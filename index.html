@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="manifest.json">
+    <title>EtherLabs Tools</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #060a0a, #0a1210);
+            color: #e8f0ec; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .page { max-width: 600px; width: 90%; padding: 40px 0; }
+        h1 { font-size: 2rem; margin-bottom: 8px; }
+        h1 span { color: #10b981; }
+        .sub { color: #7a9a8e; margin-bottom: 40px; }
+        .tool-card {
+            display: block; text-decoration: none; color: inherit;
+            background: rgba(16,185,129,0.05);
+            border: 1px solid #162e26;
+            border-radius: 16px; padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            border-color: #10b981;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(16,185,129,0.15);
+        }
+        .tool-icon { font-size: 2rem; margin-bottom: 8px; }
+        .tool-name { font-size: 1.2rem; font-weight: 700; color: #34d399; }
+        .tool-desc { color: #7a9a8e; font-size: 0.9rem; margin-top: 6px; }
+        .badge {
+            display: inline-block; background: linear-gradient(135deg, #10b981, #34d399);
+            color: #060a0a; font-size: 0.7rem; font-weight: 700;
+            padding: 3px 8px; border-radius: 6px; margin-left: 8px;
+            vertical-align: middle;
+        }
+        footer { text-align: center; color: #4a6b5e; font-size: 0.8rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>⚡ Ether<span>Labs</span> Tools</h1>
+        <p class="sub">Strumenti professionali per la vita quotidiana</p>
+
+        <a href="divisore-spese/" class="tool-card">
+            <div class="tool-icon">💰</div>
+            <div class="tool-name">Divisore Spese <span class="badge">PRO</span></div>
+            <div class="tool-desc">Dividi le spese di gruppo in modo equo. Gestisci partecipanti, spese e calcola chi deve pagare chi.</div>
+        </a>
+
+        <!-- Aggiungi altri tool qui -->
+        <!--
+        <a href="pomodoro/" class="tool-card">
+            <div class="tool-icon">🍅</div>
+            <div class="tool-name">Pomodoro Timer <span class="badge">PRO</span></div>
+            <div class="tool-desc">Timer Pomodoro con sessioni personalizzabili e statistiche.</div>
+        </a>
+        -->
+
+        <footer>© 2025 EtherLabs — Tutti i diritti riservati</footer>
+    </div>
+</body>
+</html>
