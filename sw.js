@@ -1,9 +1,9 @@
 // EtherLabs Tools — Service Worker v1
 var CACHE_NAME = 'etherlabs-v1';
 var URLS_TO_CACHE = [
-  '/etherlabs-tools/',
-  '/etherlabs-tools/divisore-spese/',
-  '/etherlabs-tools/divisore-spese/index.html'
+  '/etherlabs-tool/',
+  '/etherlabs-tool/divisore-spese/',
+  '/etherlabs-tool/divisore-spese/index.html'
 ];
 
 self.addEventListener('install', function(event) {
@@ -40,7 +40,7 @@ self.addEventListener('fetch', function(event) {
         return response;
       });
     }).catch(function() {
-      return caches.match('/etherlabs-tools/');
+      return caches.match('/etherlabs-tool/');
     })
   );
 });
