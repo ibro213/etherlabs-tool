@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Password Generator">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Password Generator Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #060a0a 0%, #0a1210 50%, #060a0a 100%);
+            color: #e8f0ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #162e26;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #10b981;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .subtitle {
+            color: #7a9a8e;
+            font-size: 0.95em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #162e26;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            color: #7a9a8e;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn:hover {
+            color: #34d399;
+        }
+
+        .tab-btn.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            background: #0a1210;
+            border: 1px solid #162e26;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .password-display {
+            background: #0f1a17;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .password-display code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4em;
+            color: #10b981;
+            word-break: break-all;
+            letter-spacing: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: #060a0a;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer; touch-action: manipulation;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #162e26;
+            color: #10b981;
+        }
+
+        .btn-secondary:hover {
+            background: #3a3455;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-delete {
+            background: #8b4545;
+            color: #e8f0ec;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .btn-delete:hover {
+            background: #a54545;
+        }
+
+        .btn-eye {
+            background: transparent;
+            color: #10b981;
+            padding: 6px 12px;
+            font-size: 0.9em;
+            border: 1px solid #10b981;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            color: #10b981;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #162e26;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .length-display {
+            color: #34d399;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .strength-meter {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .strength-bar-container {
+            background: #060a0a;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .strength-bar.weak { background: #e74c3c; width: 25%; }
+        .strength-bar.medium { background: #f39c12; width: 50%; }
+        .strength-bar.strong { background: #a8d5a8; width: 75%; }
+        .strength-bar.very-strong { background: #10b981; width: 100%; }
+
+        .strength-label {
+            color: #7a9a8e;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .strength-text {
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .strength-text.weak { color: #e74c3c; }
+        .strength-text.medium { color: #f39c12; }
+        .strength-text.strong { color: #a8d5a8; }
+        .strength-text.very-strong { color: #10b981; }
+
+        .checker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .checker-item {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .checker-label {
+            color: #7a9a8e;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .checker-value {
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .warning {
+            background: #2a1a1a;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            color: #e8f0ec;
+        }
+
+        .warning strong {
+            color: #e74c3c;
+        }
+
+        .vault-entry {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .vault-entry {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .vault-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vault-field-label {
+            color: #7a9a8e;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .vault-field-value {
+            color: #10b981;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .vault-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-field {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            color: #e8f0ec;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #162e26;
+            color: #10b981;
+            padding: 15px 20px;
+            border-radius: 6px;
+            border: 1px solid #10b981;
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7a9a8e;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        h2 {
+            color: #10b981;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .disclaimer {
+            background: #1a1823;
+            border: 1px solid #162e26;
+            padding: 15px;
+            border-radius: 6px;
+            color: #7a9a8e;
+            font-size: 0.9em;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .tabs {
+                gap: 5px;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Password Generator</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <header>
+            <h1>🔐 Password Generator Pro</h1>
+            <p class="subtitle">Secure Password Generator &amp; Manager</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick=\"switchTab('generator', this)\">Generator</button>
+            <button class="tab-btn" onclick=\"switchTab('checker', this)\">Analyzer</button>
+            <button class="tab-btn" onclick=\"switchTab('passphrase', this)\">Passphrase</button>
+            <button class="tab-btn" onclick=\"switchTab('vault', this)\">Vault</button>
+        </div>
+
+        <!-- PASSWORD GENERATOR -->
+        <div id="generator" class="tab-content active">
+            <div class="section">
+                <h2>Password Generator</h2>
+
+                <div class="password-display">
+                    <code id="passwordDisplay">Click Generate</code>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="generatePassword()">⚡ Generate Password</button>
+                    <button class="btn-secondary" onclick="copyPassword()">📋 Copy</button>
+                </div>
+
+                <div id="copyFeedback"></div>
+
+                <div class="strength-meter">
+                    <div class="strength-label">Password Strength</div>
+                    <div class="strength-bar-container">
+                        <div id="strengthBar" class="strength-bar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">-</div>
+                    <div style="color: #7a9a8e; font-size: 0.85em; margin-top: 8px;">
+                        Entropy: <span id="entropyValue">0</span> bits
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="lengthSlider">Length</label>
+                        <input type="range" id="lengthSlider" min="8" max="64" value="16" oninput="updateLength()">
+                        <div class="length-display" id="lengthDisplay">16 characters</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #10b981; margin: 25px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Options</h3>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="uppercase" checked onchange="generatePassword()">
+                        <label for="uppercase">Uppercase (A-Z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lowercase" checked onchange="generatePassword()">
+                        <label for="lowercase">Lowercase (a-z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="numbers" checked onchange="generatePassword()">
+                        <label for="numbers">Numbers (0-9)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="symbols" checked onchange="generatePassword()">
+                        <label for="symbols">Symbols (!@#$%)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="exclude-ambiguous" onchange="generatePassword()">
+                        <label for="exclude-ambiguous">Exclude Ambiguous</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="spaces" onchange="generatePassword()">
+                        <label for="spaces">Spaces</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASSWORD ANALYZER -->
+        <div id="checker" class="tab-content">
+            <div class="section">
+                <h2>Password Analyzer</h2>
+
+                <div class="control-group">
+                    <label for="checkerInput">Enter Password to Analyze</label>
+                    <input type="password" id="checkerInput" class="input-field" placeholder="Paste or type your password..." oninput="checkPassword()">
+                </div>
+
+                <div class="strength-meter" id="checkerStrength">
+                    <div class="strength-label">Password Strength</div>
+                    <div class="strength-bar-container">
+                        <div id="checkerStrengthBar" class="strength-bar"></div>
+                    </div>
+                    <div class="strength-text" id="checkerStrengthText">-</div>
+                </div>
+
+                <div class="checker-group">
+                    <div class="checker-item">
+                        <div class="checker-label">Length</div>
+                        <div class="checker-value" id="checkerLength">0</div>
+                    </div>
+                    <div class="checker-item">
+                        <div class="checker-label">Uppercase</div>
+                        <div class="checker-value" id="checkerUpper">0</div>
+                    </div>
+                    <div class="checker-item">
+                        <div class="checker-label">Lowercase</div>
+                        <div class="checker-value" id="checkerLower">0</div>
+                    </div>
+                    <div class="checker-item">
+                        <div class="checker-label">Numbers</div>
+                        <div class="checker-value" id="checkerNumbers">0</div>
+                    </div>
+                    <div class="checker-item">
+                        <div class="checker-label">Symbols</div>
+                        <div class="checker-value" id="checkerSymbols">0</div>
+                    </div>
+                    <div class="checker-item">
+                        <div class="checker-label">Entropy (bits)</div>
+                        <div class="checker-value" id="checkerEntropy">0</div>
+                    </div>
+                </div>
+
+                <div class="checker-item" style="grid-column: 1 / -1;">
+                    <div class="checker-label">Estimated Crack Time (Brute Force)</div>
+                    <div class="checker-value" id="crackeTime">-</div>
+                </div>
+
+                <div id="suggestions"></div>
+            </div>
+        </div>
+
+        <!-- PASSPHRASE GENERATOR -->
+        <div id="passphrase" class="tab-content">
+            <div class="section">
+                <h2>Passphrase Generator</h2>
+
+                <div class="password-display">
+                    <code id="passphraseDisplay">Click Generate</code>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="generatePassphrase()">⚡ Generate Passphrase</button>
+                    <button class="btn-secondary" onclick="copyPassphrase()">📋 Copy</button>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="wordCount">Number of Words</label>
+                        <input type="range" id="wordCount" min="3" max="8" value="4" oninput="updateWordCount()">
+                        <div class="length-display" id="wordCountDisplay">4 words</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="separator">Separator</label>
+                        <select id="separator" class="input-field" onchange="generatePassphrase()">
+                            <option value="-">Hyphen (-)</option>
+                            <option value="_">Underscore (_)</option>
+                            <option value=" ">Space</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="color: #10b981; margin: 25px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Options</h3>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="capitalizeSeparator" onchange="generatePassphrase()">
+                        <label for="capitalizeSeparator">Capitalize Words</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addNumber" onchange="generatePassphrase()">
+                        <label for="addNumber">Add Number</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASSWORD VAULT -->
+        <div id="vault" class="tab-content">
+            <div class="section">
+                <h2>Password Vault</h2>
+
+                <div class="warning">
+                    <strong>⚠️ Warning:</strong> localStorage is not encrypted. This vault is for convenience, not for high-security use. Do not store critical passwords here.
+                </div>
+
+                <h3 style="color: #10b981; margin: 25px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Add Entry</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label style="color: #10b981; display: block; margin-bottom: 8px;">Site / Service</label>
+                        <input type="text" id="vaultService" class="input-field" placeholder="e.g. Gmail, Twitter...">
+                    </div>
+                    <div class="form-group">
+                        <label style="color: #10b981; display: block; margin-bottom: 8px;">Username / Email</label>
+                        <input type="text" id="vaultUsername" class="input-field" placeholder="e.g. user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label style="color: #10b981; display: block; margin-bottom: 8px;">Password</label>
+                        <input type="password" id="vaultPassword" class="input-field" placeholder="Password">
+                    </div>
+                </div>
+
+                <button onclick="addVaultEntry()">➕ Add to Vault</button>
+
+                <h3 style="color: #10b981; margin: 30px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Saved Passwords</h3>
+
+                <div class="search-box">
+                    <input type="text" id="vaultSearch" class="input-field" placeholder="Search site or username..." oninput="filterVault()">
+                </div>
+
+                <div id="vaultList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIG ====================
+        const STORAGE_KEY = 'passpro_en';
+        const ENGLISH_WORDS = [
+            'apple', 'river', 'cloud', 'tiger', 'ocean', 'dream', 'brave', 'light', 'stone', 'dance',
+            'forest', 'castle', 'flame', 'storm', 'pearl', 'amber', 'blaze', 'cedar', 'coral', 'crane',
+            'daisy', 'delta', 'eagle', 'ember', 'fairy', 'flint', 'ghost', 'grain', 'grape', 'haven',
+            'ivory', 'jewel', 'karma', 'lemon', 'lunar', 'magic', 'maple', 'marsh', 'noble', 'olive',
+            'orbit', 'panda', 'phase', 'piano', 'plaza', 'plume', 'prism', 'quail', 'quest', 'raven',
+            'ridge', 'robin', 'royal', 'sage', 'satin', 'scale', 'scout', 'shade', 'shelf', 'shore',
+            'silver', 'slate', 'solar', 'spark', 'spice', 'spine', 'steam', 'steel', 'swift', 'table',
+            'thorn', 'token', 'tower', 'trail', 'tulip', 'umbra', 'unity', 'vapor', 'vault', 'vivid',
+            'wheat', 'width', 'yacht', 'zebra', 'acorn', 'basin', 'birch', 'bloom', 'blush', 'bread',
+            'brick', 'brush', 'candy', 'chalk', 'charm', 'chess', 'cliff', 'cloth', 'coast', 'crown',
+            'curve', 'depth', 'drift', 'dwarf', 'earth', 'elbow', 'event', 'faith', 'feast', 'fence',
+            'field', 'flame', 'flood', 'frost', 'globe', 'glove', 'grain', 'guard', 'guide', 'haste',
+            'heart', 'honey', 'house', 'humor', 'icicle', 'image', 'jewel', 'judge', 'juice', 'knife',
+            'lance', 'latch', 'level', 'lilac', 'linen', 'lodge', 'manor', 'medal', 'melon', 'metal',
+            'mixer', 'moose', 'motor', 'mount', 'music', 'nerve', 'night', 'north', 'novel', 'oasis',
+            'ocean', 'opera', 'otter', 'paint', 'patch', 'peace', 'peach', 'penny', 'pilot', 'pitch',
+            'plant', 'plank', 'point', 'polar', 'proud', 'pulse', 'queen', 'quick', 'quiet', 'radar',
+            'ranch', 'rapid', 'realm', 'rider', 'rival', 'river', 'robin', 'route', 'ruler', 'rural',
+            'salad', 'sandy', 'scarf', 'scene', 'scent', 'shark', 'shell', 'shine', 'shirt', 'sigma',
+            'silk', 'slope', 'smile', 'smoke', 'snake', 'snowy', 'solid', 'south', 'space', 'spear',
+            'split', 'sport', 'squad', 'stage', 'stair', 'stamp', 'stand', 'start', 'steak', 'stick',
+            'stock', 'story', 'stove', 'strap', 'straw', 'style', 'sugar', 'super', 'swamp', 'swing',
+            'sword', 'tabby', 'tempo', 'theta', 'thick', 'think', 'those', 'thumb', 'toast', 'torch',
+            'trace', 'trade', 'train', 'treat', 'trend', 'tribe', 'trick', 'trout', 'truck', 'trust',
+            'twice', 'ultra', 'under', 'upper', 'urban', 'valid', 'value', 'verse', 'vigor', 'vinyl',
+            'viola', 'virus', 'vital', 'vocal', 'voice', 'watch', 'water', 'whale', 'wheel', 'whirl',
+            'widen', 'windy', 'world', 'wound', 'wrist', 'yield', 'youth', 'zesty', 'abode', 'agile',
+            'aisle', 'alarm', 'alert', 'align', 'angle', 'anvil', 'arena', 'armor', 'arrow', 'atlas',
+            'badge', 'baker', 'barge', 'basic', 'beach', 'beard', 'bench', 'berry', 'blade', 'blank',
+            'blend', 'blink', 'block', 'board', 'bonus', 'booth', 'bound', 'brain', 'brand', 'brass',
+            'brisk', 'broad', 'brook', 'brush', 'bunch', 'cabin', 'cable', 'camel', 'cargo', 'carry',
+            'chain', 'chair', 'chase', 'cheap', 'check', 'chest', 'chief', 'child', 'china', 'chord',
+            'civic', 'civil', 'claim', 'clamp', 'clash', 'clean', 'clear', 'climb', 'clock', 'close',
+            'coach', 'color', 'comet', 'comic', 'coral', 'cover', 'craft', 'crash', 'crazy', 'creek',
+            'crest', 'cross', 'crush', 'cubic', 'cycle', 'dairy', 'dance', 'demon', 'denim', 'dense',
+            'depot', 'derby', 'diver', 'dodge', 'donor', 'doubt', 'draft', 'drain', 'drawn', 'dress',
+            'drink', 'drive', 'drone', 'dying', 'eager', 'early', 'eight', 'elect', 'elite', 'enjoy',
+            'enter', 'equal', 'equip', 'erupt', 'essay', 'evoke', 'exact', 'exile', 'extra', 'fable',
+            'facet', 'fancy', 'fiber', 'fifth', 'filth', 'final', 'flame', 'flask', 'fleet', 'flesh',
+            'float', 'flour', 'fluid', 'flute', 'focal', 'focus', 'forge', 'forth', 'forum', 'found',
+            'frame', 'fresh', 'front', 'fruit', 'fungi', 'giant', 'given', 'glass', 'gleam', 'glide',
+            'glory', 'goose', 'grace', 'grade', 'grand', 'grant', 'grasp', 'grass', 'grave', 'great',
+            'green', 'greet', 'grind', 'group', 'grove', 'grown', 'guest', 'habit', 'happy', 'harsh',
+            'hazel', 'hedge', 'heron', 'honor', 'horse', 'hotel', 'human', 'ideal', 'index', 'indie',
+            'inner', 'input', 'irony', 'ivory', 'jolly', 'knack', 'kneel', 'known', 'label', 'labor',
+            'large', 'laser', 'later', 'laugh', 'layer', 'learn', 'lever', 'light', 'limit', 'linen',
+            'liver', 'llama', 'local', 'logic', 'loose', 'lover', 'lower', 'loyal', 'lucky', 'lunch',
+            'lyric', 'major', 'maker', 'march', 'match', 'mayor', 'media', 'mercy', 'might', 'miner',
+            'minor', 'minus', 'model', 'money', 'month', 'moral', 'motor', 'mound', 'mouse', 'mouth',
+            'movie', 'mural', 'naive', 'naval', 'nerve', 'never', 'newly', 'niche', 'night', 'ninth',
+            'noise', 'north', 'noted', 'novel', 'nurse', 'ocean', 'onset', 'opera', 'orbit', 'order',
+            'organ', 'other', 'outer', 'owner', 'oxide', 'ozone', 'panel', 'paper', 'party', 'pasta',
+            'patch', 'pause', 'penny', 'perch', 'petal', 'phase', 'phone', 'photo', 'piece', 'pixel',
+            'place', 'plain', 'plane', 'plate', 'plaza', 'plead', 'pluck', 'plumb', 'plush', 'point',
+            'polar', 'popup', 'porch', 'pouch', 'pound', 'power', 'press', 'price', 'pride', 'prime',
+            'print', 'prize', 'proof', 'prose', 'proud', 'pupil', 'purse', 'quota', 'quote', 'rally',
+            'ranch', 'range', 'rapid', 'ratio', 'reach', 'realm', 'rebel', 'reign', 'relax', 'reply',
+            'rider', 'rigid', 'rival', 'robin', 'roman', 'roost', 'round', 'route', 'royal', 'rugby',
+            'rural', 'saint', 'salsa', 'savor', 'scale', 'scene', 'scoop', 'scope', 'score', 'sense',
+            'serve', 'seven', 'shade', 'shall', 'shape', 'share', 'sharp', 'sheet', 'shelf', 'shift',
+            'shire', 'shock', 'shoot', 'shore', 'short', 'shout', 'sight', 'silly', 'sixth', 'sixty',
+            'sized', 'skill', 'skull', 'sleep', 'slice', 'slide', 'slope', 'sloth', 'small', 'smart',
+            'smell', 'smith', 'snail', 'solar', 'solve', 'sonic', 'sound', 'south', 'spare', 'speak',
+            'speed', 'spend', 'spicy', 'spoil', 'spoon', 'spray', 'stain', 'stake', 'stale', 'stamp',
+            'stand', 'stark', 'state', 'stays', 'steed', 'steep', 'steer', 'stern', 'stone', 'store',
+            'stork', 'storm', 'stout', 'stove', 'strip', 'stuck', 'study', 'stuff', 'stump', 'suite',
+            'sunny', 'surge', 'swarm', 'sweet', 'swept', 'tenth', 'their', 'theme', 'thick', 'thing',
+            'think', 'third', 'tidal', 'tiger', 'tight', 'timer', 'title', 'toast', 'today', 'topaz',
+            'topic', 'total', 'touch', 'tough', 'tower', 'toxic', 'trace', 'track', 'trade', 'trail',
+            'trait', 'tramp', 'trash', 'trend', 'trial', 'tribe', 'troop', 'truce', 'truly', 'trunk',
+            'tunic', 'twist', 'unity', 'until', 'upper', 'urban', 'usage', 'usual', 'utter', 'valet',
+            'valve', 'vapor', 'verse', 'viper', 'visit', 'vista', 'vivid', 'vocal', 'voice', 'voter',
+            'wagon', 'waist', 'watch', 'water', 'weave', 'wedge', 'wheat', 'while', 'whole', 'widen',
+            'witch', 'women', 'world', 'worry', 'worse', 'worst', 'worth', 'wreck', 'wrist', 'wrong',
+            'yacht', 'youth', 'zebra', 'pixel', 'bliss', 'crisp', 'flask', 'gleam', 'haven', 'jewel',
+            'knack', 'latch', 'mocha', 'nifty', 'optic', 'plush', 'quilt', 'rogue', 'sleek', 'tryst'
+        ];
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function getRandomValues(length) {
+            const array = new Uint8Array(length);
+            crypto.getRandomValues(array);
+            return array;
+        }
+
+        function switchTab(tabName, _el) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            if(_el) _el.classList.add('active');
+        }
+
+        function showFeedback(message) {
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 3000);
+        }
+
+        function calculateEntropy(password, charset) {
+            if (!password || charset.length === 0) return 0;
+            return Math.log2(Math.pow(charset.length, password.length));
+        }
+
+        function getStrengthLevel(entropy) {
+            if (entropy < 30) return { level: 'Weak', class: 'weak' };
+            if (entropy < 60) return { level: 'Medium', class: 'medium' };
+            if (entropy < 100) return { level: 'Strong', class: 'strong' };
+            return { level: 'Very Strong', class: 'very-strong' };
+        }
+
+        function estimateCrackTime(entropy) {
+            // Assume 1 trillion guesses per second
+            const guessesPerSecond = 1e12;
+            const totalGuesses = Math.pow(2, entropy) / 2; // Average case
+            const seconds = totalGuesses / guessesPerSecond;
+
+            if (seconds < 1) return 'Instant';
+            if (seconds < 60) return Math.round(seconds) + ' seconds';
+            if (seconds < 3600) return Math.round(seconds / 60) + ' minutes';
+            if (seconds < 86400) return Math.round(seconds / 3600) + ' hours';
+            if (seconds < 31536000) return Math.round(seconds / 86400) + ' days';
+            if (seconds < 3153600000) return Math.round(seconds / 31536000) + ' years';
+            return 'Millennia';
+        }
+
+        // ==================== PASSWORD GENERATOR ====================
+        function generatePassword() {
+            const length = parseInt(document.getElementById('lengthSlider').value);
+            const uppercase = document.getElementById('uppercase').checked;
+            const lowercase = document.getElementById('lowercase').checked;
+            const numbers = document.getElementById('numbers').checked;
+            const symbols = document.getElementById('symbols').checked;
+            const excludeAmbiguous = document.getElementById('exclude-ambiguous').checked;
+            const spaces = document.getElementById('spaces').checked;
+
+            let charset = '';
+            if (uppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (lowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (numbers) charset += '0123456789';
+            if (symbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            if (spaces) charset += ' ';
+
+            if (excludeAmbiguous) {
+                charset = charset.replace(/[0OlI1]/g, '');
+            }
+
+            if (charset === '') {
+                showFeedback('❌ Select at least one character type');
+                return;
+            }
+
+            const bytes = getRandomValues(length);
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += charset[bytes[i] % charset.length];
+            }
+
+            document.getElementById('passwordDisplay').textContent = password;
+            updatePasswordStrength(password, charset);
+        }
+
+        function updatePasswordStrength(password, charset) {
+            const entropy = calculateEntropy(password, charset);
+            const strength = getStrengthLevel(entropy);
+
+            document.getElementById('strengthBar').className = 'strength-bar ' + strength.class;
+            document.getElementById('strengthText').className = 'strength-text ' + strength.class;
+            document.getElementById('strengthText').textContent = strength.level + ' (' + Math.round(entropy) + ' bits)';
+            document.getElementById('entropyValue').textContent = Math.round(entropy);
+        }
+
+        function updateLength() {
+            const length = document.getElementById('lengthSlider').value;
+            document.getElementById('lengthDisplay').textContent = length + ' characters';
+            generatePassword();
+        }
+
+        function copyPassword() {
+            const password = document.getElementById('passwordDisplay').textContent;
+            if (password === 'Click Generate') {
+                showFeedback('❌ Generate a password before copying');
+                return;
+            }
+            navigator.clipboard.writeText(password).then(() => {
+                showFeedback('✅ Copied!');
+            });
+        }
+
+        // ==================== PASSWORD CHECKER ====================
+        function checkPassword() {
+            const password = document.getElementById('checkerInput').value;
+
+            const upper = (password.match(/[A-Z]/g) || []).length;
+            const lower = (password.match(/[a-z]/g) || []).length;
+            const nums = (password.match(/[0-9]/g) || []).length;
+            const syms = (password.match(/[!@#$%^&*()\-_+=\[\]{}|;:,.<>?]/g) || []).length;
+
+            let charset = '';
+            if (/[A-Z]/.test(password)) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (/[a-z]/.test(password)) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (/[0-9]/.test(password)) charset += '0123456789';
+            if (/[!@#$%^&*()\-_+=\[\]{}|;:,.<>?]/.test(password)) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            const entropy = calculateEntropy(password, charset);
+            const strength = getStrengthLevel(entropy);
+
+            document.getElementById('checkerLength').textContent = password.length;
+            document.getElementById('checkerUpper').textContent = upper;
+            document.getElementById('checkerLower').textContent = lower;
+            document.getElementById('checkerNumbers').textContent = nums;
+            document.getElementById('checkerSymbols').textContent = syms;
+            document.getElementById('checkerEntropy').textContent = Math.round(entropy);
+            document.getElementById('crackeTime').textContent = estimateCrackTime(entropy);
+
+            document.getElementById('checkerStrengthBar').className = 'strength-bar ' + strength.class;
+            document.getElementById('checkerStrengthText').className = 'strength-text ' + strength.class;
+            document.getElementById('checkerStrengthText').textContent = strength.level;
+
+            generateSuggestions(password, upper, lower, nums, syms);
+        }
+
+        function generateSuggestions(password, upper, lower, nums, syms) {
+            const suggestions = [];
+
+            if (password.length < 12) suggestions.push('🔹 Use at least 12 characters');
+            if (upper === 0) suggestions.push('🔹 Add uppercase letters');
+            if (lower === 0) suggestions.push('🔹 Add lowercase letters');
+            if (nums === 0) suggestions.push('🔹 Add numbers');
+            if (syms === 0) suggestions.push('🔹 Add symbols');
+
+            const suggestionsDiv = document.getElementById('suggestions');
+            if (suggestions.length > 0) {
+                suggestionsDiv.innerHTML = '<div class="warning"><strong>💡 Suggestions:</strong><br>' + suggestions.join('<br>') + '</div>';
+            } else {
+                suggestionsDiv.innerHTML = '<div style="background: #1a2a1a; border-left: 4px solid #a8d5a8; padding: 15px; border-radius: 4px; color: #e8f0ec; margin: 20px 0;">✅ Very strong password!</div>';
+            }
+        }
+
+        // ==================== PASSPHRASE GENERATOR ====================
+        function generatePassphrase() {
+            const wordCount = parseInt(document.getElementById('wordCount').value);
+            const separator = document.getElementById('separator').value;
+            const capitalize = document.getElementById('capitalizeSeparator').checked;
+            const addNumber = document.getElementById('addNumber').checked;
+
+            const bytes = getRandomValues(wordCount);
+            let words = [];
+
+            for (let i = 0; i < wordCount; i++) {
+                const idx = bytes[i] % ENGLISH_WORDS.length;
+                let word = ENGLISH_WORDS[idx];
+                if (capitalize) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1);
+                }
+                words.push(word);
+            }
+
+            let passphrase = words.join(separator);
+            if (addNumber) {
+                const numByte = getRandomValues(1)[0];
+                passphrase += separator + (numByte % 100);
+            }
+
+            document.getElementById('passphraseDisplay').textContent = passphrase;
+        }
+
+        function updateWordCount() {
+            const count = document.getElementById('wordCount').value;
+            document.getElementById('wordCountDisplay').textContent = count + ' words';
+            generatePassphrase();
+        }
+
+        function copyPassphrase() {
+            const passphrase = document.getElementById('passphraseDisplay').textContent;
+            if (passphrase === 'Click Generate') {
+                showFeedback('❌ Generate a passphrase before copying');
+                return;
+            }
+            navigator.clipboard.writeText(passphrase).then(() => {
+                showFeedback('✅ Copied!');
+            });
+        }
+
+        // ==================== VAULT ====================
+        function loadVault() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveVault(vault) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(vault));
+        }
+
+        function addVaultEntry() {
+            const service = document.getElementById('vaultService').value.trim();
+            const username = document.getElementById('vaultUsername').value.trim();
+            const password = document.getElementById('vaultPassword').value.trim();
+
+            if (!service || !username || !password) {
+                showFeedback('❌ Fill in all fields');
+                return;
+            }
+
+            const vault = loadVault();
+            vault.push({
+                id: Date.now(),
+                service,
+                username,
+                password,
+                created: new Date().toLocaleDateString('en-US')
+            });
+
+            saveVault(vault);
+            document.getElementById('vaultService').value = '';
+            document.getElementById('vaultUsername').value = '';
+            document.getElementById('vaultPassword').value = '';
+            showFeedback('✅ Added to vault');
+            displayVault();
+        }
+
+        function deleteVaultEntry(id) {
+            if (!confirm('Are you sure you want to delete this entry?')) return;
+            let vault = loadVault();
+            vault = vault.filter(e => e.id !== id);
+            saveVault(vault);
+            showFeedback('✅ Deleted');
+            displayVault();
+        }
+
+        function togglePasswordVisibility(button, id) {
+            const vault = loadVault();
+            const entry = vault.find(e => e.id === id);
+            const display = button.parentElement.previousElementSibling;
+
+            if (display.textContent === '••••••••') {
+                display.textContent = entry.password;
+                button.textContent = '🙈 Hide';
+            } else {
+                display.textContent = '••••••••';
+                button.textContent = '👁️ Show';
+            }
+        }
+
+        function filterVault() {
+            const search = document.getElementById('vaultSearch').value.toLowerCase();
+            const vault = loadVault();
+            const filtered = vault.filter(e =>
+                e.service.toLowerCase().includes(search) ||
+                e.username.toLowerCase().includes(search)
+            );
+            displayVaultEntries(filtered);
+        }
+
+        function displayVault() {
+            const vault = loadVault();
+            displayVaultEntries(vault);
+        }
+
+        function displayVaultEntries(entries) {
+            const vaultList = document.getElementById('vaultList');
+            if (entries.length === 0) {
+                vaultList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔒</div><p>No saved passwords</p></div>';
+                return;
+            }
+
+            vaultList.innerHTML = entries.map(entry => `
+                <div class="vault-entry">
+                    <div class="vault-field">
+                        <div class="vault-field-label">Site / Service</div>
+                        <div class="vault-field-value">${escapeHtml(entry.service)}</div>
+                    </div>
+                    <div class="vault-field">
+                        <div class="vault-field-label">Username</div>
+                        <div class="vault-field-value">${escapeHtml(entry.username)}</div>
+                    </div>
+                    <div class="vault-field">
+                        <div class="vault-field-label">Password</div>
+                        <div class="vault-field-value" id="pwd-${entry.id}">••••••••</div>
+                        <button class="btn-eye" onclick="togglePasswordVisibility(this, ${entry.id})">👁️ Show</button>
+                    </div>
+                    <div class="vault-actions">
+                        <button class="btn-delete" onclick="deleteVaultEntry(${entry.id})">🗑️ Delete</button>
+                        <div style="color: #7a9a8e; font-size: 0.8em; margin-top: 5px;">${entry.created}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            generatePassword();
+            generatePassphrase();
+            displayVault();
+        });
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='g8vwuaz2ge',K='etherlabs_generatore-password_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

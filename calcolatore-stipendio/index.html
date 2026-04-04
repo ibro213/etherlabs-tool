@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Calcolatore Stipendio Netto">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Calcolatore Stipendio Netto Pro</title>
+    <style>
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --goldL: #34d399;
+            --goldD: #059669;
+            --t1: #e8f0ec;
+            --t2: #7a9a8e;
+            --t3: #4a6b5e;
+            --brd: #162e26;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--t1);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--goldL) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pro-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            color: var(--bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .subtitle {
+            color: var(--t2);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--brd);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--t2);
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            color: var(--goldL);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--goldL) 100%);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            color: var(--goldL);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--t1);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="range"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg);
+            border: 1px solid var(--brd);
+            border-radius: 8px;
+            color: var(--t1);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            background-color: var(--bg2);
+        }
+
+        input[type="range"] {
+            padding: 0;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            background: var(--brd);
+            border-radius: 4px;
+            border: none;
+            margin: 10px 0;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: var(--brd);
+            border-radius: 4px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+            margin-top: -8px;
+            border: 2px solid var(--goldD);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            background: var(--brd);
+            border-radius: 4px;
+            border: none;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            cursor: grab;
+            border: 2px solid var(--goldD);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .slider-value {
+            display: inline-block;
+            color: var(--goldL);
+            font-weight: 700;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer; touch-action: manipulation;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
+            color: var(--goldL);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+        }
+
+        /* Results */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border: 1px solid var(--brd);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-label {
+            color: var(--t2);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            color: var(--goldL);
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-unit {
+            color: var(--t3);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-title {
+            color: var(--goldL);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 250px;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, var(--goldL) 0%, var(--gold) 100%);
+            border-radius: 8px 8px 0 0;
+            min-height: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+            transform: scaleY(1.05);
+        }
+
+        .bar-label {
+            color: var(--t2);
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bar-value {
+            color: var(--goldL);
+            font-size: 0.85rem;
+            font-weight: 700;
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .pie-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 2rem;
+        }
+
+        .pie-circle {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .pie-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .pie-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pie-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .pie-text {
+            font-size: 0.9rem;
+            color: var(--t2);
+        }
+
+        /* Comparison Mode */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-box {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .comparison-box h4 {
+            color: var(--goldL);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-result {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--brd);
+            font-size: 0.95rem;
+        }
+
+        .comparison-result:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-label {
+            color: var(--t2);
+        }
+
+        .comparison-value {
+            color: var(--goldL);
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Checkbox */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border-top: 1px solid var(--brd);
+            padding: 2rem;
+            text-align: center;
+            color: var(--t2);
+            margin-top: 3rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--goldL);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bar-chart {
+                height: 200px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                text-align: left;
+            }
+
+            .tab-btn.active::after {
+                bottom: -0.75rem;
+                left: 0;
+                width: 100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: slideUp 0.5s ease;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        /* Export Section */
+        .export-area {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--brd);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .export-text {
+            background-color: var(--bg);
+            border: 1px solid var(--brd);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--t1);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .message.info {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--goldL);
+        }
+
+        .message.warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #ffeb3b;
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Calcolatore Stipendio Netto</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <header>
+        <h1>Calcolatore Stipendio Netto Pro <span class="pro-badge">Pro</span></h1>
+        <p class="subtitle">Calcola il tuo stipendio netto annuo e mensile con precisione</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick=\"switchTab('calcolatore', this)\">Calcolatore</button>
+            <button class="tab-btn" onclick=\"switchTab('confronto', this)\">Confronto Stipendi</button>
+            <button class="tab-btn" onclick=\"switchTab('informazioni', this)\">Informazioni</button>
+        </div>
+
+        <!-- Tab: Calcolatore -->
+        <div id="calcolatore" class="tab-content active">
+            <div class="grid">
+                <!-- Input RAL -->
+                <div class="card">
+                    <h3>Stipendio Lordo Annuo</h3>
+                    <div class="form-group">
+                        <label for="ral">RAL (€)</label>
+                        <input type="range" id="ralSlider" min="15000" max="150000" step="1000" value="30000" oninput="updateRAL()">
+                        <input type="number" id="ral" min="0" step="100" value="30000" oninput="updateRAL()">
+                        <div class="slider-value" id="ralDisplay">€ 30.000</div>
+                    </div>
+                </div>
+
+                <!-- Contract Type -->
+                <div class="card">
+                    <h3>Tipo di Contratto</h3>
+                    <div class="form-group">
+                        <label for="contractType">Categoria</label>
+                        <select id="contractType" onchange="calculate()">
+                            <option value="indeterminato">Tempo Indeterminato</option>
+                            <option value="determinato">Tempo Determinato</option>
+                            <option value="apprendistato">Apprendistato</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mensilità -->
+                <div class="card">
+                    <h3>Mensilità</h3>
+                    <div class="form-group">
+                        <label for="mensilita">Numero di Mensilità</label>
+                        <select id="mensilita" onchange="calculate()">
+                            <option value="13">13 Mensilità</option>
+                            <option value="14">14 Mensilità</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CCNL Sector -->
+                <div class="card">
+                    <h3>Settore CCNL</h3>
+                    <div class="form-group">
+                        <label for="ccnl">Categoria Contrattuale</label>
+                        <select id="ccnl" onchange="calculate()">
+                            <option value="commercio">Commercio</option>
+                            <option value="metalmeccanico">Metalmeccanico</option>
+                            <option value="pubblico">Pubblico Impiego</option>
+                            <option value="turismo">Turismo</option>
+                            <option value="edilizia">Edilizia</option>
+                            <option value="altro">Altro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Region -->
+                <div class="card">
+                    <h3>Regione</h3>
+                    <div class="form-group">
+                        <label for="region">Seleziona Regione</label>
+                        <select id="region" onchange="calculate()">
+                            <option value="lombardia">Lombardia</option>
+                            <option value="lazio">Lazio</option>
+                            <option value="campania">Campania</option>
+                            <option value="sicilia">Sicilia</option>
+                            <option value="piemonte">Piemonte</option>
+                            <option value="veneto">Veneto</option>
+                            <option value="toscana">Toscana</option>
+                            <option value="emilia">Emilia-Romagna</option>
+                            <option value="liguria">Liguria</option>
+                            <option value="marche">Marche</option>
+                            <option value="umbria">Umbria</option>
+                            <option value="molise">Molise</option>
+                            <option value="basilicata">Basilicata</option>
+                            <option value="calabria">Calabria</option>
+                            <option value="puglia">Puglia</option>
+                            <option value="sardegna">Sardegna</option>
+                            <option value="aosta">Valle d'Aosta</option>
+                            <option value="friuli">Friuli-Venezia Giulia</option>
+                            <option value="trentino">Trentino-Alto Adige</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Deductions -->
+                <div class="card">
+                    <h3>Detrazioni Fiscali</h3>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="coniuge" onchange="calculate()">
+                            <label for="coniuge" style="margin: 0;">Coniuge a carico</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="figli">Numero di Figli a carico</label>
+                        <input type="number" id="figli" min="0" max="10" value="0" onchange="calculate()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="chart-container">
+                <h2 style="color: var(--goldL); margin-bottom: 2rem;">Dettagli Calcolo</h2>
+                <div class="results-grid">
+                    <div class="result-box">
+                        <div class="result-label">Lordo Annuo</div>
+                        <div class="result-value" id="lordo">€ 30.000</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Contributi INPS</div>
+                        <div class="result-value" id="inps">€ 2.757</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Imponibile IRPEF</div>
+                        <div class="result-value" id="imponibile">€ 27.243</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">IRPEF Lorda</div>
+                        <div class="result-value" id="irpefLorda">€ 5.448</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Detrazioni</div>
+                        <div class="result-value" id="detrazioni">€ 1.104</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">IRPEF Netta</div>
+                        <div class="result-value" id="irpefNetta">€ 4.344</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Addizionali</div>
+                        <div class="result-value" id="addizionali">€ 492</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Netto Annuo</div>
+                        <div class="result-value" id="nettoAnnuo" style="color: #4ade80; font-size: 2rem;">€ 21.407</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Netto Mensile</div>
+                        <div class="result-value" id="nettoMensile" style="color: #4ade80; font-size: 2rem;">€ 1.647</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Distribuzione dello Stipendio</h3>
+                <div class="bar-chart" id="barChart">
+                    <div class="bar-item">
+                        <div class="bar" style="height: 60%; background: linear-gradient(180deg, #10b981 0%, #059669 100%);">
+                            <div class="bar-value">60%</div>
+                        </div>
+                        <div class="bar-label">Netto</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 15%; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);">
+                            <div class="bar-value">15%</div>
+                        </div>
+                        <div class="bar-label">INPS</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 20%; background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);">
+                            <div class="bar-value">20%</div>
+                        </div>
+                        <div class="bar-label">IRPEF</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 5%; background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);">
+                            <div class="bar-value">5%</div>
+                        </div>
+                        <div class="bar-label">Addizionali</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Composizione Stipendio Netto</h3>
+                <canvas id="pieCanvas" width="400" height="400" style="max-width: 100%; display: block; margin: 0 auto;"></canvas>
+            </div>
+
+            <!-- Export -->
+            <div class="export-area">
+                <h3 style="color: var(--goldL); margin-bottom: 1rem;">Esporta Risultati</h3>
+                <div class="export-text" id="exportText"></div>
+                <div class="btn-group">
+                    <button onclick="copyToClipboard()">Copia negli Appunti</button>
+                    <button class="btn-secondary" onclick="downloadAsText()">Scarica TXT</button>
+                    <button class="btn-secondary" onclick="printResults()">Stampa</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Confronto -->
+        <div id="confronto" class="tab-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Confronta Due Scenari</h3>
+                <p style="color: var(--t2); margin-bottom: 1.5rem;">Compila i dati per due diversi scenari di stipendio e confronta i risultati</p>
+            </div>
+
+            <div class="comparison-container">
+                <!-- Scenario 1 -->
+                <div class="comparison-box">
+                    <h4>Scenario 1</h4>
+                    <div class="form-group">
+                        <label for="comp1Ral">RAL (€)</label>
+                        <input type="number" id="comp1Ral" min="0" step="100" value="30000" onchange="compareCalculate()">
+                    </div>
+                    <div class="form-group">
+                        <label for="comp1Region">Regione</label>
+                        <select id="comp1Region" onchange="compareCalculate()">
+                            <option value="lombardia">Lombardia</option>
+                            <option value="lazio">Lazio</option>
+                            <option value="campania">Campania</option>
+                            <option value="sicilia">Sicilia</option>
+                            <option value="piemonte">Piemonte</option>
+                            <option value="veneto">Veneto</option>
+                            <option value="toscana">Toscana</option>
+                            <option value="emilia">Emilia-Romagna</option>
+                        </select>
+                    </div>
+                    <div id="comp1Results"></div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="comparison-box">
+                    <h4>Scenario 2</h4>
+                    <div class="form-group">
+                        <label for="comp2Ral">RAL (€)</label>
+                        <input type="number" id="comp2Ral" min="0" step="100" value="40000" onchange="compareCalculate()">
+                    </div>
+                    <div class="form-group">
+                        <label for="comp2Region">Regione</label>
+                        <select id="comp2Region" onchange="compareCalculate()">
+                            <option value="lombardia">Lombardia</option>
+                            <option value="lazio" selected>Lazio</option>
+                            <option value="campania">Campania</option>
+                            <option value="sicilia">Sicilia</option>
+                            <option value="piemonte">Piemonte</option>
+                            <option value="veneto">Veneto</option>
+                            <option value="toscana">Toscana</option>
+                            <option value="emilia">Emilia-Romagna</option>
+                        </select>
+                    </div>
+                    <div id="comp2Results"></div>
+                </div>
+            </div>
+
+            <!-- Comparison Summary -->
+            <div class="chart-container" style="margin-top: 2rem;">
+                <h3 class="chart-title">Differenza tra gli Scenari</h3>
+                <div id="comparisonSummary" style="color: var(--t2);"></div>
+            </div>
+        </div>
+
+        <!-- Tab: Informazioni -->
+        <div id="informazioni" class="tab-content">
+            <div class="card">
+                <h3>Come Funziona il Calcolo</h3>
+                <div style="color: var(--t2); line-height: 1.8;">
+                    <p><strong style="color: var(--goldL);">Lordo Annuo (RAL):</strong> Lo stipendio lordo dichiarato nel contratto di lavoro.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Contributi INPS:</strong> Circa il 9,19% del lordo, versato dal dipendente per la previdenza sociale.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Imponibile IRPEF:</strong> Lordo meno contributi INPS.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">IRPEF Lorda:</strong> Imposta progressiva calcolata con aliquote italiane (23%, 25%, 35%, 43%).</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Detrazioni:</strong> Riduzioni di imposta per coniuge e figli a carico, circa € 92 mensili per il lavoro dipendente.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Addizionali:</strong> Tasse regionali e comunali aggiunte all'IRPEF, variano per regione (1,23%-3,33% regionale, ~0,8% comunale).</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Netto Annuo:</strong> Lordo - INPS - IRPEF Netta - Addizionali.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Scaglioni IRPEF 2025</h3>
+                <div style="color: var(--t2); line-height: 1.8;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="color: var(--goldL); font-weight: 700;">Da € 0 a € 28.000</div>
+                        <div>Aliquota: 23%</div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="color: var(--goldL); font-weight: 700;">Da € 28.001 a € 50.000</div>
+                        <div>Aliquota: 25%</div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="color: var(--goldL); font-weight: 700;">Da € 50.001 a € 100.000</div>
+                        <div>Aliquota: 35%</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--goldL); font-weight: 700;">Oltre € 100.000</div>
+                        <div>Aliquota: 43%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Note Importanti</h3>
+                <div style="color: var(--t2); line-height: 1.8;">
+                    <p>• Questo calcolatore fornisce stime approssimative in base ai dati medi 2025.</p>
+                    <p style="margin-top: 0.5rem;">• Gli importi effettivi possono variare in base a fattori specifici (bonus, straordinari, ecc.).</p>
+                    <p style="margin-top: 0.5rem;">• Le addizionali regionali variano significativamente tra le regioni italiane.</p>
+                    <p style="margin-top: 0.5rem;">• Consultare la busta paga ufficiale per valori precisi.</p>
+                    <p style="margin-top: 0.5rem;">• Per questioni fiscali, rivolgersi a un commercialista qualificato.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Addizionali per Regione</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: var(--t2);">
+                    <div><span style="color: var(--goldL); font-weight: 700;">Lombardia:</span> 1,23% regionale + 0,72% comunale</div>
+                    <div><span style="color: var(--goldL); font-weight: 700;">Lazio:</span> 1,85% regionale + 0,90% comunale</div>
+                    <div><span style="color: var(--goldL); font-weight: 700;">Campania:</span> 3,33% regionale + 1,00% comunale</div>
+                    <div><span style="color: var(--goldL); font-weight: 700;">Sicilia:</span> 3,33% regionale + 0,80% comunale</div>
+                    <div><span style="color: var(--goldL); font-weight: 700;">Piemonte:</span> 1,62% regionale + 0,80% comunale</div>
+                    <div><span style="color: var(--goldL); font-weight: 700;">Veneto:</span> 1,73% regionale + 0,70% comunale</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-text">© 2025 EtherLabs - Calcolatore Stipendio Netto</div>
+        <div class="footer-links">
+            <a>Privacy Policy</a>
+            <a>Termini di Servizio</a>
+            <a>Contatti</a>
+        </div>
+        <p style="color: var(--t3); margin-top: 1rem; font-size: 0.85rem;">Questo strumento fornisce stime basate su dati medi. Per valori precisi consultare la propria busta paga.</p>
+    </footer>
+
+    <script>
+        // Regional tax rates (addizionale regionale)
+        const regionalRates = {
+            'lombardia': 1.23,
+            'lazio': 1.85,
+            'campania': 3.33,
+            'sicilia': 3.33,
+            'piemonte': 1.62,
+            'veneto': 1.73,
+            'toscana': 2.83,
+            'emilia': 1.58,
+            'liguria': 2.20,
+            'marche': 2.38,
+            'umbria': 2.78,
+            'molise': 2.20,
+            'basilicata': 2.41,
+            'calabria': 3.33,
+            'puglia': 2.03,
+            'sardegna': 2.73,
+            'aosta': 1.58,
+            'friuli': 1.73,
+            'trentino': 1.58
+        };
+
+        // Municipal tax average (~0.8%)
+        const municipalRate = 0.80;
+
+        // INPS contribution rate for employees
+        const inpsRate = 0.0919;
+
+        // IRPEF tax brackets for 2025
+        const taxBrackets = [
+            { max: 28000, rate: 0.23 },
+            { max: 50000, rate: 0.25 },
+            { max: 100000, rate: 0.35 },
+            { max: Infinity, rate: 0.43 }
+        ];
+
+        // Monthly tax deduction for dependent
+        const monthlyDeductionPerDependent = 92;
+
+        function updateRAL() {
+            const slider = document.getElementById('ralSlider');
+            const input = document.getElementById('ral');
+            const display = document.getElementById('ralDisplay');
+
+            // Sync values - determine which one was changed
+            if (document.activeElement === slider) {
+                input.value = slider.value;
+            } else {
+                slider.value = input.value;
+            }
+
+            const val = parseInt(input.value) || 0;
+            display.textContent = '€ ' + val.toLocaleString('it-IT');
+            calculate();
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function formatCurrency(num) {
+            return '€ ' + formatNumber(Math.round(num));
+        }
+
+        function calculateIRPEF(imponibile) {
+            let irpef = 0;
+            let remaining = imponibile;
+
+            for (let bracket of taxBrackets) {
+                if (remaining <= 0) break;
+                const taxableInThisBracket = Math.min(remaining, bracket.max - (imponibile - remaining));
+                irpef += taxableInThisBracket * bracket.rate;
+                remaining -= taxableInThisBracket;
+            }
+
+            return irpef;
+        }
+
+        function calculate() {
+            const ral = parseFloat(document.getElementById('ral').value) || 0;
+            const mensilita = parseInt(document.getElementById('mensilita').value);
+            const region = document.getElementById('region').value;
+            const coniuge = document.getElementById('coniuge').checked;
+            const figli = parseInt(document.getElementById('figli').value) || 0;
+
+            // Calculate INPS contributions
+            const inps = ral * inpsRate;
+            const imponibile = ral - inps;
+
+            // Calculate IRPEF gross
+            const irpefLorda = calculateIRPEF(imponibile);
+
+            // Calculate deductions (monthly deduction for spouse and children)
+            const monthlyDeduction = (coniuge ? monthlyDeductionPerDependent : 0) + (figli * 87);
+            const detrazioni = monthlyDeduction * mensilita;
+
+            // IRPEF net
+            const irpefNetta = Math.max(0, irpefLorda - detrazioni);
+
+            // Regional and municipal tax
+            const regionalRate = (regionalRates[region] || 1.23) / 100;
+            const addizionali = (imponibile * regionalRate) + (imponibile * (municipalRate / 100));
+
+            // Net annual
+            const nettoAnnuo = ral - inps - irpefNetta - addizionali;
+            const nettoMensile = nettoAnnuo / mensilita;
+
+            // Update results
+            document.getElementById('lordo').textContent = formatCurrency(ral);
+            document.getElementById('inps').textContent = formatCurrency(inps);
+            document.getElementById('imponibile').textContent = formatCurrency(imponibile);
+            document.getElementById('irpefLorda').textContent = formatCurrency(irpefLorda);
+            document.getElementById('detrazioni').textContent = formatCurrency(detrazioni);
+            document.getElementById('irpefNetta').textContent = formatCurrency(irpefNetta);
+            document.getElementById('addizionali').textContent = formatCurrency(addizionali);
+            document.getElementById('nettoAnnuo').textContent = formatCurrency(nettoAnnuo);
+            document.getElementById('nettoMensile').textContent = formatCurrency(nettoMensile);
+
+            // Update charts
+            updateBarChart(ral, inps, irpefNetta, addizionali, nettoAnnuo);
+            updatePieChart(nettoAnnuo, inps, irpefNetta, addizionali);
+
+            // Update export text
+            updateExportText(ral, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile);
+        }
+
+        function updateBarChart(lordo, inps, irpef, addizionali, netto) {
+            const total = lordo;
+            const inpsPercent = (inps / total) * 100;
+            const irpefPercent = (irpef / total) * 100;
+            const addizionaliPercent = (addizionali / total) * 100;
+            const nettoPercent = (netto / total) * 100;
+
+            const chart = document.getElementById('barChart');
+            chart.innerHTML = `
+                <div class="bar-item">
+                    <div class="bar" style="height: ${nettoPercent}%; background: linear-gradient(180deg, #10b981 0%, #059669 100%);">
+                        <div class="bar-value">${nettoPercent.toFixed(1)}%</div>
+                    </div>
+                    <div class="bar-label">Netto</div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar" style="height: ${inpsPercent}%; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);">
+                        <div class="bar-value">${inpsPercent.toFixed(1)}%</div>
+                    </div>
+                    <div class="bar-label">INPS</div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar" style="height: ${irpefPercent}%; background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);">
+                        <div class="bar-value">${irpefPercent.toFixed(1)}%</div>
+                    </div>
+                    <div class="bar-label">IRPEF</div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar" style="height: ${addizionaliPercent}%; background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <div class="bar-value">${addizionaliPercent.toFixed(1)}%</div>
+                    </div>
+                    <div class="bar-label">Addizionali</div>
+                </div>
+            `;
+        }
+
+        function updatePieChart(netto, inps, irpef, addizionali) {
+            const canvas = document.getElementById('pieCanvas');
+            const ctx = canvas.getContext('2d');
+            const total = netto + inps + irpef + addizionali;
+
+            const nettoPercent = (netto / total) * 100;
+            const inpsPercent = (inps / total) * 100;
+            const irpefPercent = (irpef / total) * 100;
+            const addizionaliPercent = (addizionali / total) * 100;
+
+            drawPie(ctx, [
+                { label: `Netto ${nettoPercent.toFixed(1)}%`, value: nettoPercent, color: '#10b981' },
+                { label: `INPS ${inpsPercent.toFixed(1)}%`, value: inpsPercent, color: '#f59e0b' },
+                { label: `IRPEF ${irpefPercent.toFixed(1)}%`, value: irpefPercent, color: '#ef4444' },
+                { label: `Addizionali ${addizionaliPercent.toFixed(1)}%`, value: addizionaliPercent, color: '#8b5cf6' }
+            ]);
+        }
+
+        function drawPie(ctx, data) {
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            const radius = 80;
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            let currentAngle = -Math.PI / 2;
+            for (let item of data) {
+                const sliceAngle = (item.value / 100) * 2 * Math.PI;
+
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.lineTo(centerX, centerY);
+                ctx.fill();
+
+                currentAngle += sliceAngle;
+            }
+
+            // Draw legend
+            let legendY = ctx.canvas.height - 60;
+            for (let i = 0; i < data.length; i++) {
+                ctx.fillStyle = data[i].color;
+                ctx.fillRect(20, legendY + (i * 25), 15, 15);
+                ctx.fillStyle = '#e8f0ec';
+                ctx.font = '12px sans-serif';
+                ctx.fillText(data[i].label, 40, legendY + (i * 25) + 12);
+            }
+        }
+
+        function updateExportText(lordo, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile) {
+            const mensilita = parseInt(document.getElementById('mensilita').value);
+            const region = document.getElementById('region').value;
+            const contractType = document.getElementById('contractType').value;
+
+            const text = `
+RIEPILOGO CALCOLO STIPENDIO NETTO - DIGITAL TOOLS PRO
+
+Data Calcolo: ${new Date().toLocaleDateString('it-IT')}
+
+DATI INSERITI
+─────────────────────────────────────────────
+Lordo Annuo (RAL):           ${formatCurrency(lordo)}
+Mensilità:                   ${mensilita}
+Tipo Contratto:              ${contractType.replace(/([A-Z])/g, ' $1').trim()}
+Regione:                     ${region}
+
+DETTAGLI CALCOLO
+─────────────────────────────────────────────
+Lordo Annuo:                 ${formatCurrency(lordo)}
+Contributi INPS (-9,19%):    ${formatCurrency(inps)}
+Imponibile IRPEF:            ${formatCurrency(imponibile)}
+
+CALCOLO IRPEF
+─────────────────────────────────────────────
+IRPEF Lorda:                 ${formatCurrency(irpefLorda)}
+Detrazioni Fiscali:          ${formatCurrency(detrazioni)}
+IRPEF Netta:                 ${formatCurrency(irpefNetta)}
+
+ADDIZIONALI (Reg. + Com.):
+─────────────────────────────────────────────
+Importo Addizionali:         ${formatCurrency(addizionali)}
+
+RIEPILOGO NETTO
+─────────────────────────────────────────────
+Netto Annuo:                 ${formatCurrency(nettoAnnuo)}
+Netto Mensile (${mensilita}):        ${formatCurrency(nettoMensile)}
+
+COMPOSIZIONE STIPENDIO LORDO
+─────────────────────────────────────────────
+Netto:                       ${((nettoAnnuo / lordo) * 100).toFixed(2)}%
+INPS:                        ${((inps / lordo) * 100).toFixed(2)}%
+IRPEF:                       ${((irpefNetta / lordo) * 100).toFixed(2)}%
+Addizionali:                 ${((addizionali / lordo) * 100).toFixed(2)}%
+
+─────────────────────────────────────────────
+© 2025 EtherLabs
+www.etherlabs.it
+            `;
+
+            document.getElementById('exportText').textContent = text.trim();
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('exportText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Testo copiato negli appunti!');
+            });
+        }
+
+        function downloadAsText() {
+            const text = document.getElementById('exportText').textContent;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', 'stipendio_netto.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function printResults() {
+            const text = document.getElementById('exportText').textContent;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<pre>' + text + '</pre>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function switchTab(tabName, _el) {
+            // Hide all tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Mark button as active
+            if(_el) _el.classList.add('active');
+
+            if (tabName === 'confronto') {
+                compareCalculate();
+            }
+        }
+
+        function compareCalculate() {
+            const ral1 = parseFloat(document.getElementById('comp1Ral').value) || 0;
+            const region1 = document.getElementById('comp1Region').value;
+
+            const ral2 = parseFloat(document.getElementById('comp2Ral').value) || 0;
+            const region2 = document.getElementById('comp2Region').value;
+
+            const result1 = calculateScenario(ral1, region1);
+            const result2 = calculateScenario(ral2, region2);
+
+            displayComparisonResults(result1, result2);
+        }
+
+        function calculateScenario(ral, region) {
+            const mensilita = 13;
+            const inps = ral * inpsRate;
+            const imponibile = ral - inps;
+            const irpefLorda = calculateIRPEF(imponibile);
+            const detrazioni = monthlyDeductionPerDependent * mensilita;
+            const irpefNetta = Math.max(0, irpefLorda - detrazioni);
+            const regionalRate = (regionalRates[region] || 1.23) / 100;
+            const addizionali = (imponibile * regionalRate) + (imponibile * (municipalRate / 100));
+            const nettoAnnuo = ral - inps - irpefNetta - addizionali;
+            const nettoMensile = nettoAnnuo / mensilita;
+
+            return { ral, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile };
+        }
+
+        function displayComparisonResults(result1, result2) {
+            const html1 = `
+                <div class="comparison-result">
+                    <span class="comparison-label">Lordo Annuo</span>
+                    <span class="comparison-value">${formatCurrency(result1.ral)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">INPS</span>
+                    <span class="comparison-value">${formatCurrency(result1.inps)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">IRPEF Netta</span>
+                    <span class="comparison-value">${formatCurrency(result1.irpefNetta)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Addizionali</span>
+                    <span class="comparison-value">${formatCurrency(result1.addizionali)}</span>
+                </div>
+                <div class="comparison-result" style="border-top: 2px solid var(--brd); margin-top: 1rem; padding-top: 1rem;">
+                    <span class="comparison-label">Netto Annuo</span>
+                    <span class="comparison-value">${formatCurrency(result1.nettoAnnuo)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Netto Mensile</span>
+                    <span class="comparison-value">${formatCurrency(result1.nettoMensile)}</span>
+                </div>
+            `;
+
+            const html2 = `
+                <div class="comparison-result">
+                    <span class="comparison-label">Lordo Annuo</span>
+                    <span class="comparison-value">${formatCurrency(result2.ral)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">INPS</span>
+                    <span class="comparison-value">${formatCurrency(result2.inps)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">IRPEF Netta</span>
+                    <span class="comparison-value">${formatCurrency(result2.irpefNetta)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Addizionali</span>
+                    <span class="comparison-value">${formatCurrency(result2.addizionali)}</span>
+                </div>
+                <div class="comparison-result" style="border-top: 2px solid var(--brd); margin-top: 1rem; padding-top: 1rem;">
+                    <span class="comparison-label">Netto Annuo</span>
+                    <span class="comparison-value">${formatCurrency(result2.nettoAnnuo)}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Netto Mensile</span>
+                    <span class="comparison-value">${formatCurrency(result2.nettoMensile)}</span>
+                </div>
+            `;
+
+            document.getElementById('comp1Results').innerHTML = html1;
+            document.getElementById('comp2Results').innerHTML = html2;
+
+            const diff = result2.nettoAnnuo - result1.nettoAnnuo;
+            const diffPercent = ((diff / result1.nettoAnnuo) * 100);
+
+            const summaryHtml = `
+                <div class="comparison-result">
+                    <span class="comparison-label">Differenza Netto Annuo</span>
+                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diff >= 0 ? '+' : ''}${formatCurrency(Math.abs(diff))}</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Variazione Percentuale</span>
+                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diff >= 0 ? '+' : ''}${diffPercent.toFixed(2)}%</span>
+                </div>
+                <div class="comparison-result">
+                    <span class="comparison-label">Differenza Mensile</span>
+                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diff >= 0 ? '+' : ''}${formatCurrency(Math.abs(diff) / 13)}</span>
+                </div>
+            `;
+
+            document.getElementById('comparisonSummary').innerHTML = summaryHtml;
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            calculate();
+        });
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='htjgni0lsb',K='etherlabs_calcolatore-stipendio';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Generatore Preventivi">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Generatore Preventivi Pro ✦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --goldL: #34d399;
+            --goldD: #059669;
+            --t1: #e8f0ec;
+            --t2: #7a9a8e;
+            --t3: #4a6b5e;
+            --brd: #162e26;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--t1);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .editor-section, .preview-section {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-section {
+            background: var(--bg2);
+            border: 1px solid var(--brd);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .preview-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--brd);
+            grid-column: 1 / -1;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--goldL);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pro-badge {
+            background: var(--gold);
+            color: var(--bg);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--gold);
+            border: none;
+            color: var(--bg);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer; touch-action: manipulation;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: var(--goldL);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg3);
+            color: var(--goldL);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--brd);
+            color: var(--goldL);
+        }
+
+        .btn-danger {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
+        .btn-danger:hover {
+            background: #991b1b;
+        }
+
+        section {
+            margin-bottom: 25px;
+            background: var(--bg3);
+            border: 1px solid var(--brd);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        section h2 {
+            color: var(--goldL);
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--t2);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            background: var(--bg);
+            border: 1px solid var(--brd);
+            color: var(--t1);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            background: var(--bg2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .line-items {
+            background: var(--bg);
+            border: 1px solid var(--brd);
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+
+        .line-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.8fr 0.8fr 0.5fr;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: var(--bg3);
+            border-radius: 4px;
+            border: 1px solid var(--brd);
+            align-items: flex-end;
+        }
+
+        .line-item input,
+        .line-item select {
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .line-item-label {
+            font-size: 11px;
+            color: var(--t2);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .line-total {
+            padding: 8px;
+            background: var(--bg2);
+            border: 1px solid var(--brd);
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--goldL);
+            text-align: right;
+        }
+
+        .btn-icon {
+            padding: 8px 12px;
+            font-size: 12px;
+            background: var(--bg);
+            color: var(--goldL);
+            border: 1px solid var(--gold);
+            min-width: auto;
+        }
+
+        .btn-icon:hover {
+            background: var(--brd);
+        }
+
+        .btn-icon-danger {
+            background: #7f1d1d;
+            color: #fecaca;
+            border-color: #7f1d1d;
+        }
+
+        .btn-icon-danger:hover {
+            background: #991b1b;
+            border-color: #991b1b;
+        }
+
+        .add-line-btn {
+            width: 100%;
+            margin-top: 10px;
+            background: var(--bg3);
+            border: 1px dashed var(--gold);
+            color: var(--goldL);
+        }
+
+        .add-line-btn:hover {
+            background: var(--brd);
+        }
+
+        .totals-section {
+            display: grid;
+            grid-template-columns: 1fr 150px;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .total-row {
+            display: grid;
+            grid-template-columns: 1fr 150px;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid var(--brd);
+        }
+
+        .total-row:last-child {
+            border-bottom: 2px solid var(--gold);
+            background: var(--bg);
+            font-weight: bold;
+            color: var(--goldL);
+            padding: 12px;
+        }
+
+        .total-label {
+            color: var(--t2);
+        }
+
+        .total-value {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
+        }
+
+        .template-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .template-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            background: var(--bg);
+            border: 1px solid var(--brd);
+            color: var(--t2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-btn.active {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+        }
+
+        .template-btn:hover {
+            border-color: var(--gold);
+            color: var(--goldL);
+        }
+
+        .quote-preview {
+            padding: 40px;
+            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .preview-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 30px;
+        }
+
+        .company-info {
+            border-right: 2px solid #e5e7eb;
+            padding-right: 30px;
+        }
+
+        .company-logo {
+            width: 100px;
+            height: 100px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .company-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .company-details {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .quote-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .quote-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #059669;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .client-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        .client-item {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .client-item-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .items-table thead {
+            background: #f3f4f6;
+            border-top: 2px solid #059669;
+            border-bottom: 2px solid #059669;
+        }
+
+        .items-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .items-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .totals-table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+        }
+
+        .totals-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        .totals-table .label {
+            text-align: right;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .totals-table .value {
+            text-align: right;
+            color: #1f2937;
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .totals-table .total-final {
+            border-top: 2px solid #059669;
+            border-bottom: 2px solid #059669;
+            background: #f0fdf4;
+            font-weight: bold;
+            font-size: 16px;
+            color: #059669;
+        }
+
+        .notes-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 4px;
+            border-left: 4px solid #059669;
+        }
+
+        .notes-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #059669;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .notes-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        /* Template Styles */
+        .template-minimal .quote-preview {
+            padding: 30px;
+        }
+
+        .template-minimal .preview-header {
+            grid-template-columns: 1fr;
+            border: none;
+        }
+
+        .template-minimal .company-info {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .template-corporate .items-table th {
+            background: #059669;
+            color: white;
+        }
+
+        .template-corporate .section-title {
+            color: #059669;
+            border-bottom: 3px solid #059669;
+        }
+
+        .template-creative .items-table {
+            margin-bottom: 30px;
+        }
+
+        .template-creative .items-table thead {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+        }
+
+        .template-creative .items-table th {
+            color: white;
+            border: none;
+        }
+
+        .template-creative .quote-title {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .template-classic .quote-preview {
+            background: linear-gradient(to bottom, white 0%, #fafafa 100%);
+        }
+
+        .template-classic .section-title {
+            border-bottom: 2px dotted #059669;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                display: block;
+                height: auto;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .editor-section, header, .header-actions {
+                display: none;
+            }
+
+            .preview-section {
+                border: none;
+                background: white;
+                overflow: visible;
+                max-height: none;
+            }
+
+            .quote-preview {
+                margin: 0;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .line-item {
+                grid-template-columns: 2fr 1fr 1fr 0.8fr;
+            }
+
+            .line-item select {
+                display: none;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg2);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--brd);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal h3 {
+            color: var(--goldL);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+
+        .success-message {
+            background: #065f46;
+            color: #d1fae5;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--t2);
+            padding: 2px 6px;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .discount-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .discount-input-group input {
+            flex: 1;
+        }
+
+        .discount-input-group span {
+            color: var(--t2);
+            padding: 8px;
+            background: var(--bg);
+            border: 1px solid var(--brd);
+            border-radius: 4px;
+            min-width: 50px;
+            text-align: center;
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Generatore Preventivi</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <header>
+        <div>
+            <h1>Generatore Preventivi Pro <span style="color: var(--goldL);">✦</span> <span class="pro-badge">Pro</span></h1>
+        </div>
+        <div class="header-actions">
+            <button onclick="app.loadQuoteModal()">📂 Carica</button>
+            <button onclick="app.duplicateQuote()">📋 Duplica</button>
+            <button class="btn-secondary" onclick="app.resetForm()">🔄 Nuovo</button>
+            <button onclick="window.print()">🖨️ Stampa PDF</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="editor-section">
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- YOUR INFO -->
+            <section>
+                <h2>📊 I TUOI DATI</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome Azienda</label>
+                        <input type="text" id="companyName" placeholder="La tua Azienda">
+                    </div>
+                    <div class="form-group">
+                        <label>Tuo Nome</label>
+                        <input type="text" id="ownerName" placeholder="Il tuo nome">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Indirizzo</label>
+                        <input type="text" id="companyAddress" placeholder="Via/Piazza, numero, CAP, Città">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>P.IVA / Codice Fiscale</label>
+                        <input type="text" id="companyVat" placeholder="P.IVA">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="companyEmail" placeholder="email@example.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input type="text" id="companyPhone" placeholder="+39">
+                    </div>
+                    <div class="form-group">
+                        <label>URL Logo</label>
+                        <input type="text" id="logoUrl" placeholder="https://...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLIENT INFO -->
+            <section>
+                <h2>👥 DATI CLIENTE</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome Cliente</label>
+                        <input type="text" id="clientName" placeholder="Nome del cliente">
+                    </div>
+                    <div class="form-group">
+                        <label>Azienda Cliente</label>
+                        <input type="text" id="clientCompany" placeholder="Azienda">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Indirizzo Cliente</label>
+                        <input type="text" id="clientAddress" placeholder="Indirizzo completo">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Cliente</label>
+                        <input type="email" id="clientEmail" placeholder="email@client.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Codice Fiscale / P.IVA Cliente</label>
+                        <input type="text" id="clientVat" placeholder="CF/P.IVA">
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUOTE DETAILS -->
+            <section>
+                <h2>📄 DETTAGLI PREVENTIVO</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Numero Preventivo</label>
+                        <input type="text" id="quoteNumber" readonly placeholder="AUTO">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Preventivo</label>
+                        <input type="date" id="quoteDate">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data Validità</label>
+                        <input type="date" id="validityDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Termini di Pagamento</label>
+                        <select id="paymentTerms">
+                            <option value="Immediato">Immediato</option>
+                            <option value="30 giorni">30 giorni</option>
+                            <option value="60 giorni">60 giorni</option>
+                            <option value="30/60 giorni">30/60 giorni</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Condizioni Pagamento Personalizzate</label>
+                        <input type="text" id="paymentCustom" placeholder="Descrivi i termini personalizzati (se selezionato Custom)">
+                    </div>
+                </div>
+            </section>
+
+            <!-- LINE ITEMS -->
+            <section>
+                <h2>📝 VOCI DI PREVENTIVO</h2>
+                <div class="line-items" id="lineItems"></div>
+                <button class="add-line-btn" onclick="app.addLineItem()">+ Aggiungi Voce</button>
+            </section>
+
+            <!-- TOTALS & TAXES -->
+            <section>
+                <h2>💰 TOTALI E TASSE</h2>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Sconto Globale</label>
+                    <div class="discount-input-group">
+                        <input type="number" id="discountGlobal" placeholder="0" min="0" step="0.01" oninput="app.calculateTotals()">
+                        <select id="discountType" onchange="app.calculateTotals()">
+                            <option value="percentage">%</option>
+                            <option value="fixed">€</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">Subtotale:</span>
+                    <span class="total-value" id="subtotal">0,00 €</span>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">Dopo Sconto:</span>
+                    <span class="total-value" id="afterDiscount">0,00 €</span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Aliquota IVA</label>
+                    <select id="ivaRate" onchange="app.calculateTotals()">
+                        <option value="22">22% (Standard)</option>
+                        <option value="10">10% (Ridotta)</option>
+                        <option value="4">4% (Super-ridotta)</option>
+                        <option value="0">Esente IVA</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="inpsCharge" onchange="app.calculateTotals()">
+                    <label for="inpsCharge">Rivalsa INPS 4%</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="withholdingTax" onchange="app.calculateTotals()">
+                    <label for="withholdingTax">Ritenuta d'acconto 20%</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="bollo" onchange="app.calculateTotals()">
+                    <label for="bollo">Marca da bollo €2,00 (se IVA esente e importo > €77,47)</label>
+                </div>
+
+                <div class="totals-section" style="margin-top: 20px;">
+                    <span class="total-label">Imponibile:</span>
+                    <span class="total-value" id="taxable">0,00 €</span>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">IVA:</span>
+                    <span class="total-value" id="ivaAmount">0,00 €</span>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">Rivalsa INPS:</span>
+                    <span class="total-value" id="inpsAmount">0,00 €</span>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">Ritenuta d'acconto:</span>
+                    <span class="total-value" id="withholdingAmount">0,00 €</span>
+                </div>
+
+                <div class="totals-section">
+                    <span class="total-label">Marca da bollo:</span>
+                    <span class="total-value" id="bolloAmount">0,00 €</span>
+                </div>
+
+                <div class="totals-section" style="margin-top: 15px; border-top: 2px solid var(--gold); padding-top: 15px;">
+                    <span class="total-label" style="font-size: 16px;">TOTALE FINALE:</span>
+                    <span class="total-value" id="finalTotal" style="font-size: 18px;">0,00 €</span>
+                </div>
+            </section>
+
+            <!-- NOTES & BANK DETAILS -->
+            <section>
+                <h2>📋 NOTE E CONDIZIONI</h2>
+                <div class="form-group">
+                    <label>Note e Termini</label>
+                    <textarea aria-label="Note e Termini" id="notes" placeholder="Condizioni di pagamento, modalità di consegna, termini e condizioni..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>IBAN (Coordinate Bancarie)</label>
+                    <input type="text" id="iban" placeholder="IT00X0000000000000000000000">
+                </div>
+            </section>
+
+            <!-- TEMPLATE SELECTION -->
+            <section>
+                <h2>🎨 TEMPLATE</h2>
+                <div class="template-selector">
+                    <button class="template-btn active" data-template="classic" onclick="app.switchTemplate('classic')">Classic</button>
+                    <button class="template-btn" data-template="minimal" onclick="app.switchTemplate('minimal')">Minimal</button>
+                    <button class="template-btn" data-template="corporate" onclick="app.switchTemplate('corporate')">Corporate</button>
+                    <button class="template-btn" data-template="creative" onclick="app.switchTemplate('creative')">Creative</button>
+                </div>
+            </section>
+
+            <!-- STORAGE -->
+            <section>
+                <h2>💾 GESTIONE PREVENTIVI</h2>
+                <button onclick="app.saveQuote()" style="width: 100%; margin-bottom: 10px;">💾 Salva Preventivo</button>
+                <button class="btn-secondary" onclick="app.exportData()" style="width: 100%; margin-bottom: 10px;">📥 Esporta JSON</button>
+                <button class="btn-secondary" onclick="document.getElementById('importFile').click()" style="width: 100%;">📤 Importa JSON</button>
+                <input type="file" id="importFile" accept=".json" onchange="app.importData(event)" style="display: none;">
+            </section>
+        </div>
+
+        <div class="preview-section">
+            <div id="quotePreview" class="template-classic">
+                <!-- Preview will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LOAD QUOTE MODAL -->
+    <div class="modal" id="loadModal">
+        <div class="modal-content">
+            <h3>Carica Preventivo</h3>
+            <div id="savedQuotesList"></div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="app.closeModal()">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAVE QUOTE MODAL -->
+    <div class="modal" id="saveModal">
+        <div class="modal-content">
+            <h3>Salva Preventivo</h3>
+            <div class="form-group">
+                <label>Nome Preventivo (per il salvataggio)</label>
+                <input type="text" id="quoteName" placeholder="Es: Preventivo Rossi - Febbraio 2025">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="app.closeModal()">Annulla</button>
+                <button onclick="app.confirmSave()">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            data: {
+                lineItems: [],
+                currentTemplate: 'classic',
+                quoteNumberCounter: parseInt(localStorage.getItem('quoteCounter')) || 1000
+            },
+
+            init() {
+                this.setDefaultDates();
+                this.loadFromLocalStorage();
+                this.addLineItem();
+                this.addLineItem();
+                this.calculateTotals();
+                this.renderPreview();
+
+                // Event listeners for real-time preview
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    el.addEventListener('input', () => this.renderPreview());
+                    el.addEventListener('change', () => {
+                        this.renderPreview();
+                        this.calculateTotals();
+                    });
+                });
+            },
+
+            setDefaultDates() {
+                const today = new Date();
+                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+                document.getElementById('quoteDate').valueAsDate = today;
+                document.getElementById('validityDate').valueAsDate = validity;
+                document.getElementById('quoteNumber').value = `PV${today.getFullYear()}-${this.data.quoteNumberCounter}`;
+            },
+
+            addLineItem() {
+                const id = Date.now();
+                const item = {
+                    id,
+                    description: '',
+                    quantity: 1,
+                    unit: 'ore',
+                    unitPrice: 0,
+                    discount: 0
+                };
+                this.data.lineItems.push(item);
+                this.renderLineItems();
+                this.calculateTotals();
+            },
+
+            removeLineItem(id) {
+                this.data.lineItems = this.data.lineItems.filter(item => item.id !== id);
+                this.renderLineItems();
+                this.calculateTotals();
+            },
+
+            updateLineItem(id, field, value) {
+                const item = this.data.lineItems.find(i => i.id === id);
+                if (item) {
+                    if (field === 'quantity' || field === 'unitPrice' || field === 'discount') {
+                        item[field] = parseFloat(value) || 0;
+                    } else {
+                        item[field] = value;
+                    }
+                    this.renderLineItems();
+                    this.calculateTotals();
+                }
+            },
+
+            renderLineItems() {
+                const container = document.getElementById('lineItems');
+                container.innerHTML = this.data.lineItems.map((item, index) => `
+                    <div class="line-item" data-id="${item.id}">
+                        <div>
+                            <span class="line-item-label">Descrizione</span>
+                            <textarea style="width: 100%; padding: 8px; border: 1px solid var(--brd); border-radius: 4px; background: var(--bg); color: var(--t1); font-family: 'Segoe UI', sans-serif;"
+                                placeholder="Descrizione della voce"
+                                oninput="app.updateLineItem(${item.id}, 'description', this.value); app.renderPreview()">${item.description}</textarea>
+                        </div>
+                        <div>
+                            <span class="line-item-label">Qtà</span>
+                            <input type="number" value="${item.quantity}" min="0" step="0.01"
+                                oninput="app.updateLineItem(${item.id}, 'quantity', this.value)">
+                        </div>
+                        <div>
+                            <span class="line-item-label">Unità</span>
+                            <select onchange="app.updateLineItem(${item.id}, 'unit', this.value)">
+                                <option value="ore" ${item.unit === 'ore' ? 'selected' : ''}>ore</option>
+                                <option value="giorni" ${item.unit === 'giorni' ? 'selected' : ''}>giorni</option>
+                                <option value="pezzi" ${item.unit === 'pezzi' ? 'selected' : ''}>pezzi</option>
+                                <option value="servizio" ${item.unit === 'servizio' ? 'selected' : ''}>servizio</option>
+                                <option value="mese" ${item.unit === 'mese' ? 'selected' : ''}>mese</option>
+                                <option value="progetto" ${item.unit === 'progetto' ? 'selected' : ''}>progetto</option>
+                            </select>
+                        </div>
+                        <div>
+                            <span class="line-item-label">Prezzo Unit.</span>
+                            <input type="number" value="${item.unitPrice}" min="0" step="0.01"
+                                oninput="app.updateLineItem(${item.id}, 'unitPrice', this.value)">
+                        </div>
+                        <div>
+                            <span class="line-item-label">Sconto %</span>
+                            <input type="number" value="${item.discount}" min="0" max="100" step="0.01"
+                                oninput="app.updateLineItem(${item.id}, 'discount', this.value)">
+                        </div>
+                        <div class="line-total">
+                            ${this.calculateLineTotal(item).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €
+                        </div>
+                        <button class="btn-icon btn-icon-danger" onclick="app.removeLineItem(${item.id})">✕</button>
+                    </div>
+                `).join('');
+            },
+
+            calculateLineTotal(item) {
+                const gross = item.quantity * item.unitPrice;
+                const discountAmount = gross * (item.discount / 100);
+                return gross - discountAmount;
+            },
+
+            calculateTotals() {
+                let subtotal = this.data.lineItems.reduce((sum, item) => sum + this.calculateLineTotal(item), 0);
+
+                const discountGlobal = parseFloat(document.getElementById('discountGlobal').value) || 0;
+                const discountType = document.getElementById('discountType').value;
+                let discountAmount = discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal;
+
+                const afterDiscount = subtotal - discountAmount;
+                const ivaRate = parseFloat(document.getElementById('ivaRate').value) / 100;
+                const ivaAmount = afterDiscount * ivaRate;
+
+                let total = afterDiscount + ivaAmount;
+
+                const inpsCharge = document.getElementById('inpsCharge').checked;
+                const inpsAmount = inpsCharge ? afterDiscount * 0.04 : 0;
+                total += inpsAmount;
+
+                const withholdingTax = document.getElementById('withholdingTax').checked;
+                const withholdingAmount = withholdingTax ? afterDiscount * 0.20 : 0;
+                total -= withholdingAmount;
+
+                const bollo = document.getElementById('bollo').checked;
+                const ivaExempt = parseFloat(document.getElementById('ivaRate').value) === 0;
+                const bolloAmount = (bollo && ivaExempt && afterDiscount > 77.47) ? 2 : 0;
+                total += bolloAmount;
+
+                document.getElementById('subtotal').textContent = subtotal.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('afterDiscount').textContent = afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('taxable').textContent = afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('ivaAmount').textContent = ivaAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('inpsAmount').textContent = inpsAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('withholdingAmount').textContent = withholdingAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('bolloAmount').textContent = bolloAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('finalTotal').textContent = total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+            },
+
+            renderPreview() {
+                const companyName = document.getElementById('companyName').value || 'La Tua Azienda';
+                const ownerName = document.getElementById('ownerName').value;
+                const companyAddress = document.getElementById('companyAddress').value;
+                const companyVat = document.getElementById('companyVat').value;
+                const companyEmail = document.getElementById('companyEmail').value;
+                const companyPhone = document.getElementById('companyPhone').value;
+                const logoUrl = document.getElementById('logoUrl').value;
+
+                const clientName = document.getElementById('clientName').value || 'Nome Cliente';
+                const clientCompany = document.getElementById('clientCompany').value;
+                const clientAddress = document.getElementById('clientAddress').value;
+                const clientEmail = document.getElementById('clientEmail').value;
+                const clientVat = document.getElementById('clientVat').value;
+
+                const quoteNumber = document.getElementById('quoteNumber').value;
+                const quoteDate = document.getElementById('quoteDate').value;
+                const validityDate = document.getElementById('validityDate').value;
+                const paymentTerms = document.getElementById('paymentTerms').value;
+                const paymentCustom = document.getElementById('paymentCustom').value;
+
+                const notes = document.getElementById('notes').value;
+                const iban = document.getElementById('iban').value;
+
+                const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const afterDiscount = parseFloat(document.getElementById('afterDiscount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const ivaAmount = parseFloat(document.getElementById('ivaAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const inpsAmount = parseFloat(document.getElementById('inpsAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const withholdingAmount = parseFloat(document.getElementById('withholdingAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const bolloAmount = parseFloat(document.getElementById('bolloAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const finalTotal = parseFloat(document.getElementById('finalTotal').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+
+                const itemsHtml = this.data.lineItems.map(item => `
+                    <tr>
+                        <td class="text-left">${item.description}</td>
+                        <td class="text-right">${item.quantity}</td>
+                        <td class="text-left">${item.unit}</td>
+                        <td class="text-right">${item.unitPrice.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                        <td class="text-right">${item.discount}%</td>
+                        <td class="text-right" style="font-weight: bold; color: #059669;">${this.calculateLineTotal(item).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                    </tr>
+                `).join('');
+
+                const paymentText = paymentTerms === 'Custom' ? paymentCustom : paymentTerms;
+
+                const logoHtml = logoUrl ? `<img src="${logoUrl}" alt="Logo">` : '<span>Logo</span>';
+
+                const html = `
+                    <div class="quote-preview">
+                        <div class="preview-header">
+                            <div class="company-info">
+                                <div class="company-logo">${logoHtml}</div>
+                                <div class="company-name">${companyName}</div>
+                                <div class="company-details">
+                                    ${ownerName ? `<div>${ownerName}</div>` : ''}
+                                    ${companyAddress ? `<div>${companyAddress}</div>` : ''}
+                                    ${companyVat ? `<div>P.IVA: ${companyVat}</div>` : ''}
+                                    ${companyEmail ? `<div><a href="mailto:${companyEmail}" style="color: #059669; text-decoration: none;">${companyEmail}</a></div>` : ''}
+                                    ${companyPhone ? `<div>${companyPhone}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quote-title">PREVENTIVO</div>
+
+                        <div class="quote-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">N. Preventivo</span>
+                                <span class="meta-value">${quoteNumber}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Data Preventivo</span>
+                                <span class="meta-value">${new Date(quoteDate).toLocaleDateString('it-IT')}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Data Validità</span>
+                                <span class="meta-value">${new Date(validityDate).toLocaleDateString('it-IT')}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Termini Pagamento</span>
+                                <span class="meta-value">${paymentText}</span>
+                            </div>
+                        </div>
+
+                        <div class="section-title">DATI CLIENTE</div>
+                        <div class="client-info">
+                            <div class="client-item">
+                                <div class="client-item-label">Nome</div>
+                                <div>${clientName}</div>
+                            </div>
+                            <div class="client-item">
+                                <div class="client-item-label">Azienda</div>
+                                <div>${clientCompany}</div>
+                            </div>
+                            <div class="client-item">
+                                <div class="client-item-label">Indirizzo</div>
+                                <div>${clientAddress}</div>
+                            </div>
+                            <div class="client-item">
+                                <div class="client-item-label">Email</div>
+                                <div>${clientEmail}</div>
+                            </div>
+                            <div class="client-item">
+                                <div class="client-item-label">Codice Fiscale / P.IVA</div>
+                                <div>${clientVat}</div>
+                            </div>
+                        </div>
+
+                        <div class="section-title">DETTAGLI PREVENTIVO</div>
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Descrizione</th>
+                                    <th>Quantità</th>
+                                    <th>Unità</th>
+                                    <th>Prezzo Unitario</th>
+                                    <th>Sconto</th>
+                                    <th>Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itemsHtml}
+                            </tbody>
+                        </table>
+
+                        <div class="section-title">RIEPILOGO ECONOMICO</div>
+                        <table class="totals-table">
+                            <tr>
+                                <td class="label">Subtotale:</td>
+                                <td class="value">${subtotal.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Dopo sconto:</td>
+                                <td class="value">${afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>
+                            ${ivaAmount > 0 ? `<tr>
+                                <td class="label">IVA:</td>
+                                <td class="value">${ivaAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>` : '<tr><td class="label">IVA:</td><td class="value">Esente</td></tr>'}
+                            ${inpsAmount > 0 ? `<tr>
+                                <td class="label">Rivalsa INPS (4%):</td>
+                                <td class="value">${inpsAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>` : ''}
+                            ${withholdingAmount > 0 ? `<tr>
+                                <td class="label">Ritenuta d'acconto (20%):</td>
+                                <td class="value">-${withholdingAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>` : ''}
+                            ${bolloAmount > 0 ? `<tr>
+                                <td class="label">Marca da bollo:</td>
+                                <td class="value">${bolloAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>` : ''}
+                            <tr class="total-final">
+                                <td class="label">TOTALE FINALE:</td>
+                                <td class="value">${finalTotal.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                            </tr>
+                        </table>
+
+                        ${notes || iban ? `<div class="notes-section">
+                            <h3>Note e Condizioni</h3>
+                            <div class="notes-content">
+                                ${notes ? notes : ''}
+                                ${iban ? `\n\nCoordinate Bancarie:\n${iban}` : ''}
+                            </div>
+                        </div>` : ''}
+
+                        <div class="footer">
+                            © 2025 EtherLabs - Generatore Preventivi Pro ✦
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('quotePreview').className = `template-${this.data.currentTemplate}`;
+                document.getElementById('quotePreview').innerHTML = html;
+            },
+
+            switchTemplate(template) {
+                this.data.currentTemplate = template;
+                document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`[data-template="${template}"]`).classList.add('active');
+                this.renderPreview();
+            },
+
+            saveQuoteToStorage(name) {
+                const quotes = JSON.parse(localStorage.getItem('quotes')) || {};
+                const quoteData = {
+                    name,
+                    date: new Date().toISOString(),
+                    data: {
+                        companyName: document.getElementById('companyName').value,
+                        ownerName: document.getElementById('ownerName').value,
+                        companyAddress: document.getElementById('companyAddress').value,
+                        companyVat: document.getElementById('companyVat').value,
+                        companyEmail: document.getElementById('companyEmail').value,
+                        companyPhone: document.getElementById('companyPhone').value,
+                        logoUrl: document.getElementById('logoUrl').value,
+                        clientName: document.getElementById('clientName').value,
+                        clientCompany: document.getElementById('clientCompany').value,
+                        clientAddress: document.getElementById('clientAddress').value,
+                        clientEmail: document.getElementById('clientEmail').value,
+                        clientVat: document.getElementById('clientVat').value,
+                        quoteNumber: document.getElementById('quoteNumber').value,
+                        quoteDate: document.getElementById('quoteDate').value,
+                        validityDate: document.getElementById('validityDate').value,
+                        paymentTerms: document.getElementById('paymentTerms').value,
+                        paymentCustom: document.getElementById('paymentCustom').value,
+                        notes: document.getElementById('notes').value,
+                        iban: document.getElementById('iban').value,
+                        discountGlobal: document.getElementById('discountGlobal').value,
+                        discountType: document.getElementById('discountType').value,
+                        ivaRate: document.getElementById('ivaRate').value,
+                        inpsCharge: document.getElementById('inpsCharge').checked,
+                        withholdingTax: document.getElementById('withholdingTax').checked,
+                        bollo: document.getElementById('bollo').checked,
+                        lineItems: JSON.parse(JSON.stringify(this.data.lineItems))
+                    }
+                };
+                quotes[name] = quoteData;
+                localStorage.setItem('quotes', JSON.stringify(quotes));
+            },
+
+            saveQuote() {
+                document.getElementById('quoteName').value = '';
+                document.getElementById('saveModal').classList.add('active');
+            },
+
+            confirmSave() {
+                const name = document.getElementById('quoteName').value.trim();
+                if (!name) {
+                    alert('Inserisci un nome per il preventivo');
+                    return;
+                }
+                this.saveQuoteToStorage(name);
+                this.closeModal();
+                this.showSuccess('Preventivo salvato con successo!');
+            },
+
+            loadQuoteModal() {
+                const quotes = JSON.parse(localStorage.getItem('quotes')) || {};
+                const list = document.getElementById('savedQuotesList');
+
+                if (Object.keys(quotes).length === 0) {
+                    list.innerHTML = '<p style="color: var(--t2);">Nessun preventivo salvato</p>';
+                } else {
+                    list.innerHTML = Object.entries(quotes).map(([key, quote]) => `
+                        <div style="padding: 10px; background: var(--bg); border: 1px solid var(--brd); border-radius: 4px; margin-bottom: 10px;">
+                            <div style="color: var(--goldL); font-weight: bold; margin-bottom: 5px;">${quote.name}</div>
+                            <div style="color: var(--t2); font-size: 12px; margin-bottom: 10px;">
+                                ${new Date(quote.date).toLocaleDateString('it-IT')}
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button style="flex: 1; padding: 8px;" onclick="app.loadQuote('${key}')">Carica</button>
+                                <button class="btn-danger" style="flex: 1; padding: 8px;" onclick="app.deleteQuote('${key}')">Elimina</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                document.getElementById('loadModal').classList.add('active');
+            },
+
+            loadQuote(name) {
+                const quotes = JSON.parse(localStorage.getItem('quotes')) || {};
+                const quote = quotes[name];
+                if (!quote) return;
+
+                const data = quote.data;
+                document.getElementById('companyName').value = data.companyName;
+                document.getElementById('ownerName').value = data.ownerName;
+                document.getElementById('companyAddress').value = data.companyAddress;
+                document.getElementById('companyVat').value = data.companyVat;
+                document.getElementById('companyEmail').value = data.companyEmail;
+                document.getElementById('companyPhone').value = data.companyPhone;
+                document.getElementById('logoUrl').value = data.logoUrl;
+                document.getElementById('clientName').value = data.clientName;
+                document.getElementById('clientCompany').value = data.clientCompany;
+                document.getElementById('clientAddress').value = data.clientAddress;
+                document.getElementById('clientEmail').value = data.clientEmail;
+                document.getElementById('clientVat').value = data.clientVat;
+                document.getElementById('quoteNumber').value = data.quoteNumber;
+                document.getElementById('quoteDate').value = data.quoteDate;
+                document.getElementById('validityDate').value = data.validityDate;
+                document.getElementById('paymentTerms').value = data.paymentTerms;
+                document.getElementById('paymentCustom').value = data.paymentCustom;
+                document.getElementById('notes').value = data.notes;
+                document.getElementById('iban').value = data.iban;
+                document.getElementById('discountGlobal').value = data.discountGlobal;
+                document.getElementById('discountType').value = data.discountType;
+                document.getElementById('ivaRate').value = data.ivaRate;
+                document.getElementById('inpsCharge').checked = data.inpsCharge;
+                document.getElementById('withholdingTax').checked = data.withholdingTax;
+                document.getElementById('bollo').checked = data.bollo;
+
+                this.data.lineItems = JSON.parse(JSON.stringify(data.lineItems));
+                this.renderLineItems();
+                this.calculateTotals();
+                this.renderPreview();
+                this.closeModal();
+                this.showSuccess('Preventivo caricato!');
+            },
+
+            deleteQuote(name) {
+                if (confirm('Sei sicuro di voler eliminare questo preventivo?')) {
+                    const quotes = JSON.parse(localStorage.getItem('quotes')) || {};
+                    delete quotes[name];
+                    localStorage.setItem('quotes', JSON.stringify(quotes));
+                    this.loadQuoteModal();
+                }
+            },
+
+            duplicateQuote() {
+                const quoteNumber = document.getElementById('quoteNumber').value;
+                this.data.quoteNumberCounter++;
+                document.getElementById('quoteNumber').value = `PV${new Date().getFullYear()}-${this.data.quoteNumberCounter}`;
+                localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
+
+                const today = new Date();
+                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+                document.getElementById('quoteDate').valueAsDate = today;
+                document.getElementById('validityDate').valueAsDate = validity;
+
+                this.calculateTotals();
+                this.renderPreview();
+                this.showSuccess('Preventivo duplicato con nuovo numero!');
+            },
+
+            resetForm() {
+                if (confirm('Sei sicuro di voler resettare il modulo? I dati non salvati verranno persi.')) {
+                    localStorage.removeItem('formData');
+                    location.reload();
+                }
+            },
+
+            closeModal() {
+                document.getElementById('loadModal').classList.remove('active');
+                document.getElementById('saveModal').classList.remove('active');
+            },
+
+            showSuccess(message) {
+                const msg = document.getElementById('successMessage');
+                msg.textContent = message;
+                msg.classList.add('show');
+                setTimeout(() => msg.classList.remove('show'), 3000);
+            },
+
+            exportData() {
+                const data = {
+                    companyName: document.getElementById('companyName').value,
+                    ownerName: document.getElementById('ownerName').value,
+                    companyAddress: document.getElementById('companyAddress').value,
+                    companyVat: document.getElementById('companyVat').value,
+                    companyEmail: document.getElementById('companyEmail').value,
+                    companyPhone: document.getElementById('companyPhone').value,
+                    logoUrl: document.getElementById('logoUrl').value,
+                    clientName: document.getElementById('clientName').value,
+                    clientCompany: document.getElementById('clientCompany').value,
+                    clientAddress: document.getElementById('clientAddress').value,
+                    clientEmail: document.getElementById('clientEmail').value,
+                    clientVat: document.getElementById('clientVat').value,
+                    quoteNumber: document.getElementById('quoteNumber').value,
+                    quoteDate: document.getElementById('quoteDate').value,
+                    validityDate: document.getElementById('validityDate').value,
+                    paymentTerms: document.getElementById('paymentTerms').value,
+                    paymentCustom: document.getElementById('paymentCustom').value,
+                    notes: document.getElementById('notes').value,
+                    iban: document.getElementById('iban').value,
+                    discountGlobal: document.getElementById('discountGlobal').value,
+                    discountType: document.getElementById('discountType').value,
+                    ivaRate: document.getElementById('ivaRate').value,
+                    inpsCharge: document.getElementById('inpsCharge').checked,
+                    withholdingTax: document.getElementById('withholdingTax').checked,
+                    bollo: document.getElementById('bollo').checked,
+                    lineItems: this.data.lineItems
+                };
+
+                const json = JSON.stringify(data, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `preventivo-${document.getElementById('quoteNumber').value}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            },
+
+            importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        document.getElementById('companyName').value = data.companyName || '';
+                        document.getElementById('ownerName').value = data.ownerName || '';
+                        document.getElementById('companyAddress').value = data.companyAddress || '';
+                        document.getElementById('companyVat').value = data.companyVat || '';
+                        document.getElementById('companyEmail').value = data.companyEmail || '';
+                        document.getElementById('companyPhone').value = data.companyPhone || '';
+                        document.getElementById('logoUrl').value = data.logoUrl || '';
+                        document.getElementById('clientName').value = data.clientName || '';
+                        document.getElementById('clientCompany').value = data.clientCompany || '';
+                        document.getElementById('clientAddress').value = data.clientAddress || '';
+                        document.getElementById('clientEmail').value = data.clientEmail || '';
+                        document.getElementById('clientVat').value = data.clientVat || '';
+                        document.getElementById('quoteNumber').value = data.quoteNumber || '';
+                        document.getElementById('quoteDate').value = data.quoteDate || '';
+                        document.getElementById('validityDate').value = data.validityDate || '';
+                        document.getElementById('paymentTerms').value = data.paymentTerms || '';
+                        document.getElementById('paymentCustom').value = data.paymentCustom || '';
+                        document.getElementById('notes').value = data.notes || '';
+                        document.getElementById('iban').value = data.iban || '';
+                        document.getElementById('discountGlobal').value = data.discountGlobal || '';
+                        document.getElementById('discountType').value = data.discountType || '';
+                        document.getElementById('ivaRate').value = data.ivaRate || '22';
+                        document.getElementById('inpsCharge').checked = data.inpsCharge || false;
+                        document.getElementById('withholdingTax').checked = data.withholdingTax || false;
+                        document.getElementById('bollo').checked = data.bollo || false;
+
+                        this.data.lineItems = data.lineItems || [];
+                        this.renderLineItems();
+                        this.calculateTotals();
+                        this.renderPreview();
+                        this.showSuccess('Preventivo importato con successo!');
+                    } catch (error) {
+                        alert('Errore nell\'importazione del file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            },
+
+            loadFromLocalStorage() {
+                const saved = localStorage.getItem('formData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    document.getElementById('companyName').value = data.companyName || '';
+                    document.getElementById('ownerName').value = data.ownerName || '';
+                    document.getElementById('companyAddress').value = data.companyAddress || '';
+                    document.getElementById('companyVat').value = data.companyVat || '';
+                    document.getElementById('companyEmail').value = data.companyEmail || '';
+                    document.getElementById('companyPhone').value = data.companyPhone || '';
+                    document.getElementById('logoUrl').value = data.logoUrl || '';
+                    document.getElementById('clientName').value = data.clientName || '';
+                    document.getElementById('clientCompany').value = data.clientCompany || '';
+                    document.getElementById('clientAddress').value = data.clientAddress || '';
+                    document.getElementById('clientEmail').value = data.clientEmail || '';
+                    document.getElementById('clientVat').value = data.clientVat || '';
+                    document.getElementById('paymentTerms').value = data.paymentTerms || 'Immediato';
+                    document.getElementById('paymentCustom').value = data.paymentCustom || '';
+                    document.getElementById('notes').value = data.notes || '';
+                    document.getElementById('iban').value = data.iban || '';
+                    document.getElementById('discountGlobal').value = data.discountGlobal || '';
+                    document.getElementById('discountType').value = data.discountType || 'percentage';
+                    document.getElementById('ivaRate').value = data.ivaRate || '22';
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => app.init());
+
+        // Auto-save form data periodically
+        setInterval(() => {
+            const formData = {
+                companyName: document.getElementById('companyName').value,
+                ownerName: document.getElementById('ownerName').value,
+                companyAddress: document.getElementById('companyAddress').value,
+                companyVat: document.getElementById('companyVat').value,
+                companyEmail: document.getElementById('companyEmail').value,
+                companyPhone: document.getElementById('companyPhone').value,
+                logoUrl: document.getElementById('logoUrl').value,
+                clientName: document.getElementById('clientName').value,
+                clientCompany: document.getElementById('clientCompany').value,
+                clientAddress: document.getElementById('clientAddress').value,
+                clientEmail: document.getElementById('clientEmail').value,
+                clientVat: document.getElementById('clientVat').value,
+                paymentTerms: document.getElementById('paymentTerms').value,
+                paymentCustom: document.getElementById('paymentCustom').value,
+                notes: document.getElementById('notes').value,
+                iban: document.getElementById('iban').value,
+                discountGlobal: document.getElementById('discountGlobal').value,
+                discountType: document.getElementById('discountType').value,
+                ivaRate: document.getElementById('ivaRate').value
+            };
+            localStorage.setItem('formData', JSON.stringify(formData));
+        }, 5000);
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'loadModal') app.closeModal();
+            if (e.target.id === 'saveModal') app.closeModal();
+        });
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='289nunfk98s',K='etherlabs_generatore-preventivi';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

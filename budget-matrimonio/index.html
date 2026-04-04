@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Budget Matrimonio">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Pianificatore Budget Matrimonio Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --bg4: #142420;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-lighter: #6ee7b7;
+            --gold-dark: #059669;
+            --gold-glow: rgba(16,185,129,0.15);
+            --gold-glow2: rgba(16,185,129,0.08);
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+            --border2: #1f3d33;
+            --success: #34d399;
+            --error: #f87171;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text1);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border2);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        .brand-pill {
+            display: inline-block;
+            background: var(--gold-glow);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .card-label {
+            color: var(--text2);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .setup-section {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+        label {
+            color: var(--text2);
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="number"],
+        input[type="date"],
+        input[type="text"] {
+            background: var(--bg4);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: var(--text1);
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        input[type="number"].large {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--gold-light);
+            padding: 18px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            margin-bottom: 24px;
+            color: var(--gold-light);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, var(--bg3) 0%, var(--bg4) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--gold-light);
+        }
+
+        .category-input {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .category-input input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 0.9em;
+        }
+
+        .percentage-input {
+            width: 70px;
+        }
+
+        .category-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+            font-size: 0.9em;
+        }
+
+        .stat {
+            background: var(--bg2);
+            padding: 14px;
+            border-radius: 8px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .stat-label {
+            color: var(--text2);
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            color: var(--text1);
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-ok {
+            background: rgba(52, 211, 153, 0.2);
+            color: var(--success);
+        }
+
+        .status-warning {
+            background: rgba(248, 113, 113, 0.2);
+            color: var(--error);
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .expense-tracker {
+            background: linear-gradient(135deg, var(--bg3) 0%, var(--bg4) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 16px;
+        }
+
+        .expense-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .expense-form input {
+            padding: 12px 14px;
+            font-size: 0.85em;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 20px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--border2);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            box-shadow: 0 4px 12px var(--gold-glow);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-small {
+            padding: 8px 14px;
+            font-size: 0.75em;
+        }
+
+        .expense-item {
+            background: var(--bg2);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--gold);
+            gap: 12px;
+        }
+
+        .expense-details {
+            flex: 1;
+        }
+
+        .expense-vendor {
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        .expense-meta {
+            font-size: 0.8em;
+            color: var(--text2);
+            margin-top: 6px;
+        }
+
+        .expense-amount {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.1em;
+            white-space: nowrap;
+        }
+
+        .vendor-checklist {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .vendor-item {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .vendor-item:hover {
+            background: var(--bg4);
+            border-color: var(--gold-dark);
+        }
+
+        .vendor-name {
+            font-weight: 600;
+            color: var(--text1);
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text1);
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 130px;
+        }
+
+        .status-select:hover {
+            border-color: var(--gold-dark);
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px var(--gold-glow);
+        }
+
+        .per-guest {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--bg);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .per-guest-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .per-guest-value {
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .export-section {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .collapsible {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible:hover {
+            background: var(--bg4);
+            border-color: var(--gold);
+        }
+
+        .collapsible.active {
+            border-color: var(--gold);
+            background: var(--bg4);
+        }
+
+        .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            color: var(--gold-light);
+        }
+
+        .collapsible.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vendor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            input[type="number"],
+            input[type="date"],
+            input[type="text"] {
+                padding: 12px 14px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text2);
+            border-top: 1px solid var(--border2);
+            margin-top: 40px;
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Budget Matrimonio</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>💍 Pianificatore Budget Matrimonio</h1>
+                    <div class="brand-pill">Premium Tool</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-label">Budget Totale</div>
+                <div class="card-value" id="totalBudgetDisplay">€0</div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-label">Spesa Totale</div>
+                <div class="card-value" id="totalSpentDisplay">€0</div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-label">Rimasto</div>
+                <div class="card-value" id="remainingDisplay">€0</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-label">Percentuale Utilizzata</div>
+                <div class="card-value" id="percentUsedDisplay">0%</div>
+            </div>
+        </div>
+
+        <div class="setup-section">
+            <h2>Configurazione Matrimonio</h2>
+            <div class="setup-grid">
+                <div class="form-group">
+                    <label for="totalBudget">Budget Totale (€)</label>
+                    <input type="number" id="totalBudget" placeholder="100000" class="large" min="0" step="100">
+                </div>
+                <div class="form-group">
+                    <label for="guestCount">Numero Ospiti</label>
+                    <input type="number" id="guestCount" placeholder="150" min="0" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="weddingDate">Data Matrimonio</label>
+                    <input type="date" id="weddingDate">
+                </div>
+            </div>
+        </div>
+
+        <div id="perGuestContainer" class="per-guest hidden">
+            <div class="per-guest-label">Costo per Ospite</div>
+            <div class="per-guest-value" id="perGuestValue">€0</div>
+        </div>
+
+        <div class="section">
+            <h2>Ripartizione Categorie</h2>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+
+        <div class="chart-container">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <canvas id="budgetChart" width="300" height="300"></canvas>
+            </div>
+            <div class="legend" id="legend"></div>
+        </div>
+
+        <div class="vendor-checklist">
+            <h2>Checklist Fornitori</h2>
+            <div class="vendor-grid" id="vendorGrid"></div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 40px;">
+            <button class="btn btn-primary" onclick="exportSummary()">📥 Esporta Riepilogo</button>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Stampa</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Wedding Budget Planner Pro - Realizzato con ❤️</p>
+    </footer>
+
+    <script>
+        const categories = [
+            { it: 'Luogo & Catering', en: 'Venue & Catering', min: 40, max: 50 },
+            { it: 'Fotografia/Video', en: 'Photography/Video', min: 10, max: 12 },
+            { it: 'Fiori & Decorazioni', en: 'Flowers & Decorations', min: 8, max: 10 },
+            { it: 'Musica/DJ/Band', en: 'Music/DJ/Band', min: 5, max: 8 },
+            { it: 'Abiti Sposi', en: 'Wedding Dress & Suits', min: 5, max: 8 },
+            { it: 'Torta & Dolci', en: 'Cake & Desserts', min: 2, max: 3 },
+            { it: 'Inviti & Cartoleria', en: 'Invitations & Stationery', min: 2, max: 3 },
+            { it: 'Trasporto', en: 'Transportation', min: 2, max: 3 },
+            { it: 'Trucco & Capelli', en: 'Hair & Makeup', min: 2, max: 3 },
+            { it: 'Anelli', en: 'Rings', min: 3, max: 5 },
+            { it: 'Bomboniere', en: 'Favors/Bomboniere', min: 2, max: 3 },
+            { it: 'Varie & Emergenza', en: 'Miscellaneous/Emergency', min: 5, max: 8 }
+        ];
+
+        const vendors = [
+            'Venue/Location', 'Catering', 'Photography', 'Videography', 'Florist', 'Decorations',
+            'DJ/Musician', 'Cake Shop', 'Bride Tailor', 'Groom Tailor', 'Jeweler',
+            'Hair Stylist', 'Makeup Artist', 'Printer', 'Entertainment', 'Photographer Assistant'
+        ];
+
+        const budgetData = {
+            totalBudget: 0,
+            guestCount: 0,
+            weddingDate: '',
+            categories: {}
+        };
+
+        const expenseData = {};
+        const vendorStatus = {};
+
+        function initApp() {
+            initializeCategories();
+            initializeVendors();
+            setupEventListeners();
+            updateDashboard();
+        }
+
+        function initializeCategories() {
+            categories.forEach((cat, idx) => {
+                const avgPercent = (cat.min + cat.max) / 2;
+                budgetData.categories[idx] = {
+                    name: cat.it,
+                    percent: avgPercent,
+                    spent: 0
+                };
+                expenseData[idx] = [];
+            });
+            renderCategories();
+        }
+
+        function initializeVendors() {
+            vendors.forEach(v => {
+                vendorStatus[v] = 'Non Iniziato';
+            });
+            renderVendors();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('totalBudget').addEventListener('change', e => {
+                budgetData.totalBudget = parseFloat(e.target.value) || 0;
+                updateDashboard();
+            });
+
+            document.getElementById('guestCount').addEventListener('change', e => {
+                budgetData.guestCount = parseInt(e.target.value) || 0;
+                updateDashboard();
+            });
+
+            document.getElementById('weddingDate').addEventListener('change', e => {
+                budgetData.weddingDate = e.target.value;
+            });
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+
+            categories.forEach((cat, idx) => {
+                const allocated = (budgetData.totalBudget * budgetData.categories[idx].percent) / 100;
+                const spent = budgetData.categories[idx].spent;
+                const remaining = allocated - spent;
+                const isOver = remaining < 0;
+
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.innerHTML = `
+                    <div class="category-header">
+                        <span class="category-name">${budgetData.categories[idx].name}</span>
+                    </div>
+                    <div class="category-input">
+                        <input type="number" class="percentage-input" value="${budgetData.categories[idx].percent.toFixed(1)}"
+                            onchange="updateCategoryPercent(${idx}, this.value)" placeholder="%">
+                        <span style="color: var(--text2); padding: 0;">%</span>
+                    </div>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <div class="stat-label">Allocato</div>
+                            <div class="stat-value">€${allocated.toFixed(0)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Speso</div>
+                            <div class="stat-value">€${spent.toFixed(0)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Rimasto</div>
+                            <div class="stat-value">€${remaining.toFixed(0)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Stato</div>
+                            <span class="status-badge ${isOver ? 'status-warning' : 'status-ok'}">
+                                ${isOver ? '⚠️ Oltre' : '✓ OK'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="expense-tracker">
+                        <div style="margin-bottom: 14px;">
+                            <button class="btn btn-secondary btn-small" onclick="toggleExpenseForm(${idx})">
+                                <span class="toggle-icon">▼</span> Aggiungi Spesa
+                            </button>
+                        </div>
+                        <div id="expenseForm-${idx}" class="expense-form hidden" style="background: var(--bg2); padding: 14px; border-radius: 8px;">
+                            <input type="text" placeholder="Fornitore" id="vendor-${idx}" class="expense-vendor-input">
+                            <input type="number" placeholder="Importo (€)" id="amount-${idx}" class="expense-amount-input" min="0" step="0.01">
+                            <input type="date" id="date-${idx}" class="expense-date-input">
+                            <input type="text" placeholder="Note" id="notes-${idx}" class="expense-notes-input">
+                            <select id="paid-${idx}" class="status-select">
+                                <option value="unpaid">Non Pagato</option>
+                                <option value="paid">Pagato</option>
+                            </select>
+                            <button class="btn btn-primary btn-small" onclick="addExpense(${idx})">Aggiungi</button>
+                        </div>
+                        <div id="expenses-${idx}"></div>
+                        <div id="totalExpense-${idx}" style="margin-top: 14px; text-align: right; color: var(--gold-light); font-weight: 600;"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            renderExpenses();
+        }
+
+        function toggleExpenseForm(idx) {
+            const form = document.getElementById(`expenseForm-${idx}`);
+            form.classList.toggle('hidden');
+        }
+
+        function addExpense(idx) {
+            const vendor = document.getElementById(`vendor-${idx}`).value;
+            const amount = parseFloat(document.getElementById(`amount-${idx}`).value) || 0;
+            const date = document.getElementById(`date-${idx}`).value;
+            const notes = document.getElementById(`notes-${idx}`).value;
+            const paid = document.getElementById(`paid-${idx}`).value;
+
+            if (!vendor || amount <= 0) return;
+
+            expenseData[idx].push({ vendor, amount, date, notes, paid });
+
+            document.getElementById(`vendor-${idx}`).value = '';
+            document.getElementById(`amount-${idx}`).value = '';
+            document.getElementById(`date-${idx}`).value = '';
+            document.getElementById(`notes-${idx}`).value = '';
+
+            budgetData.categories[idx].spent += amount;
+            updateDashboard();
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            categories.forEach((_, idx) => {
+                const container = document.getElementById(`expenses-${idx}`);
+                container.innerHTML = '';
+
+                expenseData[idx].forEach((exp, expIdx) => {
+                    const item = document.createElement('div');
+                    item.className = 'expense-item';
+                    item.innerHTML = `
+                        <div class="expense-details">
+                            <div class="expense-vendor">${exp.vendor}</div>
+                            <div class="expense-meta">${exp.date ? new Date(exp.date).toLocaleDateString('it-IT') : ''} - ${exp.paid === 'paid' ? '✓ Pagato' : '○ Non Pagato'}</div>
+                            ${exp.notes ? `<div class="expense-meta">${exp.notes}</div>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center; white-space: nowrap;">
+                            <div class="expense-amount">€${exp.amount.toFixed(2)}</div>
+                            <button class="btn btn-secondary btn-small" onclick="deleteExpense(${idx}, ${expIdx})">✕</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                const total = expenseData[idx].reduce((sum, e) => sum + e.amount, 0);
+                document.getElementById(`totalExpense-${idx}`).textContent = total > 0 ? `Totale: €${total.toFixed(2)}` : '';
+            });
+        }
+
+        function deleteExpense(catIdx, expIdx) {
+            const exp = expenseData[catIdx][expIdx];
+            budgetData.categories[catIdx].spent -= exp.amount;
+            expenseData[catIdx].splice(expIdx, 1);
+            updateDashboard();
+            renderExpenses();
+        }
+
+        function updateCategoryPercent(idx, value) {
+            budgetData.categories[idx].percent = parseFloat(value) || 0;
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const totalBudget = budgetData.totalBudget;
+            const totalSpent = Object.keys(budgetData.categories).reduce(
+                (sum, idx) => sum + budgetData.categories[idx].spent, 0
+            );
+            const remaining = totalBudget - totalSpent;
+            const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
+
+            document.getElementById('totalBudgetDisplay').textContent = `€${totalBudget.toFixed(0)}`;
+            document.getElementById('totalSpentDisplay').textContent = `€${totalSpent.toFixed(0)}`;
+            document.getElementById('remainingDisplay').textContent = `€${remaining.toFixed(0)}`;
+            document.getElementById('percentUsedDisplay').textContent = `${percentUsed.toFixed(1)}%`;
+            document.getElementById('progressFill').style.width = Math.min(percentUsed, 100) + '%';
+
+            if (budgetData.guestCount > 0) {
+                const perGuest = totalSpent / budgetData.guestCount;
+                document.getElementById('perGuestValue').textContent = `€${perGuest.toFixed(2)}`;
+                document.getElementById('perGuestContainer').classList.remove('hidden');
+            }
+
+            renderCategories();
+            drawChart();
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('budgetChart');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const totalBudget = budgetData.totalBudget;
+            const colors = [
+                '#10b981', '#34d399', '#6ee7b7', '#059669', '#0d9488', '#14b8a6',
+                '#2dd4bf', '#5eead4', '#0f766e', '#115e59', '#134e4a', '#0c4a3d'
+            ];
+
+            let currentAngle = -Math.PI / 2;
+
+            categories.forEach((cat, idx) => {
+                const allocated = (totalBudget * budgetData.categories[idx].percent) / 100;
+                const sliceAngle = (budgetData.categories[idx].percent / 100) * 2 * Math.PI;
+
+                ctx.fillStyle = colors[idx % colors.length];
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.lineTo(centerX, centerY);
+                ctx.fill();
+
+                ctx.strokeStyle = '#060a0a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                currentAngle += sliceAngle;
+            });
+
+            renderLegend(colors);
+        }
+
+        function renderLegend(colors) {
+            const legend = document.getElementById('legend');
+            legend.innerHTML = '';
+
+            categories.forEach((cat, idx) => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+
+                const percent = budgetData.categories[idx].percent;
+                const allocated = (budgetData.totalBudget * percent) / 100;
+
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${colors[idx % colors.length]};"></div>
+                    <span>${budgetData.categories[idx].name}: €${allocated.toFixed(0)} (${percent.toFixed(1)}%)</span>
+                `;
+                legend.appendChild(item);
+            });
+        }
+
+        function renderVendors() {
+            const grid = document.getElementById('vendorGrid');
+            grid.innerHTML = '';
+
+            vendors.forEach(vendor => {
+                const item = document.createElement('div');
+                item.className = 'vendor-item';
+                item.innerHTML = `
+                    <span class="vendor-name">${vendor}</span>
+                    <select class="status-select" onchange="updateVendorStatus('${vendor}', this.value)">
+                        <option value="Non Iniziato" ${vendorStatus[vendor] === 'Non Iniziato' ? 'selected' : ''}>Non Iniziato</option>
+                        <option value="Contattato" ${vendorStatus[vendor] === 'Contattato' ? 'selected' : ''}>Contattato</option>
+                        <option value="Prenotato" ${vendorStatus[vendor] === 'Prenotato' ? 'selected' : ''}>Prenotato</option>
+                        <option value="Pagato" ${vendorStatus[vendor] === 'Pagato' ? 'selected' : ''}>Pagato</option>
+                        <option value="Completato" ${vendorStatus[vendor] === 'Completato' ? 'selected' : ''}>Completato</option>
+                    </select>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function updateVendorStatus(vendor, status) {
+            vendorStatus[vendor] = status;
+        }
+
+        function exportSummary() {
+            const totalBudget = budgetData.totalBudget;
+            const totalSpent = Object.keys(budgetData.categories).reduce(
+                (sum, idx) => sum + budgetData.categories[idx].spent, 0
+            );
+
+            let summary = '=== RIEPILOGO BUDGET MATRIMONIO ===\n\n';
+            summary += `Data: ${new Date().toLocaleDateString('it-IT')}\n`;
+            summary += `Matrimonio: ${budgetData.weddingDate || 'Non impostato'}\n`;
+            summary += `Ospiti: ${budgetData.guestCount || 0}\n\n`;
+
+            summary += `TOTALI:\n`;
+            summary += `- Budget Totale: €${totalBudget.toFixed(2)}\n`;
+            summary += `- Spesa Totale: €${totalSpent.toFixed(2)}\n`;
+            summary += `- Rimasto: €${(totalBudget - totalSpent).toFixed(2)}\n`;
+            if (budgetData.guestCount > 0) {
+                summary += `- Costo per Ospite: €${(totalSpent / budgetData.guestCount).toFixed(2)}\n`;
+            }
+            summary += '\n';
+
+            summary += 'CATEGORIE:\n';
+            categories.forEach((cat, idx) => {
+                const allocated = (totalBudget * budgetData.categories[idx].percent) / 100;
+                const spent = budgetData.categories[idx].spent;
+                summary += `\n${budgetData.categories[idx].name} (${budgetData.categories[idx].percent.toFixed(1)}%)\n`;
+                summary += `  Allocato: €${allocated.toFixed(2)}\n`;
+                summary += `  Speso: €${spent.toFixed(2)}\n`;
+                summary += `  Rimasto: €${(allocated - spent).toFixed(2)}\n`;
+            });
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(summary));
+            element.setAttribute('download', `BudgetMatrimonio_${new Date().toISOString().slice(0,10)}.txt`);
+            element.click();
+        }
+
+        initApp();
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1zwpgwkzwid',K='etherlabs_budget-matrimonio';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

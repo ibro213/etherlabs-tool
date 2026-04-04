@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FIRE Calculator">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>FIRE Calculator - Financial Independence Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-dark: #059669;
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+            color: var(--text1);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border-bottom: 2px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--gold-light);
+            text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: var(--gold);
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: var(--gold-light);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text1);
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .label-secondary {
+            color: var(--text2);
+            font-size: 0.85em;
+            display: block;
+            margin-top: 3px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text1);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-info {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--gold);
+            padding: 12px;
+            border-radius: 6px;
+            color: var(--text2);
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .card-label {
+            color: var(--text2);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--gold-light);
+            text-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+        }
+
+        .card-subtext {
+            color: var(--text3);
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        .progress-bar-container {
+            margin-top: 15px;
+            background: var(--bg3);
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .progress-percentage {
+            color: var(--text2);
+            font-size: 0.75em;
+            margin-top: 5px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-container {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .scenarios-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .scenarios-table th,
+        .scenarios-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .scenarios-table th {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .scenarios-table tr:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .scenarios-table td {
+            color: var(--text1);
+        }
+
+        .scenario-label {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .slider-group {
+            margin-bottom: 25px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .slider-value {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--gold-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--gold-dark) 0%, var(--gold-light) 100%);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .timeline-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            border-color: var(--gold);
+            transform: scale(1.02);
+        }
+
+        .timeline-percent {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+        }
+
+        .timeline-date {
+            color: var(--text2);
+            font-size: 0.9em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+        }
+
+        .button-secondary:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
+        }
+
+        footer {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            padding: 25px;
+            text-align: center;
+            color: var(--text2);
+            border-radius: 12px;
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
+
+        .fire-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .fire-type-info {
+            background: rgba(16, 185, 129, 0.05);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--text2);
+            border-left: 2px solid var(--gold);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            header {
+                padding: 20px 15px;
+                margin-bottom: 30px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .timeline {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .fire-types {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: var(--bg3);
+            color: var(--gold-light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            border: 1px solid var(--border);
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .print-hide {
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hide {
+                display: none;
+            }
+
+            .section, .chart-container {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            button {
+                display: none;
+            }
+
+            footer {
+                border-top: 1px solid #ccc;
+                color: #666;
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">FIRE Calculator</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <header>
+            <h1>💰 FIRE Calculator</h1>
+            <p class="subtitle">Financial Independence Pro - Plan Your Future</p>
+        </header>
+
+        <div class="main-content">
+            <!-- INPUT SECTION -->
+            <div class="section">
+                <div class="section-title">📊 Personal Data</div>
+
+                <div class="form-group">
+                    <label>Current Age</label>
+                    <input type="number" id="currentAge" value="30" min="18" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>Target FIRE Age</label>
+                    <input type="number" id="targetAge" value="45" min="25" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>Annual Net Income ($)</label>
+                    <input type="number" id="annualIncome" value="50000" min="0" step="1000">
+                </div>
+
+                <div class="form-group">
+                    <label>Current Annual Expenses ($)</label>
+                    <input type="number" id="annualExpenses" value="30000" min="0" step="1000">
+                </div>
+
+                <div class="form-group">
+                    <label>Current Assets ($)</label>
+                    <input type="number" id="currentAssets" value="100000" min="0" step="5000">
+                </div>
+
+                <div class="form-group">
+                    <label>Savings Rate (%) - Auto-calculated</label>
+                    <input type="number" id="savingsRate" value="40" min="0" max="100" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label>Expected Investment Return (%)</label>
+                    <input type="number" id="investmentReturn" value="7" min="0" max="20" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Inflation Rate (%)</label>
+                    <input type="number" id="inflationRate" value="2" min="0" max="10" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Safe Withdrawal Rate (%) - 4% Rule</label>
+                    <input type="number" id="withdrawalRate" value="4" min="1" max="10" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label>FIRE Type</label>
+                    <select id="fireType">
+                        <option value="lean">Lean FIRE - Reduced Expenses (70% current)</option>
+                        <option value="regular" selected>Regular FIRE - Current Expenses</option>
+                        <option value="fat">Fat FIRE - Increased Expenses (150% current)</option>
+                        <option value="coast">Coast FIRE - Stop Investing</option>
+                        <option value="barista">Barista FIRE - Part-time Work</option>
+                    </select>
+                </div>
+
+                <div class="fire-types">
+                    <div class="fire-type-info">
+                        <strong>Lean FIRE:</strong> Frugal and minimalist lifestyle
+                    </div>
+                    <div class="fire-type-info">
+                        <strong>Regular FIRE:</strong> Maintain current expenses
+                    </div>
+                    <div class="fire-type-info">
+                        <strong>Fat FIRE:</strong> Luxury and high quality of life
+                    </div>
+                    <div class="fire-type-info">
+                        <strong>Coast FIRE:</strong> Stop investing, let savings grow
+                    </div>
+                    <div class="fire-type-info">
+                        <strong>Barista FIRE:</strong> Part-time work to cover expenses
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTS DASHBOARD -->
+            <div class="section">
+                <div class="section-title">📈 FIRE Results</div>
+
+                <div class="dashboard">
+                    <div class="card">
+                        <div class="card-label">FIRE Number</div>
+                        <div class="card-value" id="fireNumber">$750,000</div>
+                        <div class="card-subtext">Required Assets</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-label">Current Gap</div>
+                        <div class="card-value" id="currentGap">$650,000</div>
+                        <div class="card-subtext">To Accumulate</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-label">Years to FIRE</div>
+                        <div class="card-value" id="yearsToFire">15.2</div>
+                        <div class="card-subtext">Time Remaining</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-label">FIRE Date</div>
+                        <div class="card-value" id="fireDate">2041</div>
+                        <div class="card-subtext">Estimated Year</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-label">Monthly Savings</div>
+                        <div class="card-value" id="monthlySavings">$1,667</div>
+                        <div class="card-subtext">Required for FIRE</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-label">Monthly Income</div>
+                        <div class="card-value" id="monthlyIncome">$2,500</div>
+                        <div class="card-subtext">At FIRE Achievement</div>
+                    </div>
+
+                    <div class="card full-width">
+                        <div class="card-label">Progress Percentage</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar" style="width: 13%"></div>
+                        </div>
+                        <div class="progress-percentage" id="progressPercentage">13% - $100,000 / $750,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART SECTION -->
+        <div class="chart-container">
+            <div class="section-title">📊 Wealth Growth Projection</div>
+            <canvas id="growthChart" width="800" height="400"></canvas>
+        </div>
+
+        <!-- SCENARIOS SECTION -->
+        <div class="section full-width">
+            <div class="section-title">🎯 Scenario Analysis</div>
+            <table class="scenarios-table">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Return Rate</th>
+                        <th>Years to FIRE</th>
+                        <th>Final Assets</th>
+                        <th>Monthly Income</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="scenario-label">📉 Pessimistic</td>
+                        <td>5%</td>
+                        <td id="yearsPessimistic">18.5</td>
+                        <td id="wealthPessimistic">$950,000</td>
+                        <td id="incomePessimistic">$3,167</td>
+                    </tr>
+                    <tr>
+                        <td class="scenario-label">📊 Base (7%)</td>
+                        <td>7%</td>
+                        <td id="yearsBase">15.2</td>
+                        <td id="wealthBase">$750,000</td>
+                        <td id="incomeBase">$2,500</td>
+                    </tr>
+                    <tr>
+                        <td class="scenario-label">📈 Optimistic</td>
+                        <td>9%</td>
+                        <td id="yearsOptimistic">13.2</td>
+                        <td id="wealthOptimistic">$650,000</td>
+                        <td id="incomeOptimistic">$2,167</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SENSITIVITY ANALYSIS -->
+        <div class="section full-width">
+            <div class="section-title">🔄 Sensitivity Analysis</div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label>Additional Monthly Savings</label>
+                    <span class="slider-value">$0</span>
+                </div>
+                <input type="range" id="additionalSavings" min="0" max="2000" step="100" value="0">
+                <div class="form-info" id="addSavingsResult">With $0 additional per month: no change</div>
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label>Expense Reduction (%)</label>
+                    <span class="slider-value">0%</span>
+                </div>
+                <input type="range" id="expenseReduction" min="0" max="50" step="5" value="0">
+                <div class="form-info" id="expenseResult">With 0% reduction: no change</div>
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label>Income Increase (%)</label>
+                    <span class="slider-value">0%</span>
+                </div>
+                <input type="range" id="incomeIncrease" min="0" max="100" step="5" value="0">
+                <div class="form-info" id="incomeResult">With 0% increase: no change</div>
+            </div>
+        </div>
+
+        <!-- MILESTONES TIMELINE -->
+        <div class="section full-width">
+            <div class="section-title">🎖️ Milestone Timeline</div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-percent">25%</div>
+                    <div class="timeline-date" id="milestone25">2031</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-percent">50%</div>
+                    <div class="timeline-date" id="milestone50">2034</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-percent">75%</div>
+                    <div class="timeline-date" id="milestone75">2038</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-percent">100%</div>
+                    <div class="timeline-date" id="milestone100">2041</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="button-group print-hide">
+            <button onclick="calculateAll()">🔄 Calculate</button>
+            <button class="button-secondary" onclick="exportData()">💾 Export Report</button>
+            <button class="button-secondary" onclick="window.print()">🖨️ Print</button>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <strong>Legal Disclaimer:</strong> This tool is for educational purposes. Consult a certified financial advisor for real investment decisions. Results are estimates based on assumptions and may vary significantly from actual outcomes.
+        </footer>
+    </div>
+
+    <script>
+        // MAIN CALCULATION ENGINE
+        class FIRECalculator {
+            constructor() {
+                this.chart = null;
+                this.setupEventListeners();
+                this.calculateAll();
+            }
+
+            setupEventListeners() {
+                const inputs = [
+                    'currentAge', 'targetAge', 'annualIncome', 'annualExpenses',
+                    'currentAssets', 'savingsRate', 'investmentReturn',
+                    'inflationRate', 'withdrawalRate', 'fireType'
+                ];
+
+                inputs.forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => this.calculateAll());
+                    document.getElementById(id).addEventListener('input', () => {
+                        if (id === 'annualIncome' || id === 'annualExpenses') {
+                            this.autoCalculateSavingsRate();
+                        }
+                    });
+                });
+
+                // Sensitivity analysis
+                document.getElementById('additionalSavings').addEventListener('input', (e) => {
+                    document.querySelector('.slider-group:nth-child(1) .slider-value').textContent = '$' + parseInt(e.target.value).toLocaleString('en-US');
+                    this.updateSensitivityAnalysis();
+                });
+
+                document.getElementById('expenseReduction').addEventListener('input', (e) => {
+                    document.querySelector('.slider-group:nth-child(2) .slider-value').textContent = e.target.value + '%';
+                    this.updateSensitivityAnalysis();
+                });
+
+                document.getElementById('incomeIncrease').addEventListener('input', (e) => {
+                    document.querySelector('.slider-group:nth-child(3) .slider-value').textContent = e.target.value + '%';
+                    this.updateSensitivityAnalysis();
+                });
+            }
+
+            autoCalculateSavingsRate() {
+                const income = parseFloat(document.getElementById('annualIncome').value) || 0;
+                const expenses = parseFloat(document.getElementById('annualExpenses').value) || 0;
+                const rate = income > 0 ? ((income - expenses) / income * 100) : 0;
+                document.getElementById('savingsRate').value = Math.max(0, Math.min(100, rate.toFixed(1)));
+            }
+
+            getInputs() {
+                return {
+                    currentAge: parseInt(document.getElementById('currentAge').value),
+                    targetAge: parseInt(document.getElementById('targetAge').value),
+                    annualIncome: parseFloat(document.getElementById('annualIncome').value),
+                    annualExpenses: parseFloat(document.getElementById('annualExpenses').value),
+                    currentAssets: parseFloat(document.getElementById('currentAssets').value),
+                    savingsRate: parseFloat(document.getElementById('savingsRate').value) / 100,
+                    investmentReturn: parseFloat(document.getElementById('investmentReturn').value) / 100,
+                    inflationRate: parseFloat(document.getElementById('inflationRate').value) / 100,
+                    withdrawalRate: parseFloat(document.getElementById('withdrawalRate').value) / 100,
+                    fireType: document.getElementById('fireType').value
+                };
+            }
+
+            adjustExpensesByFireType(expenses, fireType) {
+                switch(fireType) {
+                    case 'lean': return expenses * 0.7;
+                    case 'fat': return expenses * 1.5;
+                    case 'barista': return expenses * 0.5;
+                    case 'coast': return expenses;
+                    default: return expenses;
+                }
+            }
+
+            calculateFIRENumber(expenses, withdrawalRate) {
+                return expenses / withdrawalRate;
+            }
+
+            calculateCompoundGrowth(principal, annualReturn, years, annualContribution = 0) {
+                let value = principal;
+                for (let i = 0; i < years; i++) {
+                    value = value * (1 + annualReturn) + annualContribution;
+                }
+                return value;
+            }
+
+            calculateYearsToFIRE(principal, annualContribution, annualReturn, fireNumber) {
+                let value = principal;
+                let years = 0;
+                const maxYears = 100;
+
+                while (value < fireNumber && years < maxYears) {
+                    value = value * (1 + annualReturn) + annualContribution;
+                    years++;
+                }
+
+                return years < maxYears ? years : maxYears;
+            }
+
+            calculateAll() {
+                const inputs = this.getInputs();
+
+                // Adjust expenses by FIRE type
+                const targetExpenses = this.adjustExpensesByFireType(inputs.annualExpenses, inputs.fireType);
+
+                // Calculate FIRE number
+                const fireNumber = this.calculateFIRENumber(targetExpenses, inputs.withdrawalRate);
+
+                // Calculate annual savings
+                const annualSavings = inputs.annualIncome * inputs.savingsRate;
+
+                // Calculate years to FIRE
+                const yearsToFire = this.calculateYearsToFIRE(
+                    inputs.currentAssets,
+                    annualSavings,
+                    inputs.investmentReturn,
+                    fireNumber
+                );
+
+                // Calculate FIRE date
+                const fireDate = new Date().getFullYear() + yearsToFire;
+
+                // Calculate gap
+                const currentGap = Math.max(0, fireNumber - inputs.currentAssets);
+
+                // Calculate progress percentage
+                const progressPercentage = Math.min(100, (inputs.currentAssets / fireNumber) * 100);
+
+                // Calculate monthly values
+                const monthlySavings = annualSavings / 12;
+                const monthlyIncome = (fireNumber * inputs.withdrawalRate) / 12;
+
+                // Update UI
+                document.getElementById('fireNumber').textContent = '$' + fireNumber.toLocaleString('en-US', {maximumFractionDigits: 0});
+                document.getElementById('currentGap').textContent = '$' + currentGap.toLocaleString('en-US', {maximumFractionDigits: 0});
+                document.getElementById('yearsToFire').textContent = yearsToFire.toFixed(1);
+                document.getElementById('fireDate').textContent = Math.floor(fireDate);
+                document.getElementById('monthlySavings').textContent = '$' + monthlySavings.toLocaleString('en-US', {maximumFractionDigits: 0});
+                document.getElementById('monthlyIncome').textContent = '$' + monthlyIncome.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+                // Update progress bar
+                document.getElementById('progressBar').style.width = progressPercentage + '%';
+                document.getElementById('progressPercentage').textContent =
+                    progressPercentage.toFixed(1) + '% - $' +
+                    inputs.currentAssets.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' / $' +
+                    fireNumber.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+                // Calculate scenarios
+                this.calculateScenarios(inputs, targetExpenses, inputs.withdrawalRate);
+
+                // Calculate milestones
+                this.calculateMilestones(inputs, fireNumber, annualSavings);
+
+                // Draw chart
+                this.drawGrowthChart(inputs, fireNumber, yearsToFire, annualSavings);
+            }
+
+            calculateScenarios(inputs, targetExpenses, withdrawalRate) {
+                const scenarios = [
+                    { rate: 0.05, id: 'Pessimistic' },
+                    { rate: inputs.investmentReturn, id: 'Base' },
+                    { rate: 0.09, id: 'Optimistic' }
+                ];
+
+                scenarios.forEach(scenario => {
+                    const yearsToFire = this.calculateYearsToFIRE(
+                        inputs.currentAssets,
+                        inputs.annualIncome * inputs.savingsRate,
+                        scenario.rate,
+                        this.calculateFIRENumber(targetExpenses, withdrawalRate)
+                    );
+
+                    const finalWealth = this.calculateCompoundGrowth(
+                        inputs.currentAssets,
+                        scenario.rate,
+                        yearsToFire,
+                        inputs.annualIncome * inputs.savingsRate
+                    );
+
+                    const monthlyIncome = (finalWealth * withdrawalRate) / 12;
+
+                    document.getElementById('years' + scenario.id).textContent = yearsToFire.toFixed(1);
+                    document.getElementById('wealth' + scenario.id).textContent = '$' + finalWealth.toLocaleString('en-US', {maximumFractionDigits: 0});
+                    document.getElementById('income' + scenario.id).textContent = '$' + monthlyIncome.toLocaleString('en-US', {maximumFractionDigits: 0});
+                });
+            }
+
+            calculateMilestones(inputs, fireNumber, annualSavings) {
+                const milestones = [
+                    { percent: 0.25, id: '25' },
+                    { percent: 0.50, id: '50' },
+                    { percent: 0.75, id: '75' },
+                    { percent: 1.00, id: '100' }
+                ];
+
+                milestones.forEach(milestone => {
+                    const targetAmount = fireNumber * milestone.percent;
+                    const yearsToMilestone = this.calculateYearsToFIRE(
+                        inputs.currentAssets,
+                        annualSavings,
+                        inputs.investmentReturn,
+                        targetAmount
+                    );
+
+                    const year = new Date().getFullYear() + yearsToMilestone;
+                    document.getElementById('milestone' + milestone.id).textContent = Math.floor(year);
+                });
+            }
+
+            drawGrowthChart(inputs, fireNumber, yearsToFire, annualSavings) {
+                const canvas = document.getElementById('growthChart');
+                const ctx = canvas.getContext('2d');
+
+                // Clear canvas
+                ctx.fillStyle = '#0a1210';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Prepare data
+                const years = Math.ceil(yearsToFire) + 2;
+                const withInvestmentData = [];
+                const withoutInvestmentData = [];
+
+                for (let year = 0; year <= years; year++) {
+                    const withInvestment = this.calculateCompoundGrowth(
+                        inputs.currentAssets,
+                        inputs.investmentReturn,
+                        year,
+                        annualSavings
+                    );
+                    const withoutInvestment = inputs.currentAssets + (annualSavings * year);
+
+                    withInvestmentData.push(withInvestment);
+                    withoutInvestmentData.push(withoutInvestment);
+                }
+
+                // Calculate axis scales
+                const maxValue = Math.max(...withInvestmentData, fireNumber) * 1.1;
+                const padding = 60;
+                const chartWidth = canvas.width - 2 * padding;
+                const chartHeight = canvas.height - 2 * padding;
+
+                // Draw grid and axes
+                ctx.strokeStyle = '#162e26';
+                ctx.lineWidth = 1;
+                ctx.font = '12px "Segoe UI"';
+                ctx.fillStyle = '#7a9a8e';
+
+                // Y-axis labels
+                for (let i = 0; i <= 5; i++) {
+                    const y = padding + (chartHeight / 5) * i;
+                    const value = (maxValue / 5) * (5 - i);
+
+                    ctx.fillText('$' + (value / 1000).toFixed(0) + 'k', 10, y + 4);
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(canvas.width - padding, y);
+                    ctx.stroke();
+                }
+
+                // X-axis labels
+                const yearStep = Math.ceil(years / 6);
+                for (let year = 0; year <= years; year += yearStep) {
+                    const x = padding + (year / years) * chartWidth;
+                    ctx.fillText(year + ' yrs', x - 15, canvas.height - padding + 20);
+                }
+
+                // Draw FIRE number line
+                const fireY = padding + chartHeight * (1 - fireNumber / maxValue);
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(padding, fireY);
+                ctx.lineTo(canvas.width - padding, fireY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
+                ctx.fillText('FIRE: $' + (fireNumber / 1000).toFixed(0) + 'k', padding + 10, fireY - 10);
+
+                // Draw curves
+                this.drawCurve(ctx, withInvestmentData, maxValue, padding, chartWidth, chartHeight, years, '#10b981', 'With Investments');
+                this.drawCurve(ctx, withoutInvestmentData, maxValue, padding, chartWidth, chartHeight, years, '#4a6b5e', 'Savings Only');
+
+                // Draw axes
+                ctx.strokeStyle = '#7a9a8e';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(padding, padding);
+                ctx.lineTo(padding, canvas.height - padding);
+                ctx.lineTo(canvas.width - padding, canvas.height - padding);
+                ctx.stroke();
+            }
+
+            drawCurve(ctx, data, maxValue, padding, chartWidth, chartHeight, totalYears, color, label) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+
+                let firstPoint = true;
+                data.forEach((value, year) => {
+                    const x = padding + (year / totalYears) * chartWidth;
+                    const y = padding + chartHeight * (1 - value / maxValue);
+
+                    if (firstPoint) {
+                        ctx.moveTo(x, y);
+                        firstPoint = false;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+
+                ctx.stroke();
+
+                // Draw legend
+                const legendY = padding + 20;
+                const legendX = padding + 20;
+                ctx.fillStyle = color;
+                ctx.fillRect(legendX, legendY + (data === data ? 0 : 20), 12, 12);
+                ctx.fillStyle = '#e8f0ec';
+                ctx.font = '12px "Segoe UI"';
+                ctx.fillText(label, legendX + 18, legendY + 10 + (data === data ? 0 : 20));
+            }
+
+            updateSensitivityAnalysis() {
+                const inputs = this.getInputs();
+                const additionalSavings = parseFloat(document.getElementById('additionalSavings').value) || 0;
+                const expenseReduction = parseFloat(document.getElementById('expenseReduction').value) / 100 || 0;
+                const incomeIncrease = parseFloat(document.getElementById('incomeIncrease').value) / 100 || 0;
+
+                const targetExpenses = this.adjustExpensesByFireType(inputs.annualExpenses, inputs.fireType);
+                const fireNumber = this.calculateFIRENumber(targetExpenses, inputs.withdrawalRate);
+
+                // Calculate with adjustments
+                const adjustedAnnualSavings = (inputs.annualIncome * inputs.savingsRate) + (additionalSavings * 12);
+                const adjustedExpenses = targetExpenses * (1 - expenseReduction);
+                const adjustedIncome = inputs.annualIncome * (1 + incomeIncrease);
+                const adjustedSavings = adjustedIncome - inputs.annualExpenses;
+                const adjustedFireNumber = this.calculateFIRENumber(adjustedExpenses, inputs.withdrawalRate);
+
+                // Calculate impact
+                const yearsWithAdjustment = this.calculateYearsToFIRE(
+                    inputs.currentAssets,
+                    adjustedAnnualSavings,
+                    inputs.investmentReturn,
+                    adjustedFireNumber
+                );
+
+                const originalYears = this.calculateYearsToFIRE(
+                    inputs.currentAssets,
+                    inputs.annualIncome * inputs.savingsRate,
+                    inputs.investmentReturn,
+                    fireNumber
+                );
+
+                const yearsSaved = (originalYears - yearsWithAdjustment).toFixed(1);
+
+                // Update info texts
+                if (additionalSavings > 0) {
+                    document.getElementById('addSavingsResult').textContent =
+                        'With $' + additionalSavings.toLocaleString('en-US', {maximumFractionDigits: 0}) +
+                        ' additional per month: ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                }
+
+                if (expenseReduction > 0) {
+                    const newExpenses = adjustedExpenses;
+                    document.getElementById('expenseResult').textContent =
+                        'Expenses reduced to $' + newExpenses.toLocaleString('en-US', {maximumFractionDigits: 0}) +
+                        '/year: ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                }
+
+                if (incomeIncrease > 0) {
+                    const newIncome = adjustedIncome;
+                    document.getElementById('incomeResult').textContent =
+                        'Income increased to $' + newIncome.toLocaleString('en-US', {maximumFractionDigits: 0}) +
+                        ': ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                }
+            }
+        }
+
+        // Export functionality
+        function exportData() {
+            const inputs = calculator.getInputs();
+            const fireNumber = parseFloat(document.getElementById('fireNumber').textContent.replace(/[^0-9,-]/g, '').replace('.', '').replace(',', '.'));
+            const yearsToFire = parseFloat(document.getElementById('yearsToFire').textContent);
+            const fireDate = document.getElementById('fireDate').textContent;
+
+            let content = 'FIRE ANALYSIS REPORT - Financial Independence\n';
+            content += '='.repeat(50) + '\n\n';
+            content += 'PERSONAL DATA:\n';
+            content += 'Current Age: ' + inputs.currentAge + ' years\n';
+            content += 'Target FIRE Age: ' + inputs.targetAge + ' years\n';
+            content += 'Annual Income: $' + inputs.annualIncome.toLocaleString('en-US') + '\n';
+            content += 'Annual Expenses: $' + inputs.annualExpenses.toLocaleString('en-US') + '\n';
+            content += 'Current Assets: $' + inputs.currentAssets.toLocaleString('en-US') + '\n\n';
+
+            content += 'FIRE RESULTS:\n';
+            content += 'FIRE Number: $' + fireNumber.toLocaleString('en-US') + '\n';
+            content += 'Years Remaining: ' + yearsToFire + '\n';
+            content += 'Estimated FIRE Date: ' + fireDate + '\n';
+            content += 'Monthly Savings: $' + document.getElementById('monthlySavings').textContent.replace(/[^0-9,-]/g, '').replace('.', '').replace(',', '.') + '\n';
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', 'FIRE-Report_' + new Date().getFullYear() + '.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        // Initialize calculator on page load
+        let calculator;
+        document.addEventListener('DOMContentLoaded', () => {
+            calculator = new FIRECalculator();
+        });
+
+        function calculateAll() {
+            if (calculator) calculator.calculateAll();
+        }
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1p6140e2lem',K='etherlabs_calcolatore-fire_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

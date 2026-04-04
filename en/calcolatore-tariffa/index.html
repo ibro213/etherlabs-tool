@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Rate Calculator">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Rate Calculator Pro - Freelancer Rate Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #060a0a 0%, #0a1210 100%);
+            color: #e8f0ec;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid #162e26;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #10b981;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7a9a8e;
+            font-size: 1rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: #059669;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .section h2 {
+            color: #10b981;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #162e26;
+            font-weight: 600;
+        }
+
+        .input-row {
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-row label {
+            flex: 1;
+            color: #34d399;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .input-row input,
+        .input-row select {
+            flex: 0.7;
+            background: #060a0a;
+            border: 1px solid #162e26;
+            color: #e8f0ec;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-row input:focus,
+        .input-row select:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            background: #0a1210;
+        }
+
+        .total-row {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #162e26;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .total-row label {
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+
+        .total-value {
+            color: #10b981;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #0f1a17 0%, #0a1210 100%);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
+        }
+
+        .result-card h3 {
+            color: #34d399;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7a9a8e;
+        }
+
+        .result-value {
+            color: #10b981;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .result-unit {
+            color: #4a6b5e;
+            font-size: 0.9rem;
+        }
+
+        .comparison-section {
+            background: #0f1a17;
+            border: 1px solid #162e26;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-item {
+            background: #060a0a;
+            border: 1px solid #162e26;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .comparison-label {
+            color: #7a9a8e;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .comparison-value {
+            color: #10b981;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: #060a0a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: transparent;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        button.secondary:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .info-box {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #7a9a8e;
+        }
+
+        .info-box strong {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .main-grid {
+                gap: 20px;
+            }
+
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .input-row input,
+            .input-row select {
+                flex: 1;
+            }
+
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+
+            .result-value {
+                font-size: 1.8rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        .section-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .section-two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-two-col .input-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .section-two-col .input-row label {
+            margin-bottom: 5px;
+        }
+
+        .section-two-col .input-row input,
+        .section-two-col .input-row select {
+            flex: 1;
+        }
+
+        .emphasis {
+            color: #34d399;
+            font-weight: 700;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #162e26;
+            color: #4a6b5e;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: #10b981;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #34d399;
+            text-decoration: underline;
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Rate Calculator</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <header>
+            <h1>💼 Rate Calculator Pro</h1>
+            <p class="subtitle">Discover your ideal hourly and daily rate</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- PERSONAL MONTHLY EXPENSES -->
+            <div class="section">
+                <h2>📊 Personal Monthly Expenses</h2>
+                <div class="section-two-col">
+                    <div class="input-row">
+                        <label>Rent / Mortgage ($)</label>
+                        <input type="number" id="rent" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Utilities ($)</label>
+                        <input type="number" id="utilities" min="0" step="5" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Groceries ($)</label>
+                        <input type="number" id="groceries" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Transportation ($)</label>
+                        <input type="number" id="transportation" min="0" step="5" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Insurance ($)</label>
+                        <input type="number" id="insurance" min="0" step="5" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Subscriptions ($)</label>
+                        <input type="number" id="subscriptions" min="0" step="5" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Entertainment ($)</label>
+                        <input type="number" id="entertainment" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Desired Savings ($)</label>
+                        <input type="number" id="savings" min="0" step="50" placeholder="0">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <label>Other ($)</label>
+                    <input type="number" id="other_personal" min="0" step="10" placeholder="0">
+                </div>
+                <div class="total-row">
+                    <label>MONTHLY TOTAL</label>
+                    <span class="total-value" id="total_personal">$ 0</span>
+                </div>
+            </div>
+
+            <!-- PROFESSIONAL MONTHLY EXPENSES -->
+            <div class="section">
+                <h2>🏢 Professional Monthly Expenses</h2>
+                <div class="section-two-col">
+                    <div class="input-row">
+                        <label>Office / Coworking ($)</label>
+                        <input type="number" id="office" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Software & Tools ($)</label>
+                        <input type="number" id="software" min="0" step="5" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Hardware (amortized) ($)</label>
+                        <input type="number" id="hardware" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Accountant ($)</label>
+                        <input type="number" id="accountant" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Professional Insurance ($)</label>
+                        <input type="number" id="prof_insurance" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Training / Courses ($)</label>
+                        <input type="number" id="training" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Marketing / Advertising ($)</label>
+                        <input type="number" id="marketing" min="0" step="10" placeholder="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Other ($)</label>
+                        <input type="number" id="other_professional" min="0" step="10" placeholder="0">
+                    </div>
+                </div>
+                <div class="total-row">
+                    <label>MONTHLY TOTAL</label>
+                    <span class="total-value" id="total_professional">$ 0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAXES & CONTRIBUTIONS -->
+        <div class="section">
+            <h2>💰 Taxes & Contributions</h2>
+            <div class="main-grid">
+                <div>
+                    <div class="input-row">
+                        <label>Tax Regime</label>
+                        <select id="tax_regime">
+                            <option value="simplified15">Simplified (15% flat rate)</option>
+                            <option value="standard25">Standard (25% estimated)</option>
+                            <option value="selfemployed30">Self-employed (30% estimated)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Social Security / Pension (%)</label>
+                        <input type="number" id="social_security" min="0" max="100" step="0.1" value="15.3" placeholder="15.3">
+                    </div>
+                    <div class="input-row">
+                        <label>Estimated Income Tax (%)</label>
+                        <input type="number" id="income_tax" min="0" max="100" step="0.1" value="22" placeholder="22">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <strong>Note:</strong> For simplified regime, tax is calculated on gross income at the chosen rate. For standard regime, social security and income tax are added.
+                </div>
+            </div>
+        </div>
+
+        <!-- AVAILABLE WORKING TIME -->
+        <div class="section">
+            <h2>⏰ Available Working Time</h2>
+            <div class="main-grid">
+                <div>
+                    <div class="input-row">
+                        <label>Working Days / Week</label>
+                        <input type="number" id="working_days" min="1" max="7" step="0.5" value="5" placeholder="5">
+                    </div>
+                    <div class="input-row">
+                        <label>Vacation Weeks / Year</label>
+                        <input type="number" id="vacation_weeks" min="0" max="52" step="0.5" value="4" placeholder="4">
+                    </div>
+                    <div class="input-row">
+                        <label>Sick / Training Days (estimated)</label>
+                        <input type="number" id="sick_days" min="0" max="365" step="1" value="5" placeholder="5">
+                    </div>
+                    <div class="input-row">
+                        <label>Productive Hours / Day</label>
+                        <input type="number" id="productive_hours" min="0" max="12" step="0.5" value="6" placeholder="6">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <strong>Remember:</strong> Not all 8 hours of a working day are billable. Admin, emails, breaks, and accounting take time. Enter only hours effectively dedicated to clients.
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results-grid">
+            <div class="result-card">
+                <h3>Minimum Annual Revenue</h3>
+                <div class="result-value" id="annual_revenue">$ 0</div>
+                <div class="result-unit">required to cover expenses</div>
+            </div>
+            <div class="result-card">
+                <h3>Annual Working Days</h3>
+                <div class="result-value" id="effective_days">0</div>
+                <div class="result-unit">effective days available</div>
+            </div>
+            <div class="result-card">
+                <h3>Minimum Daily Rate</h3>
+                <div class="result-value" id="daily_rate">$ 0</div>
+                <div class="result-unit">minimum recommended</div>
+            </div>
+            <div class="result-card">
+                <h3>Minimum Hourly Rate</h3>
+                <div class="result-value" id="hourly_rate">$ 0</div>
+                <div class="result-unit">minimum recommended</div>
+            </div>
+            <div class="result-card">
+                <h3>Recommended Rate +20%</h3>
+                <div class="result-value" id="recommended_daily">$ 0</div>
+                <div class="result-unit">with safety margin</div>
+            </div>
+            <div class="result-card">
+                <h3>Recommended Hourly Rate</h3>
+                <div class="result-value" id="recommended_hourly">$ 0</div>
+                <div class="result-unit">with safety margin</div>
+            </div>
+        </div>
+
+        <!-- INCOME SIMULATION -->
+        <div class="comparison-section">
+            <h2 style="color: #10b981; margin-bottom: 20px;">📈 Monthly Net Income Simulation</h2>
+            <div class="comparison-row">
+                <div class="comparison-item">
+                    <div class="comparison-label">If you bill 100 hrs/month at minimum rate</div>
+                    <div class="comparison-value" id="income_100_min">$ 0</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">If you bill 100 hrs/month at recommended rate</div>
+                    <div class="comparison-value" id="income_100_rec">$ 0</div>
+                </div>
+            </div>
+            <div class="comparison-row">
+                <div class="comparison-item">
+                    <div class="comparison-label">If you bill 160 hrs/month at minimum rate</div>
+                    <div class="comparison-value" id="income_160_min">$ 0</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">If you bill 160 hrs/month at recommended rate</div>
+                    <div class="comparison-value" id="income_160_rec">$ 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="button-group">
+            <button onclick="saveToLocalStorage()">💾 Save My Data</button>
+            <button class="secondary" onclick="resetData()">🔄 Reset All</button>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>Rate Calculator Pro v1.0 | Data is saved locally in your browser</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #4a6b5e;">⚠️ This calculator is a guidance tool. Consult an accountant for precise tax figures.</p>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'ratepro';
+
+        const personalExpenses = [
+            'rent', 'utilities', 'groceries', 'transportation', 'insurance',
+            'subscriptions', 'entertainment', 'savings', 'other_personal'
+        ];
+
+        const profExpenses = [
+            'office', 'software', 'hardware', 'accountant',
+            'prof_insurance', 'training', 'marketing', 'other_professional'
+        ];
+
+        const allInputs = [
+            ...personalExpenses,
+            ...profExpenses,
+            'tax_regime',
+            'social_security',
+            'income_tax',
+            'working_days',
+            'vacation_weeks',
+            'sick_days',
+            'productive_hours'
+        ];
+
+        function loadFromLocalStorage() {
+            try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            } catch(e) {}
+            if (saved) {
+                const data = JSON.parse(saved);
+                allInputs.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && data[id] !== undefined) {
+                        element.value = data[id];
+                    }
+                });
+            }
+        }
+
+        function saveToLocalStorage() {
+            const data = {};
+            allInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    data[id] = element.value;
+                }
+            });
+            try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch(e) {}
+            alert('✅ Your data has been saved!');
+        }
+
+        function resetData() {
+            if (confirm('Are you sure you want to reset all data? This action cannot be undone.')) {
+                try {
+                localStorage.removeItem(STORAGE_KEY);
+                } catch(e) {}
+                document.querySelectorAll('input, select').forEach(el => {
+                    if (el.id === 'tax_regime') el.value = 'simplified15';
+                    else if (el.id === 'social_security') el.value = '15.3';
+                    else if (el.id === 'income_tax') el.value = '22';
+                    else if (el.id === 'working_days') el.value = '5';
+                    else if (el.id === 'vacation_weeks') el.value = '4';
+                    else if (el.id === 'sick_days') el.value = '5';
+                    else if (el.id === 'productive_hours') el.value = '6';
+                    else el.value = '0';
+                });
+                calculateResults();
+            }
+        }
+
+        function calculateResults() {
+            const totalPersonal = personalExpenses.reduce((sum, id) => {
+                return sum + (parseFloat(document.getElementById(id).value) || 0);
+            }, 0);
+            document.getElementById('total_personal').textContent = '$ ' + totalPersonal.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+            const totalProfessional = profExpenses.reduce((sum, id) => {
+                return sum + (parseFloat(document.getElementById(id).value) || 0);
+            }, 0);
+            document.getElementById('total_professional').textContent = '$ ' + totalProfessional.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+            const monthlyExpenses = totalPersonal + totalProfessional;
+
+            const regime = document.getElementById('tax_regime').value;
+            const socialSecurity = parseFloat(document.getElementById('social_security').value) || 15.3;
+            const incomeTax = parseFloat(document.getElementById('income_tax').value) || 22;
+
+            let annualExpenses = monthlyExpenses * 12;
+            let taxPercentage = 0;
+
+            if (regime === 'simplified15') {
+                taxPercentage = 15;
+            } else if (regime === 'standard25') {
+                taxPercentage = 25;
+            } else if (regime === 'selfemployed30') {
+                taxPercentage = 30;
+            } else {
+                // Custom: social security + income tax
+                taxPercentage = (socialSecurity + incomeTax) / 100;
+            }
+
+            let annualRevenue;
+            if (regime === 'custom') {
+                annualRevenue = annualExpenses / (1 - taxPercentage);
+            } else {
+                annualRevenue = annualExpenses / (1 - taxPercentage / 100);
+            }
+
+            document.getElementById('annual_revenue').textContent = '$ ' + annualRevenue.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+            const workingDaysPerWeek = parseFloat(document.getElementById('working_days').value) || 5;
+            const weeksPerYear = 52;
+            const annualDays = workingDaysPerWeek * weeksPerYear;
+            const vacationWeeks = parseFloat(document.getElementById('vacation_weeks').value) || 4;
+            const sickDays = parseFloat(document.getElementById('sick_days').value) || 5;
+            const effectiveDays = annualDays - (vacationWeeks * workingDaysPerWeek) - sickDays;
+
+            document.getElementById('effective_days').textContent = Math.max(0, Math.round(effectiveDays));
+
+            const hoursPerDay = parseFloat(document.getElementById('productive_hours').value) || 6;
+
+            const dailyRate = annualRevenue / Math.max(1, effectiveDays);
+            document.getElementById('daily_rate').textContent = '$ ' + dailyRate.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+            const hourlyRate = dailyRate / Math.max(1, hoursPerDay);
+            document.getElementById('hourly_rate').textContent = '$ ' + hourlyRate.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+            const recommendedDaily = dailyRate * 1.2;
+            const recommendedHourly = hourlyRate * 1.2;
+
+            document.getElementById('recommended_daily').textContent = '$ ' + recommendedDaily.toLocaleString('en-US', { maximumFractionDigits: 0 });
+            document.getElementById('recommended_hourly').textContent = '$ ' + recommendedHourly.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+            const taxRate = regime === 'custom'
+                ? taxPercentage
+                : (taxPercentage / 100);
+
+            const income100Min = (100 * hourlyRate * (1 - taxRate)) - monthlyExpenses;
+            const income100Rec = (100 * recommendedHourly * (1 - taxRate)) - monthlyExpenses;
+            const income160Min = (160 * hourlyRate * (1 - taxRate)) - monthlyExpenses;
+            const income160Rec = (160 * recommendedHourly * (1 - taxRate)) - monthlyExpenses;
+
+            document.getElementById('income_100_min').textContent = '$ ' + Math.max(0, income100Min).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            document.getElementById('income_100_rec').textContent = '$ ' + Math.max(0, income100Rec).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            document.getElementById('income_160_min').textContent = '$ ' + Math.max(0, income160Min).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            document.getElementById('income_160_rec').textContent = '$ ' + Math.max(0, income160Rec).toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            calculateResults();
+
+            allInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculateResults);
+                    element.addEventListener('change', calculateResults);
+                }
+            });
+        });
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='gg93obp1se',K='etherlabs_calcolatore-tariffa_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

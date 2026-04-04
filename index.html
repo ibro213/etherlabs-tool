@@ -8,40 +8,25 @@
     <link rel="manifest" href="manifest.json">
     <title>EtherLabs Tools</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #060a0a, #0a1210);
-            color: #e8f0ec; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .page { max-width: 600px; width: 90%; padding: 40px 0; }
-        h1 { font-size: 2rem; margin-bottom: 8px; }
-        h1 span { color: #10b981; }
-        .sub { color: #7a9a8e; margin-bottom: 40px; }
-        .tool-card {
-            display: block; text-decoration: none; color: inherit;
-            background: rgba(16,185,129,0.05);
-            border: 1px solid #162e26;
-            border-radius: 16px; padding: 24px;
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
-        }
-        .tool-card:hover {
-            border-color: #10b981;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(16,185,129,0.15);
-        }
-        .tool-icon { font-size: 2rem; margin-bottom: 8px; }
-        .tool-name { font-size: 1.2rem; font-weight: 700; color: #34d399; }
-        .tool-desc { color: #7a9a8e; font-size: 0.9rem; margin-top: 6px; }
-        .badge {
-            display: inline-block; background: linear-gradient(135deg, #10b981, #34d399);
-            color: #060a0a; font-size: 0.7rem; font-weight: 700;
-            padding: 3px 8px; border-radius: 6px; margin-left: 8px;
-            vertical-align: middle;
-        }
-        footer { text-align: center; color: #4a6b5e; font-size: 0.8rem; margin-top: 40px; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#060a0a,#0a1210);color:#e8f0ec;min-height:100vh;padding:40px 20px}
+        .page{max-width:700px;margin:0 auto}
+        h1{font-size:2rem;margin-bottom:8px}
+        h1 span{color:#10b981}
+        h2{color:#34d399;font-size:1.3rem;margin:35px 0 15px;padding-bottom:8px;border-bottom:1px solid #162e26}
+        .sub{color:#7a9a8e;margin-bottom:30px}
+        .tool-card{display:block;text-decoration:none;color:inherit;background:rgba(16,185,129,0.05);border:1px solid #162e26;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .3s ease}
+        .tool-card:hover{border-color:#10b981;transform:translateY(-3px);box-shadow:0 10px 30px rgba(16,185,129,0.15)}
+        .tool-icon{font-size:2rem;margin-bottom:8px}
+        .tool-name{font-size:1.15rem;font-weight:700;color:#34d399}
+        .tool-desc{color:#7a9a8e;font-size:.9rem;margin-top:6px}
+        .badge{display:inline-block;background:linear-gradient(135deg,#10b981,#34d399);color:#060a0a;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
+        .lang-switch{display:inline-flex;gap:8px;margin-bottom:25px}
+        .lang-btn{padding:8px 16px;border-radius:8px;border:1px solid #162e26;background:none;color:#7a9a8e;cursor:pointer;font-size:.9rem;transition:all .3s}
+        .lang-btn.active{background:rgba(16,185,129,0.15);border-color:#10b981;color:#10b981}
+        .lang-section{display:none}
+        .lang-section.active{display:block}
+        footer{text-align:center;color:#4a6b5e;font-size:.8rem;margin-top:40px}
     </style>
 </head>
 <body>
@@ -49,22 +34,230 @@
         <h1>⚡ Ether<span>Labs</span> Tools</h1>
         <p class="sub">Strumenti professionali per la vita quotidiana</p>
 
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="switchLang('it')">🇮🇹 Italiano</button>
+            <button class="lang-btn" onclick="switchLang('en')">🇬🇧 English</button>
+        </div>
+
+        <div id="lang-it" class="lang-section active">
+            <h2>🇮🇹 Strumenti in Italiano</h2>
         <a href="divisore-spese/" class="tool-card">
             <div class="tool-icon">💰</div>
             <div class="tool-name">Divisore Spese <span class="badge">PRO</span></div>
-            <div class="tool-desc">Dividi le spese di gruppo in modo equo. Gestisci partecipanti, spese e calcola chi deve pagare chi.</div>
+            <div class="tool-desc">Dividi le spese di gruppo in modo equo</div>
         </a>
 
-        <!-- Aggiungi altri tool qui -->
-        <!--
-        <a href="pomodoro/" class="tool-card">
+        <a href="calcolatore-debiti/" class="tool-card">
+            <div class="tool-icon">📉</div>
+            <div class="tool-name">Calcolatore Estinzione Debiti <span class="badge">PRO</span></div>
+            <div class="tool-desc">Pianifica l'estinzione dei tuoi debiti</div>
+        </a>
+
+        <a href="calcolatore-fire/" class="tool-card">
+            <div class="tool-icon">🔥</div>
+            <div class="tool-name">Calcolatore FIRE <span class="badge">PRO</span></div>
+            <div class="tool-desc">Calcola quando raggiungere l'indipendenza finanziaria</div>
+        </a>
+
+        <a href="calcolatore-mutuo/" class="tool-card">
+            <div class="tool-icon">🏠</div>
+            <div class="tool-name">Calcolatore Mutuo <span class="badge">PRO</span></div>
+            <div class="tool-desc">Simula rate e piani di ammortamento</div>
+        </a>
+
+        <a href="calcolatore-stipendio/" class="tool-card">
+            <div class="tool-icon">💵</div>
+            <div class="tool-name">Calcolatore Stipendio Netto <span class="badge">PRO</span></div>
+            <div class="tool-desc">Dal lordo al netto in un click</div>
+        </a>
+
+        <a href="calcolatore-tariffa/" class="tool-card">
+            <div class="tool-icon">🏷️</div>
+            <div class="tool-name">Calcolatore Tariffa <span class="badge">PRO</span></div>
+            <div class="tool-desc">Calcola la tariffa giusta per i tuoi servizi</div>
+        </a>
+
+        <a href="cv-builder/" class="tool-card">
+            <div class="tool-icon">📄</div>
+            <div class="tool-name">CV Builder <span class="badge">PRO</span></div>
+            <div class="tool-desc">Crea il tuo curriculum professionale</div>
+        </a>
+
+        <a href="generatore-contratti/" class="tool-card">
+            <div class="tool-icon">📝</div>
+            <div class="tool-name">Generatore Contratti <span class="badge">PRO</span></div>
+            <div class="tool-desc">Genera contratti professionali personalizzati</div>
+        </a>
+
+        <a href="generatore-fatture/" class="tool-card">
+            <div class="tool-icon">🧾</div>
+            <div class="tool-name">Generatore Fatture <span class="badge">PRO</span></div>
+            <div class="tool-desc">Crea fatture professionali in pochi click</div>
+        </a>
+
+        <a href="generatore-firma/" class="tool-card">
+            <div class="tool-icon">✉️</div>
+            <div class="tool-name">Generatore Firma Email <span class="badge">PRO</span></div>
+            <div class="tool-desc">Crea firme email professionali</div>
+        </a>
+
+        <a href="generatore-password/" class="tool-card">
+            <div class="tool-icon">🔑</div>
+            <div class="tool-name">Generatore Password <span class="badge">PRO</span></div>
+            <div class="tool-desc">Genera password sicure e personalizzate</div>
+        </a>
+
+        <a href="generatore-preventivi/" class="tool-card">
+            <div class="tool-icon">💼</div>
+            <div class="tool-name">Generatore Preventivi <span class="badge">PRO</span></div>
+            <div class="tool-desc">Crea preventivi professionali</div>
+        </a>
+
+        <a href="matrice-eisenhower/" class="tool-card">
+            <div class="tool-icon">📊</div>
+            <div class="tool-name">Matrice Eisenhower <span class="badge">PRO</span></div>
+            <div class="tool-desc">Organizza le priorità con la matrice urgente/importante</div>
+        </a>
+
+        <a href="budget-matrimonio/" class="tool-card">
+            <div class="tool-icon">💒</div>
+            <div class="tool-name">Budget Matrimonio <span class="badge">PRO</span></div>
+            <div class="tool-desc">Pianifica il budget del tuo matrimonio</div>
+        </a>
+
+        <a href="pomodoro-timer/" class="tool-card">
             <div class="tool-icon">🍅</div>
             <div class="tool-name">Pomodoro Timer <span class="badge">PRO</span></div>
-            <div class="tool-desc">Timer Pomodoro con sessioni personalizzabili e statistiche.</div>
+            <div class="tool-desc">Timer Pomodoro con sessioni personalizzabili</div>
         </a>
-        -->
+
+        <a href="side-hustle/" class="tool-card">
+            <div class="tool-icon">🚀</div>
+            <div class="tool-name">Side Hustle Evaluator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Valuta il potenziale del tuo side hustle</div>
+        </a>
+
+        <a href="tracker-risparmio/" class="tool-card">
+            <div class="tool-icon">🎯</div>
+            <div class="tool-name">Tracker Obiettivi Risparmio <span class="badge">PRO</span></div>
+            <div class="tool-desc">Traccia i tuoi obiettivi di risparmio</div>
+        </a>
+        </div>
+
+        <div id="lang-en" class="lang-section">
+            <h2>🇬🇧 Tools in English</h2>
+        <a href="en/divisore-spese/" class="tool-card">
+            <div class="tool-icon">💰</div>
+            <div class="tool-name">Group Expense Splitter <span class="badge">PRO</span></div>
+            <div class="tool-desc">Split group expenses fairly</div>
+        </a>
+
+        <a href="en/calcolatore-debiti/" class="tool-card">
+            <div class="tool-icon">📉</div>
+            <div class="tool-name">Debt Payoff Calculator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Plan your debt payoff strategy</div>
+        </a>
+
+        <a href="en/calcolatore-fire/" class="tool-card">
+            <div class="tool-icon">🔥</div>
+            <div class="tool-name">FIRE Calculator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Calculate your financial independence date</div>
+        </a>
+
+        <a href="en/calcolatore-mutuo/" class="tool-card">
+            <div class="tool-icon">🏠</div>
+            <div class="tool-name">Mortgage Calculator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Simulate mortgage rates and amortization</div>
+        </a>
+
+        <a href="en/calcolatore-stipendio/" class="tool-card">
+            <div class="tool-icon">💵</div>
+            <div class="tool-name">Net Salary Calculator <span class="badge">PRO</span></div>
+            <div class="tool-desc">From gross to net in one click</div>
+        </a>
+
+        <a href="en/calcolatore-tariffa/" class="tool-card">
+            <div class="tool-icon">🏷️</div>
+            <div class="tool-name">Rate Calculator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Calculate the right rate for your services</div>
+        </a>
+
+        <a href="en/cv-builder/" class="tool-card">
+            <div class="tool-icon">📄</div>
+            <div class="tool-name">Resume Builder <span class="badge">PRO</span></div>
+            <div class="tool-desc">Build your professional resume</div>
+        </a>
+
+        <a href="en/generatore-contratti/" class="tool-card">
+            <div class="tool-icon">📝</div>
+            <div class="tool-name">Contract Generator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Generate custom professional contracts</div>
+        </a>
+
+        <a href="en/generatore-fatture/" class="tool-card">
+            <div class="tool-icon">🧾</div>
+            <div class="tool-name">Invoice Generator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Create professional invoices in clicks</div>
+        </a>
+
+        <a href="en/generatore-firma/" class="tool-card">
+            <div class="tool-icon">✉️</div>
+            <div class="tool-name">Email Signature Generator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Create professional email signatures</div>
+        </a>
+
+        <a href="en/generatore-password/" class="tool-card">
+            <div class="tool-icon">🔑</div>
+            <div class="tool-name">Password Generator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Generate secure custom passwords</div>
+        </a>
+
+        <a href="en/generatore-preventivi/" class="tool-card">
+            <div class="tool-icon">💼</div>
+            <div class="tool-name">Quote Generator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Create professional quotes</div>
+        </a>
+
+        <a href="en/matrice-eisenhower/" class="tool-card">
+            <div class="tool-icon">📊</div>
+            <div class="tool-name">Eisenhower Matrix <span class="badge">PRO</span></div>
+            <div class="tool-desc">Organize priorities with the urgent/important matrix</div>
+        </a>
+
+        <a href="en/budget-matrimonio/" class="tool-card">
+            <div class="tool-icon">💒</div>
+            <div class="tool-name">Wedding Budget Planner <span class="badge">PRO</span></div>
+            <div class="tool-desc">Plan your wedding budget</div>
+        </a>
+
+        <a href="en/pomodoro-timer/" class="tool-card">
+            <div class="tool-icon">🍅</div>
+            <div class="tool-name">Pomodoro Timer <span class="badge">PRO</span></div>
+            <div class="tool-desc">Pomodoro timer with custom sessions</div>
+        </a>
+
+        <a href="en/side-hustle/" class="tool-card">
+            <div class="tool-icon">🚀</div>
+            <div class="tool-name">Side Hustle Evaluator <span class="badge">PRO</span></div>
+            <div class="tool-desc">Evaluate your side hustle potential</div>
+        </a>
+
+        <a href="en/tracker-risparmio/" class="tool-card">
+            <div class="tool-icon">🎯</div>
+            <div class="tool-name">Savings Goal Tracker <span class="badge">PRO</span></div>
+            <div class="tool-desc">Track your savings goals</div>
+        </a>
+        </div>
 
         <footer>© 2025 EtherLabs — Tutti i diritti riservati</footer>
     </div>
+    <script>
+    function switchLang(lang) {
+        document.querySelectorAll('.lang-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('lang-' + lang).classList.add('active');
+        event.target.classList.add('active');
+    }
+    </script>
 </body>
 </html>

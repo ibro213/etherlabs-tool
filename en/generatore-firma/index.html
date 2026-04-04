@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Email Signature Generator">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Email Signature Pro ✦ - Professional Signature Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --goldL: #34d399;
+            --goldD: #059669;
+            --t1: #e8f0ec;
+            --t2: #7a9a8e;
+            --t3: #4a6b5e;
+            --brd: #162e26;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+            color: var(--t1);
+            overflow-x: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            flex: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--goldL), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--t2);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .pro-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--goldL);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Styling */
+        .card {
+            background: rgba(15, 26, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--brd);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(15, 26, 23, 0.8);
+        }
+
+        .card h2 {
+            color: var(--goldL);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(to right, var(--gold), var(--goldL));
+            border-radius: 2px;
+        }
+
+        /* Form Section */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        label {
+            color: var(--t1);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="color"],
+        select {
+            background: rgba(10, 18, 16, 0.8);
+            border: 1px solid var(--brd);
+            color: var(--t1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="url"]:focus,
+        input[type="color"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(10, 18, 16, 1);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 44px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .color-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-btn.active {
+            border-color: var(--t1);
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .template-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .template-btn {
+            padding: 12px;
+            background: rgba(10, 18, 16, 0.8);
+            border: 2px solid var(--brd);
+            color: var(--t2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .template-btn:hover {
+            border-color: var(--gold);
+            color: var(--goldL);
+        }
+
+        .template-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--gold);
+            color: var(--goldL);
+        }
+
+        /* Toggle Switches */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(10, 18, 16, 0.5);
+            border-radius: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: var(--brd);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--gold);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--bg2);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            left: 24px;
+        }
+
+        /* Preview Section */
+        .preview-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .preview-header {
+            color: var(--bg);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        .signature-preview {
+            flex: 1;
+            font-family: inherit;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--goldL));
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--goldL);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--t3);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--brd);
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--goldL);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            animation: slideInUp 0.3s ease-out;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: var(--t3);
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .main-wrapper {
+                gap: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Email Signature Generator</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Email Signature Pro ✦</h1>
+            <p>Professional email signature generator</p>
+            <div class="pro-badge">🚀 Pro Version</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <!-- Left Panel - Form -->
+            <div class="card">
+                <h2>Personal Information</h2>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" placeholder="e.g., John Smith" value="Marco Rossi">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title *</label>
+                        <input type="text" id="jobTitle" placeholder="e.g., Director of Operations" value="Director of Operations">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company Name *</label>
+                        <input type="text" id="company" placeholder="e.g., Digital Solutions Ltd" value="Digital Solutions Ltd">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" placeholder="e.g., marco@company.com" value="marco@company.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" placeholder="e.g., +1 (555) 123-4567" value="+39 123 456 7890">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" placeholder="e.g., https://www.company.com" value="https://www.company.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn URL</label>
+                        <input type="url" id="linkedin" placeholder="e.g., https://linkedin.com/in/marco" value="https://linkedin.com/in/marco">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instagram">Instagram URL</label>
+                        <input type="url" id="instagram" placeholder="e.g., https://instagram.com/marco" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photoUrl">Profile Photo URL</label>
+                        <input type="url" id="photoUrl" placeholder="e.g., https://..." value="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Design Options -->
+            <div>
+                <div class="card">
+                    <h2>Template & Design</h2>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label>Select Template</label>
+                            <div class="template-selector">
+                                <button class="template-btn active" data-template="modern">Modern Minimal</button>
+                                <button class="template-btn" data-template="corporate">Corporate</button>
+                                <button class="template-btn" data-template="creative">Creative</button>
+                                <button class="template-btn" data-template="bold">Bold Impact</button>
+                                <button class="template-btn" data-template="elegant">Elegant</button>
+                                <button class="template-btn" data-template="tech">Tech</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Accent Color</label>
+                            <div class="color-presets">
+                                <button class="color-btn active" data-color="#10b981" style="background: #10b981;" title="Emerald"></button>
+                                <button class="color-btn" data-color="#3b82f6" style="background: #3b82f6;" title="Blue"></button>
+                                <button class="color-btn" data-color="#ef4444" style="background: #ef4444;" title="Red"></button>
+                                <button class="color-btn" data-color="#8b5cf6" style="background: #8b5cf6;" title="Purple"></button>
+                                <button class="color-btn" data-color="#f97316" style="background: #f97316;" title="Orange"></button>
+                            </div>
+                            <div class="form-group">
+                                <label for="customColor">Custom Color</label>
+                                <div class="color-group">
+                                    <input type="color" id="customColor" value="#10b981">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fontFamily">Font</label>
+                            <select id="fontFamily">
+                                <option value="'Segoe UI', Roboto">Segoe UI (Modern)</option>
+                                <option value="Georgia, serif">Georgia (Classic)</option>
+                                <option value="'Courier New', monospace">Courier (Technical)</option>
+                                <option value="Verdana, sans-serif">Verdana (Clean)</option>
+                            </select>
+                        </div>
+
+                        <div class="toggle-group">
+                            <label style="margin: 0; font-weight: 500;">Include Profile Photo</label>
+                            <div class="toggle-switch active" id="togglePhoto"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <label style="margin: 0; font-weight: 500;">Show Social Icons</label>
+                            <div class="toggle-switch active" id="toggleSocial"></div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <label style="margin: 0; font-weight: 500;">Include Separator</label>
+                            <div class="toggle-switch active" id="toggleSeparator"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h2>Export</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="copyHtmlBtn">
+                            <span>📋</span> Copy HTML
+                        </button>
+                        <button class="btn btn-secondary" id="copyTextBtn">
+                            <span>✏️</span> Copy Text
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="card">
+            <h2>Signature Preview</h2>
+            <div class="preview-container">
+                <div class="preview-header">Email Preview (White Background)</div>
+                <div class="signature-preview" id="signaturePreview"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div style="position: relative; padding-bottom: 15px;">
+            © 2025 EtherLabs - Email Signature Pro ✦
+            <div class="watermark">Created with Email Signature Pro</div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        // ============================================
+        // SVG Icons (Inline)
+        // ============================================
+        const icons = {
+            linkedin: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`,
+            instagram: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.057-1.645.069-4.849.069-3.204 0-3.584-.012-4.849-.069-3.259-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.322a1.44 1.44 0 110-2.881 1.44 1.44 0 010 2.881z"/></svg>`,
+            website: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11.99 5V1h-11v6h2v8h-2v6h17v-6h-2v-8h2v-6h-8zm6 4v8h-12v-8h12z"/></svg>`,
+            email: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
+            phone: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.707 12.293l-5.293-5.293a1 1 0 00-1.414 1.414L15.586 12l-4.586 4.586a1 1 0 001.414 1.414l5.293-5.293a1 1 0 000-1.414zM8 5a1 1 0 00-1 1v12a1 1 0 102 0V6a1 1 0 00-1-1z"/></svg>`
+        };
+
+        // ============================================
+        // State Management
+        // ============================================
+        const state = {
+            fullName: document.getElementById('fullName').value,
+            jobTitle: document.getElementById('jobTitle').value,
+            company: document.getElementById('company').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            website: document.getElementById('website').value,
+            linkedin: document.getElementById('linkedin').value,
+            instagram: document.getElementById('instagram').value,
+            photoUrl: document.getElementById('photoUrl').value,
+            template: 'modern',
+            accentColor: '#10b981',
+            fontFamily: "'Segoe UI', Roboto",
+            includePhoto: true,
+            showSocial: true,
+            includeSeparator: true
+        };
+
+        // ============================================
+        // Template Definitions
+        // ============================================
+        const templates = {
+            modern: {
+                name: 'Modern Minimal',
+                generate: (data, color, font) => {
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<img src="${data.photoUrl}" alt="${data.fullName}" style="width: 60px; height: 60px; border-radius: 50%; margin-bottom: 12px; display: block;">` : '';
+                    const socialHtml = generateSocialLinks(data, color, 'horizontal');
+                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; border-top: 2px solid ${color}; opacity: 0.3;"></div>` : '';
+
+                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
+                        ${photoHtml}
+                        <div style="margin-bottom: 16px;">
+                            <div style="font-size: 16px; font-weight: 700; color: #000;">${data.fullName}</div>
+                            <div style="font-size: 14px; color: ${color}; font-weight: 600; margin-top: 4px;">${data.jobTitle}</div>
+                            <div style="font-size: 13px; color: #666; margin-top: 2px;">${data.company}</div>
+                        </div>
+                        ${separator}
+                        <div style="font-size: 13px; color: #555; line-height: 1.6; margin-top: 12px;">
+                            ${data.email ? `<div>📧 <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
+                            ${data.phone ? `<div>📱 ${data.phone}</div>` : ''}
+                            ${data.website ? `<div>🌐 <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Website</a></div>` : ''}
+                        </div>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${socialHtml}</div>` : ''}
+                    </div>`;
+                }
+            },
+            corporate: {
+                name: 'Corporate',
+                generate: (data, color, font) => {
+                    const separator = data.includeSeparator ? `<table width="100%" style="margin: 12px 0;"><tr><td style="border-top: 3px solid ${color}; height: 0;"></td></tr></table>` : '';
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<table style="margin-bottom: 12px;"><tr><td><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 70px; height: 70px; border-radius: 4px; border: 2px solid ${color};"></td></tr></table>` : '';
+
+                    return `<div style="font-family: ${font}; color: #000; max-width: 600px;">
+                        ${photoHtml}
+                        <table width="100%" style="margin-bottom: 16px;">
+                            <tr><td style="font-size: 18px; font-weight: 700; color: #000; padding-bottom: 4px;">${data.fullName}</td></tr>
+                            <tr><td style="font-size: 14px; font-weight: 600; color: ${color};">${data.jobTitle}</td></tr>
+                            <tr><td style="font-size: 13px; color: #666;">${data.company}</td></tr>
+                        </table>
+                        ${separator}
+                        <table width="100%" style="margin-top: 12px; font-size: 13px; color: #555;">
+                            ${data.email ? `<tr><td style="padding: 2px 0;"><strong>Email:</strong> <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></td></tr>` : ''}
+                            ${data.phone ? `<tr><td style="padding: 2px 0;"><strong>Phone:</strong> ${data.phone}</td></tr>` : ''}
+                            ${data.website ? `<tr><td style="padding: 2px 0;"><strong>Web:</strong> <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Visit us</a></td></tr>` : ''}
+                        </table>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
+                    </div>`;
+                }
+            },
+            creative: {
+                name: 'Creative',
+                generate: (data, color, font) => {
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 12px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid ${color}; display: block;"></div>` : '';
+                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; height: 4px; background: linear-gradient(to right, ${color}, transparent);"></div>` : '';
+
+                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
+                        <div style="background: linear-gradient(135deg, ${color}15, transparent); padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                            ${photoHtml}
+                            <div style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px;">${data.fullName}</div>
+                            <div style="font-size: 14px; color: ${color}; font-weight: 600; margin-bottom: 4px;">${data.jobTitle}</div>
+                            <div style="font-size: 13px; color: #666;">${data.company}</div>
+                        </div>
+                        ${separator}
+                        <div style="font-size: 13px; color: #555; line-height: 1.8; margin-top: 12px;">
+                            ${data.email ? `<div>💌 <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none; font-weight: 500;">${data.email}</a></div>` : ''}
+                            ${data.phone ? `<div>📞 <span style="font-weight: 500;">${data.phone}</span></div>` : ''}
+                            ${data.website ? `<div>🔗 <a href="${data.website}" style="color: ${color}; text-decoration: none; font-weight: 500;" target="_blank">Visita il nostro sito</a></div>` : ''}
+                        </div>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 10px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
+                    </div>`;
+                }
+            },
+            bold: {
+                name: 'Bold Impact',
+                generate: (data, color, font) => {
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 16px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 90px; height: 90px; border-radius: 8px; border: 3px solid ${color};"></div>` : '';
+                    const separator = data.includeSeparator ? `<div style="margin: 16px 0; padding-left: 8px; border-left: 4px solid ${color};"></div>` : '';
+
+                    return `<div style="font-family: ${font}; color: #000; max-width: 600px;">
+                        <div style="background: ${color}; color: white; padding: 20px; border-radius: 4px; margin-bottom: 16px;">
+                            <div style="font-size: 20px; font-weight: 900;">${data.fullName.toUpperCase()}</div>
+                            <div style="font-size: 14px; margin-top: 6px; opacity: 0.9;">${data.jobTitle}</div>
+                        </div>
+                        ${photoHtml}
+                        <div style="font-size: 13px; color: #333; margin-bottom: 12px;">
+                            <div style="font-weight: 600; color: ${color}; margin-bottom: 4px;">${data.company}</div>
+                        </div>
+                        ${separator}
+                        <div style="font-size: 13px; color: #555; margin-top: 12px;">
+                            ${data.email ? `<div style="margin-bottom: 4px;"><a href="mailto:${data.email}" style="color: ${color}; text-decoration: none; font-weight: 600;">${data.email}</a></div>` : ''}
+                            ${data.phone ? `<div style="margin-bottom: 4px; font-weight: 500;">${data.phone}</div>` : ''}
+                            ${data.website ? `<div><a href="${data.website}" style="color: ${color}; text-decoration: none; font-weight: 600;" target="_blank">www.company.com</a></div>` : ''}
+                        </div>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 10px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
+                    </div>`;
+                }
+            },
+            elegant: {
+                name: 'Elegant',
+                generate: (data, color, font) => {
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<img src="${data.photoUrl}" alt="${data.fullName}" style="width: 75px; height: 75px; border-radius: 50%; margin-bottom: 12px; display: block; border: 3px solid ${color};">` : '';
+                    const separator = data.includeSeparator ? `<div style="margin: 16px 0; height: 1px; background: ${color}; opacity: 0.4;"></div>` : '';
+
+                    return `<div style="font-family: ${font}; color: #2c3e50; max-width: 600px; text-align: center;">
+                        ${photoHtml}
+                        <div style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px;">${data.fullName}</div>
+                        <div style="font-size: 13px; color: ${color}; font-weight: 600; letter-spacing: 1px; margin-bottom: 2px;">${data.jobTitle}</div>
+                        <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 12px;">${data.company}</div>
+                        ${separator}
+                        <div style="font-size: 12px; color: #555; line-height: 1.8;">
+                            ${data.email ? `<div><a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
+                            ${data.phone ? `<div>${data.phone}</div>` : ''}
+                            ${data.website ? `<div><a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Visit Website</a></div>` : ''}
+                        </div>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px; justify-content: center;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
+                    </div>`;
+                }
+            },
+            tech: {
+                name: 'Tech',
+                generate: (data, color, font) => {
+                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 12px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 70px; height: 70px; border: 2px solid ${color}; display: block;"></div>` : '';
+                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; background: linear-gradient(to right, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%); background-size: 8px 2px; height: 2px;"></div>` : '';
+
+                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
+                        ${photoHtml}
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-weight: 700; color: #000; font-family: 'Courier New', monospace;">&gt; ${data.fullName}</div>
+                            <div style="font-size: 13px; color: ${color}; font-family: 'Courier New', monospace; margin-top: 2px;">$ ${data.jobTitle}</div>
+                            <div style="font-size: 12px; color: #888; font-family: 'Courier New', monospace;">@ ${data.company}</div>
+                        </div>
+                        ${separator}
+                        <div style="font-size: 12px; color: #555; font-family: 'Courier New', monospace; line-height: 1.6;">
+                            ${data.email ? `<div>→ <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
+                            ${data.phone ? `<div>→ ${data.phone}</div>` : ''}
+                            ${data.website ? `<div>→ <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">${data.website}</a></div>` : ''}
+                        </div>
+                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
+                    </div>`;
+                }
+            }
+        };
+
+        // ============================================
+        // Helper Functions
+        // ============================================
+        function generateSocialLinks(data, color, layout) {
+            let html = '';
+
+            if (data.email) {
+                html += `<a href="mailto:${data.email}" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Email">${icons.email}</a>`;
+            }
+            if (data.phone) {
+                html += `<a href="tel:${data.phone}" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Phone">${icons.phone}</a>`;
+            }
+            if (data.linkedin) {
+                html += `<a href="${data.linkedin}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="LinkedIn">${icons.linkedin}</a>`;
+            }
+            if (data.instagram) {
+                html += `<a href="${data.instagram}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Instagram">${icons.instagram}</a>`;
+            }
+            if (data.website) {
+                html += `<a href="${data.website}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Website">${icons.website}</a>`;
+            }
+
+            return html;
+        }
+
+        function updatePreview() {
+            const template = templates[state.template];
+            const html = template.generate(state, state.accentColor, state.fontFamily);
+            document.getElementById('signaturePreview').innerHTML = html;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.getElementById('notificationContainer').appendChild(notification);
+            setTimeout(() => notification.remove(), 2500);
+        }
+
+        function copyToClipboard(text, type) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification(`✓ ${type} copied to clipboard!`);
+            }).catch(() => {
+                showNotification('Error copying to clipboard');
+            });
+        }
+
+        function generatePlainText() {
+            const lines = [
+                state.fullName,
+                state.jobTitle,
+                state.company,
+                ''
+            ];
+            if (state.email) lines.push(`Email: ${state.email}`);
+            if (state.phone) lines.push(`Phone: ${state.phone}`);
+            if (state.website) lines.push(`Web: ${state.website}`);
+            if (state.linkedin) lines.push(`LinkedIn: ${state.linkedin}`);
+            if (state.instagram) lines.push(`Instagram: ${state.instagram}`);
+            return lines.join('\n');
+        }
+
+        function generateHTMLSignature() {
+            const template = templates[state.template];
+            return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+${template.generate(state, state.accentColor, state.fontFamily)}
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='15pfep4yd98',K='etherlabs_generatore-firma_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>`;
+        }
+
+        // ============================================
+        // Event Listeners
+        // ============================================
+        // Input fields
+        document.getElementById('fullName').addEventListener('input', (e) => {
+            state.fullName = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('jobTitle').addEventListener('input', (e) => {
+            state.jobTitle = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('company').addEventListener('input', (e) => {
+            state.company = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('email').addEventListener('input', (e) => {
+            state.email = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('phone').addEventListener('input', (e) => {
+            state.phone = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('website').addEventListener('input', (e) => {
+            state.website = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('linkedin').addEventListener('input', (e) => {
+            state.linkedin = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('instagram').addEventListener('input', (e) => {
+            state.instagram = e.target.value;
+            updatePreview();
+        });
+
+        document.getElementById('photoUrl').addEventListener('input', (e) => {
+            state.photoUrl = e.target.value;
+            updatePreview();
+        });
+
+        // Template selector
+        document.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                state.template = e.target.dataset.template;
+                updatePreview();
+            });
+        });
+
+        // Color selector
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                state.accentColor = e.target.dataset.color;
+                document.getElementById('customColor').value = state.accentColor;
+                updatePreview();
+            });
+        });
+
+        // Custom color
+        document.getElementById('customColor').addEventListener('input', (e) => {
+            state.accentColor = e.target.value;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            updatePreview();
+        });
+
+        // Font selector
+        document.getElementById('fontFamily').addEventListener('change', (e) => {
+            state.fontFamily = e.target.value;
+            updatePreview();
+        });
+
+        // Toggles
+        document.getElementById('togglePhoto').addEventListener('click', function() {
+            this.classList.toggle('active');
+            state.includePhoto = this.classList.contains('active');
+            updatePreview();
+        });
+
+        document.getElementById('toggleSocial').addEventListener('click', function() {
+            this.classList.toggle('active');
+            state.showSocial = this.classList.contains('active');
+            updatePreview();
+        });
+
+        document.getElementById('toggleSeparator').addEventListener('click', function() {
+            this.classList.toggle('active');
+            state.includeSeparator = this.classList.contains('active');
+            updatePreview();
+        });
+
+        // Action buttons
+        document.getElementById('copyHtmlBtn').addEventListener('click', () => {
+            const html = generateHTMLSignature();
+            copyToClipboard(html, 'HTML');
+        });
+
+        document.getElementById('copyTextBtn').addEventListener('click', () => {
+            const text = generatePlainText();
+            copyToClipboard(text, 'Text');
+        });
+
+        // Initial preview
+        updatePreview();
+    </script>
+</body>
+</html>

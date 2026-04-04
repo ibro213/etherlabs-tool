@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Resume Builder">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --bg4: #142420;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-lighter: #6ee7b7;
+            --gold-dark: #059669;
+            --gold-glow: rgba(16,185,129,0.15);
+            --gold-glow2: rgba(16,185,129,0.08);
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+            --border2: #1f3d33;
+            --success: #34d399;
+            --error: #f87171;
+            --accent-color: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
+            color: var(--text1);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: var(--gold-glow);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text2);
+            font-size: 14px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--gold-light);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text1);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: var(--bg2);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Inter', sans-serif;
+            margin-top: 15px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--gold-light);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg4);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .entry-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .entry-item .form-row {
+            margin-bottom: 15px;
+        }
+
+        .entry-item textarea {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .entry-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .entry-remove:hover {
+            opacity: 0.9;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg2);
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            justify-content: space-between;
+        }
+
+        .skill-stars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .star {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .star.filled {
+            background: var(--gold-light);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        .star:hover {
+            background: var(--gold);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-group label {
+            margin-bottom: 0;
+            color: var(--text2);
+            text-transform: capitalize;
+            font-size: 13px;
+        }
+
+        .control-group select {
+            min-width: 150px;
+        }
+
+        /* PREVIEW PANEL */
+        .preview-panel {
+            background: #f6faf8;
+            color: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .preview-panel {
+                position: static;
+                margin-top: 30px;
+            }
+        }
+
+        .preview-header {
+            text-align: center;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .preview-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .preview-title {
+            font-size: 16px;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .preview-contact {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #555;
+            margin-top: 12px;
+        }
+
+        .preview-section {
+            margin-bottom: 20px;
+        }
+
+        .preview-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            margin-top: 18px;
+        }
+
+        .preview-entry {
+            margin-bottom: 12px;
+        }
+
+        .preview-entry-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+
+        .preview-entry-subtitle {
+            font-size: 12px;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .preview-entry-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .preview-entry-desc {
+            font-size: 12px;
+            color: #555;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .preview-skills {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .preview-skill-item {
+            font-size: 12px;
+            color: #1a1a1a;
+        }
+
+        .preview-skill-bar {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .preview-skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color) 0%, var(--accent-color) 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .preview-languages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .preview-language-item {
+            font-size: 12px;
+            color: #1a1a1a;
+        }
+
+        .preview-language-level {
+            font-size: 10px;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .preview-empty {
+            color: #bbb;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        .preview-panel.template-classic .preview-name {
+            font-family: 'Georgia', serif;
+        }
+
+        .preview-panel.template-modern {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 30px;
+        }
+
+        .preview-panel.template-modern .preview-sidebar {
+            border-left: 2px solid var(--accent-color);
+            padding-left: 20px;
+        }
+
+        .preview-panel.template-minimal .preview-section-title {
+            border-bottom: none;
+            margin-top: 25px;
+            padding-bottom: 0;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+        /* Accent Colors */
+        .accent-green {
+            --accent-color: #10b981;
+        }
+
+        .accent-blue {
+            --accent-color: #3b82f6;
+        }
+
+        .accent-red {
+            --accent-color: #ef4444;
+        }
+
+        .accent-purple {
+            --accent-color: #a855f7;
+        }
+
+        .accent-orange {
+            --accent-color: #f97316;
+        }
+
+        .accent-black {
+            --accent-color: #1f2937;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: var(--text1);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .color-green { background: #10b981; }
+        .color-blue { background: #3b82f6; }
+        .color-red { background: #ef4444; }
+        .color-purple { background: #a855f7; }
+        .color-orange { background: #f97316; }
+        .color-black { background: #1f2937; }
+
+        .bottom-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                display: none;
+            }
+
+            .preview-panel {
+                position: static;
+                background: white;
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                color: #1a1a1a;
+                display: block;
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Resume Builder</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <div class="header">
+            <div class="brand-tag">Premium Tool</div>
+            <h1>ResumeBuilder Pro</h1>
+            <p>Build your professional resume with style and ease</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="template-select">Resume Style:</label>
+                <select id="template-select">
+                    <option value="classic">Classic</option>
+                    <option value="modern">Modern</option>
+                    <option value="minimal">Minimal</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="accent-select">Accent Color:</label>
+                <div class="color-picker">
+                    <div class="color-option active color-green" data-accent="green" title="Green"></div>
+                    <div class="color-option color-blue" data-accent="blue" title="Blue"></div>
+                    <div class="color-option color-red" data-accent="red" title="Red"></div>
+                    <div class="color-option color-purple" data-accent="purple" title="Purple"></div>
+                    <div class="color-option color-orange" data-accent="orange" title="Orange"></div>
+                    <div class="color-option color-black" data-accent="black" title="Black"></div>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="loadExample()">Load Sample</button>
+        </div>
+
+        <div class="main-layout">
+            <!-- LEFT PANEL: FORM -->
+            <div class="panel">
+                <div class="panel-title">Professional Information</div>
+
+                <!-- PERSONAL INFO -->
+                <div class="section-header">
+                    <h3>Personal Details</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="e.g. John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Job Title/Role</label>
+                        <input type="text" id="title" placeholder="e.g. Senior Developer">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">City/Country</label>
+                        <input type="text" id="location" placeholder="New York, USA">
+                    </div>
+                    <div class="form-group">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" placeholder="https://johnsmith.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/johnsmith">
+                    </div>
+                    <div class="form-group">
+                        <label for="photoUrl">Profile Photo (URL)</label>
+                        <input type="url" id="photoUrl" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- PROFESSIONAL SUMMARY -->
+                <div class="section-header">
+                    <h3>Professional Summary</h3>
+                </div>
+                <div class="form-group form-row full">
+                    <label for="summary">Description</label>
+                    <textarea id="summary" placeholder="Describe your experience, skills and professional goals..."></textarea>
+                </div>
+
+                <!-- WORK EXPERIENCE -->
+                <div class="section-header">
+                    <h3>Work Experience</h3>
+                    <button class="btn btn-primary btn-small" onclick="addWorkEntry()">+ Add</button>
+                </div>
+                <div id="workExperience"></div>
+
+                <!-- EDUCATION -->
+                <div class="section-header">
+                    <h3>Education</h3>
+                    <button class="btn btn-primary btn-small" onclick="addEducationEntry()">+ Add</button>
+                </div>
+                <div id="education"></div>
+
+                <!-- SKILLS -->
+                <div class="section-header">
+                    <h3>Skills</h3>
+                    <button class="btn btn-primary btn-small" onclick="addSkillEntry()">+ Add</button>
+                </div>
+                <div id="skills"></div>
+
+                <!-- LANGUAGES -->
+                <div class="section-header">
+                    <h3>Languages</h3>
+                    <button class="btn btn-primary btn-small" onclick="addLanguageEntry()">+ Add</button>
+                </div>
+                <div id="languages"></div>
+
+                <!-- CERTIFICATIONS -->
+                <div class="section-header">
+                    <h3>Certifications</h3>
+                    <button class="btn btn-primary btn-small" onclick="addCertificationEntry()">+ Add</button>
+                </div>
+                <div id="certifications"></div>
+
+                <!-- CUSTOM SECTION -->
+                <div class="section-header">
+                    <h3>Custom Section</h3>
+                </div>
+                <div class="form-group">
+                    <label for="customTitle">Section Title</label>
+                    <input type="text" id="customTitle" placeholder="e.g. Projects, Publications...">
+                </div>
+                <div class="form-group form-row full">
+                    <label for="customContent">Content</label>
+                    <textarea id="customContent" placeholder="Add your custom section content..."></textarea>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="bottom-actions">
+                    <button class="btn btn-primary" onclick="printResume()">Print Resume</button>
+                    <button class="btn btn-secondary" onclick="copyText()">Copy Text</button>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: PREVIEW -->
+            <div class="preview-panel template-classic" id="preview">
+                <div class="preview-header">
+                    <div class="preview-name" id="previewName">Your Name</div>
+                    <div class="preview-title" id="previewTitle">Professional Title</div>
+                    <div class="preview-contact">
+                        <span id="previewEmail">email@example.com</span>
+                        <span id="previewPhone">+1 (555) 123-4567</span>
+                        <span id="previewLocation">New York, USA</span>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-section-title">Professional Summary</div>
+                    <div class="preview-entry-desc" id="previewSummary">Your professional summary will appear here...</div>
+                </div>
+
+                <div class="preview-section" id="previewWorkSection" style="display:none;">
+                    <div class="preview-section-title">Work Experience</div>
+                    <div id="previewWork"></div>
+                </div>
+
+                <div class="preview-section" id="previewEducationSection" style="display:none;">
+                    <div class="preview-section-title">Education</div>
+                    <div id="previewEducation"></div>
+                </div>
+
+                <div class="preview-section" id="previewSkillsSection" style="display:none;">
+                    <div class="preview-section-title">Skills</div>
+                    <div class="preview-skills" id="previewSkills"></div>
+                </div>
+
+                <div class="preview-section" id="previewLanguagesSection" style="display:none;">
+                    <div class="preview-section-title">Languages</div>
+                    <div class="preview-languages" id="previewLanguages"></div>
+                </div>
+
+                <div class="preview-section" id="previewCertificationsSection" style="display:none;">
+                    <div class="preview-section-title">Certifications</div>
+                    <div id="previewCertifications"></div>
+                </div>
+
+                <div class="preview-section" id="previewCustomSection" style="display:none;">
+                    <div class="preview-section-title" id="previewCustomTitle"></div>
+                    <div id="previewCustomContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            fullName: '',
+            title: '',
+            email: '',
+            phone: '',
+            location: '',
+            website: '',
+            linkedin: '',
+            summary: '',
+            work: [],
+            education: [],
+            skills: [],
+            languages: [],
+            certifications: [],
+            customTitle: '',
+            customContent: ''
+        };
+
+        const levelLabels = {
+            1: 'Beginner',
+            2: 'Elementary',
+            3: 'Intermediate',
+            4: 'Advanced',
+            5: 'Expert'
+        };
+
+        const languageLevels = ['Select', 'Basic', 'Intermediate', 'Fluent', 'Native'];
+
+        function addWorkEntry() {
+            state.work.push({id: Date.now(), company: '', role: '', start: '', end: '', description: ''});
+            renderWorkEntries();
+            updatePreview();
+        }
+
+        function removeWorkEntry(id) {
+            state.work = state.work.filter(e => e.id !== id);
+            renderWorkEntries();
+            updatePreview();
+        }
+
+        function renderWorkEntries() {
+            const container = document.getElementById('workExperience');
+            container.innerHTML = state.work.map(entry => `
+                <div class="entry-item">
+                    <button class="entry-remove" onclick="removeWorkEntry(${entry.id})">×</button>
+                    <div class="form-row">
+                        <input type="text" placeholder="Company" value="${entry.company}" onchange="updateWorkField(${entry.id}, 'company', this.value)">
+                        <input type="text" placeholder="Job Title" value="${entry.role}" onchange="updateWorkField(${entry.id}, 'role', this.value)">
+                    </div>
+                    <div class="form-row">
+                        <input type="text" placeholder="Start Date (e.g. Jan 2020)" value="${entry.start}" onchange="updateWorkField(${entry.id}, 'start', this.value)">
+                        <input type="text" placeholder="End Date (e.g. Dec 2023)" value="${entry.end}" onchange="updateWorkField(${entry.id}, 'end', this.value)">
+                    </div>
+                    <textarea placeholder="Job description (you can add multiple lines)" onchange="updateWorkField(${entry.id}, 'description', this.value)">${entry.description}</textarea>
+                </div>
+            `).join('');
+        }
+
+        function updateWorkField(id, field, value) {
+            const entry = state.work.find(e => e.id === id);
+            if (entry) {
+                entry[field] = value;
+                updatePreview();
+            }
+        }
+
+        function addEducationEntry() {
+            state.education.push({id: Date.now(), institution: '', degree: '', year: '', gpa: ''});
+            renderEducationEntries();
+            updatePreview();
+        }
+
+        function removeEducationEntry(id) {
+            state.education = state.education.filter(e => e.id !== id);
+            renderEducationEntries();
+            updatePreview();
+        }
+
+        function renderEducationEntries() {
+            const container = document.getElementById('education');
+            container.innerHTML = state.education.map(entry => `
+                <div class="entry-item">
+                    <button class="entry-remove" onclick="removeEducationEntry(${entry.id})">×</button>
+                    <div class="form-row">
+                        <input type="text" placeholder="Institution" value="${entry.institution}" onchange="updateEducationField(${entry.id}, 'institution', this.value)">
+                        <input type="text" placeholder="Degree/Title" value="${entry.degree}" onchange="updateEducationField(${entry.id}, 'degree', this.value)">
+                    </div>
+                    <div class="form-row">
+                        <input type="text" placeholder="Year" value="${entry.year}" onchange="updateEducationField(${entry.id}, 'year', this.value)">
+                        <input type="text" placeholder="GPA (optional)" value="${entry.gpa}" onchange="updateEducationField(${entry.id}, 'gpa', this.value)">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateEducationField(id, field, value) {
+            const entry = state.education.find(e => e.id === id);
+            if (entry) {
+                entry[field] = value;
+                updatePreview();
+            }
+        }
+
+        function addSkillEntry() {
+            state.skills.push({id: Date.now(), name: '', level: 3});
+            renderSkillEntries();
+            updatePreview();
+        }
+
+        function removeSkillEntry(id) {
+            state.skills = state.skills.filter(e => e.id !== id);
+            renderSkillEntries();
+            updatePreview();
+        }
+
+        function renderSkillEntries() {
+            const container = document.getElementById('skills');
+            container.innerHTML = state.skills.map(entry => `
+                <div class="skill-item">
+                    <input type="text" placeholder="Skill" value="${entry.name}" style="flex: 1;" onchange="updateSkillField(${entry.id}, 'name', this.value)">
+                    <div class="skill-stars">
+                        ${[1,2,3,4,5].map(i => `
+                            <div class="star ${i <= entry.level ? 'filled' : ''}" onclick="updateSkillField(${entry.id}, 'level', ${i})" title="${levelLabels[i]}"></div>
+                        `).join('')}
+                    </div>
+                    <button class="btn btn-danger btn-small" onclick="removeSkillEntry(${entry.id})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function updateSkillField(id, field, value) {
+            const entry = state.skills.find(e => e.id === id);
+            if (entry) {
+                entry[field] = value;
+                updatePreview();
+            }
+        }
+
+        function addLanguageEntry() {
+            state.languages.push({id: Date.now(), name: '', level: 0});
+            renderLanguageEntries();
+            updatePreview();
+        }
+
+        function removeLanguageEntry(id) {
+            state.languages = state.languages.filter(e => e.id !== id);
+            renderLanguageEntries();
+            updatePreview();
+        }
+
+        function renderLanguageEntries() {
+            const container = document.getElementById('languages');
+            container.innerHTML = state.languages.map(entry => `
+                <div class="entry-item">
+                    <button class="entry-remove" onclick="removeLanguageEntry(${entry.id})">×</button>
+                    <div class="form-row">
+                        <input type="text" placeholder="Language" value="${entry.name}" onchange="updateLanguageField(${entry.id}, 'name', this.value)">
+                        <select onchange="updateLanguageField(${entry.id}, 'level', this.value)">
+                            <option value="0" ${entry.level == 0 ? 'selected' : ''}>Select Level</option>
+                            <option value="1" ${entry.level == 1 ? 'selected' : ''}>Basic</option>
+                            <option value="2" ${entry.level == 2 ? 'selected' : ''}>Intermediate</option>
+                            <option value="3" ${entry.level == 3 ? 'selected' : ''}>Fluent</option>
+                            <option value="4" ${entry.level == 4 ? 'selected' : ''}>Native</option>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateLanguageField(id, field, value) {
+            const entry = state.languages.find(e => e.id === id);
+            if (entry) {
+                entry[field] = value;
+                updatePreview();
+            }
+        }
+
+        function addCertificationEntry() {
+            state.certifications.push({id: Date.now(), name: '', issuer: '', year: ''});
+            renderCertificationEntries();
+            updatePreview();
+        }
+
+        function removeCertificationEntry(id) {
+            state.certifications = state.certifications.filter(e => e.id !== id);
+            renderCertificationEntries();
+            updatePreview();
+        }
+
+        function renderCertificationEntries() {
+            const container = document.getElementById('certifications');
+            container.innerHTML = state.certifications.map(entry => `
+                <div class="entry-item">
+                    <button class="entry-remove" onclick="removeCertificationEntry(${entry.id})">×</button>
+                    <div class="form-row">
+                        <input type="text" placeholder="Certification Name" value="${entry.name}" onchange="updateCertificationField(${entry.id}, 'name', this.value)">
+                        <input type="text" placeholder="Issuing Organization" value="${entry.issuer}" onchange="updateCertificationField(${entry.id}, 'issuer', this.value)">
+                    </div>
+                    <input type="text" placeholder="Year" value="${entry.year}" onchange="updateCertificationField(${entry.id}, 'year', this.value)">
+                </div>
+            `).join('');
+        }
+
+        function updateCertificationField(id, field, value) {
+            const entry = state.certifications.find(e => e.id === id);
+            if (entry) {
+                entry[field] = value;
+                updatePreview();
+            }
+        }
+
+        function updateState() {
+            state.fullName = document.getElementById('fullName').value;
+            state.title = document.getElementById('title').value;
+            state.email = document.getElementById('email').value;
+            state.phone = document.getElementById('phone').value;
+            state.location = document.getElementById('location').value;
+            state.website = document.getElementById('website').value;
+            state.linkedin = document.getElementById('linkedin').value;
+            state.summary = document.getElementById('summary').value;
+            state.customTitle = document.getElementById('customTitle').value;
+            state.customContent = document.getElementById('customContent').value;
+        }
+
+        function updatePreview() {
+            updateState();
+
+            document.getElementById('previewName').textContent = state.fullName || 'Your Name';
+            document.getElementById('previewTitle').textContent = state.title || 'Professional Title';
+            document.getElementById('previewEmail').textContent = state.email || 'email@example.com';
+            document.getElementById('previewPhone').textContent = state.phone || '+1 (555) 123-4567';
+            document.getElementById('previewLocation').textContent = state.location || 'New York, USA';
+            document.getElementById('previewSummary').textContent = state.summary || 'Your professional summary will appear here...';
+
+            // Work experience
+            const workSection = document.getElementById('previewWorkSection');
+            const previewWork = document.getElementById('previewWork');
+            if (state.work.length > 0) {
+                workSection.style.display = 'block';
+                previewWork.innerHTML = state.work.map(w => `
+                    <div class="preview-entry">
+                        <div class="preview-entry-title">${w.role}</div>
+                        <div class="preview-entry-subtitle">${w.company}</div>
+                        <div class="preview-entry-date">${w.start} - ${w.end}</div>
+                        <div class="preview-entry-desc">${w.description}</div>
+                    </div>
+                `).join('');
+            } else {
+                workSection.style.display = 'none';
+            }
+
+            // Education
+            const eduSection = document.getElementById('previewEducationSection');
+            const previewEdu = document.getElementById('previewEducation');
+            if (state.education.length > 0) {
+                eduSection.style.display = 'block';
+                previewEdu.innerHTML = state.education.map(e => `
+                    <div class="preview-entry">
+                        <div class="preview-entry-title">${e.degree}</div>
+                        <div class="preview-entry-subtitle">${e.institution}</div>
+                        <div class="preview-entry-date">${e.year}${e.gpa ? ' • ' + e.gpa : ''}</div>
+                    </div>
+                `).join('');
+            } else {
+                eduSection.style.display = 'none';
+            }
+
+            // Skills
+            const skillsSection = document.getElementById('previewSkillsSection');
+            const previewSkills = document.getElementById('previewSkills');
+            if (state.skills.length > 0) {
+                skillsSection.style.display = 'block';
+                previewSkills.innerHTML = state.skills.map(s => `
+                    <div class="preview-skill-item">
+                        <div>${s.name}</div>
+                        <div class="preview-skill-bar">
+                            <div class="preview-skill-fill" style="width: ${(s.level / 5) * 100}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                skillsSection.style.display = 'none';
+            }
+
+            // Languages
+            const langSection = document.getElementById('previewLanguagesSection');
+            const previewLang = document.getElementById('previewLanguages');
+            if (state.languages.length > 0) {
+                langSection.style.display = 'block';
+                previewLang.innerHTML = state.languages.map(l => `
+                    <div class="preview-language-item">
+                        <div>${l.name}</div>
+                        <div class="preview-language-level">${languageLevels[l.level] || 'Select'}</div>
+                    </div>
+                `).join('');
+            } else {
+                langSection.style.display = 'none';
+            }
+
+            // Certifications
+            const certSection = document.getElementById('previewCertificationsSection');
+            const previewCert = document.getElementById('previewCertifications');
+            if (state.certifications.length > 0) {
+                certSection.style.display = 'block';
+                previewCert.innerHTML = state.certifications.map(c => `
+                    <div class="preview-entry">
+                        <div class="preview-entry-title">${c.name}</div>
+                        <div class="preview-entry-subtitle">${c.issuer}</div>
+                        <div class="preview-entry-date">${c.year}</div>
+                    </div>
+                `).join('');
+            } else {
+                certSection.style.display = 'none';
+            }
+
+            // Custom section
+            const customSection = document.getElementById('previewCustomSection');
+            if (state.customTitle && state.customContent) {
+                customSection.style.display = 'block';
+                document.getElementById('previewCustomTitle').textContent = state.customTitle;
+                document.getElementById('previewCustomContent').innerHTML = state.customContent.replace(/\n/g, '<br>');
+            } else {
+                customSection.style.display = 'none';
+            }
+        }
+
+        function loadExample() {
+            document.getElementById('fullName').value = 'John Smith';
+            document.getElementById('title').value = 'Senior Software Developer';
+            document.getElementById('email').value = 'john.smith@example.com';
+            document.getElementById('phone').value = '+1 (555) 123-4567';
+            document.getElementById('location').value = 'New York, USA';
+            document.getElementById('website').value = 'https://johnsmith.dev';
+            document.getElementById('linkedin').value = 'https://linkedin.com/in/johnsmith';
+            document.getElementById('summary').value = 'Software developer with 8+ years of experience in full-stack development. Specialized in JavaScript, React and Node.js. Passionate about software architecture and development best practices.';
+
+            state.work = [
+                {id: 1, company: 'Tech Solutions Inc', role: 'Senior Developer', start: 'Jan 2021', end: 'Present', description: 'Led development team. Implemented new features. Conducted code reviews and mentoring.'},
+                {id: 2, company: 'Digital Innovate Corp', role: 'Full Stack Developer', start: 'Mar 2019', end: 'Dec 2020', description: 'Developed web applications with React and Node.js. Implemented REST APIs.'}
+            ];
+
+            state.education = [
+                {id: 1, institution: 'University of New York', degree: 'Bachelor of Science in Computer Science', year: '2015', gpa: '3.8/4.0'}
+            ];
+
+            state.skills = [
+                {id: 1, name: 'JavaScript', level: 5},
+                {id: 2, name: 'React', level: 5},
+                {id: 3, name: 'Node.js', level: 4},
+                {id: 4, name: 'HTML/CSS', level: 5},
+                {id: 5, name: 'Git', level: 5}
+            ];
+
+            state.languages = [
+                {id: 1, name: 'English', level: 4},
+                {id: 2, name: 'Spanish', level: 2}
+            ];
+
+            state.certifications = [
+                {id: 1, name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', year: '2022'}
+            ];
+
+            document.getElementById('customTitle').value = 'Featured Projects';
+            document.getElementById('customContent').value = 'E-Commerce Platform: Scalable e-commerce platform serving 50k+ active users\nTask Manager App: Collaborative task management web application';
+
+            renderWorkEntries();
+            renderEducationEntries();
+            renderSkillEntries();
+            renderLanguageEntries();
+            renderCertificationEntries();
+
+            updatePreview();
+        }
+
+        function printResume() {
+            window.print();
+        }
+
+        function copyText() {
+            updateState();
+            let text = `${state.fullName}\n${state.title}\n`;
+            text += `Email: ${state.email}\nPhone: ${state.phone}\nLocation: ${state.location}\n\n`;
+            text += `PROFESSIONAL SUMMARY\n${state.summary}\n\n`;
+
+            if (state.work.length > 0) {
+                text += `WORK EXPERIENCE\n`;
+                state.work.forEach(w => {
+                    text += `${w.role} at ${w.company} (${w.start} - ${w.end})\n${w.description}\n\n`;
+                });
+            }
+
+            if (state.education.length > 0) {
+                text += `EDUCATION\n`;
+                state.education.forEach(e => {
+                    text += `${e.degree} from ${e.institution} (${e.year})\n`;
+                });
+            }
+
+            if (state.skills.length > 0) {
+                text += `SKILLS\n`;
+                state.skills.forEach(s => {
+                    text += `${s.name} (${s.level}/5)\n`;
+                });
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Resume copied to clipboard!');
+            });
+        }
+
+        // Template selector
+        document.getElementById('template-select').addEventListener('change', (e) => {
+            const preview = document.getElementById('preview');
+            preview.className = `preview-panel template-${e.target.value}`;
+        });
+
+        // Accent color picker - now updates CSS variable
+        const colorMap = {
+            'green': '#10b981',
+            'blue': '#3b82f6',
+            'red': '#ef4444',
+            'purple': '#a855f7',
+            'orange': '#f97316',
+            'black': '#1f2937'
+        };
+
+        document.querySelectorAll('.color-option').forEach(el => {
+            el.addEventListener('click', (e) => {
+                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const accentColor = e.target.dataset.accent;
+                document.documentElement.style.setProperty('--accent-color', colorMap[accentColor]);
+            });
+        });
+
+        // Initial setup
+        updatePreview();
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1hljw9ucn08',K='etherlabs_cv-builder_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

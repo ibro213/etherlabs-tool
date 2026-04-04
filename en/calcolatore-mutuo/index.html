@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mortgage Calculator">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Mortgage Calculator Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-dark: #059669;
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--gold-light);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(232, 201, 106, 0.3);
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: var(--bg2);
+            color: var(--text2);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: var(--gold-light);
+            border-color: var(--gold);
+        }
+
+        .tab-btn.active {
+            background: var(--bg3);
+            color: var(--gold-light);
+            border-color: var(--gold);
+            border-bottom-color: var(--bg3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gold-dark);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text1);
+            font-weight: 600;
+        }
+
+        .label-unit {
+            color: var(--text2);
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg3);
+            color: var(--text1);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: var(--bg3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-weight: 600;
+            margin-left: 10px;
+            font-size: 0.95em;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="radio"] {
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--bg3) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .result-card:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 20px rgba(232, 201, 106, 0.2);
+        }
+
+        .result-label {
+            color: var(--text2);
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 2em;
+            color: var(--gold-light);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-subtext {
+            color: var(--text3);
+            font-size: 0.85em;
+        }
+
+        .chart-container {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        canvas {
+            max-width: 100%;
+            display: block;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg2);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: var(--gold-light);
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text1);
+        }
+
+        tbody tr:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        tbody tr.highlight {
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid var(--gold);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer; touch-action: manipulation;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(232, 201, 106, 0.3);
+        }
+
+        button.secondary {
+            background: var(--bg3);
+            color: var(--gold-light);
+            border: 1px solid var(--gold-dark);
+        }
+
+        button.secondary:hover {
+            background: var(--bg2);
+            border-color: var(--gold-light);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .comparison-card {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .comparison-card.highlighted {
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-label {
+            color: var(--text2);
+        }
+
+        .comparison-value {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .scenario-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .scenario-inputs input {
+            font-size: 0.9em;
+            padding: 10px;
+        }
+
+        .remove-btn {
+            padding: 10px 15px;
+            background: #c94a4a;
+            font-size: 0.9em;
+        }
+
+        .remove-btn:hover {
+            background: #e74c3c;
+        }
+
+        .info-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--gold);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            color: var(--text2);
+            font-size: 0.95em;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: var(--bg3);
+            color: var(--text2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            animation: slideIn 0.3s;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+            border: 1px solid #4caf50;
+        }
+
+        .message.warning {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffb74d;
+            border: 1px solid #ff9800;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-radius: 8px;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Mortgage Calculator</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <header>
+            <h1>💰 Mortgage Calculator Pro</h1>
+            <p class="subtitle">Calculate payments, interest, and compare different scenarios</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="calculator">Mortgage Calculator</button>
+            <button class="tab-btn" data-tab="results">Results &amp; Charts</button>
+            <button class="tab-btn" data-tab="amortization">Amortization Table</button>
+            <button class="tab-btn" data-tab="comparison">Scenario Comparison</button>
+            <button class="tab-btn" data-tab="earlyrepay">Early Repayment</button>
+        </div>
+
+        <!-- TAB: Mortgage Calculator -->
+        <div id="calculator" class="tab-content active">
+            <div class="section">
+                <h2 class="section-title">Mortgage Input</h2>
+
+                <div class="input-group">
+                    <label>Loan Amount <span class="label-unit">($)</span></label>
+                    <div class="input-row">
+                        <div>
+                            <input type="range" id="amountRange" min="50000" max="1000000" step="10000" value="250000">
+                        </div>
+                        <div>
+                            <input type="number" id="amountNum" min="50000" max="1000000" step="10000" value="250000">
+                            <span class="slider-value" id="amountVal">$250,000.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Annual Interest Rate <span class="label-unit">(%)</span></label>
+                    <div class="input-row">
+                        <div>
+                            <input type="range" id="rateRange" min="0.5" max="10" step="0.1" value="3.5">
+                        </div>
+                        <div>
+                            <input type="number" id="rateNum" min="0.5" max="10" step="0.1" value="3.5">
+                            <span class="slider-value" id="rateVal">3.5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Term <span class="label-unit">(years)</span></label>
+                    <div class="input-row">
+                        <div>
+                            <input type="range" id="termRange" min="5" max="40" step="1" value="20">
+                        </div>
+                        <div>
+                            <input type="number" id="termNum" min="5" max="40" step="1" value="20">
+                            <span class="slider-value" id="termVal">20 years</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Rate Type</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="fixedRate" name="rateType" value="fixed" checked>
+                            <label for="fixedRate" style="margin: 0; display: inline;">Fixed Rate</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="variableRate" name="rateType" value="variable">
+                            <label for="variableRate" style="margin: 0; display: inline;">Variable Rate</label>
+                        </div>
+                    </div>
+
+                    <div id="variableOptions" style="display: none; margin-top: 15px;">
+                        <div class="input-row">
+                            <div>
+                                <label>Spread <span class="label-unit">(%)</span></label>
+                                <input type="number" id="spread" min="0" max="5" step="0.1" value="1.5">
+                            </div>
+                            <div>
+                                <label>Base Rate <span class="label-unit">(%)</span></label>
+                                <input type="number" id="baseRate" min="0" max="10" step="0.1" value="2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+
+                <div class="button-group">
+                    <button onclick="calculateMortgage()">Calculate</button>
+                    <button class="secondary" onclick="resetForm()">Reset</button>
+                    <button class="secondary" onclick="saveLocally()">Save Data</button>
+                </div>
+            </div>
+
+            <div id="messageCalculator" style="display: none;"></div>
+        </div>
+
+        <!-- TAB: Results & Charts -->
+        <div id="results" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Instant Results</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Monthly Payment</div>
+                        <div class="result-value" id="monthlyPayment">$ 0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Interest</div>
+                        <div class="result-value" id="totalInterest">$ 0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Cost</div>
+                        <div class="result-value" id="totalCost">$ 0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Interest-to-Principal Ratio</div>
+                        <div class="result-value" id="interestRatio">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Amortization Chart – Principal vs Interest</h2>
+                <div class="chart-container">
+                    <canvas id="piePie" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Annual Breakdown – Principal vs Interest</h2>
+                <div class="chart-container">
+                    <canvas id="barChart" width="800" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Amortization Table -->
+        <div id="amortization" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Amortization Table</h2>
+
+                <div class="toggle-group">
+                    <button class="toggle-btn active" data-view="monthly" onclick="changeView('monthly', this)">Monthly</button>
+                    <button class="toggle-btn" data-view="annual" onclick="changeView('annual', this)">Annual</button>
+                </div>
+
+                <div class="info-box">
+                    Rows highlighted in gold indicate the month where the principal portion exceeds the interest portion.
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="amortizationTable">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Payment</th>
+                                <th>Principal</th>
+                                <th>Interest</th>
+                                <th>Remaining Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="secondary" onclick="exportTable()">Export as CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Scenario Comparison -->
+        <div id="comparison" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Scenario Comparison</h2>
+
+                <div id="scenarioList"></div>
+
+                <div class="button-group">
+                    <button onclick="addScenario()">+ Add Scenario</button>
+                    <button class="secondary" onclick="compareScenarios()">Compare</button>
+                </div>
+
+                <div id="comparisonResults"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Early Repayment -->
+        <div id="earlyrepay" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Early Repayment</h2>
+
+                <div class="input-group">
+                    <label>Extra Monthly Payment <span class="label-unit">($)</span></label>
+                    <input type="number" id="extraAmount" min="0" step="100" value="100">
+                </div>
+
+                <div class="button-group">
+                    <button onclick="calculatePayoff()">Calculate Payoff</button>
+                </div>
+
+                <div id="payoffResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== STATE & STORAGE ==========
+        const storageKey = 'mortpro';
+        let calcData = {
+            amount: 250000,
+            rate: 3.5,
+            term: 20,
+            rateType: 'fixed',
+            spread: 1.5,
+            baseRate: 2,
+            startDate: new Date().toISOString().split('T')[0],
+            amortization: []
+        };
+
+        // ========== EVENT LISTENERS ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            setTodayDate();
+            setupEventListeners();
+            calculateMortgage();
+        });
+
+        function setupEventListeners() {
+            // Amount
+            document.getElementById('amountRange').addEventListener('input', (e) => {
+                document.getElementById('amountNum').value = e.target.value;
+                calcData.amount = parseFloat(e.target.value);
+                updateSliderValue('amountVal', formatCurrency(calcData.amount));
+                calculateMortgage();
+            });
+
+            document.getElementById('amountNum').addEventListener('input', (e) => {
+                document.getElementById('amountRange').value = e.target.value;
+                calcData.amount = parseFloat(e.target.value);
+                updateSliderValue('amountVal', formatCurrency(calcData.amount));
+                calculateMortgage();
+            });
+
+            // Rate
+            document.getElementById('rateRange').addEventListener('input', (e) => {
+                document.getElementById('rateNum').value = e.target.value;
+                calcData.rate = parseFloat(e.target.value);
+                updateSliderValue('rateVal', calcData.rate.toFixed(1) + '%');
+                calculateMortgage();
+            });
+
+            document.getElementById('rateNum').addEventListener('input', (e) => {
+                document.getElementById('rateRange').value = e.target.value;
+                calcData.rate = parseFloat(e.target.value);
+                updateSliderValue('rateVal', calcData.rate.toFixed(1) + '%');
+                calculateMortgage();
+            });
+
+            // Term
+            document.getElementById('termRange').addEventListener('input', (e) => {
+                document.getElementById('termNum').value = e.target.value;
+                calcData.term = parseFloat(e.target.value);
+                updateSliderValue('termVal', calcData.term + ' years');
+                calculateMortgage();
+            });
+
+            document.getElementById('termNum').addEventListener('input', (e) => {
+                document.getElementById('termRange').value = e.target.value;
+                calcData.term = parseFloat(e.target.value);
+                updateSliderValue('termVal', calcData.term + ' years');
+                calculateMortgage();
+            });
+
+            // Rate Type
+            document.getElementById('fixedRate').addEventListener('change', () => {
+                calcData.rateType = 'fixed';
+                document.getElementById('variableOptions').style.display = 'none';
+                calculateMortgage();
+            });
+
+            document.getElementById('variableRate').addEventListener('change', () => {
+                calcData.rateType = 'variable';
+                document.getElementById('variableOptions').style.display = 'block';
+                calculateMortgage();
+            });
+
+            document.getElementById('spread').addEventListener('input', (e) => {
+                calcData.spread = parseFloat(e.target.value);
+                calculateMortgage();
+            });
+
+            document.getElementById('baseRate').addEventListener('input', (e) => {
+                calcData.baseRate = parseFloat(e.target.value);
+                calculateMortgage();
+            });
+
+            // Start Date
+            document.getElementById('startDate').addEventListener('change', (e) => {
+                calcData.startDate = e.target.value;
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tab = e.target.dataset.tab;
+                    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+                    document.getElementById(tab).classList.add('active');
+                    e.target.classList.add('active');
+                });
+            });
+        }
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+            calcData.startDate = today;
+        }
+
+        // ========== CORE CALCULATIONS ==========
+        function getCurrentRate() {
+            if (calcData.rateType === 'variable') {
+                return calcData.spread + calcData.baseRate;
+            }
+            return calcData.rate;
+        }
+
+        function calculateMortgage() {
+            const P = calcData.amount;
+            const r = getCurrentRate() / 100 / 12; // monthly rate
+            const n = calcData.term * 12; // number of payments
+
+            if (r === 0) {
+                const payment = P / n;
+                calcData.amortization = generateAmortizationZero(P, n);
+            } else {
+                const payment = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                calcData.amortization = generateAmortization(P, payment, r, n);
+            }
+
+            updateResults();
+            drawCharts();
+            updateAmortizationTable();
+        }
+
+        function generateAmortization(P, payment, r, n) {
+            const amort = [];
+            let remainingBalance = P;
+
+            for (let i = 1; i <= n; i++) {
+                const interest = remainingBalance * r;
+                const principal = payment - interest;
+                remainingBalance -= principal;
+
+                if (remainingBalance < 0) remainingBalance = 0;
+
+                amort.push({
+                    month: i,
+                    payment: payment,
+                    principal: principal,
+                    interest: interest,
+                    remainingBalance: remainingBalance
+                });
+            }
+
+            return amort;
+        }
+
+        function generateAmortizationZero(P, n) {
+            const amort = [];
+            const payment = P / n;
+            let remainingBalance = P;
+
+            for (let i = 1; i <= n; i++) {
+                remainingBalance -= payment;
+                if (remainingBalance < 0) remainingBalance = 0;
+
+                amort.push({
+                    month: i,
+                    payment: payment,
+                    principal: payment,
+                    interest: 0,
+                    remainingBalance: remainingBalance
+                });
+            }
+
+            return amort;
+        }
+
+        function updateResults() {
+            const amort = calcData.amortization;
+            if (amort.length === 0) return;
+
+            const payment = amort[0].payment;
+            const totalInterest = amort.reduce((sum, m) => sum + m.interest, 0);
+            const totalCost = calcData.amount + totalInterest;
+            const ratio = (totalInterest / calcData.amount) * 100;
+
+            document.getElementById('monthlyPayment').textContent = formatCurrency(payment);
+            document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+            document.getElementById('totalCost').textContent = formatCurrency(totalCost);
+            document.getElementById('interestRatio').textContent = ratio.toFixed(1) + '%';
+        }
+
+        // ========== CHARTS ==========
+        function drawCharts() {
+            drawPieChart();
+            drawBarChart();
+        }
+
+        function drawPieChart() {
+            const amort = calcData.amortization;
+            const totalInterest = amort.reduce((sum, m) => sum + m.interest, 0);
+            const principal = calcData.amount;
+
+            const canvas = document.getElementById('piePie');
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) / 3;
+
+            const total = principal + totalInterest;
+            const principalAngle = (principal / total) * 2 * Math.PI;
+            const interestAngle = (totalInterest / total) * 2 * Math.PI;
+
+            // Background
+            ctx.fillStyle = '#0f1a17';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Principal sector
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, 0, principalAngle);
+            ctx.closePath();
+            ctx.fill();
+
+            // Interest sector
+            ctx.fillStyle = '#059669';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, principalAngle, principalAngle + interestAngle);
+            ctx.closePath();
+            ctx.fill();
+
+            // Border
+            ctx.strokeStyle = '#162e26';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#e8f0ec';
+            ctx.font = 'bold 16px Segoe UI';
+            ctx.textAlign = 'center';
+
+            const principalMidAngle = principalAngle / 2;
+            const x1 = centerX + radius * 0.65 * Math.cos(principalMidAngle);
+            const y1 = centerY + radius * 0.65 * Math.sin(principalMidAngle);
+            ctx.fillText('Principal', x1, y1);
+            ctx.fillText(formatCurrency(principal), x1, y1 + 20);
+
+            const interestMidAngle = principalAngle + interestAngle / 2;
+            const x2 = centerX + radius * 0.65 * Math.cos(interestMidAngle);
+            const y2 = centerY + radius * 0.65 * Math.sin(interestMidAngle);
+            ctx.fillText('Interest', x2, y2);
+            ctx.fillText(formatCurrency(totalInterest), x2, y2 + 20);
+        }
+
+        function drawBarChart() {
+            const amort = calcData.amortization;
+            const annualData = {};
+
+            amort.forEach(m => {
+                const year = Math.ceil(m.month / 12);
+                if (!annualData[year]) {
+                    annualData[year] = { principal: 0, interest: 0 };
+                }
+                annualData[year].principal += m.principal;
+                annualData[year].interest += m.interest;
+            });
+
+            const years = Object.keys(annualData).map(Number).sort((a, b) => a - b);
+            const principals = years.map(y => annualData[y].principal);
+            const interests = years.map(y => annualData[y].interest);
+
+            const canvas = document.getElementById('barChart');
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const margin = { top: 40, right: 20, bottom: 40, left: 60 };
+            const chartWidth = canvas.width - margin.left - margin.right;
+            const chartHeight = canvas.height - margin.top - margin.bottom;
+
+            // Background
+            ctx.fillStyle = '#0f1a17';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const maxVal = Math.max(...principals, ...interests);
+            const barWidth = chartWidth / (years.length * 2.5);
+            const spacing = chartWidth / years.length;
+
+            // Draw bars
+            years.forEach((year, idx) => {
+                const x = margin.left + idx * spacing + spacing * 0.25;
+                const yPrincipal = margin.top + chartHeight - (principals[idx] / maxVal) * chartHeight;
+                const heightPrincipal = (principals[idx] / maxVal) * chartHeight;
+
+                const xInterest = x + barWidth + 5;
+                const yInterest = margin.top + chartHeight - (interests[idx] / maxVal) * chartHeight;
+                const heightInterest = (interests[idx] / maxVal) * chartHeight;
+
+                // Principal bar
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(x, yPrincipal, barWidth, heightPrincipal);
+
+                // Interest bar
+                ctx.fillStyle = '#059669';
+                ctx.fillRect(xInterest, yInterest, barWidth, heightInterest);
+            });
+
+            // Axes
+            ctx.strokeStyle = '#162e26';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + chartHeight);
+            ctx.lineTo(margin.left + chartWidth, margin.top + chartHeight);
+            ctx.stroke();
+
+            // X Labels
+            ctx.fillStyle = '#7a9a8e';
+            ctx.font = '12px Segoe UI';
+            ctx.textAlign = 'center';
+            years.forEach((year, idx) => {
+                const x = margin.left + idx * spacing + spacing * 0.5;
+                ctx.fillText('Year ' + year, x, margin.top + chartHeight + 25);
+            });
+
+            // Y Labels
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const val = (maxVal / 5) * i;
+                const y = margin.top + chartHeight - (val / maxVal) * chartHeight;
+                ctx.fillText(formatCurrency(val), margin.left - 10, y + 5);
+                ctx.strokeStyle = '#162e26';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(margin.left - 5, y);
+                ctx.lineTo(margin.left, y);
+                ctx.stroke();
+            }
+
+            // Legend
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(margin.left + chartWidth - 250, margin.top + 10, 15, 15);
+            ctx.fillStyle = '#e8f0ec';
+            ctx.textAlign = 'left';
+            ctx.font = '12px Segoe UI';
+            ctx.fillText('Principal', margin.left + chartWidth - 230, margin.top + 22);
+
+            ctx.fillStyle = '#059669';
+            ctx.fillRect(margin.left + chartWidth - 120, margin.top + 10, 15, 15);
+            ctx.fillStyle = '#e8f0ec';
+            ctx.fillText('Interest', margin.left + chartWidth - 100, margin.top + 22);
+        }
+
+        // ========== AMORTIZATION TABLE ==========
+        function updateAmortizationTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            const amort = calcData.amortization;
+            const view = document.querySelector('.toggle-btn.active').dataset.view;
+
+            if (view === 'monthly') {
+                amort.forEach(m => {
+                    const tr = document.createElement('tr');
+                    const isHighlight = m.principal > m.interest;
+                    if (isHighlight) tr.classList.add('highlight');
+
+                    tr.innerHTML = `
+                        <td>Month ${m.month}</td>
+                        <td>${formatCurrency(m.payment)}</td>
+                        <td>${formatCurrency(m.principal)}</td>
+                        <td>${formatCurrency(m.interest)}</td>
+                        <td>${formatCurrency(m.remainingBalance)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                const annualData = {};
+                amort.forEach(m => {
+                    const year = Math.ceil(m.month / 12);
+                    if (!annualData[year]) {
+                        annualData[year] = { payment: 0, principal: 0, interest: 0, remainingBalance: 0 };
+                    }
+                    annualData[year].payment += m.payment;
+                    annualData[year].principal += m.principal;
+                    annualData[year].interest += m.interest;
+                    annualData[year].remainingBalance = m.remainingBalance;
+                });
+
+                Object.keys(annualData).sort((a, b) => a - b).forEach(year => {
+                    const data = annualData[year];
+                    const tr = document.createElement('tr');
+                    const isHighlight = data.principal > data.interest;
+                    if (isHighlight) tr.classList.add('highlight');
+
+                    tr.innerHTML = `
+                        <td>Year ${year}</td>
+                        <td>${formatCurrency(data.payment)}</td>
+                        <td>${formatCurrency(data.principal)}</td>
+                        <td>${formatCurrency(data.interest)}</td>
+                        <td>${formatCurrency(data.remainingBalance)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function changeView(view, btn) {
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateAmortizationTable();
+        }
+
+        function exportTable() {
+            const amort = calcData.amortization;
+            let csv = 'Period,Payment,Principal,Interest,Remaining Balance\n';
+
+            amort.forEach(m => {
+                csv += `Month ${m.month},${m.payment.toFixed(2)},${m.principal.toFixed(2)},${m.interest.toFixed(2)},${m.remainingBalance.toFixed(2)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'amortization.csv';
+            a.click();
+        }
+
+        // ========== SCENARIO COMPARISON ==========
+        function addScenario() {
+            const list = document.getElementById('scenarioList');
+            const count = list.children.length;
+
+            const div = document.createElement('div');
+            div.className = 'section';
+            div.dataset.scenario = count;
+            div.innerHTML = `
+                <h3 style="color: var(--gold-light); margin-bottom: 15px;">Scenario ${count + 1}</h3>
+                <div class="scenario-inputs">
+                    <input type="number" class="scenario-amount" min="50000" max="1000000" step="10000" placeholder="Amount ($)" value="250000">
+                    <input type="number" class="scenario-rate" min="0.5" max="10" step="0.1" placeholder="Rate (%)" value="3.5">
+                    <input type="number" class="scenario-term" min="5" max="40" step="1" placeholder="Term (years)" value="20">
+                    <input type="number" class="scenario-spread" min="0" max="5" step="0.1" placeholder="Spread (%)" value="0">
+                    <button class="remove-btn" onclick="removeScenario(${count})">Remove</button>
+                </div>
+            `;
+            list.appendChild(div);
+        }
+
+        function removeScenario(idx) {
+            const elem = document.querySelector(`[data-scenario="${idx}"]`);
+            if (elem) elem.remove();
+        }
+
+        function compareScenarios() {
+            const scenarios = Array.from(document.querySelectorAll('[data-scenario]')).map(el => {
+                return {
+                    amount: parseFloat(el.querySelector('.scenario-amount').value),
+                    rate: parseFloat(el.querySelector('.scenario-rate').value),
+                    term: parseFloat(el.querySelector('.scenario-term').value),
+                    spread: parseFloat(el.querySelector('.scenario-spread').value) || 0
+                };
+            });
+
+            if (scenarios.length === 0) {
+                showMessage('comparison', 'Please add at least one scenario', 'warning');
+                return;
+            }
+
+            const results = scenarios.map((s, idx) => {
+                const P = s.amount;
+                const r = (s.rate + s.spread) / 100 / 12;
+                const n = s.term * 12;
+                let payment, totalInterest;
+
+                if (r === 0) {
+                    payment = P / n;
+                    totalInterest = 0;
+                } else {
+                    payment = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                    totalInterest = payment * n - P;
+                }
+
+                return {
+                    idx: idx + 1,
+                    amount: P,
+                    rate: s.rate + s.spread,
+                    term: s.term,
+                    payment: payment,
+                    totalInterest: totalInterest,
+                    totalCost: P + totalInterest
+                };
+            });
+
+            const container = document.getElementById('comparisonResults');
+            container.innerHTML = '<div class="results-grid">';
+
+            results.forEach(r => {
+                const highlighted = results.length === 1 ? 'highlighted' : (r.payment === Math.min(...results.map(x => x.payment)) ? 'highlighted' : '');
+                container.innerHTML += `
+                    <div class="comparison-card ${highlighted}">
+                        <h3 style="color: var(--gold-light); margin-bottom: 15px;">Scenario ${r.idx}</h3>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Amount:</span>
+                            <span class="comparison-value">${formatCurrency(r.amount)}</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Rate:</span>
+                            <span class="comparison-value">${r.rate.toFixed(2)}%</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Term:</span>
+                            <span class="comparison-value">${r.term} years</span>
+                        </div>
+                        <div class="comparison-item" style="padding-top: 15px; border-top: 1px solid var(--border); margin-top: 10px;">
+                            <span class="comparison-label">Monthly Payment:</span>
+                            <span class="comparison-value">${formatCurrency(r.payment)}</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Total Interest:</span>
+                            <span class="comparison-value">${formatCurrency(r.totalInterest)}</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Total Cost:</span>
+                            <span class="comparison-value">${formatCurrency(r.totalCost)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML += '</div>';
+        }
+
+        // ========== EARLY REPAYMENT ==========
+        function calculatePayoff() {
+            const extraAmount = parseFloat(document.getElementById('extraAmount').value) || 0;
+            if (extraAmount <= 0) {
+                showMessage('earlyrepay', 'Please enter a valid amount', 'warning');
+                return;
+            }
+
+            const amort = calcData.amortization;
+            const payment = amort[0].payment;
+            const totalPayment = payment + extraAmount;
+
+            let remainingBalance = calcData.amount;
+            let monthsRemaining = amort.length;
+            let savings = 0;
+
+            amort.forEach(m => {
+                if (remainingBalance <= 0) return;
+
+                const r = getCurrentRate() / 100 / 12;
+                const interest = remainingBalance * r;
+                const principal = Math.min(totalPayment - interest, remainingBalance);
+                remainingBalance -= principal;
+
+                if (remainingBalance <= 0) {
+                    monthsRemaining = m.month;
+                    savings = amort.length * payment - m.month * totalPayment;
+                }
+            });
+
+            const newTerm = (monthsRemaining / 12).toFixed(1);
+            const originalTerm = (amort.length / 12).toFixed(1);
+
+            const container = document.getElementById('payoffResults');
+            container.innerHTML = `
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Original Term</div>
+                        <div class="result-value">${originalTerm} years</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">New Term</div>
+                        <div class="result-value">${newTerm} years</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Months Saved</div>
+                        <div class="result-value">${Math.round(amort.length - monthsRemaining)}</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Interest Saved</div>
+                        <div class="result-value">${formatCurrency(savings)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========== UTILITIES ==========
+        function formatCurrency(value) {
+            return '$ ' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function updateSliderValue(id, val) {
+            document.getElementById(id).textContent = val;
+        }
+
+        function showMessage(containerId, msg, type) {
+            const container = document.getElementById(`message${containerId.charAt(0).toUpperCase() + containerId.slice(1)}`) ||
+                              document.getElementById(`${containerId}Results`) ||
+                              document.getElementById(`payoffResults`) ||
+                              document.getElementById(`comparisonResults`);
+            if (container) {
+                const div = document.createElement('div');
+                div.className = `message ${type}`;
+                div.textContent = msg;
+                container.innerHTML = div.outerHTML;
+                setTimeout(() => div.remove(), 5000);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('amountNum').value = 250000;
+            document.getElementById('amountRange').value = 250000;
+            document.getElementById('rateNum').value = 3.5;
+            document.getElementById('rateRange').value = 3.5;
+            document.getElementById('termNum').value = 20;
+            document.getElementById('termRange').value = 20;
+            document.getElementById('fixedRate').checked = true;
+            document.getElementById('variableOptions').style.display = 'none';
+            setTodayDate();
+            calcData = {
+                amount: 250000,
+                rate: 3.5,
+                term: 20,
+                rateType: 'fixed',
+                spread: 1.5,
+                baseRate: 2,
+                startDate: new Date().toISOString().split('T')[0],
+                amortization: []
+            };
+            calculateMortgage();
+            showMessage('calculator', 'Data has been reset', 'success');
+        }
+
+        function saveLocally() {
+            localStorage.setItem(storageKey, JSON.stringify(calcData));
+            showMessage('calculator', 'Data saved successfully', 'success');
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                try {
+                    calcData = JSON.parse(saved);
+                    document.getElementById('amountNum').value = calcData.amount;
+                    document.getElementById('amountRange').value = calcData.amount;
+                    document.getElementById('rateNum').value = calcData.rate;
+                    document.getElementById('rateRange').value = calcData.rate;
+                    document.getElementById('termNum').value = calcData.term;
+                    document.getElementById('termRange').value = calcData.term;
+                    document.getElementById('spread').value = calcData.spread;
+                    document.getElementById('baseRate').value = calcData.baseRate;
+                    document.getElementById('startDate').value = calcData.startDate;
+
+                    if (calcData.rateType === 'variable') {
+                        document.getElementById('variableRate').checked = true;
+                        document.getElementById('variableOptions').style.display = 'block';
+                    }
+
+                    updateSliderValue('amountVal', formatCurrency(calcData.amount));
+                    updateSliderValue('rateVal', calcData.rate.toFixed(1) + '%');
+                    updateSliderValue('termVal', calcData.term + ' years');
+                } catch (e) {
+                }
+            }
+        }
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1brgg3ppqpd',K='etherlabs_calcolatore-mutuo_en';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

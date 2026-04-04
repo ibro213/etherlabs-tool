@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Generatore Contratti">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Generatore Contratti Freelancer — Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --bg4: #142420;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-lighter: #6ee7b7;
+            --gold-dark: #059669;
+            --gold-glow: rgba(16, 185, 129, 0.15);
+            --gold-glow2: rgba(16, 185, 129, 0.08);
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+            --border2: #1f3d33;
+            --success: #34d399;
+            --error: #f87171;
+            --card-hover: rgba(16, 185, 129, 0.04);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-gold: 0 0 40px rgba(201, 168, 76, 0.12);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text1);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* AMBIENT BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16,185,129,0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16,185,129,0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1520px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 52px 32px 44px;
+            background: linear-gradient(160deg, var(--bg2) 0%, var(--bg3) 50%, var(--bg2) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .brand-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 100px;
+            font-size: 0.72em;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-tag .dot {
+            width: 6px; height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+        header h1 span {
+            color: var(--gold-light);
+        }
+
+        header p {
+            color: var(--text2);
+            font-size: 1.05em;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* STEP INDICATOR */
+        .step-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 44px;
+            padding: 0 40px;
+        }
+        .step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+        .step-circle {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--bg3);
+            border: 2px solid var(--border2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--text3);
+            transition: var(--transition);
+        }
+        .step-node.active .step-circle {
+            background: var(--gold);
+            border-color: var(--gold-light);
+            color: var(--bg);
+            box-shadow: 0 0 24px rgba(16,185,129,0.35), 0 0 60px rgba(16,185,129,0.1);
+        }
+        .step-node.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .step-node.completed .step-circle::after {
+            content: '✓';
+            font-size: 1em;
+        }
+        .step-label {
+            font-size: 0.7em;
+            color: var(--text3);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+        .step-node.active .step-label { color: var(--gold-light); }
+        .step-node.completed .step-label { color: var(--text2); }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin: 0 -2px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .step-line .fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px rgba(16,185,129,0.4);
+        }
+        .step-line.filled .fill { width: 100%; }
+
+        /* MAIN LAYOUT */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+
+        /* FORM PANEL */
+        .form-panel {
+            background: linear-gradient(170deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border2), transparent);
+        }
+
+        .form-section { display: none; }
+        .form-section.active {
+            display: block;
+            animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .section-subtitle {
+            font-size: 0.88em;
+            color: var(--text3);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* CARDS */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .card {
+            padding: 24px 18px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(180deg, var(--gold-glow) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .card:hover { border-color: rgba(16,185,129,0.3); }
+        .card:hover::before { opacity: 1; }
+        .card .icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+            display: block;
+            filter: grayscale(0.3);
+            transition: var(--transition);
+        }
+        .card:hover .icon { filter: grayscale(0); }
+        .card strong {
+            font-size: 0.88em;
+            font-weight: 600;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+        .card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(170deg, rgba(16,185,129,0.12) 0%, var(--bg4) 100%);
+            box-shadow: var(--shadow-gold);
+        }
+        .card.selected::before { opacity: 1; }
+        .card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px; right: 12px;
+            width: 22px; height: 22px;
+            background: var(--gold);
+            color: var(--bg);
+            border-radius: 50%;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* FORM ELEMENTS */
+        .form-group { margin-bottom: 22px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text2);
+            font-size: 0.82em;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .form-group label.required::after {
+            content: ' *';
+            color: var(--gold);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            color: var(--text1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92em;
+            transition: var(--transition);
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: var(--text3);
+            font-weight: 300;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+        }
+        .form-group input.error, .form-group textarea.error, .form-group select.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(248,113,113,0.1);
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+        .form-group select { cursor: pointer; }
+        .form-group select option { background: var(--bg2); color: var(--text1); }
+
+        .inline-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .checkbox-group:hover { border-color: var(--border2); background: var(--bg2); }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px; height: 18px;
+            cursor: pointer;
+            accent-color: var(--gold);
+            flex-shrink: 0;
+        }
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.9em;
+            color: var(--text1);
+        }
+
+        /* BUTTONS */
+        .add-btn {
+            padding: 14px 24px;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+        .add-btn:hover {
+            background: var(--gold);
+            color: var(--bg);
+            box-shadow: 0 0 20px rgba(16,185,129,0.2);
+        }
+
+        .dynamic-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .dynamic-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            border-left: 3px solid var(--gold);
+            font-size: 0.9em;
+        }
+        .remove-btn {
+            padding: 6px 14px;
+            background: transparent;
+            color: var(--error);
+            border: 1px solid rgba(248,113,113,0.3);
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .remove-btn:hover { background: var(--error); color: white; }
+
+        /* TEMPLATE BUTTONS */
+        .template-section { margin-bottom: 28px; }
+        .template-section > label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--gold);
+            font-size: 0.82em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .template-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .template-btn {
+            padding: 10px 18px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text2);
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .template-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(16,185,129,0.06);
+        }
+
+        /* NAVIGATION BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+            justify-content: space-between;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: var(--radius-xs);
+            cursor: pointer; touch-action: manipulation;
+            font-weight: 600;
+            font-size: 0.92em;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--bg);
+            box-shadow: 0 4px 16px rgba(16,185,129,0.25);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 6px 28px rgba(16,185,129,0.4);
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text2);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--border2);
+            color: var(--text1);
+        }
+
+        /* PREVIEW PANEL */
+        .preview-panel {
+            background: #f6faf8;
+            border-radius: var(--radius);
+            padding: 48px;
+            min-height: 600px;
+            color: #1a1a1a;
+            overflow-y: auto;
+            max-height: 90vh;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        .preview-panel::before {
+            content: 'ANTEPRIMA';
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 0.62em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #a0c5b6;
+            text-transform: uppercase;
+        }
+
+        .preview-panel h2 {
+            text-align: center;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .contract-date {
+            text-align: center;
+            font-size: 0.82em;
+            color: #888;
+            margin-bottom: 32px;
+            font-style: italic;
+        }
+
+        .preview-section { margin-bottom: 24px; }
+        .preview-section h3 {
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .preview-section p {
+            font-size: 0.9em;
+            line-height: 1.7;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .article {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #d8ebe3;
+        }
+        .article:last-child { border-bottom: none; }
+        .article-title {
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .article-content {
+            font-size: 0.88em;
+            color: #444;
+            line-height: 1.7;
+        }
+        .article-content ul { padding-left: 20px; margin-top: 8px; }
+        .article-content li { margin-bottom: 4px; }
+
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 2px solid #1a1a1a;
+        }
+        .signature-block { text-align: center; }
+        .signature-block .sig-label {
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .signature-block .sig-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 40px;
+        }
+        .signature-block .line {
+            border-top: 1px solid #1a1a1a;
+            margin-bottom: 6px;
+        }
+        .signature-block .sig-sub {
+            font-size: 0.78em;
+            color: #888;
+        }
+        .sig-meta { font-size: 0.78em; color: #888; margin-top: 16px; }
+
+        /* EXPORT & STATS */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e6e0;
+            flex-wrap: wrap;
+        }
+        .export-group { display: flex; gap: 8px; }
+        .btn-export {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #ddd;
+            color: #555;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-export:hover { border-color: #999; color: #1a1a1a; }
+
+        .stats-row {
+            display: flex;
+            gap: 24px;
+        }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.1em; color: #1a1a1a; font-weight: 700; }
+        .stat-label { font-size: 0.7em; color: #999; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        .placeholder-msg {
+            text-align: center;
+            padding: 80px 40px;
+            color: #bbb;
+        }
+        .placeholder-msg .ph-icon { font-size: 3em; margin-bottom: 16px; display: block; opacity: 0.4; }
+        .placeholder-msg p { font-size: 0.95em; line-height: 1.6; }
+
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            animation: notifIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            font-size: 0.9em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification.success { background: var(--bg3); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+        .notification.error { background: var(--bg3); color: var(--error); border: 1px solid rgba(248,113,113,0.2); }
+        @keyframes notifIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text3);
+            font-size: 0.75em;
+            letter-spacing: 0.5px;
+        }
+        .footer a { color: var(--gold); text-decoration: none; }
+
+        /* PRINT */
+        @media print {
+            body { background: white; color: #000; }
+            body::before, body::after { display: none; }
+            header, .form-panel, .step-bar, .bottom-bar, .footer, .notification { display: none !important; }
+            .main-wrapper { grid-template-columns: 1fr !important; }
+            .preview-panel {
+                background: white; border: none; padding: 0; box-shadow: none;
+                max-height: none; overflow: visible;
+            }
+            .preview-panel::before { display: none; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+            .preview-panel { max-height: none; }
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .form-panel, .preview-panel { padding: 24px; }
+            .inline-group { grid-template-columns: 1fr; }
+            .signature-section { grid-template-columns: 1fr; gap: 32px; }
+            .step-label { display: none; }
+            .step-bar { gap: 0; padding: 0; }
+            .container { padding: 16px; }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Generatore Contratti</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="brand-tag"><span class="dot"></span> PREMIUM TOOL</div>
+            <h1>Generatore <span>Contratti</span></h1>
+            <p>Crea contratti professionali e legalmente strutturati in pochi minuti</p>
+        </header>
+
+        <!-- STEP BAR -->
+        <div class="step-bar" id="stepBar">
+            <div class="step-node active" data-step="1" onclick="goToStep(1)">
+                <div class="step-circle">1</div>
+                <span class="step-label">Tipo</span>
+            </div>
+            <div class="step-line" id="line1"><div class="fill"></div></div>
+            <div class="step-node" data-step="2" onclick="goToStep(2)">
+                <div class="step-circle">2</div>
+                <span class="step-label">Freelancer</span>
+            </div>
+            <div class="step-line" id="line2"><div class="fill"></div></div>
+            <div class="step-node" data-step="3" onclick="goToStep(3)">
+                <div class="step-circle">3</div>
+                <span class="step-label">Cliente</span>
+            </div>
+            <div class="step-line" id="line3"><div class="fill"></div></div>
+            <div class="step-node" data-step="4" onclick="goToStep(4)">
+                <div class="step-circle">4</div>
+                <span class="step-label">Progetto</span>
+            </div>
+            <div class="step-line" id="line4"><div class="fill"></div></div>
+            <div class="step-node" data-step="5" onclick="goToStep(5)">
+                <div class="step-circle">5</div>
+                <span class="step-label">Compenso</span>
+            </div>
+            <div class="step-line" id="line5"><div class="fill"></div></div>
+            <div class="step-node" data-step="6" onclick="goToStep(6)">
+                <div class="step-circle">6</div>
+                <span class="step-label">Clausole</span>
+            </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main-wrapper">
+            <!-- FORM -->
+            <div class="form-panel">
+                <form id="contractForm">
+                    <!-- STEP 1 -->
+                    <div class="form-section active" data-step="1">
+                        <h2 class="section-title">Tipo di Contratto</h2>
+                        <p class="section-subtitle">Seleziona il tipo di documento che desideri generare</p>
+                        <div class="card-grid" id="contractTypeGrid">
+                            <div class="card" data-value="prestazione">
+                                <span class="icon">📝</span>
+                                <strong>Prestazione d'Opera</strong>
+                            </div>
+                            <div class="card" data-value="collaborazione">
+                                <span class="icon">🤝</span>
+                                <strong>Collaborazione</strong>
+                            </div>
+                            <div class="card" data-value="preventivo">
+                                <span class="icon">💼</span>
+                                <strong>Preventivo</strong>
+                            </div>
+                            <div class="card" data-value="nda">
+                                <span class="icon">🔒</span>
+                                <strong>NDA</strong>
+                            </div>
+                            <div class="card" data-value="licenza">
+                                <span class="icon">⚖️</span>
+                                <strong>Licenza d'Uso</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="form-section" data-step="2">
+                        <h2 class="section-title">Dati del Freelancer</h2>
+                        <p class="section-subtitle">Le tue informazioni professionali e di contatto</p>
+                        <div class="form-group">
+                            <label class="required">Nome e Cognome</label>
+                            <input type="text" id="freelancerName" placeholder="Es. Mario Rossi">
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label class="required">Codice Fiscale / P.IVA</label>
+                                <input type="text" id="freelancerTaxId" placeholder="Es. RSSMRA85M01H501X">
+                            </div>
+                            <div class="form-group">
+                                <label>Specializzazione</label>
+                                <input type="text" id="freelancerSpecialty" placeholder="Es. Web Developer">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Indirizzo</label>
+                            <input type="text" id="freelancerAddress" placeholder="Es. Via Roma 123, 00100 Roma">
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label class="required">Email</label>
+                                <input type="email" id="freelancerEmail" placeholder="mario@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Telefono</label>
+                                <input type="tel" id="freelancerPhone" placeholder="+39 06 1234567">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="form-section" data-step="3">
+                        <h2 class="section-title">Dati del Cliente</h2>
+                        <p class="section-subtitle">Informazioni del cliente o azienda committente</p>
+                        <div class="form-group">
+                            <label class="required">Nome / Ragione Sociale</label>
+                            <input type="text" id="clientName" placeholder="Es. Azienda Rossi S.r.l.">
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label class="required">Codice Fiscale / P.IVA</label>
+                                <input type="text" id="clientTaxId" placeholder="Es. IT12345678901">
+                            </div>
+                            <div class="form-group">
+                                <label>Referente</label>
+                                <input type="text" id="clientContact" placeholder="Es. Giancarlo Bianchi">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Indirizzo</label>
+                            <input type="text" id="clientAddress" placeholder="Es. Viale Europa 456, 20100 Milano">
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Email</label>
+                            <input type="email" id="clientEmail" placeholder="info@azienda.it">
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="form-section" data-step="4">
+                        <h2 class="section-title">Dettagli Progetto</h2>
+                        <p class="section-subtitle">Descrivi il lavoro, i deliverable e le tempistiche</p>
+
+                        <div class="template-section">
+                            <label>Template Rapido</label>
+                            <div class="template-grid">
+                                <button type="button" class="template-btn" data-template="developer">Web Developer</button>
+                                <button type="button" class="template-btn" data-template="designer">Graphic Designer</button>
+                                <button type="button" class="template-btn" data-template="social">Social Media Manager</button>
+                                <button type="button" class="template-btn" data-template="copywriter">Copywriter</button>
+                                <button type="button" class="template-btn" data-template="photographer">Fotografo</button>
+                                <button type="button" class="template-btn" data-template="marketing">Marketing</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Titolo del Progetto</label>
+                            <input type="text" id="projectTitle" placeholder="Es. Sviluppo sito web e-commerce">
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Descrizione Dettagliata</label>
+                            <textarea aria-label="Descrizione Dettagliata" id="projectDescription" placeholder="Descrivi nel dettaglio il lavoro da svolgere, gli obiettivi e le aspettative..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Deliverables</label>
+                            <div style="display:grid;grid-template-columns:1fr auto;gap:10px;">
+                                <input type="text" id="deliverableInput" placeholder="Es. 5 pagine web responsive">
+                                <button type="button" class="add-btn" onclick="addDeliverable()">+ Aggiungi</button>
+                            </div>
+                            <div class="dynamic-list" id="deliverableList"></div>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label class="required">Data Inizio</label>
+                                <input type="date" id="startDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Data Consegna</label>
+                                <input type="date" id="endDate">
+                            </div>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label>Revisioni Incluse</label>
+                                <input type="number" id="revisions" value="2" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Prezzo Revisione Extra (€)</label>
+                                <input type="number" id="revisionPrice" placeholder="100" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Milestones</label>
+                            <div style="display:grid;grid-template-columns:1fr 120px 80px auto;gap:10px;">
+                                <input type="text" id="milestoneDesc" placeholder="Es. Design approvato">
+                                <input type="date" id="milestoneDate">
+                                <input type="number" id="milestonePercent" placeholder="%" min="0" max="100">
+                                <button type="button" class="add-btn" onclick="addMilestone()">+</button>
+                            </div>
+                            <div class="dynamic-list" id="milestoneList"></div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="form-section" data-step="5">
+                        <h2 class="section-title">Condizioni Economiche</h2>
+                        <p class="section-subtitle">Definisci compenso, metodo e tempistiche di pagamento</p>
+                        <div class="form-group">
+                            <label class="required">Tipo di Compenso</label>
+                            <select id="compensationType">
+                                <option value="">Seleziona tipo compenso</option>
+                                <option value="fisso">Importo Fisso</option>
+                                <option value="orario">Compenso Orario</option>
+                                <option value="milestone">A Milestone</option>
+                            </select>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label class="required">Importo Totale (€)</label>
+                                <input type="number" id="totalAmount" placeholder="5.000" min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Costo Orario (€)</label>
+                                <input type="number" id="hourlyRate" placeholder="50" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Modalità Pagamento</label>
+                            <select id="paymentMethod">
+                                <option value="">Seleziona metodo</option>
+                                <option value="bonifico">Bonifico Bancario</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="assegno">Assegno</option>
+                                <option value="altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Tempistiche Pagamento</label>
+                            <select id="paymentTiming">
+                                <option value="">Seleziona tempistiche</option>
+                                <option value="100-0">100% Anticipato</option>
+                                <option value="50-50">50% Deposito + 50% Consegna</option>
+                                <option value="30-40-30">30% + 40% + 30%</option>
+                                <option value="consegna">A Consegna</option>
+                                <option value="personalizzato">Personalizzato</option>
+                            </select>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label>Penale Ritardo (%)</label>
+                                <input type="number" id="latePenalty" placeholder="5" min="0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>Giorni Tolleranza</label>
+                                <input type="number" id="graceDays" placeholder="0" min="0">
+                            </div>
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input').click()">
+                            <input type="checkbox" id="expensesReimbursable" onclick="event.stopPropagation()">
+                            <label for="expensesReimbursable">Spese Extra Rimborsabili</label>
+                        </div>
+                        <div id="expensesDetail" style="display:none;margin-bottom:20px;">
+                            <input type="text" id="expensesDescription" placeholder="Es. Hosting, licenze software, trasferte..." style="width:100%;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.92em;">
+                        </div>
+                    </div>
+
+                    <!-- STEP 6 -->
+                    <div class="form-section" data-step="6">
+                        <h2 class="section-title">Clausole Contrattuali</h2>
+                        <p class="section-subtitle">Personalizza le clausole da includere nel contratto</p>
+
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="ipClause" checked onclick="event.stopPropagation()">
+                            <label for="ipClause">Proprietà Intellettuale — Trasferimento al cliente dopo pagamento</label>
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="confidenceClause" checked onclick="event.stopPropagation()">
+                            <label for="confidenceClause">Riservatezza e Confidenzialità</label>
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="nonCompeteClause" checked onclick="event.stopPropagation()">
+                            <label for="nonCompeteClause">Non Concorrenza</label>
+                        </div>
+                        <div id="nonCompeteDetail" style="display:none;margin-bottom:14px;margin-left:30px;">
+                            <input type="number" id="nonCompeteMonths" placeholder="Durata in mesi" min="1" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.9em;">
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="resolutionClause" checked onclick="event.stopPropagation()">
+                            <label for="resolutionClause">Risoluzione Anticipata con Preavviso</label>
+                        </div>
+                        <div id="resolutionDetail" style="display:none;margin-bottom:14px;margin-left:30px;">
+                            <input type="number" id="resolutionDays" placeholder="Giorni di preavviso" min="1" value="30" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.9em;">
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="forceClause" checked onclick="event.stopPropagation()">
+                            <label for="forceClause">Forza Maggiore</label>
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="jurisdictionClause" checked onclick="event.stopPropagation()">
+                            <label for="jurisdictionClause">Foro Competente</label>
+                        </div>
+                        <div id="jurisdictionDetail" style="display:none;margin-bottom:14px;margin-left:30px;">
+                            <input type="text" id="jurisdictionCity" placeholder="Es. Roma" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.9em;">
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="cancellationPenalty" onclick="event.stopPropagation()">
+                            <label for="cancellationPenalty">Penale per Cancellazione Progetto</label>
+                        </div>
+                        <div id="cancellationDetail" style="display:none;margin-bottom:14px;margin-left:30px;">
+                            <input type="number" id="cancellationPercent" placeholder="%" min="0" max="100" value="30" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.9em;">
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="exclusivityClause" onclick="event.stopPropagation()">
+                            <label for="exclusivityClause">Clausola di Esclusività</label>
+                        </div>
+                        <div class="checkbox-group" onclick="this.querySelector('input[type=checkbox]').click()">
+                            <input type="checkbox" id="warrantyClause" onclick="event.stopPropagation()">
+                            <label for="warrantyClause">Garanzia Post-Consegna</label>
+                        </div>
+                        <div id="warrantyDetail" style="display:none;margin-bottom:14px;margin-left:30px;">
+                            <input type="number" id="warrantyMonths" placeholder="Mesi di garanzia" min="1" value="1" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text1);font-family:'Inter',sans-serif;font-size:0.9em;">
+                        </div>
+                    </div>
+
+                    <!-- NAV BUTTONS -->
+                    <div class="button-group" id="buttonGroup">
+                        <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display:none;">← Indietro</button>
+                        <div style="flex:1;"></div>
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Avanti →</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- PREVIEW -->
+            <div class="preview-panel" id="previewPanel">
+                <div id="previewContent">
+                    <div class="placeholder-msg">
+                        <span class="ph-icon">📋</span>
+                        <p>Seleziona il tipo di contratto e compila<br>i campi per vedere l'anteprima in tempo reale</p>
+                    </div>
+                </div>
+                <div class="bottom-bar" id="bottomBar" style="display:none;">
+                    <div class="export-group">
+                        <button class="btn-export" onclick="printContract()">🖨 Stampa</button>
+                        <button class="btn-export" onclick="copyToClipboard()">📋 Copia</button>
+                        <button class="btn-export" onclick="downloadAsText()">↓ Scarica TXT</button>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat">
+                            <div class="stat-value" id="wordCount">0</div>
+                            <div class="stat-label">Parole</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="readingTime">0 min</div>
+                            <div class="stat-label">Lettura</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Questo strumento genera bozze contrattuali a scopo informativo. Si consiglia di consultare un legale per la validazione finale.
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let formData = { contractType:'', freelancer:{}, client:{}, project:{deliverables:[],milestones:[]}, conditions:{}, clauses:{} };
+        let deliverables = [];
+        let milestones = [];
+
+        const templates = {
+            developer: { specialty:'Web Developer', description:'Sviluppo di applicazione web completa con frontend responsive e backend robusto. Incluso hosting, manutenzione e supporto tecnico per i primi 3 mesi.' },
+            designer: { specialty:'Graphic Designer', description:'Creazione di identità visiva completa: logo, linee guida del brand, materiale di marketing. Sono incluse 2 round di revisioni per ogni elemento progettuale.' },
+            social: { specialty:'Social Media Manager', description:'Gestione completa dei profili social media con creazione di contenuti originali, pianificazione editoriale, community management e reportistica mensile dettagliata.' },
+            copywriter: { specialty:'Copywriter', description:'Creazione di testi persuasivi e ottimizzati SEO per sito web, landing page, email marketing e materiale promozionale digitale e cartaceo.' },
+            photographer: { specialty:'Fotografo Professionista', description:'Sessione fotografica professionale con servizio di editing avanzato e post-produzione. Include utilizzo illimitato delle immagini per scopi commerciali.' },
+            marketing: { specialty:'Consulente Marketing', description:'Consulenza strategica di marketing con analisi competitiva, definizione della strategia, piano d\'azione dettagliato e supporto all\'implementazione.' }
+        };
+
+        function nextStep() {
+            if (!validateStep(currentStep)) { showNotification('Compila tutti i campi obbligatori','error'); return; }
+            saveStepData();
+            if (currentStep < 6) { currentStep++; updateUI(); }
+            else { showNotification('Contratto completato! Puoi stamparlo o scaricarlo.','success'); }
+        }
+        function previousStep() { saveStepData(); if (currentStep > 1) { currentStep--; updateUI(); } }
+        function goToStep(step) {
+            if (step > currentStep && !validateStep(currentStep)) return;
+            saveStepData(); currentStep = step; updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.form-section').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.step) === currentStep);
+            });
+            document.querySelectorAll('.step-node').forEach(n => {
+                const sn = parseInt(n.dataset.step);
+                n.classList.remove('active','completed');
+                if (sn === currentStep) n.classList.add('active');
+                else if (sn < currentStep) n.classList.add('completed');
+            });
+            for (let i = 1; i <= 5; i++) {
+                const line = document.getElementById('line' + i);
+                if (line) line.classList.toggle('filled', i < currentStep);
+            }
+            document.querySelectorAll('.step-node.completed .step-circle').forEach(c => { c.textContent = ''; });
+            document.querySelectorAll('.step-node:not(.completed) .step-circle').forEach(c => {
+                if (!c.closest('.step-node').classList.contains('active') || true) c.textContent = c.closest('.step-node').dataset.step;
+            });
+            document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'flex';
+            document.getElementById('nextBtn').textContent = currentStep === 6 ? 'Completa ✓' : 'Avanti →';
+            updatePreview();
+            window.scrollTo({top: 0, behavior:'smooth'});
+        }
+
+        function validateStep(step) {
+            if (step === 1 && !formData.contractType) return false;
+            const fields = document.querySelectorAll(`[data-step="${step}"] input[type="text"][id*="Name"], [data-step="${step}"] input[type="text"][id*="TaxId"], [data-step="${step}"] input[type="text"][id*="Address"], [data-step="${step}"] input[type="email"]`);
+            let valid = true;
+            fields.forEach(f => { if (!f.value.trim()) { f.classList.add('error'); valid = false; } else f.classList.remove('error'); });
+            return valid;
+        }
+
+        function saveStepData() {
+            if (currentStep === 2) formData.freelancer = { name:document.getElementById('freelancerName').value, taxId:document.getElementById('freelancerTaxId').value, address:document.getElementById('freelancerAddress').value, email:document.getElementById('freelancerEmail').value, phone:document.getElementById('freelancerPhone').value, specialty:document.getElementById('freelancerSpecialty').value };
+            else if (currentStep === 3) formData.client = { name:document.getElementById('clientName').value, taxId:document.getElementById('clientTaxId').value, address:document.getElementById('clientAddress').value, email:document.getElementById('clientEmail').value, contact:document.getElementById('clientContact').value };
+            else if (currentStep === 4) formData.project = { title:document.getElementById('projectTitle').value, description:document.getElementById('projectDescription').value, deliverables, startDate:document.getElementById('startDate').value, endDate:document.getElementById('endDate').value, revisions:document.getElementById('revisions').value, revisionPrice:document.getElementById('revisionPrice').value, milestones };
+            else if (currentStep === 5) formData.conditions = { compensationType:document.getElementById('compensationType').value, totalAmount:document.getElementById('totalAmount').value, hourlyRate:document.getElementById('hourlyRate').value, paymentMethod:document.getElementById('paymentMethod').value, paymentTiming:document.getElementById('paymentTiming').value, latePenalty:document.getElementById('latePenalty').value, graceDays:document.getElementById('graceDays').value, expensesReimbursable:document.getElementById('expensesReimbursable').checked, expensesDescription:document.getElementById('expensesDescription').value };
+            else if (currentStep === 6) formData.clauses = { ipClause:document.getElementById('ipClause').checked, confidenceClause:document.getElementById('confidenceClause').checked, nonCompeteClause:document.getElementById('nonCompeteClause').checked, nonCompeteMonths:document.getElementById('nonCompeteMonths').value, resolutionClause:document.getElementById('resolutionClause').checked, resolutionDays:document.getElementById('resolutionDays').value, forceClause:document.getElementById('forceClause').checked, jurisdictionClause:document.getElementById('jurisdictionClause').checked, jurisdictionCity:document.getElementById('jurisdictionCity').value, cancellationPenalty:document.getElementById('cancellationPenalty').checked, cancellationPercent:document.getElementById('cancellationPercent').value, exclusivityClause:document.getElementById('exclusivityClause').checked, warrantyClause:document.getElementById('warrantyClause').checked, warrantyMonths:document.getElementById('warrantyMonths').value };
+        }
+
+        function addDeliverable() {
+            const inp = document.getElementById('deliverableInput');
+            if (!inp.value.trim()) { showNotification('Inserisci un deliverable','error'); return; }
+            deliverables.push(inp.value.trim()); inp.value = ''; renderDeliverables();
+        }
+        function removeDeliverable(i) { deliverables.splice(i,1); renderDeliverables(); }
+        function renderDeliverables() {
+            document.getElementById('deliverableList').innerHTML = deliverables.map((d,i) => `<div class="dynamic-item"><span>${d}</span><button type="button" class="remove-btn" onclick="removeDeliverable(${i})">Rimuovi</button></div>`).join('');
+        }
+
+        function addMilestone() {
+            const desc=document.getElementById('milestoneDesc').value.trim(), date=document.getElementById('milestoneDate').value, pct=parseInt(document.getElementById('milestonePercent').value);
+            if (!desc||!date||!pct) { showNotification('Completa tutti i campi della milestone','error'); return; }
+            if (milestones.reduce((s,m)=>s+m.percent,0)+pct>100) { showNotification('Le percentuali non possono superare 100%','error'); return; }
+            milestones.push({desc,date,percent:pct});
+            document.getElementById('milestoneDesc').value=''; document.getElementById('milestoneDate').value=''; document.getElementById('milestonePercent').value='';
+            renderMilestones();
+        }
+        function removeMilestone(i) { milestones.splice(i,1); renderMilestones(); }
+        function renderMilestones() {
+            const list=document.getElementById('milestoneList'), total=milestones.reduce((s,m)=>s+m.percent,0);
+            list.innerHTML = milestones.map((m,i) => `<div class="dynamic-item"><span>${m.desc} — ${new Date(m.date).toLocaleDateString('it-IT')} — ${m.percent}%</span><button type="button" class="remove-btn" onclick="removeMilestone(${i})">Rimuovi</button></div>`).join('');
+            if (milestones.length) list.innerHTML += `<div style="padding:10px 16px;background:var(--bg4);border-radius:var(--radius-xs);margin-top:8px;text-align:center;color:var(--gold);font-weight:600;font-size:0.85em;">Totale: ${total}%</div>`;
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('#contractTypeGrid .card').forEach(c => c.addEventListener('click', function() {
+                document.querySelectorAll('#contractTypeGrid .card').forEach(x => x.classList.remove('selected'));
+                this.classList.add('selected'); formData.contractType = this.dataset.value;
+            }));
+            document.querySelectorAll('.template-btn').forEach(b => b.addEventListener('click', function(e) {
+                e.preventDefault(); const t = templates[this.dataset.template];
+                document.getElementById('freelancerSpecialty').value = t.specialty;
+                document.getElementById('projectDescription').value = t.description;
+                showNotification('Template caricato','success');
+            }));
+            ['expensesReimbursable','nonCompeteClause','resolutionClause','jurisdictionClause','cancellationPenalty','warrantyClause'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const detailId = {expensesReimbursable:'expensesDetail',nonCompeteClause:'nonCompeteDetail',resolutionClause:'resolutionDetail',jurisdictionClause:'jurisdictionDetail',cancellationPenalty:'cancellationDetail',warrantyClause:'warrantyDetail'}[id];
+                    document.getElementById(detailId).style.display = this.checked ? 'block' : 'none';
+                });
+            });
+            document.querySelectorAll('input, textarea, select').forEach(f => f.addEventListener('input', () => f.classList.remove('error')));
+            updateUI();
+        });
+
+        // PREVIEW
+        function updatePreview() {
+            const {contractType, freelancer:f, client:c, project:p, conditions:co, clauses:cl} = formData;
+            if (!contractType || !f.name || !c.name) {
+                document.getElementById('previewContent').innerHTML = '<div class="placeholder-msg"><span class="ph-icon">📋</span><p>Seleziona il tipo di contratto e compila<br>i campi per vedere l\'anteprima in tempo reale</p></div>';
+                document.getElementById('bottomBar').style.display = 'none';
+                return;
+            }
+            document.getElementById('bottomBar').style.display = 'flex';
+            const typeLabel = {prestazione:"CONTRATTO DI PRESTAZIONE D'OPERA",collaborazione:"CONTRATTO DI COLLABORAZIONE PROFESSIONALE",preventivo:"PREVENTIVO / PROPOSTA COMMERCIALE",nda:"ACCORDO DI RISERVATEZZA (NDA)",licenza:"CONTRATTO DI LICENZA D'USO"}[contractType];
+            const today = new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+            let h = `<h2>${typeLabel}</h2><p class="contract-date">${today}</p>`;
+            h += `<div class="preview-section"><h3>Tra</h3><p><strong>${f.name}</strong>, con sede in ${f.address}, C.F./P.IVA ${f.taxId}, di seguito denominato "il Prestatore"</p></div>`;
+            h += `<div class="preview-section"><h3>E</h3><p><strong>${c.name}</strong>${c.contact?', nella persona di '+c.contact:''}, con sede in ${c.address}, C.F./P.IVA ${c.taxId}, di seguito denominato "il Committente"</p></div>`;
+            h += `<div class="preview-section"><h3>Premesso che</h3><p>Il Prestatore possiede competenze professionali in ${f.specialty||'ambito specifico'} e il Committente intende avvalersi di tali competenze per la realizzazione del progetto: <strong>${p.title||'—'}</strong></p><p>${p.description||''}</p></div>`;
+            let n = 1;
+            h += `<div class="article"><div class="article-title">Art. ${n++} — Oggetto</div><div class="article-content">Il Prestatore si impegna a svolgere le seguenti attività professionali: ${p.description||'—'}${deliverables.length?'<br><br><strong>Deliverables:</strong><ul>'+deliverables.map(d=>`<li>${d}</li>`).join('')+'</ul>':''}</div></div>`;
+            if (p.startDate||p.endDate) h += `<div class="article"><div class="article-title">Art. ${n++} — Tempistiche</div><div class="article-content">Data di inizio: ${p.startDate?new Date(p.startDate).toLocaleDateString('it-IT'):'Da definire'}<br>Data di consegna: ${p.endDate?new Date(p.endDate).toLocaleDateString('it-IT'):'Da definire'}${p.revisions?'<br>Revisioni incluse: '+p.revisions:''}${p.revisionPrice?'<br>Costo revisione extra: € '+parseFloat(p.revisionPrice).toFixed(2):''}</div></div>`;
+            if (milestones.length) h += `<div class="article"><div class="article-title">Art. ${n++} — Milestones</div><div class="article-content"><ul>${milestones.map(m=>`<li>${m.desc} — ${new Date(m.date).toLocaleDateString('it-IT')} — ${m.percent}%</li>`).join('')}</ul></div></div>`;
+            if (co.totalAmount) h += `<div class="article"><div class="article-title">Art. ${n++} — Compenso e Pagamento</div><div class="article-content">Importo complessivo: <strong>€ ${parseFloat(co.totalAmount).toLocaleString('it-IT',{minimumFractionDigits:2})}</strong><br>Tipologia: ${co.compensationType||'—'}<br>Modalità: ${co.paymentMethod||'—'}<br>Tempistiche: ${{['100-0']:'100% anticipato',['50-50']:'50% deposito + 50% alla consegna',['30-40-30']:'30% + 40% + 30%',consegna:'Alla consegna',personalizzato:'Personalizzato'}[co.paymentTiming]||'—'}${co.latePenalty?'<br>Penale ritardo: '+co.latePenalty+'% dopo '+(co.graceDays||0)+' giorni':''}${co.expensesReimbursable?'<br>Spese rimborsabili: '+(co.expensesDescription||'Sì'):''}</div></div>`;
+            if (cl.ipClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Proprietà Intellettuale</div><div class="article-content">Tutti i lavori e materiali sviluppati nell'ambito del presente contratto saranno di proprietà esclusiva del Committente a partire dal completo pagamento dell'importo concordato. Il Prestatore cede tutti i diritti d'autore e di proprietà intellettuale relativi ai lavori eseguiti.</div></div>`;
+            if (cl.confidenceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Riservatezza</div><div class="article-content">Le parti si impegnano a mantenere la massima riservatezza sulle informazioni confidenziali scambiate durante l'esecuzione del contratto. Tali informazioni non potranno essere divulgate a terzi senza previo consenso scritto, fatto salvo quanto richiesto dalla legge.</div></div>`;
+            if (cl.nonCompeteClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Non Concorrenza</div><div class="article-content">Durante la vigenza del contratto e per i successivi ${cl.nonCompeteMonths||'12'} mesi, il Prestatore si impegna a non fornire servizi analoghi a soggetti direttamente concorrenti del Committente in relazione all'oggetto del presente contratto.</div></div>`;
+            if (cl.resolutionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Risoluzione Anticipata</div><div class="article-content">Ciascuna parte può recedere dal contratto con preavviso scritto di ${cl.resolutionDays||'30'} giorni. In caso di recesso del Committente, il Prestatore avrà diritto al compenso per il lavoro già eseguito alla data di efficacia del recesso.</div></div>`;
+            if (cl.forceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Forza Maggiore</div><div class="article-content">Nessuna delle parti sarà responsabile per inadempimenti causati da eventi di forza maggiore, intesi come circostanze imprevedibili e inevitabili che rendano impossibile l'esecuzione delle obbligazioni contrattuali.</div></div>`;
+            if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Foro Competente</div><div class="article-content">Per qualsiasi controversia derivante dal presente contratto sarà competente in via esclusiva il Foro di ${cl.jurisdictionCity||'Roma'}.</div></div>`;
+            if (cl.cancellationPenalty) h += `<div class="article"><div class="article-title">Art. ${n++} — Penale di Cancellazione</div><div class="article-content">In caso di cancellazione del progetto da parte del Committente, questi corrisponderà al Prestatore una penale pari al ${cl.cancellationPercent||'30'}% dell'importo complessivo concordato.</div></div>`;
+            if (cl.exclusivityClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Esclusività</div><div class="article-content">Per la durata del contratto, il Prestatore dedicherà al Committente il tempo e le risorse necessarie alla realizzazione del progetto, impegnandosi a non accettare incarichi concorrenti senza preventivo consenso scritto.</div></div>`;
+            if (cl.warrantyClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Garanzia</div><div class="article-content">Il Prestatore garantisce il proprio operato per ${cl.warrantyMonths||'1'} mese/i dalla consegna. Durante tale periodo si impegna a correggere eventuali difetti o malfunzionamenti riscontrati nel lavoro consegnato, senza costi aggiuntivi.</div></div>`;
+            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">Il Prestatore</div><div class="sig-name">${f.name}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div><div class="signature-block"><div class="sig-label">Il Committente</div><div class="sig-name">${c.name}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div></div>`;
+            document.getElementById('previewContent').innerHTML = h;
+            const txt = document.getElementById('previewContent').innerText, words = txt.trim().split(/\s+/).length;
+            document.getElementById('wordCount').textContent = words;
+            document.getElementById('readingTime').textContent = Math.ceil(words/250) + ' min';
+        }
+
+        function printContract() { window.print(); }
+        function copyToClipboard() { navigator.clipboard.writeText(document.getElementById('previewContent').innerText).then(()=>showNotification('Contratto copiato negli appunti','success')); }
+        function downloadAsText() {
+            const blob = new Blob([document.getElementById('previewContent').innerText], {type:'text/plain'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `Contratto_${formData.contractType}_${Date.now()}.txt`;
+            a.click(); URL.revokeObjectURL(a.href);
+            showNotification('Contratto scaricato','success');
+        }
+        function showNotification(msg, type='success') {
+            const el = document.createElement('div');
+            el.className = 'notification ' + type;
+            el.innerHTML = (type==='success'?'✓':'⚠') + '&nbsp;&nbsp;' + msg;
+            document.body.appendChild(el);
+            setTimeout(()=>el.remove(), 3000);
+        }
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1pcerw8qpqn',K='etherlabs_generatore-contratti';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tracker Obiettivi Risparmio">
+    <meta name="theme-color" content="#060a0a">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <title>Tracker Obiettivi Risparmio - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --bg4: #142420;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-lighter: #6ee7b7;
+            --gold-dark: #059669;
+            --gold-glow: rgba(16,185,129,0.15);
+            --gold-glow2: rgba(16,185,129,0.08);
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+            --border2: #1f3d33;
+            --success: #34d399;
+            --error: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+            color: var(--text1);
+            min-height: 100vh;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-content p {
+            color: var(--text2);
+            font-size: 0.95rem;
+        }
+
+        .premium-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 26px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer; touch-action: manipulation;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #000;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--bg3);
+            color: var(--gold-light);
+            border: 1px solid var(--border2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg4);
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px var(--gold-glow);
+        }
+
+        .btn-secondary:active {
+            background: var(--bg3);
+        }
+
+        .btn-sm {
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            min-height: 40px;
+        }
+
+        .btn-danger {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--error);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(248, 113, 113, 0.25);
+            border-color: var(--error);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 14px 24px;
+            background: none;
+            border: none;
+            color: var(--text2);
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--gold-light);
+            border-bottom-color: var(--gold);
+            background: var(--gold-glow2);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--gold-light);
+            background: var(--gold-glow2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .summary-label {
+            color: var(--text2);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold-light);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .summary-subtext {
+            color: var(--text3);
+            font-size: 0.85rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 14px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--bg2);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px var(--gold-glow);
+            border-radius: 10px;
+        }
+
+        /* Goal Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 6px;
+        }
+
+        .form-group label {
+            color: var(--text1);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text1);
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            min-height: 48px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: var(--bg4);
+            box-shadow: 0 0 0 3px var(--gold-glow), 0 0 12px var(--gold-glow);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text3);
+        }
+
+        /* Icon Selector */
+        .emoji-section-label {
+            color: var(--text1);
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .emoji-option {
+            background: var(--bg3);
+            border: 2px solid var(--border);
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .emoji-option:hover {
+            border-color: var(--gold);
+            background: rgba(16, 185, 129, 0.1);
+            transform: scale(1.08);
+        }
+
+        .emoji-option.selected {
+            border-color: var(--gold);
+            background: rgba(16, 185, 129, 0.15);
+            box-shadow: 0 0 12px var(--gold-glow);
+            transform: scale(1.08);
+        }
+
+        /* Template Buttons */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 36px;
+        }
+
+        .template-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text1);
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            min-height: 48px;
+        }
+
+        .template-btn:hover {
+            border-color: var(--gold);
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--gold-glow);
+        }
+
+        .template-btn:active {
+            transform: translateY(0);
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        /* Goals Grid */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .goal-card {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 12px 32px var(--gold-glow);
+            transform: translateY(-4px);
+        }
+
+        .goal-card.high-priority {
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+
+        .goal-card.medium-priority {
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .goal-card.low-priority {
+            border-color: rgba(122, 154, 142, 0.2);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .goal-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .goal-emoji {
+            font-size: 2rem;
+        }
+
+        .goal-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-on-track {
+            background: rgba(52, 211, 153, 0.2);
+            color: var(--success);
+        }
+
+        .status-behind {
+            background: rgba(248, 113, 113, 0.2);
+            color: var(--error);
+        }
+
+        .status-ahead {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--gold-light);
+        }
+
+        .status-complete {
+            background: rgba(16, 185, 129, 0.3);
+            color: var(--gold-light);
+        }
+
+        /* Circular Progress */
+        .progress-ring-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 24px 0;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            width: 150px;
+            height: 150px;
+        }
+
+        .progress-ring-circle {
+            stroke: var(--border);
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            stroke: url(#gradient);
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percentage {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .progress-label {
+            color: var(--text2);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        /* Goal Stats */
+        .goal-stats {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .goal-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 4px 0;
+        }
+
+        .goal-stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .goal-stat-label {
+            color: var(--text2);
+            font-size: 0.85rem;
+        }
+
+        .goal-stat-value {
+            color: var(--text1);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* Milestones */
+        .milestones-section {
+            margin-top: 20px;
+        }
+
+        .milestones-label {
+            color: var(--text2);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .milestones {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .milestone {
+            flex: 1;
+            height: 8px;
+            background: var(--bg2);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .milestone.reached {
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            box-shadow: 0 0 8px var(--gold-glow);
+            border-color: transparent;
+        }
+
+        /* Goal Actions */
+        .goal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .goal-actions .btn {
+            flex: 1;
+        }
+
+        /* Confetti */
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(300px) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        canvas {
+            max-width: 100%;
+            display: block;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Log Section */
+        .log-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .log-card {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .log-title {
+            font-weight: 700;
+            color: var(--gold-light);
+            font-size: 1rem;
+        }
+
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border2);
+            font-size: 0.9rem;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-date {
+            color: var(--text2);
+        }
+
+        .log-amount {
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        /* What-If Calculator */
+        .calculator-container {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 40px;
+        }
+
+        .slider-group {
+            margin-bottom: 32px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .slider-label-text {
+            color: var(--text1);
+            font-weight: 600;
+        }
+
+        .slider-value {
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: var(--bg2);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            border: 1px solid var(--border);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--gold-glow);
+            border: 2px solid var(--gold-light);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            cursor: pointer;
+            border: 2px solid var(--gold-light);
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .calculator-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .result-item {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: rgba(16, 185, 129, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .result-label {
+            color: var(--text2);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            color: var(--gold-light);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Deposit Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--bg2), var(--bg3));
+            border: 1px solid var(--border2);
+            border-radius: 14px;
+            padding: 36px;
+            max-width: 480px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--gold-light);
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text2);
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+            background: var(--gold-glow);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 28px;
+            color: var(--text1);
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .subsection-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-top: 8px;
+            margin-bottom: 24px;
+            color: var(--text1);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 12px;
+            border: 1px dashed var(--border2);
+        }
+
+        .empty-state p {
+            color: var(--text2);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Form panel */
+        .form-panel {
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 36px;
+            margin-bottom: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .header-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                gap: 2px;
+            }
+
+            .tab-btn {
+                padding: 12px 14px;
+                font-size: 0.8rem;
+            }
+
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .emoji-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-results {
+                grid-template-columns: 1fr;
+            }
+
+            .form-panel {
+                padding: 24px;
+            }
+
+            .chart-container {
+                padding: 20px;
+            }
+
+            .goal-card {
+                padding: 22px;
+            }
+
+            .log-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: #000;
+                padding: 20px;
+            }
+
+            .tabs, .header-actions, .goal-actions, .btn, .template-grid, .emoji-grid {
+                display: none !important;
+            }
+
+            .summary-card, .goal-card, .log-card {
+                background: white;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .summary-value, .goal-name, .log-title {
+                color: #000;
+            }
+
+            .progress-fill {
+                background: #10b981;
+            }
+        }
+    
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="lock-card">
+<div class="lock-icon">🔐</div>
+<div class="lock-title">Tracker Obiettivi Risparmio</div>
+<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div id="lockError" class="lock-error"></div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div class="lock-footer">© 2025 EtherLabs</div>
+</div>
+</div>
+
+<div id="appContent" style="display:none">
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>Tracker Obiettivi Risparmio</h1>
+                <p>Gestisci i tuoi obiettivi di risparmio in modo intelligente e efficace</p>
+            </div>
+            <div>
+                <span class="premium-badge">Premium Tool</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-sm" onclick="exportData()">Esporta</button>
+                <button class="btn btn-secondary btn-sm" onclick="printSummary()">Stampa</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="tabsBar">
+            <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard', this)">Dashboard</button>
+            <button class="tab-btn" data-tab="goals" onclick="switchTab('goals', this)">Nuovo Obiettivo</button>
+            <button class="tab-btn" data-tab="chart" onclick="switchTab('chart', this)">Grafico</button>
+            <button class="tab-btn" data-tab="log" onclick="switchTab('log', this)">Registro</button>
+            <button class="tab-btn" data-tab="calculator" onclick="switchTab('calculator', this)">What-If</button>
+        </div>
+
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard" class="tab-content active">
+            <div class="summary-grid" id="summaryGrid"></div>
+
+            <h2 class="section-header">I Tuoi Obiettivi</h2>
+            <div class="goals-grid" id="goalsContainer"></div>
+
+            <div class="empty-state" id="emptyState">
+                <p>Nessun obiettivo ancora. Inizia creandone uno!</p>
+                <button class="btn btn-primary" onclick="switchTab('goals')">+ Crea Primo Obiettivo</button>
+            </div>
+        </div>
+
+        <!-- GOALS TAB -->
+        <div id="goals" class="tab-content">
+            <div class="form-panel">
+                <h2 class="subsection-header">Scegli un Modello Predefinito</h2>
+                <div class="template-grid">
+                    <button class="template-btn" onclick="useTemplate('emergency')">Fondo Emergenza</button>
+                    <button class="template-btn" onclick="useTemplate('vacation')">Vacanza</button>
+                    <button class="template-btn" onclick="useTemplate('car')">Auto Nuova</button>
+                    <button class="template-btn" onclick="useTemplate('downpayment')">Anticipo Casa</button>
+                    <button class="template-btn" onclick="useTemplate('wedding')">Matrimonio</button>
+                    <button class="template-btn" onclick="useTemplate('education')">Istruzione</button>
+                    <button class="template-btn" onclick="useTemplate('retirement')">Pensione</button>
+                </div>
+
+                <h2 class="subsection-header">Crea Obiettivo Personalizzato</h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="goalName">Nome Obiettivo</label>
+                        <input type="text" id="goalName" placeholder="Es: Nuovo Laptop">
+                    </div>
+                    <div class="form-group">
+                        <label for="targetAmount">Importo Target (&euro;)</label>
+                        <input type="number" id="targetAmount" placeholder="5000" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="currentSaved">Già Risparmiato (&euro;)</label>
+                        <input type="number" id="currentSaved" placeholder="0" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyContribution">Contributo Mensile (&euro;)</label>
+                        <input type="number" id="monthlyContribution" placeholder="500" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="targetDate">Data Obiettivo</label>
+                        <input type="date" id="targetDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Priorità</label>
+                        <select id="priority">
+                            <option value="low">Bassa</option>
+                            <option value="medium" selected>Media</option>
+                            <option value="high">Alta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 28px; margin-top: 8px;">
+                    <label class="emoji-section-label">Scegli un Emoji</label>
+                    <div class="emoji-grid">
+                        <div class="emoji-option selected" data-emoji="💰" onclick="selectEmoji(this)">💰</div>
+                        <div class="emoji-option" data-emoji="🎯" onclick="selectEmoji(this)">🎯</div>
+                        <div class="emoji-option" data-emoji="🚀" onclick="selectEmoji(this)">🚀</div>
+                        <div class="emoji-option" data-emoji="⭐" onclick="selectEmoji(this)">⭐</div>
+                        <div class="emoji-option" data-emoji="🏆" onclick="selectEmoji(this)">🏆</div>
+                        <div class="emoji-option" data-emoji="💎" onclick="selectEmoji(this)">💎</div>
+                    </div>
+                    <input type="hidden" id="selectedEmoji" value="💰">
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1rem;" onclick="addGoal()">Crea Obiettivo</button>
+            </div>
+        </div>
+
+        <!-- CHART TAB -->
+        <div id="chart" class="tab-content">
+            <div class="chart-container">
+                <h2 class="subsection-header">Proiezione Risparmio</h2>
+                <canvas id="projectionChart"></canvas>
+                <div class="chart-legend" id="chartLegend"></div>
+            </div>
+        </div>
+
+        <!-- LOG TAB -->
+        <div id="log" class="tab-content">
+            <h2 class="section-header">Registro Depositi</h2>
+            <div class="log-grid" id="logContainer"></div>
+            <div class="empty-state" id="logEmptyState">
+                <p>Nessun deposito registrato. Aggiungi il tuo primo deposito!</p>
+            </div>
+        </div>
+
+        <!-- CALCULATOR TAB -->
+        <div id="calculator" class="tab-content">
+            <div class="calculator-container">
+                <h2 class="subsection-header">Calcolatore What-If</h2>
+                <p style="color: var(--text2); margin-bottom: 28px;">Scopri come risparmi extra accelerano i tuoi obiettivi</p>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span class="slider-label-text">Risparmio Mensile Extra (&euro;)</span>
+                        <span class="slider-value" id="extraSavingsDisplay">&euro;0,00</span>
+                    </div>
+                    <input type="range" id="extraSavingsSlider" min="0" max="5000" step="50" value="0" oninput="updateCalculator()">
+                </div>
+
+                <div class="calculator-results" id="calculatorResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div class="modal" id="depositModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Aggiungi Deposito</span>
+                <button class="modal-close" onclick="closeDepositModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="depositAmount">Importo (&euro;)</label>
+                <input type="number" id="depositAmount" placeholder="100" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="depositDate">Data</label>
+                <input type="date" id="depositDate">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeDepositModal()">Annulla</button>
+                <button class="btn btn-primary" onclick="confirmDeposit()">Conferma Deposito</button>
+            </div>
+        </div>
+    </div>
+
+    <svg style="display: none;">
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <script>
+        // In-memory storage (no localStorage dependency)
+        let goals = [];
+        let selectedEmoji = '💰';
+        let activeDepositGoalId = null;
+
+        const templates = {
+            emergency: { name: 'Fondo Emergenza', amount: 15000, emoji: '🚨', priority: 'high', months: 12 },
+            vacation: { name: 'Vacanza', amount: 3000, emoji: '✈️', priority: 'medium', months: 6 },
+            car: { name: 'Auto Nuova', amount: 25000, emoji: '🚗', priority: 'medium', months: 24 },
+            downpayment: { name: 'Anticipo Casa', amount: 50000, emoji: '🏠', priority: 'high', months: 36 },
+            wedding: { name: 'Matrimonio', amount: 20000, emoji: '💍', priority: 'medium', months: 18 },
+            education: { name: 'Istruzione', amount: 12000, emoji: '📚', priority: 'medium', months: 12 },
+            retirement: { name: 'Pensione', amount: 100000, emoji: '🏖️', priority: 'low', months: 120 }
+        };
+
+        const chartColors = ['#34d399', '#10b981', '#6ee7b7', '#059669', '#a7f3d0'];
+
+        function selectEmoji(el) {
+            document.querySelectorAll('.emoji-option').forEach(e => e.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedEmoji = el.dataset.emoji;
+            document.getElementById('selectedEmoji').value = selectedEmoji;
+        }
+
+        function useTemplate(template) {
+            const t = templates[template];
+            document.getElementById('goalName').value = t.name;
+            document.getElementById('targetAmount').value = t.amount;
+            document.getElementById('currentSaved').value = 0;
+            document.getElementById('monthlyContribution').value = Math.ceil(t.amount / t.months);
+
+            const targetDate = new Date();
+            targetDate.setMonth(targetDate.getMonth() + t.months);
+            document.getElementById('targetDate').value = targetDate.toISOString().split('T')[0];
+            document.getElementById('priority').value = t.priority;
+
+            selectedEmoji = t.emoji;
+            document.getElementById('selectedEmoji').value = selectedEmoji;
+            document.querySelectorAll('.emoji-option').forEach(e => {
+                e.classList.toggle('selected', e.dataset.emoji === selectedEmoji);
+            });
+        }
+
+        function addGoal() {
+            const name = document.getElementById('goalName').value.trim();
+            const targetAmount = parseFloat(document.getElementById('targetAmount').value);
+            const currentSaved = parseFloat(document.getElementById('currentSaved').value) || 0;
+            const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            const targetDate = document.getElementById('targetDate').value;
+            const priority = document.getElementById('priority').value;
+            const emoji = document.getElementById('selectedEmoji').value;
+
+            if (!name || !targetAmount || targetAmount <= 0) {
+                alert('Inserisci nome e importo target validi!');
+                return;
+            }
+
+            goals.push({
+                id: Date.now(),
+                name,
+                targetAmount,
+                currentSaved,
+                monthlyContribution,
+                targetDate: targetDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                priority,
+                emoji,
+                deposits: []
+            });
+
+            clearForm();
+            switchTab('dashboard');
+            render();
+        }
+
+        function clearForm() {
+            document.getElementById('goalName').value = '';
+            document.getElementById('targetAmount').value = '';
+            document.getElementById('currentSaved').value = '0';
+            document.getElementById('monthlyContribution').value = '';
+            document.getElementById('targetDate').value = '';
+            document.getElementById('priority').value = 'medium';
+            selectedEmoji = '💰';
+            document.getElementById('selectedEmoji').value = '💰';
+            document.querySelectorAll('.emoji-option').forEach(e => {
+                e.classList.toggle('selected', e.dataset.emoji === '💰');
+            });
+        }
+
+        function deleteGoal(id) {
+            if (confirm('Eliminare questo obiettivo?')) {
+                goals = goals.filter(g => g.id !== id);
+                render();
+            }
+        }
+
+        // Deposit Modal
+        function openDepositModal(goalId) {
+            activeDepositGoalId = goalId;
+            document.getElementById('depositAmount').value = '';
+            document.getElementById('depositDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('depositModal').classList.add('active');
+            setTimeout(() => document.getElementById('depositAmount').focus(), 100);
+        }
+
+        function closeDepositModal() {
+            document.getElementById('depositModal').classList.remove('active');
+            activeDepositGoalId = null;
+        }
+
+        function confirmDeposit() {
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const date = document.getElementById('depositDate').value || new Date().toISOString().split('T')[0];
+
+            if (!amount || amount <= 0) {
+                alert('Inserisci un importo valido!');
+                return;
+            }
+
+            const goal = goals.find(g => g.id === activeDepositGoalId);
+            if (goal) {
+                goal.deposits.push({ date, amount });
+                goal.currentSaved += amount;
+
+                if (goal.currentSaved >= goal.targetAmount) {
+                    celebrateGoal(goal.id);
+                }
+
+                closeDepositModal();
+                render();
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('depositModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDepositModal();
+        });
+
+        function getGoalStatus(goal) {
+            if (goal.currentSaved >= goal.targetAmount) return 'complete';
+
+            const remaining = goal.targetAmount - goal.currentSaved;
+            const targetDate = new Date(goal.targetDate);
+            const today = new Date();
+            const daysRemaining = (targetDate - today) / (1000 * 60 * 60 * 24);
+            const monthsRemaining = daysRemaining / 30;
+
+            const neededMonthly = remaining / Math.max(monthsRemaining, 1);
+            if (goal.monthlyContribution >= neededMonthly * 1.1) return 'ahead';
+            if (goal.monthlyContribution >= neededMonthly * 0.8) return 'on-track';
+            return 'behind';
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('it-IT', {
+                style: 'currency',
+                currency: 'EUR'
+            }).format(amount);
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString('it-IT', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function calculateCompletionDate(goal) {
+            if (goal.currentSaved >= goal.targetAmount) return new Date();
+            if (goal.monthlyContribution <= 0) return null;
+
+            const remaining = goal.targetAmount - goal.currentSaved;
+            const monthsNeeded = remaining / goal.monthlyContribution;
+            const completionDate = new Date();
+            completionDate.setMonth(completionDate.getMonth() + Math.ceil(monthsNeeded));
+            return completionDate;
+        }
+
+        function createCircularProgress(percentage) {
+            const circumference = 2 * Math.PI * 70;
+            const offset = circumference - (percentage / 100) * circumference;
+            return `
+                <svg class="progress-ring" viewBox="0 0 160 160">
+                    <circle class="progress-ring-circle" cx="80" cy="80" r="70"></circle>
+                    <circle class="progress-ring-fill" cx="80" cy="80" r="70" style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${offset}"></circle>
+                </svg>
+                <div class="progress-ring-text">
+                    <div class="progress-percentage">${Math.round(percentage)}%</div>
+                    <div class="progress-label">Progresso</div>
+                </div>
+            `;
+        }
+
+        function getMilestoneMarkers(percentage) {
+            const milestones = [25, 50, 75, 100];
+            return milestones.map(m => `
+                <div class="milestone ${percentage >= m ? 'reached' : ''}"></div>
+            `).join('');
+        }
+
+        function celebrateGoal() {
+            const colors = ['#10b981', '#34d399', '#6ee7b7'];
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.borderRadius = '50%';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function render() {
+            renderSummary();
+            renderGoals();
+            renderLogs();
+            renderChart();
+            renderCalculator();
+        }
+
+        function renderSummary() {
+            const totalTarget = goals.reduce((sum, g) => sum + g.targetAmount, 0);
+            const totalSaved = goals.reduce((sum, g) => sum + g.currentSaved, 0);
+            const totalRemaining = Math.max(totalTarget - totalSaved, 0);
+            const totalMonthly = goals.reduce((sum, g) => sum + g.monthlyContribution, 0);
+            const totalMonths = (goals.length > 0 && totalMonthly > 0) ? Math.ceil(totalRemaining / totalMonthly) : 0;
+            const progressPct = totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0;
+
+            document.getElementById('summaryGrid').innerHTML = `
+                <div class="summary-card">
+                    <div class="summary-label">Target Totale</div>
+                    <div class="summary-value">${formatCurrency(totalTarget)}</div>
+                    <div class="summary-subtext">${goals.length} obiettiv${goals.length === 1 ? 'o' : 'i'} attiv${goals.length === 1 ? 'o' : 'i'}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Già Risparmiato</div>
+                    <div class="summary-value">${formatCurrency(totalSaved)}</div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPct}%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Ancora da Risparmiare</div>
+                    <div class="summary-value">${formatCurrency(totalRemaining)}</div>
+                    <div class="summary-subtext">per raggiungere tutti gli obiettivi</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Impegno Mensile</div>
+                    <div class="summary-value">${formatCurrency(totalMonthly)}</div>
+                    <div class="summary-subtext">${totalMonths > 0 ? totalMonths + ' mesi stimati' : 'Nessun impegno'}</div>
+                </div>
+            `;
+        }
+
+        function renderGoals() {
+            const container = document.getElementById('goalsContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            if (goals.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = goals.map(goal => {
+                const percentage = Math.min((goal.currentSaved / goal.targetAmount) * 100, 100);
+                const status = getGoalStatus(goal);
+                const completionDate = calculateCompletionDate(goal);
+                const completionText = completionDate ? formatDate(completionDate.toISOString().split('T')[0]) : 'N/D';
+
+                const statusLabels = {
+                    'complete': { badge: 'status-complete', text: 'Completato' },
+                    'ahead': { badge: 'status-ahead', text: 'In Anticipo' },
+                    'on-track': { badge: 'status-on-track', text: 'In Pista' },
+                    'behind': { badge: 'status-behind', text: 'In Ritardo' }
+                };
+
+                const statusInfo = statusLabels[status] || statusLabels['on-track'];
+
+                return `
+                    <div class="goal-card ${goal.priority}-priority">
+                        <div class="goal-header">
+                            <div class="goal-title">
+                                <div class="goal-emoji">${goal.emoji}</div>
+                                <div class="goal-name">${goal.name}</div>
+                            </div>
+                            <span class="status-badge ${statusInfo.badge}">${statusInfo.text}</span>
+                        </div>
+
+                        <div class="progress-ring-container">
+                            ${createCircularProgress(percentage)}
+                        </div>
+
+                        <div class="goal-stats">
+                            <div class="goal-stat">
+                                <span class="goal-stat-label">Risparmiato</span>
+                                <span class="goal-stat-value">${formatCurrency(goal.currentSaved)}</span>
+                            </div>
+                            <div class="goal-stat">
+                                <span class="goal-stat-label">Target</span>
+                                <span class="goal-stat-value">${formatCurrency(goal.targetAmount)}</span>
+                            </div>
+                            <div class="goal-stat">
+                                <span class="goal-stat-label">Contributo Mensile</span>
+                                <span class="goal-stat-value">${formatCurrency(goal.monthlyContribution)}</span>
+                            </div>
+                            <div class="goal-stat">
+                                <span class="goal-stat-label">Data Stimata</span>
+                                <span class="goal-stat-value">${completionText}</span>
+                            </div>
+                        </div>
+
+                        <div class="milestones-section">
+                            <span class="milestones-label">Pietre Miliari (25% - 50% - 75% - 100%)</span>
+                            <div class="milestones">
+                                ${getMilestoneMarkers(percentage)}
+                            </div>
+                        </div>
+
+                        <div class="goal-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openDepositModal(${goal.id})">+ Deposito</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteGoal(${goal.id})">Elimina</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logContainer');
+            const emptyState = document.getElementById('logEmptyState');
+
+            const goalsWithDeposits = goals.filter(g => g.deposits && g.deposits.length > 0);
+
+            if (goalsWithDeposits.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = goalsWithDeposits.map(goal => {
+                const sortedDeposits = [...goal.deposits].sort((a, b) => new Date(b.date) - new Date(a.date));
+                return `
+                    <div class="log-card">
+                        <div class="log-header">
+                            <div class="log-title">${goal.emoji} ${goal.name}</div>
+                            <span style="color: var(--text3); font-size: 0.8rem;">${goal.deposits.length} depositi</span>
+                        </div>
+                        ${sortedDeposits.map(d => `
+                            <div class="log-entry">
+                                <span class="log-date">${formatDate(d.date)}</span>
+                                <span class="log-amount">+${formatCurrency(d.amount)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderChart() {
+            const canvas = document.getElementById('projectionChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const containerWidth = canvas.parentElement.clientWidth - 56;
+            canvas.width = Math.max(containerWidth, 300);
+            canvas.height = 320;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (goals.length === 0) {
+                ctx.fillStyle = 'rgba(122,154,142,0.5)';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('Aggiungi obiettivi per vedere la proiezione', canvas.width / 2, canvas.height / 2);
+                document.getElementById('chartLegend').innerHTML = '';
+                return;
+            }
+
+            const months = 36;
+            const yMax = Math.max(...goals.map(g => g.targetAmount)) * 1.15;
+            const padding = { top: 30, right: 30, bottom: 50, left: 70 };
+            const chartW = canvas.width - padding.left - padding.right;
+            const chartH = canvas.height - padding.top - padding.bottom;
+
+            // Grid lines
+            ctx.strokeStyle = 'rgba(16,185,129,0.08)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding.top + chartH * (i / 5);
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(padding.left + chartW, y);
+                ctx.stroke();
+
+                // Y-axis labels
+                const val = yMax * (1 - i / 5);
+                ctx.fillStyle = 'rgba(122,154,142,0.6)';
+                ctx.font = '11px Inter';
+                ctx.textAlign = 'right';
+                ctx.fillText(formatCurrency(val).replace(/,\d{2}$/, ''), padding.left - 8, y + 4);
+            }
+
+            // Axes
+            ctx.strokeStyle = 'rgba(16,185,129,0.25)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, padding.top);
+            ctx.lineTo(padding.left, padding.top + chartH);
+            ctx.lineTo(padding.left + chartW, padding.top + chartH);
+            ctx.stroke();
+
+            // Draw data for each goal
+            goals.forEach((goal, idx) => {
+                const color = chartColors[idx % chartColors.length];
+
+                // Filled area
+                ctx.beginPath();
+                for (let i = 0; i <= months; i++) {
+                    const saved = Math.min(goal.currentSaved + (goal.monthlyContribution * i), goal.targetAmount);
+                    const x = padding.left + chartW * (i / months);
+                    const y = padding.top + chartH - (saved / yMax) * chartH;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.lineTo(padding.left + chartW, padding.top + chartH);
+                ctx.lineTo(padding.left, padding.top + chartH);
+                ctx.closePath();
+                ctx.fillStyle = color + '20';
+                ctx.fill();
+
+                // Line stroke
+                ctx.beginPath();
+                for (let i = 0; i <= months; i++) {
+                    const saved = Math.min(goal.currentSaved + (goal.monthlyContribution * i), goal.targetAmount);
+                    const x = padding.left + chartW * (i / months);
+                    const y = padding.top + chartH - (saved / yMax) * chartH;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // Target line (dashed)
+                const targetY = padding.top + chartH - (goal.targetAmount / yMax) * chartH;
+                ctx.beginPath();
+                ctx.setLineDash([6, 4]);
+                ctx.strokeStyle = color + '60';
+                ctx.lineWidth = 1;
+                ctx.moveTo(padding.left, targetY);
+                ctx.lineTo(padding.left + chartW, targetY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            // X-axis labels
+            ctx.fillStyle = 'rgba(122,154,142,0.6)';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= months; i += 6) {
+                const x = padding.left + chartW * (i / months);
+                ctx.fillText(i + ' mesi', x, padding.top + chartH + 24);
+            }
+
+            // Legend
+            document.getElementById('chartLegend').innerHTML = goals.map((goal, idx) => `
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: ${chartColors[idx % chartColors.length]}"></div>
+                    ${goal.emoji} ${goal.name}
+                </div>
+            `).join('');
+        }
+
+        function updateCalculator() {
+            const extraSavings = parseFloat(document.getElementById('extraSavingsSlider').value);
+            document.getElementById('extraSavingsDisplay').textContent = formatCurrency(extraSavings);
+
+            if (goals.length === 0) {
+                document.getElementById('calculatorResults').innerHTML = '<p style="color: var(--text2); text-align: center;">Aggiungi obiettivi per usare il calcolatore.</p>';
+                return;
+            }
+
+            document.getElementById('calculatorResults').innerHTML = goals.map(goal => {
+                const newMonthly = goal.monthlyContribution + extraSavings;
+                const remaining = Math.max(goal.targetAmount - goal.currentSaved, 0);
+                const monthsNeeded = newMonthly > 0 ? Math.ceil(remaining / newMonthly) : 999;
+                const completionDate = new Date();
+                completionDate.setMonth(completionDate.getMonth() + monthsNeeded);
+
+                const originalMonths = goal.monthlyContribution > 0 ? Math.ceil(remaining / goal.monthlyContribution) : 999;
+                const savedMonths = originalMonths - monthsNeeded;
+
+                return `
+                    <div class="result-item">
+                        <div class="result-label">${goal.emoji} ${goal.name}</div>
+                        <div class="result-value">${completionDate.toLocaleDateString('it-IT', { month: 'short', year: 'numeric' })}</div>
+                        ${savedMonths > 0 ? `<div style="color: var(--success); font-size: 0.8rem; margin-top: 6px;">${savedMonths} mesi risparmiati</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCalculator() {
+            updateCalculator();
+        }
+
+        function switchTab(tabName, clickedBtn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+
+            // Find the correct button
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+            } else {
+                const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+                if (btn) btn.classList.add('active');
+            }
+
+            if (tabName === 'chart') {
+                setTimeout(() => renderChart(), 100);
+            }
+        }
+
+        function exportData() {
+            const summary = {
+                exportDate: new Date().toISOString(),
+                totalTarget: goals.reduce((sum, g) => sum + g.targetAmount, 0),
+                totalSaved: goals.reduce((sum, g) => sum + g.currentSaved, 0),
+                goals: goals
+            };
+
+            const dataStr = JSON.stringify(summary, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'risparmio-export-' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function printSummary() {
+            window.print();
+        }
+
+        // Resize handler for chart
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (document.getElementById('chart').classList.contains('active')) {
+                    renderChart();
+                }
+            }, 200);
+        });
+
+        // Initial render
+        render();
+    </script>
+</div><!-- /appContent -->
+
+<script>
+(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='1xjbunbt2nq',K='etherlabs_tracker-risparmio';
+var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);
+li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>
