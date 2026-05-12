@@ -1134,7 +1134,7 @@ function renderTimerControls() {
 }
 
 function punchIn() {
-  state.liveSession = { startTs: Date.now(), taskId: state.tasks[0]?.id || null };
+  state.liveSession = { startTs: Date.now(), taskId: (state.tasks[0] && state.tasks[0].id) || null };
   saveData();
   renderTimerControls();
 }
@@ -1233,14 +1233,14 @@ function openSessionModal(dayKey, sessionId) {
     document.getElementById('session-modal-title').textContent = 'Modifica sessione';
     document.getElementById('session-start').value = s.start || '';
     document.getElementById('session-end').value = s.end === '24:00' ? '23:59' : (s.end || '');
-    document.getElementById('session-task').value = s.taskId || state.tasks[0]?.id;
+    document.getElementById('session-task').value = s.taskId || (state.tasks[0] && state.tasks[0].id);
     document.getElementById('session-note').value = s.note || '';
     document.getElementById('session-delete-btn').style.display = '';
   } else {
     document.getElementById('session-modal-title').textContent = 'Aggiungi sessione';
     document.getElementById('session-start').value = '';
     document.getElementById('session-end').value = '';
-    document.getElementById('session-task').value = state.tasks[0]?.id || '';
+    document.getElementById('session-task').value = (state.tasks[0] && state.tasks[0].id) || '';
     document.getElementById('session-note').value = '';
     document.getElementById('session-delete-btn').style.display = 'none';
   }
@@ -1305,7 +1305,7 @@ function renderWeek() {
     const br = computeBreakdown(day);
     totalH += hours; totalP += pay; totalOrd += br.ordinary; totalOt += br.overtime;
     const isToday = k === todayKey();
-    const t = day?.type || 'empty';
+    const t = (day && day.type) || 'empty';
     const label = day ? TYPE_LABELS[day.type] : '—';
     const sessTxt = day && day.sessions.length
       ? day.sessions.map(s => `${s.start}–${s.end}`).join(', ')
