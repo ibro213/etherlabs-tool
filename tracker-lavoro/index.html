@@ -2,6 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -839,38 +840,13 @@ body { overflow-x: hidden; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// DEBUG / ERROR DISPLAY (mobile diagnostics)
-// ============================================================
+// Indicatore semplice "JS attivo" — appare in basso a destra, sparisce dopo 4s
 (function(){
-  function showErr(msg){
-    var d = document.getElementById('__dbg');
-    if (!d) {
-      d = document.createElement('div');
-      d.id = '__dbg';
-      d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#7f1d1d;color:#fff;padding:10px 12px;font-family:monospace;font-size:11px;line-height:1.4;z-index:9999;max-height:40vh;overflow:auto;border-bottom:2px solid #fca5a5;white-space:pre-wrap;';
-      d.onclick = function(){ d.remove(); };
-      (document.body || document.documentElement).appendChild(d);
-    }
-    d.textContent += '\n' + msg;
-  }
-  window.addEventListener('error', function(e){
-    showErr('ERR: ' + (e.message||'?') + ' @ line ' + (e.lineno||'?') + ':' + (e.colno||'?'));
-  });
-  window.addEventListener('unhandledrejection', function(e){
-    showErr('PROMISE: ' + (e.reason && e.reason.message || e.reason || '?'));
-  });
-  window.__dbgOK = function(label){
-    var s = document.getElementById('__ok');
-    if (!s) {
-      s = document.createElement('div');
-      s.id = '__ok';
-      s.style.cssText = 'position:fixed;bottom:8px;left:8px;background:#064e3b;color:#6ee7b7;padding:6px 10px;border-radius:6px;font-family:monospace;font-size:10px;z-index:9999;opacity:0.85;';
-      s.onclick = function(){ s.remove(); };
-      (document.body || document.documentElement).appendChild(s);
-    }
-    s.textContent = 'JS OK · ' + label;
-  };
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;bottom:8px;right:8px;background:#10b981;color:#000;padding:6px 12px;border-radius:6px;font-family:-apple-system,sans-serif;font-size:11px;font-weight:600;z-index:9999;';
+  d.textContent = '✓ JS ATTIVO';
+  if (document.body) document.body.appendChild(d);
+  setTimeout(function(){ if (d.parentNode) d.parentNode.removeChild(d); }, 4000);
 })();
 
 // ============================================================
@@ -902,7 +878,7 @@ const DEFAULT_DATA = {
   liveSession: null
 };
 
-// Nessun turno precaricato: importa il backup JSON da Impostazioni dopo il primo accesso
+// Turni precaricati
 const PRESET_SHIFTS = [];
 
 function seedShifts(data) {
@@ -1713,18 +1689,10 @@ document.getElementById('reset-btn').onclick = () => {
 // ============================================================
 // INIT
 // ============================================================
-try {
-  applyTheme();
-  renderTimerControls();
-  startTimerTick();
-  renderToday();
-  if (window.__dbgOK) window.__dbgOK('init complete');
-} catch (e) {
-  var d = document.createElement('div');
-  d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#7f1d1d;color:#fff;padding:10px;font-family:monospace;font-size:11px;z-index:9999;';
-  d.textContent = 'INIT ERR: ' + (e.message || e) + ' @ ' + (e.stack||'').split('\n')[1];
-  document.body.appendChild(d);
-}
+applyTheme();
+renderTimerControls();
+startTimerTick();
+renderToday();
 </script>
 </body>
 </html>
