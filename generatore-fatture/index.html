@@ -2,15 +2,11 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Generatore Fatture">
-    <meta name="theme-color" content="#060a0a">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Generatore di Fatture Pro - PREMIUM TOOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --bg: #060a0a;
@@ -35,8 +31,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
+            box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -134,6 +129,11 @@
             background: var(--bg2);
         }
 
+        input:disabled, select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -219,11 +219,13 @@
             justify-content: center;
         }
 
-        button:hover {
+        @media (hover: hover) and (pointer: fine) {
+button:hover {
             background: var(--gold-light);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px var(--gold-glow);
         }
+}
 
         button:active {
             transform: translateY(0);
@@ -235,19 +237,23 @@
             border: 1px solid var(--gold);
         }
 
-        button.secondary:hover {
+        @media (hover: hover) and (pointer: fine) {
+button.secondary:hover {
             background: var(--border2);
             border-color: var(--gold-light);
         }
+}
 
         button.danger {
             background: var(--error);
             color: white;
         }
 
-        button.danger:hover {
+        @media (hover: hover) and (pointer: fine) {
+button.danger:hover {
             background: #f45c5c;
         }
+}
 
         .line-items {
             margin-top: 1.5rem;
@@ -290,7 +296,7 @@
             color: white;
             border: none;
             border-radius: 0.5rem;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-weight: 600;
             min-height: 44px;
             min-width: 44px;
@@ -300,10 +306,12 @@
             transition: all 0.3s ease;
         }
 
-        .line-item-remove:hover {
+        @media (hover: hover) and (pointer: fine) {
+.line-item-remove:hover {
             background: #f45c5c;
             transform: scale(1.05);
         }
+}
 
         .summary-row {
             display: flex;
@@ -523,7 +531,7 @@
             background: var(--bg3);
             color: var(--text2);
             border: 1px solid var(--border);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             border-radius: 0.5rem;
             transition: all 0.3s ease;
             min-height: 40px;
@@ -532,10 +540,12 @@
             justify-content: center;
         }
 
-        .template-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.template-btn:hover {
             border-color: var(--gold-light);
             background: var(--bg4);
         }
+}
 
         .template-btn.active {
             background: var(--gold);
@@ -556,6 +566,41 @@
             padding: 1rem;
             font-size: 0.9rem;
             min-height: 48px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer; touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-wrapper label {
+            margin: 0;
+            text-transform: none;
+            cursor: pointer; touch-action: manipulation;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        #loadJson {
+            display: none;
         }
 
         @media (max-width: 1200px) {
@@ -684,36 +729,56 @@
             }
         }
     
+        /* === MOBILE iOS FIX (auto-applied) === */
+        html { -webkit-text-size-adjust: 100%; }
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
+        @media (max-width: 768px) {
+          button, .btn, input[type="submit"], input[type="button"] { min-height: 44px; }
+          .btn-small { min-height: 40px; }
+          input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
+        }
+
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
 .lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
 .lock-input:focus{border-color:#10b981}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
+.lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
 .lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
+.install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#060a0a">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
 </head>
 <body>
-
 <div id="lockScreen">
 <div class="lock-card">
 <div class="lock-icon">🔐</div>
 <div class="lock-title">Generatore Fatture</div>
 <div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
 <div class="lock-footer">© 2025 EtherLabs</div>
 </div>
 </div>
@@ -745,6 +810,8 @@
                     <button class="template-btn active" data-template="professional">Professional</button>
                     <button class="template-btn" data-template="minimal">Minimal</button>
                     <button class="template-btn" data-template="bold">Bold</button>
+                    <button class="template-btn" data-template="classico">Classico</button>
+                    <button class="template-btn" data-template="moderno">Moderno</button>
                 </div>
             </div>
             <div class="control-group">
@@ -759,6 +826,12 @@
             <div class="control-group">
                 <label>Numero Progressivo Fattura</label>
                 <input type="number" id="invoiceCounter" value="1" min="1">
+            </div>
+            <div class="control-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="regimeForfettario">
+                    <label for="regimeForfettario">Regime Forfettario</label>
+                </div>
             </div>
         </div>
 
@@ -796,7 +869,11 @@
                         <input type="text" id="fromName" placeholder="La Tua Azienda S.r.l.">
                     </div>
                     <div class="control-group">
-                        <label>Logo URL (Opzionale)</label>
+                        <label>Carica Logo</label>
+                        <input type="file" id="fromLogoFile" accept="image/*">
+                    </div>
+                    <div class="control-group">
+                        <label>oppure incolla URL...</label>
                         <input type="text" id="fromLogo" placeholder="https://esempio.com/logo.png">
                     </div>
                     <div class="form-row">
@@ -913,16 +990,22 @@
                 <h2 class="panel-title">Anteprima Fattura</h2>
                 <div id="preview" class="preview"></div>
                 <div class="export-buttons">
-                    <button class="export-btn" onclick="printInvoice()">🖨 Stampa</button>
+                    <button class="export-btn" onclick="downloadPDF()">⬇ Scarica PDF</button>
+                    <button class="export-btn secondary" onclick="printInvoice()">🖨 Stampa</button>
                     <button class="export-btn secondary" onclick="copyToClipboard()">📋 Copia</button>
                     <button class="export-btn secondary" onclick="downloadAsText()">📥 Scarica TXT</button>
+                    <button class="export-btn secondary" onclick="saveJSON()">💾 Salva Dati</button>
+                    <button class="export-btn secondary" onclick="triggerLoadJSON()">📂 Carica Dati</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <input type="file" id="loadJson" accept=".json">
+
     <script>
         let currentTemplate = 'professional';
+        let logoDataUrl = null;
         const lineItemsContainer = document.getElementById('lineItems');
 
         // Initialize invoice with today's date
@@ -937,6 +1020,19 @@
             const year = new Date().getFullYear();
             document.getElementById('invoiceNumber').value = `INV-${year}-${String(counter).padStart(3, '0')}`;
         }
+
+        // Handle logo file upload
+        document.getElementById('fromLogoFile').addEventListener('input', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    logoDataUrl = event.target.result;
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         // Add line item
         function addLineItem() {
@@ -954,10 +1050,10 @@
                 <button class="line-item-remove" onclick="removeLineItem(${id})">✕</button>
             `;
             lineItemsContainer.appendChild(item);
-            item.querySelector('.quantity').addEventListener('change', updatePreview);
-            item.querySelector('.price').addEventListener('change', updatePreview);
-            item.querySelector('.tax').addEventListener('change', updatePreview);
-            item.querySelector('.description').addEventListener('change', updatePreview);
+            item.querySelector('.quantity').addEventListener('input', updatePreview);
+            item.querySelector('.price').addEventListener('input', updatePreview);
+            item.querySelector('.tax').addEventListener('input', updatePreview);
+            item.querySelector('.description').addEventListener('input', updatePreview);
             updatePreview();
         }
 
@@ -978,11 +1074,17 @@
             const items = document.querySelectorAll('.line-item');
             let subtotal = 0;
             let taxTotal = 0;
+            const isForfettario = document.getElementById('regimeForfettario').checked;
 
             items.forEach(item => {
                 const qty = parseFloat(item.querySelector('.quantity').value) || 0;
                 const price = parseFloat(item.querySelector('.price').value) || 0;
-                const tax = parseFloat(item.querySelector('.tax').value) || 0;
+                let tax = parseFloat(item.querySelector('.tax').value) || 0;
+
+                // Se regime forfettario, ignora l'IVA
+                if (isForfettario) {
+                    tax = 0;
+                }
 
                 const lineSubtotal = qty * price;
                 const lineTax = lineSubtotal * (tax / 100);
@@ -1020,6 +1122,7 @@
         function renderPreview() {
             const preview = document.getElementById('preview');
             const currency = document.getElementById('currency').value;
+            const isForfettario = document.getElementById('regimeForfettario').checked;
 
             const fromName = document.getElementById('fromName').value || 'La Tua Azienda';
             const fromAddress = document.getElementById('fromAddress').value || 'Indirizzo';
@@ -1027,7 +1130,6 @@
             const fromEmail = document.getElementById('fromEmail').value || 'email@azienda.it';
             const fromPhone = document.getElementById('fromPhone').value || '+39 06 1234';
             const fromTax = document.getElementById('fromTax').value || 'P.IVA';
-            const fromLogo = document.getElementById('fromLogo').value;
 
             const toName = document.getElementById('toName').value || 'Cliente';
             const toAddress = document.getElementById('toAddress').value || 'Indirizzo';
@@ -1053,7 +1155,11 @@
                 const desc = item.querySelector('.description').value || '-';
                 const qty = parseFloat(item.querySelector('.quantity').value) || 0;
                 const price = parseFloat(item.querySelector('.price').value) || 0;
-                const tax = parseFloat(item.querySelector('.tax').value) || 0;
+                let tax = parseFloat(item.querySelector('.tax').value) || 0;
+
+                if (isForfettario) {
+                    tax = 0;
+                }
 
                 const lineSubtotal = qty * price;
                 const lineTax = lineSubtotal * (tax / 100);
@@ -1061,12 +1167,14 @@
                 subtotal += lineSubtotal;
                 taxTotal += lineTax;
 
+                const taxDisplay = isForfettario ? 'Esente' : `${tax.toFixed(2)}%`;
+
                 itemsHTML += `
                     <tr>
                         <td>${desc}</td>
                         <td style="text-align: center;">${qty}</td>
                         <td style="text-align: right;">${currency}${price.toFixed(2)}</td>
-                        <td style="text-align: center;">${tax.toFixed(2)}%</td>
+                        <td style="text-align: center;">${taxDisplay}</td>
                         <td style="text-align: right;">${currency}${(lineSubtotal + lineTax).toFixed(2)}</td>
                     </tr>
                 `;
@@ -1084,23 +1192,68 @@
             const grandTotal = subtotal - discountAmount + taxTotal;
 
             let headerStyle = '';
+            let tableHeaderStyle = '';
+            let titleStyle = '';
+            let previewBorderStyle = '';
+
             if (currentTemplate === 'professional') {
                 headerStyle = 'border-top: 4px solid #000;';
+                tableHeaderStyle = 'background: #e8e8e8; color: #000;';
             } else if (currentTemplate === 'bold') {
                 headerStyle = 'background: #f0f0f0; padding: 1rem; margin: -2.5rem -2.5rem 1rem -2.5rem;';
+                tableHeaderStyle = 'background: #e8e8e8; color: #000;';
+            } else if (currentTemplate === 'minimal') {
+                headerStyle = '';
+                tableHeaderStyle = 'background: #f5f5f5; color: #000;';
+            } else if (currentTemplate === 'classico') {
+                headerStyle = 'background: #1a3a5c; color: white; padding: 1rem; margin: -2.5rem -2.5rem 1.5rem -2.5rem;';
+                tableHeaderStyle = 'background: #1a3a5c; color: white;';
+                titleStyle = 'color: #1a3a5c;';
+            } else if (currentTemplate === 'moderno') {
+                headerStyle = '';
+                titleStyle = 'color: #10b981;';
+                tableHeaderStyle = 'background: #10b981; color: white;';
+                previewBorderStyle = 'border-left: 4px solid #10b981;';
             }
 
             let logoHTML = '';
-            if (fromLogo) {
-                logoHTML = `<div class="preview-logo-area has-logo" style="background-image: url('${fromLogo}');"></div>`;
+            const logoToUse = logoDataUrl || document.getElementById('fromLogo').value;
+            if (logoToUse) {
+                logoHTML = `<div class="preview-logo-area has-logo" style="background-image: url('${logoToUse}');"></div>`;
             } else {
                 logoHTML = `<div class="preview-logo-area">LOGO</div>`;
             }
 
-            preview.innerHTML = `
+            let forfettarioBlockHTML = '';
+            if (isForfettario) {
+                forfettarioBlockHTML = `
+                    <div style="margin-top:1.5rem;padding:1rem;background:#fff8e1;border-left:4px solid #f59e0b;font-size:0.82rem;color:#555;">
+                        Operazione effettuata ai sensi dell'art. 1, commi 54-89, L. 190/2014 - Regime forfetario. Il prestatore non è soggetto a ritenuta d'acconto ai sensi dell'art. 1, comma 67, Legge 190/2014.
+                    </div>
+                `;
+                if (grandTotal >= 77.47) {
+                    forfettarioBlockHTML += `
+                        <div style="margin-top:0.75rem;padding:0.75rem;background:#f5f5f5;font-size:0.82rem;color:#666;border-radius:4px;">
+                            Imposta di bollo assolta sull'originale ai sensi del D.M. 17/06/2014.
+                        </div>
+                    `;
+                }
+            }
+
+            let previewStyle = '';
+            if (currentTemplate === 'moderno') {
+                previewStyle = 'style="border-left: 4px solid #10b981;"';
+            }
+
+            let classicHeaderCompanyStyle = '';
+            if (currentTemplate === 'classico') {
+                classicHeaderCompanyStyle = 'style="color: white;"';
+            }
+
+            let previewHTML = `
                 <div class="preview-header" style="${headerStyle}">
                     ${logoHTML}
-                    <div class="preview-company-info">
+                    <div class="preview-company-info" ${classicHeaderCompanyStyle}>
                         <h2>${fromName}</h2>
                         <p>${fromAddress}<br>${fromCity}</p>
                         <p>${fromEmail}<br>${fromPhone}</p>
@@ -1108,7 +1261,7 @@
                     </div>
                 </div>
 
-                <div class="preview-title">FATTURA</div>
+                <div class="preview-title" style="${titleStyle}">FATTURA</div>
                 <div class="preview-invoice-number">N. ${invoiceNumber} | Data: ${invoiceDate}</div>
 
                 <div class="bill-to">
@@ -1124,12 +1277,12 @@
 
                 <table>
                     <thead>
-                        <tr>
-                            <th>Descrizione</th>
-                            <th style="text-align: center;">Quantità</th>
-                            <th style="text-align: right;">Prezzo Unitario</th>
-                            <th style="text-align: center;">IVA</th>
-                            <th style="text-align: right;">Totale</th>
+                        <tr style="${tableHeaderStyle}">
+                            <th style="${tableHeaderStyle}">Descrizione</th>
+                            <th style="text-align: center; ${tableHeaderStyle}">Quantità</th>
+                            <th style="text-align: right; ${tableHeaderStyle}">Prezzo Unitario</th>
+                            <th style="text-align: center; ${tableHeaderStyle}">IVA</th>
+                            <th style="text-align: right; ${tableHeaderStyle}">Totale</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1167,8 +1320,52 @@
                 </div>
                 ` : ''}
 
+                ${forfettarioBlockHTML}
+
                 ${notes ? `<div class="preview-notes">${notes}</div>` : ''}
             `;
+
+            preview.innerHTML = previewHTML;
+        }
+
+        async function downloadPDF() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value || 'fattura';
+            const preview = document.getElementById('preview');
+            showSuccessMessage('Generazione PDF in corso...');
+            try {
+                const canvas = await html2canvas(preview, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    windowWidth: preview.scrollWidth,
+                    windowHeight: preview.scrollHeight
+                });
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageW = pdf.internal.pageSize.getWidth();
+                const pageH = pdf.internal.pageSize.getHeight();
+                const imgW = canvas.width;
+                const imgH = canvas.height;
+                const ratio = pageW / (imgW / (96 / 25.4));
+                const scaledH = (imgH / (96 / 25.4)) * ratio;
+                let posY = 0;
+                let remaining = scaledH;
+                pdf.addImage(imgData, 'JPEG', 0, posY, pageW, scaledH);
+                remaining -= pageH;
+                while (remaining > 0) {
+                    posY -= pageH;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, posY, pageW, scaledH);
+                    remaining -= pageH;
+                }
+                pdf.save(`Fattura-${invoiceNumber}.pdf`);
+                showSuccessMessage('PDF scaricato! ✓');
+            } catch(e) {
+                console.error(e);
+                showSuccessMessage('Errore PDF — riprova con Chrome');
+            }
         }
 
         function printInvoice() {
@@ -1196,6 +1393,145 @@
             URL.revokeObjectURL(url);
         }
 
+        function saveJSON() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const data = {
+                currency: document.getElementById('currency').value,
+                template: currentTemplate,
+                defaultTax: document.getElementById('defaultTax').value,
+                invoiceCounter: document.getElementById('invoiceCounter').value,
+                regimeForfettario: document.getElementById('regimeForfettario').checked,
+                invoiceNumber: invoiceNumber,
+                invoiceDate: document.getElementById('invoiceDate').value,
+                dueDate: document.getElementById('dueDate').value,
+                fromName: document.getElementById('fromName').value,
+                fromLogo: document.getElementById('fromLogo').value,
+                fromLogoFile: logoDataUrl,
+                fromAddress: document.getElementById('fromAddress').value,
+                fromCity: document.getElementById('fromCity').value,
+                fromEmail: document.getElementById('fromEmail').value,
+                fromPhone: document.getElementById('fromPhone').value,
+                fromTax: document.getElementById('fromTax').value,
+                toName: document.getElementById('toName').value,
+                toAddress: document.getElementById('toAddress').value,
+                toCity: document.getElementById('toCity').value,
+                toEmail: document.getElementById('toEmail').value,
+                toTax: document.getElementById('toTax').value,
+                discount: document.getElementById('discount').value,
+                bankName: document.getElementById('bankName').value,
+                bankIBAN: document.getElementById('bankIBAN').value,
+                paymentTerms: document.getElementById('paymentTerms').value,
+                notes: document.getElementById('notes').value,
+                lineItems: []
+            };
+
+            const items = document.querySelectorAll('.line-item');
+            items.forEach(item => {
+                data.lineItems.push({
+                    description: item.querySelector('.description').value,
+                    quantity: item.querySelector('.quantity').value,
+                    price: item.querySelector('.price').value,
+                    tax: item.querySelector('.tax').value
+                });
+            });
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `FatturaData-${invoiceNumber}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showSuccessMessage('Dati salvati con successo!');
+        }
+
+        function triggerLoadJSON() {
+            document.getElementById('loadJson').click();
+        }
+
+        document.getElementById('loadJson').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        loadDataFromJSON(data);
+                        showSuccessMessage('Dati caricati con successo!');
+                    } catch (error) {
+                        showSuccessMessage('Errore nel caricamento del file JSON!');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function loadDataFromJSON(data) {
+            document.getElementById('currency').value = data.currency || '€';
+            document.getElementById('defaultTax').value = data.defaultTax || '22';
+            document.getElementById('invoiceCounter').value = data.invoiceCounter || '1';
+            document.getElementById('regimeForfettario').checked = data.regimeForfettario || false;
+            document.getElementById('invoiceDate').value = data.invoiceDate || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.getElementById('fromName').value = data.fromName || '';
+            document.getElementById('fromLogo').value = data.fromLogo || '';
+            if (data.fromLogoFile) {
+                logoDataUrl = data.fromLogoFile;
+            }
+            document.getElementById('fromAddress').value = data.fromAddress || '';
+            document.getElementById('fromCity').value = data.fromCity || '';
+            document.getElementById('fromEmail').value = data.fromEmail || '';
+            document.getElementById('fromPhone').value = data.fromPhone || '';
+            document.getElementById('fromTax').value = data.fromTax || '';
+            document.getElementById('toName').value = data.toName || '';
+            document.getElementById('toAddress').value = data.toAddress || '';
+            document.getElementById('toCity').value = data.toCity || '';
+            document.getElementById('toEmail').value = data.toEmail || '';
+            document.getElementById('toTax').value = data.toTax || '';
+            document.getElementById('discount').value = data.discount || '';
+            document.getElementById('bankName').value = data.bankName || '';
+            document.getElementById('bankIBAN').value = data.bankIBAN || '';
+            document.getElementById('paymentTerms').value = data.paymentTerms || '';
+            document.getElementById('notes').value = data.notes || '';
+
+            if (data.template) {
+                currentTemplate = data.template;
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.template === data.template) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            lineItemsContainer.innerHTML = '';
+            if (data.lineItems && data.lineItems.length > 0) {
+                data.lineItems.forEach(item => {
+                    const id = Date.now() + Math.random();
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'line-item';
+                    itemDiv.id = `line-${id}`;
+                    itemDiv.innerHTML = `
+                        <input type="text" class="description" placeholder="Descrizione" value="${item.description || ''}">
+                        <input type="number" class="quantity" placeholder="Qty" value="${item.quantity || '1'}" step="0.01" min="0">
+                        <input type="number" class="price" placeholder="Prezzo Unitario" value="${item.price || '0'}" step="0.01" min="0">
+                        <input type="number" class="tax" placeholder="IVA %" value="${item.tax || data.defaultTax || '22'}" step="0.01" min="0">
+                        <div class="line-item-total">€0.00</div>
+                        <button class="line-item-remove" onclick="removeLineItem(${id})">✕</button>
+                    `;
+                    lineItemsContainer.appendChild(itemDiv);
+                    itemDiv.querySelector('.quantity').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.price').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.tax').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.description').addEventListener('input', updatePreview);
+                });
+            } else {
+                addLineItem();
+            }
+
+            updatePreview();
+        }
+
         function showSuccessMessage(msg) {
             const element = document.getElementById('successMessage');
             element.textContent = msg;
@@ -1203,29 +1539,46 @@
             setTimeout(() => element.classList.remove('show'), 3000);
         }
 
-        // Event listeners
-        document.getElementById('currency').addEventListener('change', updatePreview);
-        document.getElementById('defaultTax').addEventListener('change', updatePreview);
-        document.getElementById('invoiceCounter').addEventListener('change', updatePreview);
-        document.getElementById('discount').addEventListener('change', updatePreview);
-        document.getElementById('invoiceDate').addEventListener('change', updatePreview);
-        document.getElementById('dueDate').addEventListener('change', updatePreview);
-        document.getElementById('fromName').addEventListener('change', updatePreview);
-        document.getElementById('fromAddress').addEventListener('change', updatePreview);
-        document.getElementById('fromCity').addEventListener('change', updatePreview);
-        document.getElementById('fromEmail').addEventListener('change', updatePreview);
-        document.getElementById('fromPhone').addEventListener('change', updatePreview);
-        document.getElementById('fromTax').addEventListener('change', updatePreview);
-        document.getElementById('fromLogo').addEventListener('change', updatePreview);
-        document.getElementById('toName').addEventListener('change', updatePreview);
-        document.getElementById('toAddress').addEventListener('change', updatePreview);
-        document.getElementById('toCity').addEventListener('change', updatePreview);
-        document.getElementById('toEmail').addEventListener('change', updatePreview);
-        document.getElementById('toTax').addEventListener('change', updatePreview);
-        document.getElementById('bankName').addEventListener('change', updatePreview);
-        document.getElementById('bankIBAN').addEventListener('change', updatePreview);
-        document.getElementById('paymentTerms').addEventListener('change', updatePreview);
-        document.getElementById('notes').addEventListener('change', updatePreview);
+        // Event listeners - changed from 'change' to 'input' for real-time updates
+        document.getElementById('currency').addEventListener('input', updatePreview);
+        document.getElementById('defaultTax').addEventListener('input', function() {
+            updatePreview();
+            if (!document.getElementById('regimeForfettario').checked) {
+                document.getElementById('defaultTax').disabled = false;
+            }
+        });
+        document.getElementById('invoiceCounter').addEventListener('input', updatePreview);
+        document.getElementById('discount').addEventListener('input', updatePreview);
+        document.getElementById('invoiceDate').addEventListener('input', updatePreview);
+        document.getElementById('dueDate').addEventListener('input', updatePreview);
+        document.getElementById('fromName').addEventListener('input', updatePreview);
+        document.getElementById('fromAddress').addEventListener('input', updatePreview);
+        document.getElementById('fromCity').addEventListener('input', updatePreview);
+        document.getElementById('fromEmail').addEventListener('input', updatePreview);
+        document.getElementById('fromPhone').addEventListener('input', updatePreview);
+        document.getElementById('fromTax').addEventListener('input', updatePreview);
+        document.getElementById('fromLogo').addEventListener('input', updatePreview);
+        document.getElementById('toName').addEventListener('input', updatePreview);
+        document.getElementById('toAddress').addEventListener('input', updatePreview);
+        document.getElementById('toCity').addEventListener('input', updatePreview);
+        document.getElementById('toEmail').addEventListener('input', updatePreview);
+        document.getElementById('toTax').addEventListener('input', updatePreview);
+        document.getElementById('bankName').addEventListener('input', updatePreview);
+        document.getElementById('bankIBAN').addEventListener('input', updatePreview);
+        document.getElementById('paymentTerms').addEventListener('input', updatePreview);
+        document.getElementById('notes').addEventListener('input', updatePreview);
+
+        // Regime Forfettario handler
+        document.getElementById('regimeForfettario').addEventListener('change', function() {
+            const defaultTaxSelect = document.getElementById('defaultTax');
+            if (this.checked) {
+                defaultTaxSelect.disabled = true;
+                defaultTaxSelect.value = '0';
+            } else {
+                defaultTaxSelect.disabled = false;
+            }
+            updatePreview();
+        });
 
         // Template selector
         document.querySelectorAll('.template-btn').forEach(btn => {
@@ -1241,8 +1594,8 @@
         addLineItem();
         updatePreview();
     </script>
-</div><!-- /appContent -->
 
+</div><!-- /appContent -->
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}

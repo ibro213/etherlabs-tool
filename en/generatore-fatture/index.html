@@ -2,15 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Invoice Generator">
-    <meta name="theme-color" content="#060a0a">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Invoice Generator Pro - PREMIUM TOOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --bg: #060a0a;
@@ -35,8 +31,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
+            box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -134,6 +129,11 @@
             background: var(--bg2);
         }
 
+        input:disabled, select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -219,11 +219,13 @@
             justify-content: center;
         }
 
-        button:hover {
+        @media (hover: hover) and (pointer: fine) {
+button:hover {
             background: var(--gold-light);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px var(--gold-glow);
         }
+}
 
         button:active {
             transform: translateY(0);
@@ -235,19 +237,23 @@
             border: 1px solid var(--gold);
         }
 
-        button.secondary:hover {
+        @media (hover: hover) and (pointer: fine) {
+button.secondary:hover {
             background: var(--border2);
             border-color: var(--gold-light);
         }
+}
 
         button.danger {
             background: var(--error);
             color: white;
         }
 
-        button.danger:hover {
+        @media (hover: hover) and (pointer: fine) {
+button.danger:hover {
             background: #f45c5c;
         }
+}
 
         .line-items {
             margin-top: 1.5rem;
@@ -290,7 +296,7 @@
             color: white;
             border: none;
             border-radius: 0.5rem;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-weight: 600;
             min-height: 44px;
             min-width: 44px;
@@ -300,10 +306,12 @@
             transition: all 0.3s ease;
         }
 
-        .line-item-remove:hover {
+        @media (hover: hover) and (pointer: fine) {
+.line-item-remove:hover {
             background: #f45c5c;
             transform: scale(1.05);
         }
+}
 
         .summary-row {
             display: flex;
@@ -523,7 +531,7 @@
             background: var(--bg3);
             color: var(--text2);
             border: 1px solid var(--border);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             border-radius: 0.5rem;
             transition: all 0.3s ease;
             min-height: 40px;
@@ -532,10 +540,12 @@
             justify-content: center;
         }
 
-        .template-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.template-btn:hover {
             border-color: var(--gold-light);
             background: var(--bg4);
         }
+}
 
         .template-btn.active {
             background: var(--gold);
@@ -684,36 +694,56 @@
             }
         }
     
+        /* === MOBILE iOS FIX (auto-applied) === */
+        html { -webkit-text-size-adjust: 100%; }
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
+        @media (max-width: 768px) {
+          button, .btn, input[type="submit"], input[type="button"] { min-height: 44px; }
+          .btn-small { min-height: 40px; }
+          input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
+        }
+
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
 .lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
 .lock-input:focus{border-color:#10b981}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
+.lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
 .lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
+.install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#060a0a">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
 </head>
 <body>
-
 <div id="lockScreen">
 <div class="lock-card">
 <div class="lock-icon">🔐</div>
 <div class="lock-title">Invoice Generator</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div class="lock-sub">Enter the unlock code you received with your purchase</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
+<button id="lockBtn" class="lock-btn">UNLOCK</button>
 <div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
 <div class="lock-footer">© 2025 EtherLabs</div>
 </div>
 </div>
@@ -745,6 +775,8 @@
                     <button class="template-btn active" data-template="professional">Professional</button>
                     <button class="template-btn" data-template="minimal">Minimal</button>
                     <button class="template-btn" data-template="bold">Bold</button>
+                    <button class="template-btn" data-template="classic">Classic</button>
+                    <button class="template-btn" data-template="modern">Modern</button>
                 </div>
             </div>
             <div class="control-group">
@@ -795,7 +827,11 @@
                         <input type="text" id="fromName" placeholder="Your Company Inc.">
                     </div>
                     <div class="control-group">
-                        <label>Logo URL (Optional)</label>
+                        <label>Upload Logo</label>
+                        <input type="file" id="fromLogoFile" accept="image/*" style="background: var(--bg4); border: 1px solid var(--border); color: var(--text1); padding: 0.85rem; border-radius: 0.5rem; font-family: inherit; font-size: 0.95rem; cursor: pointer;">
+                    </div>
+                    <div class="control-group">
+                        <label>Or Paste URL</label>
                         <input type="text" id="fromLogo" placeholder="https://example.com/logo.png">
                     </div>
                     <div class="form-row">
@@ -912,16 +948,22 @@
                 <h2 class="panel-title">Invoice Preview</h2>
                 <div id="preview" class="preview"></div>
                 <div class="export-buttons">
-                    <button class="export-btn" onclick="printInvoice()">🖨 Print</button>
+                    <button class="export-btn" onclick="downloadPDF()">⬇ Download PDF</button>
+                    <button class="export-btn secondary" onclick="printInvoice()">🖨 Print</button>
                     <button class="export-btn secondary" onclick="copyToClipboard()">📋 Copy</button>
                     <button class="export-btn secondary" onclick="downloadAsText()">📥 Download TXT</button>
+                    <button class="export-btn secondary" onclick="saveJSON()">💾 Save Data</button>
+                    <button class="export-btn secondary" onclick="triggerLoadJSON()">📂 Load Data</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <input type="file" id="loadJson" accept=".json" style="display:none" onchange="loadDataFromJSON(event)">
+
     <script>
         let currentTemplate = 'professional';
+        let logoDataUrl = null;
         const lineItemsContainer = document.getElementById('lineItems');
 
         // Initialize invoice with today's date
@@ -936,6 +978,19 @@
             const year = new Date().getFullYear();
             document.getElementById('invoiceNumber').value = `INV-${year}-${String(counter).padStart(3, '0')}`;
         }
+
+        // Handle logo file upload
+        document.getElementById('fromLogoFile').addEventListener('input', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    logoDataUrl = event.target.result;
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         // Add line item
         function addLineItem() {
@@ -953,10 +1008,10 @@
                 <button class="line-item-remove" onclick="removeLineItem(${id})">✕</button>
             `;
             lineItemsContainer.appendChild(item);
-            item.querySelector('.quantity').addEventListener('change', updatePreview);
-            item.querySelector('.price').addEventListener('change', updatePreview);
-            item.querySelector('.tax').addEventListener('change', updatePreview);
-            item.querySelector('.description').addEventListener('change', updatePreview);
+            item.querySelector('.quantity').addEventListener('input', updatePreview);
+            item.querySelector('.price').addEventListener('input', updatePreview);
+            item.querySelector('.tax').addEventListener('input', updatePreview);
+            item.querySelector('.description').addEventListener('input', updatePreview);
             updatePreview();
         }
 
@@ -1083,23 +1138,47 @@
             const grandTotal = subtotal - discountAmount + taxTotal;
 
             let headerStyle = '';
+            let tableHeaderStyle = '';
+            let titleStyle = '';
+            let previewBorderStyle = '';
+
             if (currentTemplate === 'professional') {
                 headerStyle = 'border-top: 4px solid #000;';
+                tableHeaderStyle = 'background: #e8e8e8; color: #000;';
             } else if (currentTemplate === 'bold') {
                 headerStyle = 'background: #f0f0f0; padding: 1rem; margin: -2.5rem -2.5rem 1rem -2.5rem;';
+                tableHeaderStyle = 'background: #e8e8e8; color: #000;';
+            } else if (currentTemplate === 'minimal') {
+                headerStyle = '';
+                tableHeaderStyle = 'background: #f5f5f5; color: #000;';
+            } else if (currentTemplate === 'classic') {
+                headerStyle = 'background: #1a3a5c; color: white; padding: 1rem; margin: -2.5rem -2.5rem 1.5rem -2.5rem;';
+                tableHeaderStyle = 'background: #1a3a5c; color: white;';
+                titleStyle = 'color: #1a3a5c;';
+            } else if (currentTemplate === 'modern') {
+                headerStyle = '';
+                titleStyle = 'color: #10b981;';
+                tableHeaderStyle = 'background: #10b981; color: white;';
+                previewBorderStyle = 'border-left: 4px solid #10b981;';
             }
 
             let logoHTML = '';
-            if (fromLogo) {
-                logoHTML = `<div class="preview-logo-area has-logo" style="background-image: url('${fromLogo}');"></div>`;
+            const logoToUse = logoDataUrl || fromLogo;
+            if (logoToUse) {
+                logoHTML = `<div class="preview-logo-area has-logo" style="background-image: url('${logoToUse}');"></div>`;
             } else {
                 logoHTML = `<div class="preview-logo-area">LOGO</div>`;
+            }
+
+            let classicHeaderCompanyStyle = '';
+            if (currentTemplate === 'classic') {
+                classicHeaderCompanyStyle = 'style="color: white;"';
             }
 
             preview.innerHTML = `
                 <div class="preview-header" style="${headerStyle}">
                     ${logoHTML}
-                    <div class="preview-company-info">
+                    <div class="preview-company-info" ${classicHeaderCompanyStyle}>
                         <h2>${fromName}</h2>
                         <p>${fromAddress}<br>${fromCity}</p>
                         <p>${fromEmail}<br>${fromPhone}</p>
@@ -1107,7 +1186,7 @@
                     </div>
                 </div>
 
-                <div class="preview-title">INVOICE</div>
+                <div class="preview-title" style="${titleStyle}">INVOICE</div>
                 <div class="preview-invoice-number">No. ${invoiceNumber} | Date: ${invoiceDate}</div>
 
                 <div class="bill-to">
@@ -1123,12 +1202,12 @@
 
                 <table>
                     <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th style="text-align: center;">Quantity</th>
-                            <th style="text-align: right;">Unit Price</th>
-                            <th style="text-align: center;">Tax</th>
-                            <th style="text-align: right;">Total</th>
+                        <tr style="${tableHeaderStyle}">
+                            <th style="${tableHeaderStyle}">Description</th>
+                            <th style="text-align: center; ${tableHeaderStyle}">Quantity</th>
+                            <th style="text-align: right; ${tableHeaderStyle}">Unit Price</th>
+                            <th style="text-align: center; ${tableHeaderStyle}">Tax</th>
+                            <th style="text-align: right; ${tableHeaderStyle}">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1170,6 +1249,41 @@
             `;
         }
 
+        async function downloadPDF() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value || 'invoice';
+            const preview = document.getElementById('preview');
+            showSuccessMessage('Generating PDF...');
+            try {
+                const canvas = await html2canvas(preview, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    windowWidth: preview.scrollWidth,
+                    windowHeight: preview.scrollHeight
+                });
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageW = pdf.internal.pageSize.getWidth();
+                const pageH = pdf.internal.pageSize.getHeight();
+                const ratio = pageW / (canvas.width / (96 / 25.4));
+                const scaledH = (canvas.height / (96 / 25.4)) * ratio;
+                let posY = 0, remaining = scaledH;
+                pdf.addImage(imgData, 'JPEG', 0, posY, pageW, scaledH);
+                remaining -= pageH;
+                while (remaining > 0) {
+                    posY -= pageH; pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, posY, pageW, scaledH);
+                    remaining -= pageH;
+                }
+                pdf.save(`Invoice-${invoiceNumber}.pdf`);
+                showSuccessMessage('PDF downloaded! ✓');
+            } catch(e) {
+                showSuccessMessage('PDF error — try Chrome');
+            }
+        }
+
         function printInvoice() {
             window.print();
         }
@@ -1195,6 +1309,143 @@
             URL.revokeObjectURL(url);
         }
 
+        function saveJSON() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const data = {
+                currency: document.getElementById('currency').value,
+                template: currentTemplate,
+                defaultTax: document.getElementById('defaultTax').value,
+                invoiceCounter: document.getElementById('invoiceCounter').value,
+                invoiceNumber: invoiceNumber,
+                invoiceDate: document.getElementById('invoiceDate').value,
+                dueDate: document.getElementById('dueDate').value,
+                fromName: document.getElementById('fromName').value,
+                fromLogo: document.getElementById('fromLogo').value,
+                fromLogoFile: logoDataUrl,
+                fromAddress: document.getElementById('fromAddress').value,
+                fromCity: document.getElementById('fromCity').value,
+                fromEmail: document.getElementById('fromEmail').value,
+                fromPhone: document.getElementById('fromPhone').value,
+                fromTax: document.getElementById('fromTax').value,
+                toName: document.getElementById('toName').value,
+                toAddress: document.getElementById('toAddress').value,
+                toCity: document.getElementById('toCity').value,
+                toEmail: document.getElementById('toEmail').value,
+                toTax: document.getElementById('toTax').value,
+                discount: document.getElementById('discount').value,
+                bankName: document.getElementById('bankName').value,
+                bankIBAN: document.getElementById('bankIBAN').value,
+                paymentTerms: document.getElementById('paymentTerms').value,
+                notes: document.getElementById('notes').value,
+                lineItems: []
+            };
+
+            const items = document.querySelectorAll('.line-item');
+            items.forEach(item => {
+                data.lineItems.push({
+                    description: item.querySelector('.description').value,
+                    quantity: item.querySelector('.quantity').value,
+                    price: item.querySelector('.price').value,
+                    tax: item.querySelector('.tax').value
+                });
+            });
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `InvoiceData-${invoiceNumber}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showSuccessMessage('Data saved successfully!');
+        }
+
+        function triggerLoadJSON() {
+            document.getElementById('loadJson').click();
+        }
+
+        document.getElementById('loadJson').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        loadDataFromJSON(data);
+                        showSuccessMessage('Data loaded successfully!');
+                    } catch (error) {
+                        showSuccessMessage('Error loading JSON file!');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function loadDataFromJSON(data) {
+            document.getElementById('currency').value = data.currency || '$';
+            document.getElementById('defaultTax').value = data.defaultTax || '10';
+            document.getElementById('invoiceCounter').value = data.invoiceCounter || '1';
+            document.getElementById('invoiceDate').value = data.invoiceDate || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.getElementById('fromName').value = data.fromName || '';
+            document.getElementById('fromLogo').value = data.fromLogo || '';
+            if (data.fromLogoFile) {
+                logoDataUrl = data.fromLogoFile;
+            }
+            document.getElementById('fromAddress').value = data.fromAddress || '';
+            document.getElementById('fromCity').value = data.fromCity || '';
+            document.getElementById('fromEmail').value = data.fromEmail || '';
+            document.getElementById('fromPhone').value = data.fromPhone || '';
+            document.getElementById('fromTax').value = data.fromTax || '';
+            document.getElementById('toName').value = data.toName || '';
+            document.getElementById('toAddress').value = data.toAddress || '';
+            document.getElementById('toCity').value = data.toCity || '';
+            document.getElementById('toEmail').value = data.toEmail || '';
+            document.getElementById('toTax').value = data.toTax || '';
+            document.getElementById('discount').value = data.discount || '';
+            document.getElementById('bankName').value = data.bankName || '';
+            document.getElementById('bankIBAN').value = data.bankIBAN || '';
+            document.getElementById('paymentTerms').value = data.paymentTerms || '';
+            document.getElementById('notes').value = data.notes || '';
+
+            if (data.template) {
+                currentTemplate = data.template;
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.template === data.template) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            lineItemsContainer.innerHTML = '';
+            if (data.lineItems && data.lineItems.length > 0) {
+                data.lineItems.forEach(item => {
+                    const id = Date.now() + Math.random();
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'line-item';
+                    itemDiv.id = `line-${id}`;
+                    itemDiv.innerHTML = `
+                        <input type="text" class="description" placeholder="Description" value="${item.description || ''}">
+                        <input type="number" class="quantity" placeholder="Qty" value="${item.quantity || '1'}" step="0.01" min="0">
+                        <input type="number" class="price" placeholder="Unit Price" value="${item.price || '0'}" step="0.01" min="0">
+                        <input type="number" class="tax" placeholder="Tax %" value="${item.tax || data.defaultTax || '10'}" step="0.01" min="0">
+                        <div class="line-item-total">$0.00</div>
+                        <button class="line-item-remove" onclick="removeLineItem(${id})">✕</button>
+                    `;
+                    lineItemsContainer.appendChild(itemDiv);
+                    itemDiv.querySelector('.quantity').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.price').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.tax').addEventListener('input', updatePreview);
+                    itemDiv.querySelector('.description').addEventListener('input', updatePreview);
+                });
+            } else {
+                addLineItem();
+            }
+
+            updatePreview();
+        }
+
         function showSuccessMessage(msg) {
             const element = document.getElementById('successMessage');
             element.textContent = msg;
@@ -1202,29 +1453,29 @@
             setTimeout(() => element.classList.remove('show'), 3000);
         }
 
-        // Event listeners
-        document.getElementById('currency').addEventListener('change', updatePreview);
-        document.getElementById('defaultTax').addEventListener('change', updatePreview);
-        document.getElementById('invoiceCounter').addEventListener('change', updatePreview);
-        document.getElementById('discount').addEventListener('change', updatePreview);
-        document.getElementById('invoiceDate').addEventListener('change', updatePreview);
-        document.getElementById('dueDate').addEventListener('change', updatePreview);
-        document.getElementById('fromName').addEventListener('change', updatePreview);
-        document.getElementById('fromAddress').addEventListener('change', updatePreview);
-        document.getElementById('fromCity').addEventListener('change', updatePreview);
-        document.getElementById('fromEmail').addEventListener('change', updatePreview);
-        document.getElementById('fromPhone').addEventListener('change', updatePreview);
-        document.getElementById('fromTax').addEventListener('change', updatePreview);
-        document.getElementById('fromLogo').addEventListener('change', updatePreview);
-        document.getElementById('toName').addEventListener('change', updatePreview);
-        document.getElementById('toAddress').addEventListener('change', updatePreview);
-        document.getElementById('toCity').addEventListener('change', updatePreview);
-        document.getElementById('toEmail').addEventListener('change', updatePreview);
-        document.getElementById('toTax').addEventListener('change', updatePreview);
-        document.getElementById('bankName').addEventListener('change', updatePreview);
-        document.getElementById('bankIBAN').addEventListener('change', updatePreview);
-        document.getElementById('paymentTerms').addEventListener('change', updatePreview);
-        document.getElementById('notes').addEventListener('change', updatePreview);
+        // Event listeners - changed from 'change' to 'input' for real-time updates
+        document.getElementById('currency').addEventListener('input', updatePreview);
+        document.getElementById('defaultTax').addEventListener('input', updatePreview);
+        document.getElementById('invoiceCounter').addEventListener('input', updatePreview);
+        document.getElementById('discount').addEventListener('input', updatePreview);
+        document.getElementById('invoiceDate').addEventListener('input', updatePreview);
+        document.getElementById('dueDate').addEventListener('input', updatePreview);
+        document.getElementById('fromName').addEventListener('input', updatePreview);
+        document.getElementById('fromAddress').addEventListener('input', updatePreview);
+        document.getElementById('fromCity').addEventListener('input', updatePreview);
+        document.getElementById('fromEmail').addEventListener('input', updatePreview);
+        document.getElementById('fromPhone').addEventListener('input', updatePreview);
+        document.getElementById('fromTax').addEventListener('input', updatePreview);
+        document.getElementById('fromLogo').addEventListener('input', updatePreview);
+        document.getElementById('toName').addEventListener('input', updatePreview);
+        document.getElementById('toAddress').addEventListener('input', updatePreview);
+        document.getElementById('toCity').addEventListener('input', updatePreview);
+        document.getElementById('toEmail').addEventListener('input', updatePreview);
+        document.getElementById('toTax').addEventListener('input', updatePreview);
+        document.getElementById('bankName').addEventListener('input', updatePreview);
+        document.getElementById('bankIBAN').addEventListener('input', updatePreview);
+        document.getElementById('paymentTerms').addEventListener('input', updatePreview);
+        document.getElementById('notes').addEventListener('input', updatePreview);
 
         // Template selector
         document.querySelectorAll('.template-btn').forEach(btn => {
@@ -1240,8 +1491,8 @@
         addLineItem();
         updatePreview();
     </script>
-</div><!-- /appContent -->
 
+</div><!-- /appContent -->
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
@@ -1249,7 +1500,7 @@ var H='1mfx87c27p3',K='etherlabs_generatore-fatture_v2_en';
 var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
