@@ -2,20 +2,13 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Matrice Eisenhower">
-    <meta name="theme-color" content="#060a0a">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Matrice Eisenhower Pro - Prioritizza con Intelligenza</title>
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
+            box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
             --bg: #060a0a;
@@ -210,7 +203,7 @@
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
             color: var(--t2);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-size: 0.85rem;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -221,16 +214,24 @@
         }
 
         .quad-btn.q1 { border-color: var(--q1L); color: var(--q1L); }
-        .quad-btn.q1:hover, .quad-btn.q1.active { background: rgba(194, 74, 74, 0.2); border-color: var(--q1L); }
+        @media (hover: hover) and (pointer: fine) {
+.quad-btn.q1:hover, .quad-btn.q1.active { background: rgba(194, 74, 74, 0.2); border-color: var(--q1L); }
+}
 
         .quad-btn.q2 { border-color: var(--q2L); color: var(--q2L); }
-        .quad-btn.q2:hover, .quad-btn.q2.active { background: rgba(74, 157, 74, 0.2); border-color: var(--q2L); }
+        @media (hover: hover) and (pointer: fine) {
+.quad-btn.q2:hover, .quad-btn.q2.active { background: rgba(74, 157, 74, 0.2); border-color: var(--q2L); }
+}
 
         .quad-btn.q3 { border-color: var(--q3L); color: var(--q3L); }
-        .quad-btn.q3:hover, .quad-btn.q3.active { background: rgba(196, 160, 74, 0.2); border-color: var(--q3L); }
+        @media (hover: hover) and (pointer: fine) {
+.quad-btn.q3:hover, .quad-btn.q3.active { background: rgba(196, 160, 74, 0.2); border-color: var(--q3L); }
+}
 
         .quad-btn.q4 { border-color: var(--q4L); color: var(--q4L); }
-        .quad-btn.q4:hover, .quad-btn.q4.active { background: rgba(90, 106, 106, 0.2); border-color: var(--q4L); }
+        @media (hover: hover) and (pointer: fine) {
+.quad-btn.q4:hover, .quad-btn.q4.active { background: rgba(90, 106, 106, 0.2); border-color: var(--q4L); }
+}
 
         .add-btn {
             padding: 11px 24px;
@@ -239,7 +240,7 @@
             border: none;
             border-radius: 10px;
             font-weight: 700;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -247,10 +248,12 @@
             min-width: 100px;
         }
 
-        .add-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.add-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(16, 185, 129, 0.3);
         }
+}
 
         .add-btn:active {
             transform: translateY(0);
@@ -272,7 +275,7 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
             color: var(--goldL);
             border-radius: 8px;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-weight: 600;
             transition: all 0.3s ease;
             font-size: 0.9rem;
@@ -280,10 +283,12 @@
             letter-spacing: 0.5px;
         }
 
-        .control-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.control-btn:hover {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
             border-color: var(--goldL);
         }
+}
 
         .control-btn.active {
             background: linear-gradient(135deg, var(--goldD), var(--gold));
@@ -485,9 +490,11 @@
         .quadrant.q3 { border-color: var(--q3L); box-shadow: 0 8px 32px rgba(196, 160, 74, 0.2); }
         .quadrant.q4 { border-color: var(--q4L); box-shadow: 0 8px 32px rgba(90, 106, 106, 0.2); }
 
-        .quadrant:hover {
+        @media (hover: hover) and (pointer: fine) {
+.quadrant:hover {
             transform: translateY(-4px);
         }
+}
 
         .quadrant.drag-over {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
@@ -554,9 +561,11 @@
             border-radius: 3px;
         }
 
-        .tasks-container::-webkit-scrollbar-thumb:hover {
+        @media (hover: hover) and (pointer: fine) {
+.tasks-container::-webkit-scrollbar-thumb:hover {
             background: rgba(16, 185, 129, 0.5);
         }
+}
 
         .task-card {
             background: rgba(10, 18, 16, 0.5);
@@ -577,11 +586,13 @@
         .task-card.q3 { border-left-color: var(--q3L); }
         .task-card.q4 { border-left-color: var(--q4L); }
 
-        .task-card:hover {
+        @media (hover: hover) and (pointer: fine) {
+.task-card:hover {
             background: rgba(10, 18, 16, 0.7);
             border-color: rgba(16, 185, 129, 0.3);
             box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
         }
+}
 
         .task-card.dragging {
             opacity: 0.5;
@@ -651,16 +662,18 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
             color: var(--goldL);
             border-radius: 4px;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-size: 0.75rem;
             transition: all 0.2s ease;
             font-weight: 600;
         }
 
-        .task-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.task-btn:hover {
             background: rgba(16, 185, 129, 0.2);
             border-color: var(--goldL);
         }
+}
 
         .task-btn.delete {
             color: #ff6b6b;
@@ -668,10 +681,12 @@
             background: rgba(255, 107, 107, 0.1);
         }
 
-        .task-btn.delete:hover {
+        @media (hover: hover) and (pointer: fine) {
+.task-btn.delete:hover {
             background: rgba(255, 107, 107, 0.2);
             border-color: #ff6b6b;
         }
+}
 
         .empty-state {
             display: flex;
@@ -902,36 +917,56 @@
             }
         }
     
+        /* === MOBILE iOS FIX (auto-applied) === */
+        html { -webkit-text-size-adjust: 100%; }
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
+        @media (max-width: 768px) {
+          button, .btn, input[type="submit"], input[type="button"] { min-height: 44px; }
+          .btn-small { min-height: 40px; }
+          input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
+        }
+
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
 .lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
 .lock-input:focus{border-color:#10b981}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
+.lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
 .lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
+.install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#060a0a">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
 </head>
 <body>
-
 <div id="lockScreen">
 <div class="lock-card">
 <div class="lock-icon">🔐</div>
 <div class="lock-title">Matrice Eisenhower</div>
 <div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
 <div class="lock-footer">© 2025 EtherLabs</div>
 </div>
 </div>
@@ -1611,8 +1646,8 @@
         // START
         init();
     </script>
-</div><!-- /appContent -->
 
+</div><!-- /appContent -->
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}

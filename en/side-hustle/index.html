@@ -2,13 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Side Hustle Evaluator">
-    <meta name="theme-color" content="#060a0a">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Side Hustle Scorecard & Evaluator Pro</title>
     <style>
         :root {
@@ -30,8 +24,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
+            box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -86,18 +79,20 @@
             background: var(--bg2);
             border: 2px solid var(--border);
             color: var(--text2);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             border-radius: 8px;
             font-size: 1em;
             transition: all 0.3s ease;
             font-weight: 500;
         }
 
-        .tab-btn:hover {
+        @media (hover: hover) and (pointer: fine) {
+.tab-btn:hover {
             border-color: var(--gold);
             color: var(--gold-light);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
+}
 
         .tab-btn.active {
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
@@ -225,7 +220,7 @@
             outline: none;
             -webkit-appearance: none;
             appearance: none;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -235,32 +230,36 @@
             height: 24px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
             border: 2px solid var(--bg);
             transition: all 0.2s ease;
         }
 
-        input[type="range"]::-webkit-slider-thumb:hover {
+        @media (hover: hover) and (pointer: fine) {
+input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
         }
+}
 
         input[type="range"]::-moz-range-thumb {
             width: 24px;
             height: 24px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
             border: 2px solid var(--bg);
             transition: all 0.2s ease;
         }
 
-        input[type="range"]::-moz-range-thumb:hover {
+        @media (hover: hover) and (pointer: fine) {
+input[type="range"]::-moz-range-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
         }
+}
 
         .button-group {
             display: flex;
@@ -287,10 +286,12 @@
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
-        .btn-primary:hover {
+        @media (hover: hover) and (pointer: fine) {
+.btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
         }
+}
 
         .btn-secondary {
             background: var(--bg3);
@@ -298,10 +299,12 @@
             color: var(--gold);
         }
 
-        .btn-secondary:hover {
+        @media (hover: hover) and (pointer: fine) {
+.btn-secondary:hover {
             background: rgba(16, 185, 129, 0.1);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
+}
 
         .btn-small {
             padding: 8px 16px;
@@ -320,15 +323,17 @@
             border: 2px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             transition: all 0.3s ease;
         }
 
-        .template-card:hover {
+        @media (hover: hover) and (pointer: fine) {
+.template-card:hover {
             border-color: var(--gold);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
             transform: translateY(-5px);
         }
+}
 
         .template-card h3 {
             color: var(--gold-light);
@@ -509,9 +514,11 @@
             font-weight: 600;
         }
 
-        .comparison-table tr:hover {
+        @media (hover: hover) and (pointer: fine) {
+.comparison-table tr:hover {
             background: rgba(16, 185, 129, 0.05);
         }
+}
 
         .winner {
             background: rgba(39, 174, 96, 0.2);
@@ -602,10 +609,12 @@
             transition: all 0.3s ease;
         }
 
-        .idea-item:hover {
+        @media (hover: hover) and (pointer: fine) {
+.idea-item:hover {
             border-color: var(--gold);
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
         }
+}
 
         .idea-item-info h4 {
             color: var(--gold-light);
@@ -725,36 +734,56 @@
             }
         }
     
+        /* === MOBILE iOS FIX (auto-applied) === */
+        html { -webkit-text-size-adjust: 100%; }
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
+        @media (max-width: 768px) {
+          button, .btn, input[type="submit"], input[type="button"] { min-height: 44px; }
+          .btn-small { min-height: 40px; }
+          input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
+        }
+
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
 .lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
 .lock-input:focus{border-color:#10b981}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
+.lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
 .lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
+.install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#060a0a">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
 </head>
 <body>
-
 <div id="lockScreen">
 <div class="lock-card">
 <div class="lock-icon">🔐</div>
 <div class="lock-title">Side Hustle Evaluator</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
+<div class="lock-sub">Enter the unlock code you received with your purchase</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
+<button id="lockBtn" class="lock-btn">UNLOCK</button>
 <div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
 <div class="lock-footer">© 2025 EtherLabs</div>
 </div>
 </div>
@@ -1608,8 +1637,8 @@
             }
         });
     </script>
-</div><!-- /appContent -->
 
+</div><!-- /appContent -->
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
@@ -1617,7 +1646,7 @@ var H='1m6zyfxa9nc',K='etherlabs_side-hustle_en';
 var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}

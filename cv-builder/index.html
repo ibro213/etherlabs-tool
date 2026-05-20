@@ -2,15 +2,17 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CV Builder">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
-    <title>CVBuilder Pro - Costruisci il tuo CV Professionale</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta name="format-detection" content="telephone=no">
+    <title>CVBuilder Pro - Crea il tuo Curriculum Professionale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Roboto:wght@400;500;700&family=Lora:wght@400;600;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
     <style>
         :root {
             --bg: #060a0a;
@@ -30,31 +32,34 @@
             --border2: #1f3d33;
             --success: #34d399;
             --error: #f87171;
+            --accent-color: #10b981;
+            --cv-font: 'Inter', sans-serif;
+            --cv-heading: 'Playfair Display', serif;
+            --cv-bg: #ffffff;
+            --cv-text: #1a1a1a;
+            --cv-muted: #555;
+            --cv-subtle: #999;
+            --cv-line: #ddd;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
             color: var(--text1);
             min-height: 100vh;
+            min-height: 100dvh;
             padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            overscroll-behavior-y: contain;
+            -webkit-text-size-adjust: 100%;
         }
 
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
 
         .brand-tag {
             display: inline-block;
@@ -80,10 +85,23 @@
             background-clip: text;
         }
 
-        .header p {
-            color: var(--text2);
-            font-size: 14px;
+        .header p { color: var(--text2); font-size: 14px; }
+
+        .autosave-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 12px;
+            font-size: 11px;
+            color: var(--text3);
         }
+        .autosave-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--text3);
+            transition: background 0.3s;
+        }
+        .autosave-dot.saving { background: #fbbf24; }
+        .autosave-dot.saved { background: var(--gold); }
 
         .main-layout {
             display: grid;
@@ -93,9 +111,7 @@
         }
 
         @media (max-width: 1200px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
+            .main-layout { grid-template-columns: 1fr; }
         }
 
         .panel {
@@ -116,19 +132,9 @@
             border-bottom: 2px solid var(--border2);
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-row.full { grid-template-columns: 1fr; }
 
         label {
             display: block;
@@ -140,13 +146,9 @@
             letter-spacing: 0.5px;
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="number"],
-        input[type="url"],
-        textarea,
-        select {
+        input[type="text"], input[type="email"], input[type="tel"],
+        input[type="number"], input[type="url"], input[type="date"],
+        input[type="month"], textarea, select {
             width: 100%;
             padding: 12px 14px;
             background: var(--bg4);
@@ -154,17 +156,15 @@
             border-radius: 8px;
             color: var(--text1);
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-size: 16px;
+            line-height: 1.4;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        input[type="number"]:focus,
-        input[type="url"]:focus,
-        textarea:focus,
-        select:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--gold);
             background: var(--bg2);
@@ -175,7 +175,18 @@
             resize: vertical;
             min-height: 80px;
             font-family: 'Inter', sans-serif;
+            margin-top: 15px;
         }
+
+        .char-counter {
+            display: block;
+            text-align: right;
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 4px;
+        }
+        .char-counter.warn { color: #fbbf24; }
+        .char-counter.over { color: var(--error); }
 
         .section-header {
             display: flex;
@@ -199,7 +210,8 @@
             border-radius: 8px;
             font-size: 13px;
             font-weight: 600;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
+            touch-action: manipulation;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -209,59 +221,64 @@
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: #000;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
+        @media (hover: hover) and (pointer: fine) {
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+}
 
         .btn-secondary {
             background: var(--bg4);
             color: var(--gold-light);
             border: 1px solid var(--gold);
         }
+        @media (hover: hover) and (pointer: fine) {
+.btn-secondary:hover { background: var(--gold-glow); transform: translateY(-2px); }
+}
 
-        .btn-secondary:hover {
-            background: var(--gold-glow);
-            transform: translateY(-2px);
-        }
-
-        .btn-small {
-            padding: 8px 12px;
-            font-size: 12px;
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            opacity: 0.9;
-        }
+        .btn-small { padding: 8px 12px; font-size: 12px; }
+        .btn-danger { background: var(--error); color: white; }
+        @media (hover: hover) and (pointer: fine) {
+.btn-danger:hover { opacity: 0.9; }
+}
 
         .entry-item {
             background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 15px;
+            padding: 15px 15px 15px 38px;
             margin-bottom: 12px;
             position: relative;
         }
 
-        .entry-item .form-row {
-            margin-bottom: 10px;
-        }
+        .entry-item .form-row { margin-bottom: 15px; }
+        .entry-item textarea { margin-top: 0; margin-bottom: 0; }
 
-        .entry-item textarea {
-            margin-top: 10px;
+        .drag-handle {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            color: var(--text3);
+            font-size: 18px;
+            line-height: 1;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
         }
+        .drag-handle::before { content: "⋮⋮"; letter-spacing: -2px; }
+        @media (hover: hover) and (pointer: fine) {
+.drag-handle:hover { color: var(--gold-light); }
+}
+        .drag-handle:active { cursor: grabbing; }
 
-        .entry-item input[type="text"],
-        .entry-item input[type="url"],
-        .entry-item select {
-            margin-top: 0;
-        }
+        .sortable-ghost { opacity: 0.4; }
+        .sortable-chosen { box-shadow: 0 0 0 2px var(--gold) !important; }
 
         .entry-remove {
             position: absolute;
@@ -273,93 +290,108 @@
             border-radius: 4px;
             width: 24px;
             height: 24px;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .entry-remove:hover {
-            opacity: 0.9;
-        }
+        @media (hover: hover) and (pointer: fine) {
+.entry-remove:hover { opacity: 0.9; }
+}
 
         .skill-item {
             display: flex;
             align-items: center;
             gap: 10px;
             background: var(--bg2);
-            padding: 10px 12px;
+            padding: 10px 12px 10px 36px;
             border-radius: 6px;
             margin-bottom: 8px;
             justify-content: space-between;
+            position: relative;
         }
+        .skill-item .drag-handle { height: auto; top: 0; bottom: 0; transform: none; }
 
-        .skill-stars {
-            display: flex;
-            gap: 4px;
-        }
-
+        .skill-stars { display: flex; gap: 4px; }
         .star {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
+            width: 16px; height: 16px; border-radius: 50%;
             background: var(--border);
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             transition: all 0.2s;
         }
-
-        .star.filled {
-            background: var(--gold-light);
-            box-shadow: 0 0 8px var(--gold-glow);
-        }
-
-        .star:hover {
-            background: var(--gold);
-        }
+        .star.filled { background: var(--gold-light); box-shadow: 0 0 8px var(--gold-glow); }
+        @media (hover: hover) and (pointer: fine) {
+.star:hover { background: var(--gold); }
+}
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 25px;
             flex-wrap: wrap;
-        }
-
-        .control-group {
-            display: flex;
-            gap: 10px;
             align-items: center;
         }
+        .control-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .control-group label { margin-bottom: 0; color: var(--text2); text-transform: capitalize; font-size: 13px; }
+        .control-group select { min-width: 150px; }
 
-        .control-group label {
-            margin-bottom: 0;
+        .preview-wrap {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        @media (max-width: 1200px) {
+            .preview-wrap { position: static; margin-top: 30px; }
+        }
+
+        .preview-toolbar {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            align-items: center;
+            font-size: 12px;
             color: var(--text2);
-            text-transform: capitalize;
-            font-size: 13px;
         }
 
-        .control-group select {
-            min-width: 150px;
+        .toggle-switch {
+            display: inline-flex;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
         }
+        .toggle-switch button {
+            background: transparent;
+            border: none;
+            color: var(--text2);
+            padding: 6px 12px;
+            font-size: 11px;
+            cursor: pointer; touch-action: manipulation;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .toggle-switch button.active { background: var(--gold); color: #000; }
 
-        /* PREVIEW PANEL */
         .preview-panel {
-            --accent-color: #10b981;
-            background: #f6faf8;
-            color: #1a1a1a;
+            background: var(--cv-bg);
+            color: var(--cv-text);
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            font-family: var(--cv-font);
         }
 
-        @media (max-width: 1200px) {
-            .preview-panel {
-                position: static;
-                margin-top: 30px;
-            }
+        .preview-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            margin: 0 auto 15px;
+            display: block;
         }
 
         .preview-header {
@@ -370,11 +402,12 @@
         }
 
         .preview-name {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--cv-heading);
             font-size: 36px;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--cv-text);
             margin-bottom: 5px;
+            line-height: 1.15;
         }
 
         .preview-title {
@@ -391,19 +424,19 @@
             gap: 15px;
             flex-wrap: wrap;
             font-size: 12px;
-            color: #555;
+            color: var(--cv-muted);
             margin-top: 12px;
         }
+        .preview-contact a { color: var(--cv-muted); text-decoration: none; }
+        .preview-contact .sep { color: var(--cv-subtle); }
 
-        .preview-section {
-            margin-bottom: 20px;
-        }
+        .preview-section { margin-bottom: 20px; page-break-inside: avoid; }
 
         .preview-section-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--cv-heading);
             font-size: 14px;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--cv-text);
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 2px solid var(--accent-color);
@@ -412,32 +445,16 @@
             margin-top: 18px;
         }
 
-        .preview-entry {
-            margin-bottom: 12px;
-        }
-
-        .preview-entry-title {
-            font-weight: 600;
-            color: #1a1a1a;
-            font-size: 14px;
-        }
-
-        .preview-entry-subtitle {
-            font-size: 12px;
-            color: var(--accent-color);
-            font-weight: 500;
-        }
-
-        .preview-entry-date {
-            font-size: 11px;
-            color: #999;
-        }
-
+        .preview-entry { margin-bottom: 12px; page-break-inside: avoid; }
+        .preview-entry-title { font-weight: 600; color: var(--cv-text); font-size: 14px; }
+        .preview-entry-subtitle { font-size: 12px; color: var(--accent-color); font-weight: 500; }
+        .preview-entry-date { font-size: 11px; color: var(--cv-subtle); }
         .preview-entry-desc {
             font-size: 12px;
-            color: #555;
+            color: var(--cv-muted);
             margin-top: 4px;
-            line-height: 1.4;
+            line-height: 1.5;
+            white-space: pre-line;
         }
 
         .preview-skills {
@@ -445,26 +462,19 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-
-        .preview-skill-item {
-            font-size: 12px;
-            color: #1a1a1a;
-        }
-
+        .preview-skill-item { font-size: 12px; color: var(--cv-text); }
         .preview-skill-bar {
-            width: 100%;
-            height: 6px;
-            background: #ddd;
+            width: 100%; height: 6px;
+            background: var(--cv-line);
             border-radius: 3px;
             margin-top: 4px;
             overflow: hidden;
         }
-
         .preview-skill-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-color) 0%, var(--accent-color) 100%);
+            background: var(--accent-color);
             border-radius: 3px;
-            transition: width 0.3s ease;
+            opacity: 0.85;
         }
 
         .preview-languages {
@@ -472,12 +482,7 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
-
-        .preview-language-item {
-            font-size: 12px;
-            color: #1a1a1a;
-        }
-
+        .preview-language-item { font-size: 12px; color: var(--cv-text); }
         .preview-language-level {
             font-size: 10px;
             color: var(--accent-color);
@@ -485,152 +490,332 @@
             text-transform: uppercase;
         }
 
-        .preview-empty {
-            color: #bbb;
-            font-style: italic;
-            font-size: 13px;
-        }
-
-        .preview-panel.template-classic .preview-name {
-            font-family: 'Georgia', serif;
-        }
-
         .preview-panel.template-modern {
             display: grid;
-            grid-template-columns: 1fr 200px;
+            grid-template-columns: 1fr 220px;
             gap: 30px;
         }
-
-        .preview-panel.template-modern .preview-sidebar {
+        .preview-panel.template-modern .preview-header { text-align: left; }
+        .preview-panel.template-modern .preview-contact { justify-content: flex-start; }
+        .preview-panel.template-modern .preview-photo { margin: 0 0 15px 0; }
+        .preview-panel.template-modern .preview-side-col {
             border-left: 2px solid var(--accent-color);
             padding-left: 20px;
         }
+        .preview-panel.template-modern .preview-skills,
+        .preview-panel.template-modern .preview-languages {
+            grid-template-columns: 1fr;
+        }
 
+        .preview-panel.template-minimal .preview-header {
+            border-bottom: 1px solid var(--cv-line);
+        }
         .preview-panel.template-minimal .preview-section-title {
             border-bottom: none;
-            margin-top: 25px;
-            padding-bottom: 0;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--cv-line);
             padding-top: 15px;
+            padding-bottom: 0;
+            margin-top: 22px;
+            color: var(--cv-muted);
+            font-weight: 600;
+        }
+        .preview-panel.template-minimal .preview-name { font-weight: 400; letter-spacing: 1px; }
+
+        .preview-panel.template-executive {
+            --cv-font: 'Lora', serif;
+            --cv-heading: 'Lora', serif;
+        }
+        .preview-panel.template-executive .preview-header {
+            background: var(--accent-color);
+            color: #fff;
+            text-align: left;
+            padding: 30px 35px;
+            margin: -40px -40px 25px -40px;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+        .preview-panel.template-executive .preview-name { color: #fff; font-size: 32px; }
+        .preview-panel.template-executive .preview-title { color: rgba(255,255,255,0.85); }
+        .preview-panel.template-executive .preview-contact { color: rgba(255,255,255,0.9); justify-content: flex-start; }
+        .preview-panel.template-executive .preview-contact a { color: rgba(255,255,255,0.9); }
+        .preview-panel.template-executive .preview-contact .sep { color: rgba(255,255,255,0.5); }
+        .preview-panel.template-executive .preview-photo {
+            margin: 0 0 15px 0;
+            border-color: #fff;
+        }
+        .preview-panel.template-executive .preview-section-title {
+            color: var(--accent-color);
+            letter-spacing: 2px;
         }
 
-        /* Accent Colors */
-        .accent-green {
-            --accent: #10b981;
+        .preview-panel.template-creative {
+            --cv-font: 'Montserrat', sans-serif;
+            --cv-heading: 'Montserrat', sans-serif;
+        }
+        .preview-panel.template-creative .preview-header {
+            border-bottom: none;
+            padding-bottom: 10px;
+        }
+        .preview-panel.template-creative .preview-name {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 40px;
+        }
+        .preview-panel.template-creative .preview-title {
+            background: var(--accent-color);
+            color: #fff;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-top: 6px;
+        }
+        .preview-panel.template-creative .preview-section-title {
+            border-bottom: none;
+            background: linear-gradient(90deg, var(--accent-color) 0%, transparent 100%);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
         }
 
-        .accent-blue {
-            --accent: #3b82f6;
+        .preview-panel.template-tech {
+            --cv-font: 'Roboto', sans-serif;
+            --cv-heading: 'Roboto', sans-serif;
         }
-
-        .accent-red {
-            --accent: #ef4444;
+        .preview-panel.template-tech .preview-name {
+            font-weight: 700;
+            font-size: 30px;
+            letter-spacing: -1px;
         }
+        .preview-panel.template-tech .preview-title::before { content: "> "; color: var(--accent-color); }
+        .preview-panel.template-tech .preview-header { text-align: left; }
+        .preview-panel.template-tech .preview-contact { justify-content: flex-start; font-family: monospace; }
+        .preview-panel.template-tech .preview-section-title::before { content: "## "; color: var(--accent-color); }
+        .preview-panel.template-tech .preview-section-title { border-bottom: 1px dashed var(--accent-color); }
+        .preview-panel.template-tech .preview-photo { margin: 0 0 15px 0; border-radius: 8px; }
 
-        .accent-purple {
-            --accent: #a855f7;
+        .preview-panel.preview-dark {
+            --cv-bg: #1a1a1a;
+            --cv-text: #f0f0f0;
+            --cv-muted: #b0b0b0;
+            --cv-subtle: #888;
+            --cv-line: #333;
         }
+        .preview-panel.template-executive.preview-dark .preview-header { background: var(--accent-color); }
 
-        .accent-orange {
-            --accent: #f97316;
-        }
-
-        .accent-black {
-            --accent: #1f2937;
-        }
-
-        .color-picker {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        .color-picker { display: flex; gap: 10px; flex-wrap: wrap; }
         .color-option {
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             border-radius: 50%;
-            cursor: pointer;
+            cursor: pointer; touch-action: manipulation;
             border: 2px solid transparent;
             transition: all 0.3s;
         }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
+        @media (hover: hover) and (pointer: fine) {
+.color-option:hover { transform: scale(1.1); }
+}
         .color-option.active {
             border-color: var(--text1);
             box-shadow: 0 0 10px currentColor;
         }
-
         .color-green { background: #10b981; }
         .color-blue { background: #3b82f6; }
         .color-red { background: #ef4444; }
         .color-purple { background: #a855f7; }
         .color-orange { background: #f97316; }
         .color-black { background: #1f2937; }
+        .color-teal { background: #14b8a6; }
+        .color-rose { background: #f43f5e; }
 
         .bottom-actions {
-            display: flex;
-            gap: 10px;
+            display: flex; gap: 10px;
             margin-top: 30px;
             flex-wrap: wrap;
         }
 
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .panel {
-                display: none;
-            }
-
-            .preview-panel {
-                position: static;
-                background: white;
-                box-shadow: none;
-                padding: 0;
-                border-radius: 0;
-                color: #1a1a1a;
-            }
+        .photo-upload-area {
+            position: relative;
+            border: 2px dashed var(--border2);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer; touch-action: manipulation;
+            transition: all 0.3s;
+            background: var(--bg4);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
+        @media (hover: hover) and (pointer: fine) {
+.photo-upload-area:hover, .photo-upload-area.dragover {
+            border-color: var(--gold);
+            background: var(--gold-glow2);
+        }
+}
+        .photo-upload-text {
+            display: flex; flex-direction: column; gap: 4px;
+            color: var(--text2); font-size: 13px;
+        }
+        .photo-upload-text small { font-size: 11px; color: var(--text3); }
+        .photo-preview-thumb {
+            width: 60px; height: 60px; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0;
+        }
+        .photo-remove-btn {
+            position: absolute; top: 5px; right: 5px;
+            background: var(--error); color: white; border: none;
+            border-radius: 50%; width: 22px; height: 22px;
+            cursor: pointer; touch-action: manipulation; font-size: 12px;
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+        }
+        @media (hover: hover) and (pointer: fine) {
+.photo-remove-btn:hover { opacity: 0.85; }
+}
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 9999;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+        #pdf-render-area {
+            position: fixed;
+            left: -10000px;
+            top: 0;
+            width: 794px;
+            background: #fff;
+            z-index: -1;
+        }
+        #pdf-render-area .preview-panel {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 40px !important;
+            width: 794px !important;
+            max-width: 794px !important;
+            position: static !important;
+        }
+
+        @page { size: A4; margin: 12mm 14mm; }
+
+        @media print {
+            html, body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            body * { visibility: hidden !important; }
+            #preview, #preview * { visibility: visible !important; }
+            .header, .controls, .panel, .bottom-actions,
+            .toast, .preview-toolbar, .preview-wrap > .preview-toolbar { display: none !important; }
+            .main-layout {
+                display: block !important;
+                grid-template-columns: none !important;
+                gap: 0 !important;
+                margin: 0 !important;
+            }
+            .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .preview-wrap { position: static !important; }
+            .preview-panel {
+                position: static !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                border: none !important;
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .preview-panel.template-modern {
+                display: grid !important;
+                grid-template-columns: 1fr 200px !important;
+                gap: 24px !important;
+            }
+            .preview-panel.template-executive .preview-header {
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+            a { color: inherit !important; text-decoration: none !important; }
+        }
+
+        /* === MOBILE / iPhone touch enhancements === */
+        @media (max-width: 768px) {
+            body { padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+            .header h1 { font-size: 30px; }
+            .panel { padding: 18px; border-radius: 14px; }
+            .btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
+            .btn-small { min-height: 40px; padding: 10px 14px; font-size: 13px; }
+            .entry-remove { width: 36px; height: 36px; font-size: 18px; top: 6px; right: 6px; }
+            .entry-item { padding: 14px 14px 14px 44px; }
+            .skill-item { padding: 12px 14px 12px 40px; }
+            .skill-stars { gap: 6px; }
+            .star { width: 24px; height: 24px; }
+            .toggle-switch button { padding: 10px 14px; font-size: 12px; min-height: 40px; }
+            .drag-handle { width: 32px; height: 48px; left: 4px; font-size: 22px; }
+            .controls { gap: 10px; }
+            .control-group select { min-width: 0; flex: 1; }
+            .form-row { grid-template-columns: 1fr; gap: 12px; }
+            .preview-panel { padding: 22px; }
+            .preview-name { font-size: 28px; }
+            .preview-photo { width: 90px; height: 90px; }
+            input[type="text"], input[type="email"], input[type="tel"],
+            input[type="number"], input[type="url"], input[type="date"],
+            input[type="month"], textarea, select { font-size: 16px; }
+        }
+
+        /* prevent iOS double-tap zoom on interactive elements */
+        button, a, label, [role="button"], .star, .toggle-switch button,
+        .tab, .template-btn, .color-option { touch-action: manipulation; }
     
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
 .lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
 .lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
 .lock-input:focus{border-color:#10b981}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
+.lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
 .lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
+.install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.svg">
 </head>
 <body>
-
 <div id="lockScreen">
 <div class="lock-card">
 <div class="lock-icon">🔐</div>
 <div class="lock-title">CV Builder</div>
 <div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
+<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
 <div class="lock-footer">© 2025 EtherLabs</div>
 </div>
 </div>
@@ -639,647 +824,1218 @@
 
     <div class="container">
         <div class="header">
-            <div class="brand-tag">Premium Tool</div>
+            <div class="brand-tag">Strumento Premium</div>
             <h1>CVBuilder Pro</h1>
-            <p>Costruisci il tuo CV professionale con stile e facilità</p>
+            <p>Crea il tuo curriculum professionale con stile e facilità
+                <span class="autosave-indicator">
+                    <span class="autosave-dot" id="autosaveDot"></span>
+                    <span id="autosaveText">Salvataggio automatico attivo</span>
+                </span>
+            </p>
         </div>
 
         <div class="controls">
             <div class="control-group">
-                <label for="template-select">Stile CV:</label>
+                <label for="template-select">Template:</label>
                 <select id="template-select">
-                    <option value="classic">Classic</option>
-                    <option value="modern">Modern</option>
+                    <option value="classic">Classico</option>
+                    <option value="modern">Moderno</option>
                     <option value="minimal">Minimal</option>
+                    <option value="executive">Executive</option>
+                    <option value="creative">Creativo</option>
+                    <option value="tech">Tech</option>
                 </select>
             </div>
             <div class="control-group">
-                <label for="accent-select">Colore Accento:</label>
-                <div class="color-picker">
+                <label for="font-select">Font:</label>
+                <select id="font-select">
+                    <option value="default">Default (Inter + Playfair)</option>
+                    <option value="roboto">Roboto</option>
+                    <option value="lora">Lora (serif)</option>
+                    <option value="montserrat">Montserrat</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Colore:</label>
+                <div class="color-picker" id="colorPicker">
                     <div class="color-option active color-green" data-accent="green" title="Verde"></div>
                     <div class="color-option color-blue" data-accent="blue" title="Blu"></div>
-                    <div class="color-option color-red" data-accent="red" title="Rosso"></div>
+                    <div class="color-option color-teal" data-accent="teal" title="Teal"></div>
                     <div class="color-option color-purple" data-accent="purple" title="Viola"></div>
+                    <div class="color-option color-rose" data-accent="rose" title="Rosa"></div>
+                    <div class="color-option color-red" data-accent="red" title="Rosso"></div>
                     <div class="color-option color-orange" data-accent="orange" title="Arancione"></div>
                     <div class="color-option color-black" data-accent="black" title="Nero"></div>
                 </div>
             </div>
-            <button class="btn btn-secondary" onclick="loadExample()">Carica Esempio</button>
+            <div class="control-group">
+                <label for="preset-select">Preset:</label>
+                <select id="preset-select">
+                    <option value="">Carica Esempio...</option>
+                    <option value="developer">Sviluppatore Software</option>
+                    <option value="designer">Designer UX/UI</option>
+                    <option value="marketing">Responsabile Marketing</option>
+                    <option value="sales">Account Commerciale</option>
+                    <option value="student">Neolaureato</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="clearAll()">Pulisci Tutto</button>
         </div>
 
         <div class="main-layout">
-            <!-- LEFT PANEL: FORM -->
             <div class="panel">
                 <div class="panel-title">Informazioni Professionali</div>
 
-                <!-- PERSONAL INFO -->
-                <div class="section-header">
-                    <h3>Dati Personali</h3>
-                </div>
+                <div class="section-header"><h3>Dati Personali</h3></div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fullName">Nome Completo</label>
-                        <input type="text" id="fullName" placeholder="Es. Marco Rossi">
+                        <label for="fullName">Nome e Cognome</label>
+                        <input type="text" id="fullName" placeholder="es. Mario Rossi" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
-                        <label for="title">Titolo/Ruolo</label>
-                        <input type="text" id="title" placeholder="Es. Senior Developer">
+                        <label for="title">Ruolo/Posizione</label>
+                        <input type="text" id="title" placeholder="es. Sviluppatore Senior" oninput="onFieldInput()">
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="marco@example.com">
+                        <input type="email" id="email" placeholder="mario@example.com" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
                         <label for="phone">Telefono</label>
-                        <input type="tel" id="phone" placeholder="+39 123 456 7890">
+                        <input type="tel" id="phone" placeholder="+39 345 123 4567" oninput="onFieldInput()">
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label for="location">Città/Paese</label>
-                        <input type="text" id="location" placeholder="Milano, Italia">
+                        <input type="text" id="location" placeholder="Milano, Italia" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
                         <label for="website">Sito Web</label>
-                        <input type="url" id="website" placeholder="https://marcorossi.com">
+                        <input type="url" id="website" placeholder="https://mariorossi.it" oninput="onFieldInput()">
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label for="linkedin">LinkedIn</label>
-                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/marcorossi">
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/mariorossi" oninput="onFieldInput()">
                     </div>
-                    <div class="form-group">
-                        <label for="photoUrl">Foto Profilo (URL)</label>
-                        <input type="url" id="photoUrl" placeholder="https://...">
+                    <div class="form-group" style="flex-basis:100%">
+                        <label>Foto Profilo</label>
+                        <div class="photo-upload-area" id="photoUploadArea">
+                            <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+                            <div class="photo-upload-text">
+                                <span>📷 Clicca o trascina un'immagine qui</span>
+                                <small>JPG, PNG, WebP — max 2 MB</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- PROFESSIONAL SUMMARY -->
-                <div class="section-header">
-                    <h3>Profilo Professionale</h3>
-                </div>
+                <div class="section-header"><h3>Profilo Professionale</h3></div>
                 <div class="form-group form-row full">
                     <label for="summary">Descrizione</label>
-                    <textarea id="summary" placeholder="Descrivi la tua esperienza, competenze e obiettivi professionali..."></textarea>
+                    <textarea id="summary" placeholder="Descrivi la tua esperienza, competenze e obiettivi professionali..." oninput="onFieldInput()" maxlength="800"></textarea>
+                    <span class="char-counter" id="summaryCounter">0 / 800</span>
                 </div>
 
-                <!-- WORK EXPERIENCE -->
                 <div class="section-header">
-                    <h3>Esperienze Lavorative</h3>
+                    <h3>Esperienza Lavorativa</h3>
                     <button class="btn btn-primary btn-small" onclick="addWorkEntry()">+ Aggiungi</button>
                 </div>
                 <div id="workExperience"></div>
 
-                <!-- EDUCATION -->
                 <div class="section-header">
-                    <h3>Formazione</h3>
+                    <h3>Istruzione</h3>
                     <button class="btn btn-primary btn-small" onclick="addEducationEntry()">+ Aggiungi</button>
                 </div>
                 <div id="education"></div>
 
-                <!-- SKILLS -->
                 <div class="section-header">
                     <h3>Competenze</h3>
                     <button class="btn btn-primary btn-small" onclick="addSkillEntry()">+ Aggiungi</button>
                 </div>
                 <div id="skills"></div>
 
-                <!-- LANGUAGES -->
                 <div class="section-header">
                     <h3>Lingue</h3>
                     <button class="btn btn-primary btn-small" onclick="addLanguageEntry()">+ Aggiungi</button>
                 </div>
                 <div id="languages"></div>
 
-                <!-- CERTIFICATIONS -->
                 <div class="section-header">
                     <h3>Certificazioni</h3>
                     <button class="btn btn-primary btn-small" onclick="addCertificationEntry()">+ Aggiungi</button>
                 </div>
                 <div id="certifications"></div>
 
-                <!-- CUSTOM SECTION -->
-                <div class="section-header">
-                    <h3>Sezione Personalizzata</h3>
-                </div>
+                <div class="section-header"><h3>Sezione Personalizzata</h3></div>
                 <div class="form-group">
                     <label for="customTitle">Titolo Sezione</label>
-                    <input type="text" id="customTitle" placeholder="Es. Progetti, Pubblicazioni...">
+                    <input type="text" id="customTitle" placeholder="es. Progetti, Pubblicazioni..." oninput="onFieldInput()">
                 </div>
                 <div class="form-group form-row full">
                     <label for="customContent">Contenuto</label>
-                    <textarea id="customContent" placeholder="Aggiungi il contenuto della tua sezione personalizzata..."></textarea>
+                    <textarea id="customContent" placeholder="Aggiungi il contenuto della tua sezione personalizzata..." oninput="onFieldInput()"></textarea>
                 </div>
 
-                <!-- ACTION BUTTONS -->
                 <div class="bottom-actions">
-                    <button class="btn btn-primary" onclick="printCV()">Stampa CV</button>
-                    <button class="btn btn-secondary" onclick="copyText()">Copia Testo</button>
+                    <button class="btn btn-primary" onclick="downloadPDF()">⬇ Scarica PDF</button>
+                    <button class="btn btn-secondary" onclick="printResume()">🖨 Stampa</button>
+                    <button class="btn btn-secondary" onclick="exportATS()">📄 Export ATS (.txt)</button>
+                    <button class="btn btn-secondary" onclick="copyText()">📋 Copia Testo</button>
+                    <button class="btn btn-secondary" onclick="exportJSON()">💾 Salva (JSON)</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 Carica (JSON)</button>
+                    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: PREVIEW -->
-            <div class="preview-panel" id="preview">
-                <div class="preview-header">
-                    <div class="preview-name" id="previewName">Il Tuo Nome</div>
-                    <div class="preview-title" id="previewTitle">Titolo Professionale</div>
-                    <div class="preview-contact">
-                        <span id="previewEmail">email@example.com</span>
-                        <span id="previewPhone">+39 123 456 7890</span>
-                        <span id="previewLocation">Milano, Italia</span>
+            <div class="preview-wrap">
+                <div class="preview-toolbar">
+                    <span>Anteprima:</span>
+                    <div class="toggle-switch" id="previewModeToggle">
+                        <button class="active" data-mode="light">Chiara</button>
+                        <button data-mode="dark">Scura</button>
                     </div>
                 </div>
-
-                <div class="preview-section">
-                    <div class="preview-section-title">Profilo Professionale</div>
-                    <div class="preview-entry-desc" id="previewSummary">La tua descrizione professionale apparirà qui...</div>
-                </div>
-
-                <div class="preview-section" id="previewWorkSection" style="display:none;">
-                    <div class="preview-section-title">Esperienze Lavorative</div>
-                    <div id="previewWork"></div>
-                </div>
-
-                <div class="preview-section" id="previewEducationSection" style="display:none;">
-                    <div class="preview-section-title">Formazione</div>
-                    <div id="previewEducation"></div>
-                </div>
-
-                <div class="preview-section" id="previewSkillsSection" style="display:none;">
-                    <div class="preview-section-title">Competenze</div>
-                    <div class="preview-skills" id="previewSkills"></div>
-                </div>
-
-                <div class="preview-section" id="previewLanguagesSection" style="display:none;">
-                    <div class="preview-section-title">Lingue</div>
-                    <div class="preview-languages" id="previewLanguages"></div>
-                </div>
-
-                <div class="preview-section" id="previewCertificationsSection" style="display:none;">
-                    <div class="preview-section-title">Certificazioni</div>
-                    <div id="previewCertifications"></div>
-                </div>
-
-                <div class="preview-section" id="previewCustomSection" style="display:none;">
-                    <div class="preview-section-title" id="previewCustomTitle"></div>
-                    <div id="previewCustomContent"></div>
+                <div class="preview-panel template-classic" id="preview">
+                    <div class="preview-main-col">
+                        <div class="preview-header" id="previewHeader">
+                            <img id="previewPhoto" class="preview-photo" style="display:none;" alt="">
+                            <div class="preview-name" id="previewName">Nome e Cognome</div>
+                            <div class="preview-title" id="previewTitle">Titolo Professionale</div>
+                            <div class="preview-contact" id="previewContact"></div>
+                        </div>
+                        <div class="preview-section">
+                            <div class="preview-section-title">Profilo Professionale</div>
+                            <div class="preview-entry-desc" id="previewSummary">Il tuo profilo professionale apparirà qui...</div>
+                        </div>
+                        <div class="preview-section" id="previewWorkSection" style="display:none;">
+                            <div class="preview-section-title">Esperienza Lavorativa</div>
+                            <div id="previewWork"></div>
+                        </div>
+                        <div class="preview-section" id="previewEducationSection" style="display:none;">
+                            <div class="preview-section-title">Istruzione</div>
+                            <div id="previewEducation"></div>
+                        </div>
+                        <div class="preview-section" id="previewCustomSection" style="display:none;">
+                            <div class="preview-section-title" id="previewCustomTitle"></div>
+                            <div id="previewCustomContent"></div>
+                        </div>
+                    </div>
+                    <div class="preview-side-col">
+                        <div class="preview-section" id="previewSkillsSection" style="display:none;">
+                            <div class="preview-section-title">Competenze</div>
+                            <div class="preview-skills" id="previewSkills"></div>
+                        </div>
+                        <div class="preview-section" id="previewLanguagesSection" style="display:none;">
+                            <div class="preview-section-title">Lingue</div>
+                            <div class="preview-languages" id="previewLanguages"></div>
+                        </div>
+                        <div class="preview-section" id="previewCertificationsSection" style="display:none;">
+                            <div class="preview-section-title">Certificazioni</div>
+                            <div id="previewCertifications"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="pdf-render-area"></div>
+    <div class="toast" id="toast">Messaggio</div>
+
     <script>
+        const T = {
+            yourName: 'Nome e Cognome',
+            professionalTitle: 'Titolo Professionale',
+            summaryPlaceholder: 'Il tuo profilo professionale apparirà qui...',
+            sections: {
+                summary: 'Profilo Professionale',
+                work: 'Esperienza Lavorativa',
+                education: 'Istruzione',
+                skills: 'Competenze',
+                languages: 'Lingue',
+                certifications: 'Certificazioni'
+            },
+            toast: {
+                cleared: 'Tutto cancellato',
+                saved: 'Salvato',
+                loaded: 'Caricato',
+                invalidJson: 'File JSON non valido',
+                copied: 'CV copiato negli appunti',
+                copyFailed: 'Copia fallita',
+                atsDownloaded: 'Versione ATS scaricata',
+                pdfGenerating: 'Generazione PDF in corso...',
+                pdfDone: 'PDF scaricato',
+                pdfError: 'Errore PDF - apro finestra di stampa',
+                presetLoaded: 'Preset caricato',
+                restored: 'Bozza ripristinata dalla sessione precedente'
+            },
+            confirmClear: 'Cancellare tutti i campi? L\'operazione è irreversibile.',
+            confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
+            saving: 'Salvataggio...',
+            savedAt: 'Salvato ',
+            saveFailed: 'Salvataggio fallito',
+            atsHeader: 'CURRICULUM OTTIMIZZATO ATS',
+            loadPresetPrompt: 'Carica Esempio...'
+        };
+
+        const LEVEL_LABELS = { 1: 'Base', 2: 'Elementare', 3: 'Intermedio', 4: 'Avanzato', 5: 'Esperto' };
+        const LANG_LEVELS = ['Seleziona', 'Base', 'Intermedio', 'Fluente', 'Madrelingua'];
+        const STORAGE_KEY = 'cvBuilderPro_v2';
+
+        const COLOR_MAP = {
+            green: '#10b981', blue: '#3b82f6', teal: '#14b8a6',
+            purple: '#a855f7', rose: '#f43f5e', red: '#ef4444',
+            orange: '#f97316', black: '#1f2937'
+        };
+
+        const FONT_MAP = {
+            default: { body: "'Inter', sans-serif", heading: "'Playfair Display', serif" },
+            roboto: { body: "'Roboto', sans-serif", heading: "'Roboto', sans-serif" },
+            lora: { body: "'Lora', serif", heading: "'Lora', serif" },
+            montserrat: { body: "'Montserrat', sans-serif", heading: "'Montserrat', sans-serif" }
+        };
+
+        const PRESETS = {
+            developer: {
+                fullName: 'Alessandro Bianchi',
+                title: 'Sviluppatore Full Stack Senior',
+                email: 'alessandro.bianchi@example.com',
+                phone: '+39 345 789 1234',
+                location: 'Milano, Italia',
+                website: 'https://alessandrobianchi.dev',
+                linkedin: 'https://linkedin.com/in/alessandrobianchi',
+                summary: 'Ingegnere full-stack con oltre 9 anni di esperienza nella costruzione di applicazioni web scalabili. Esperto in React, Node.js e architetture cloud su AWS. Ho guidato team di 5-8 sviluppatori e rilasciato funzionalità utilizzate da oltre 2 milioni di utenti mensili. Appassionato di codice pulito, test-driven development e mentoring.',
+                work: [
+                    {company:'Satispay', role:'Senior Software Engineer', start:'Gen 2022', end:'Presente', description:'Progettato servizio di riconciliazione pagamenti che gestisce oltre 500M€ al mese. Ridotto la latenza API del 40% tramite caching e ottimizzazione query. Ho seguito 4 sviluppatori e guidato review di architettura trimestrali.'},
+                    {company:'Bending Spoons', role:'Software Engineer II', start:'Mar 2019', end:'Dic 2021', description:'Sviluppata infrastruttura di messaggistica real-time per 150M+ utenti. Migrati servizi legacy Ruby a microservizi Node.js. Ridotto il deployment time da 45min a 8min grazie a miglioramenti CI/CD.'}
+                ],
+                education: [{institution:'Politecnico di Milano', degree:'Laurea Magistrale in Ingegneria Informatica', year:'2015', gpa:'110/110 con lode'}],
+                skills: [
+                    {name:'JavaScript/TypeScript', level:5},
+                    {name:'React/Next.js', level:5},
+                    {name:'Node.js', level:5},
+                    {name:'AWS/Cloud', level:4},
+                    {name:'PostgreSQL', level:4},
+                    {name:'Docker/Kubernetes', level:4}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:2}],
+                certifications: [{name:'AWS Solutions Architect Professional', issuer:'Amazon Web Services', year:'2023'}],
+                customTitle: 'Open Source',
+                customContent: 'Contributor a React, Next.js e TanStack Query\nAutore di react-query-utils (5k stelle GitHub)'
+            },
+            designer: {
+                fullName: 'Sofia Greco',
+                title: 'Senior UX/UI Designer',
+                email: 'sofia@sofiagreco.design',
+                phone: '+39 347 555 0144',
+                location: 'Roma, Italia',
+                website: 'https://sofiagreco.design',
+                linkedin: 'https://linkedin.com/in/sofiagreco',
+                summary: 'Product designer con oltre 7 anni di esperienza nel plasmare esperienze digitali per SaaS, fintech ed e-commerce. Specializzata in design system, user research e nella trasformazione di flussi complessi in interfacce semplici. Ho lavorato con team cross-funzionali per rilasciare funzionalità che hanno spostato metriche chiave.',
+                work: [
+                    {company:'Nexi', role:'Senior Product Designer', start:'Apr 2022', end:'Presente', description:'Design lead per funzionalità AI utilizzate da oltre 30M utenti. Creato design system adottato su 4 aree di prodotto. Aumentato il completamento dell\'onboarding del 28% grazie a redesign data-driven.'},
+                    {company:'Subito.it', role:'Product Designer', start:'Giu 2019', end:'Mar 2022', description:'Progettati flussi di checkout che hanno convertito oltre 3 miliardi di GMV. Guidata l\'iniziativa di accessibilità per raggiungere la conformità WCAG 2.1 AA. Facilitati oltre 40 sessioni di user research.'}
+                ],
+                education: [{institution:'IUAV Venezia', degree:'Laurea Magistrale in Design della Comunicazione', year:'2017', gpa:'110/110'}],
+                skills: [
+                    {name:'Figma', level:5},
+                    {name:'Design System', level:5},
+                    {name:'User Research', level:4},
+                    {name:'Prototipazione', level:5},
+                    {name:'Motion Design', level:3},
+                    {name:'HTML/CSS', level:3}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
+                certifications: [{name:'Nielsen Norman UX Certification', issuer:'NN/g', year:'2021'}],
+                customTitle: 'Speaking',
+                customContent: 'Config 2023 - "Scalare i Design System Oltre i 100 Componenti"\nUX Week 2022 - Panel su accessibilità nel fintech'
+            },
+            marketing: {
+                fullName: 'Giulia Ferrari',
+                title: 'Senior Marketing Manager',
+                email: 'giulia.ferrari@example.com',
+                phone: '+39 348 123 5678',
+                location: 'Milano, Italia',
+                website: '',
+                linkedin: 'https://linkedin.com/in/giuliaferrari',
+                summary: 'Marketing leader con oltre 8 anni di esperienza nello scalare SaaS B2B da 1M a 50M€ di ARR. Competenze approfondite in demand generation, content strategy e marketing operations. Ho costruito e guidato team cross-funzionali fino a 12 persone, gestendo budget annuali fino a 4M€.',
+                work: [
+                    {company:'Monday.com', role:'Senior Marketing Manager - EMEA', start:'Set 2021', end:'Presente', description:'Gestione di budget demand gen da 4M€/anno tra paid, SEO ed eventi. Crescita pipeline del 180% anno su anno. Lanciato programma ABM che ha generato 12M€ di pipeline qualificata.'},
+                    {company:'HubSpot', role:'Marketing Manager', start:'Gen 2018', end:'Ago 2021', description:'Guidata strategia di contenuti che ha portato 2,5M visitatori organici mensili. Scalato il programma email da 50k a 400k iscritti con tasso di apertura medio del 28%. Gestito budget di acquisizione paid da 1,5M€.'}
+                ],
+                education: [{institution:'Bocconi', degree:'Laurea Magistrale in Marketing Management', year:'2016', gpa:'110/110 con lode'}],
+                skills: [
+                    {name:'Demand Generation', level:5},
+                    {name:'Content Strategy', level:5},
+                    {name:'SEO/SEM', level:4},
+                    {name:'HubSpot/Salesforce', level:5},
+                    {name:'Analytics (GA4, Amplitude)', level:4},
+                    {name:'Team Leadership', level:4}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
+                certifications: [
+                    {name:'Google Ads Professional', issuer:'Google', year:'2023'},
+                    {name:'HubSpot Inbound Marketing', issuer:'HubSpot', year:'2022'}
+                ],
+                customTitle: 'Riconoscimenti',
+                customContent: 'Blog aziendale cresciuto fino al #1 di categoria (SimilarWeb)\nSpeaker invitato a SaaStr Europe 2023'
+            },
+            sales: {
+                fullName: 'Marco Esposito',
+                title: 'Enterprise Account Executive',
+                email: 'marco.esposito@example.com',
+                phone: '+39 320 987 6543',
+                location: 'Roma, Italia',
+                website: '',
+                linkedin: 'https://linkedin.com/in/marcoespositosales',
+                summary: 'Sales leader enterprise con oltre 10 anni di esperienza nel chiudere deal complessi in ambito B2B SaaS. Top performer costante - superata la quota 8 degli ultimi 10 trimestri. Specializzato in account Fortune 500 con deal size 250k-2M€. Forte capacità di vendita consulenziale ed engagement con C-level.',
+                work: [
+                    {company:'Salesforce', role:'Senior Enterprise AE', start:'Feb 2020', end:'Presente', description:'115% di raggiungimento su quota da 3M€+ in 4 anni. Chiuso il deal più grande della regione (4,2M€ ARR, contratto triennale). Top 5% della sales org globale per 3 anni consecutivi.'},
+                    {company:'Oracle', role:'Account Executive', start:'Lug 2015', end:'Gen 2020', description:'Territorio cresciuto da 800k a 4,5M€ di ARR. Pipeline costruita tramite outbound e canali partner. Due promozioni in 5 anni.'}
+                ],
+                education: [{institution:'SDA Bocconi', degree:'MBA', year:'2015', gpa:''}],
+                skills: [
+                    {name:'Vendite Enterprise', level:5},
+                    {name:'Vendita Consulenziale', level:5},
+                    {name:'Salesforce CRM', level:5},
+                    {name:'Negoziazione', level:5},
+                    {name:'Engagement C-Suite', level:4},
+                    {name:'Pipeline Management', level:5}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:3}],
+                certifications: [{name:"President's Club", issuer:'Salesforce', year:'2023'}],
+                customTitle: 'Premi',
+                customContent: "Vincitore President's Club - 2021, 2022, 2023\nRookie of the Year 2016 - Oracle"
+            },
+            student: {
+                fullName: 'Elena Rossi',
+                title: 'Neolaureata in Informatica',
+                email: 'elena.rossi@example.com',
+                phone: '+39 340 234 5678',
+                location: 'Bologna, Italia',
+                website: 'https://elenarossi.io',
+                linkedin: 'https://linkedin.com/in/elenarossics',
+                summary: 'Neolaureata in Informatica con esperienza pratica in sviluppo web full-stack e machine learning. Ho completato 3 stage in startup e un assistentato di ricerca in NLP. Desidero entrare in un team dove posso contribuire a prodotti significativi continuando a crescere professionalmente.',
+                work: [
+                    {company:'Nextdoor', role:'Stage in Ingegneria del Software', start:'Giu 2024', end:'Ago 2024', description:'Sviluppato uno strumento interno per pianificare la capacità dei team. Scritto frontend React e API Python, rilasciato in produzione per oltre 200 dipendenti. Return offer ricevuta.'},
+                    {company:'Università di Bologna - CS Lab', role:'Assistente alla Ricerca', start:'Set 2023', end:'Mag 2024', description:'Ricerca NLP sotto la guida del Prof. Rossi. Co-autrice di paper accettato a EMNLP 2024. Implementato framework di valutazione su benchmark.'}
+                ],
+                education: [
+                    {institution:'Università di Bologna', degree:'Laurea Magistrale in Informatica', year:'2025', gpa:'110/110 con lode'},
+                    {institution:'Liceo Scientifico Copernico', degree:'Diploma di Maturità Scientifica', year:'2020', gpa:'100/100'}
+                ],
+                skills: [
+                    {name:'Python', level:5},
+                    {name:'JavaScript/React', level:4},
+                    {name:'Machine Learning', level:3},
+                    {name:'SQL', level:4},
+                    {name:'Git', level:4},
+                    {name:'Strutture Dati e Algoritmi', level:5}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:1}],
+                certifications: [{name:'AWS Cloud Practitioner', issuer:'Amazon', year:'2024'}],
+                customTitle: 'Progetti',
+                customContent: 'Tesi di laurea: App di trascrizione in tempo reale per studenti (React + Whisper API)\nVincitrice hackathon - HackUnibo 2023 (Miglior Progetto AI)'
+            }
+        };
+
         const state = {
-            fullName: '',
-            title: '',
-            email: '',
-            phone: '',
-            location: '',
-            website: '',
-            linkedin: '',
-            summary: '',
-            work: [],
-            education: [],
-            skills: [],
-            languages: [],
-            certifications: [],
-            customTitle: '',
-            customContent: ''
+            fullName: '', title: '', email: '', phone: '', location: '',
+            website: '', linkedin: '', photoData: '', summary: '',
+            work: [], education: [], skills: [], languages: [], certifications: [],
+            customTitle: '', customContent: '',
+            template: 'classic', font: 'default', accent: 'green', previewMode: 'light'
         };
 
-        const levelLabels = {
-            1: 'Base',
-            2: 'Elementare',
-            3: 'Intermedio',
-            4: 'Avanzato',
-            5: 'Esperto'
-        };
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(showToast._timer);
+            showToast._timer = setTimeout(() => t.classList.remove('show'), 2500);
+        }
+        function safeFilename(s) {
+            return (s || 'cv').replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'cv';
+        }
+        function hostnameOf(url) {
+            try { return new URL(url).hostname.replace(/^www\./,''); }
+            catch { return url; }
+        }
+        function newId() { return Date.now() + Math.random(); }
 
-        const languageLevels = ['Nativo', 'Fluente', 'Intermedio', 'Base'];
+        // ============ CARICAMENTO FOTO ============
+        function initPhotoUpload() {
+            const area = document.getElementById('photoUploadArea');
+            const fileInput = document.getElementById('photoFileInput');
+            area.addEventListener('click', () => fileInput.click());
+            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+            area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+            area.addEventListener('drop', e => {
+                e.preventDefault(); area.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) handlePhotoFile(file);
+            });
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files[0]) handlePhotoFile(fileInput.files[0]);
+                fileInput.value = '';
+            });
+        }
+        function handlePhotoFile(file) {
+            if (!file.type.startsWith('image/')) { showToast('Seleziona un file immagine'); return; }
+            if (file.size > 2 * 1024 * 1024) { showToast('Immagine troppo grande (max 2 MB)'); return; }
+            const reader = new FileReader();
+            reader.onload = e => {
+                state.photoData = e.target.result;
+                updatePhotoUI();
+                updatePreview();
+                scheduleSave();
+            };
+            reader.readAsDataURL(file);
+        }
+        function removePhoto() {
+            state.photoData = '';
+            updatePhotoUI();
+            updatePreview();
+            scheduleSave();
+        }
+        function updatePhotoUI() {
+            const area = document.getElementById('photoUploadArea');
+            if (state.photoData) {
+                area.innerHTML = `
+                    <img src="${state.photoData}" class="photo-preview-thumb" alt="Foto">
+                    <div class="photo-upload-text"><span>Foto caricata ✓</span><small>Clicca per sostituire</small></div>
+                    <button type="button" class="photo-remove-btn" onclick="event.stopPropagation();removePhoto()" title="Rimuovi">✕</button>
+                    <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+                `;
+            } else {
+                area.innerHTML = `
+                    <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+                    <div class="photo-upload-text"><span>📷 Clicca o trascina un'immagine qui</span><small>JPG, PNG, WebP — max 2 MB</small></div>
+                `;
+            }
+            const fileInput = area.querySelector('#photoFileInput');
+            area.onclick = () => fileInput.click();
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files[0]) handlePhotoFile(fileInput.files[0]);
+                fileInput.value = '';
+            });
+        }
 
         function addWorkEntry() {
-            state.work.push({id: Date.now(), company: '', role: '', start: '', end: '', description: ''});
-            renderWorkEntries();
-            updatePreview();
+            state.work.push({id: newId(), company:'', role:'', start:'', end:'', description:''});
+            renderWorkEntries(); updatePreview(); scheduleSave();
         }
-
         function removeWorkEntry(id) {
             state.work = state.work.filter(e => e.id !== id);
-            renderWorkEntries();
-            updatePreview();
+            renderWorkEntries(); updatePreview(); scheduleSave();
         }
-
         function renderWorkEntries() {
             const container = document.getElementById('workExperience');
-            container.innerHTML = state.work.map(entry => `
-                <div class="entry-item">
-                    <button class="entry-remove" onclick="removeWorkEntry(${entry.id})">×</button>
+            container.innerHTML = '';
+            state.work.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'entry-item';
+                div.dataset.id = entry.id;
+                div.innerHTML = `
+                    <div class="drag-handle"></div>
+                    <button class="entry-remove" title="Rimuovi">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Azienda" value="${entry.company}" onchange="updateWorkField(${entry.id}, 'company', this.value)">
-                        <input type="text" placeholder="Ruolo" value="${entry.role}" onchange="updateWorkField(${entry.id}, 'role', this.value)">
+                        <input type="text" placeholder="Azienda" data-field="company">
+                        <input type="text" placeholder="Ruolo" data-field="role">
                     </div>
                     <div class="form-row">
-                        <input type="text" placeholder="Data Inizio (Es. Gen 2020)" value="${entry.start}" onchange="updateWorkField(${entry.id}, 'start', this.value)">
-                        <input type="text" placeholder="Data Fine (Es. Dic 2023)" value="${entry.end}" onchange="updateWorkField(${entry.id}, 'end', this.value)">
+                        <input type="text" placeholder="Data Inizio (es. Gen 2020)" data-field="start">
+                        <input type="text" placeholder="Data Fine (es. Dic 2023 o Presente)" data-field="end">
                     </div>
-                    <textarea placeholder="Descrizione ruolo (puoi aggiungere più righe)" onchange="updateWorkField(${entry.id}, 'description', this.value)">${entry.description}</textarea>
-                </div>
-            `).join('');
-        }
-
-        function updateWorkField(id, field, value) {
-            const entry = state.work.find(e => e.id === id);
-            if (entry) {
-                entry[field] = value;
-                updatePreview();
-            }
+                    <textarea placeholder="Descrizione del ruolo (puoi aggiungere più righe)" data-field="description" maxlength="1000"></textarea>
+                    <span class="char-counter" data-counter-for="description"></span>
+                `;
+                div.querySelectorAll('[data-field]').forEach(el => {
+                    el.value = entry[el.dataset.field] || '';
+                    el.addEventListener('input', () => {
+                        entry[el.dataset.field] = el.value;
+                        if (el.dataset.field === 'description') updateCharCounter(el);
+                        updatePreview(); scheduleSave();
+                    });
+                });
+                const descTA = div.querySelector('[data-field="description"]');
+                if (descTA) updateCharCounter(descTA);
+                div.querySelector('.entry-remove').addEventListener('click', () => removeWorkEntry(entry.id));
+                container.appendChild(div);
+            });
+            initSortable('workExperience', 'work');
         }
 
         function addEducationEntry() {
-            state.education.push({id: Date.now(), institution: '', degree: '', year: '', gpa: ''});
-            renderEducationEntries();
-            updatePreview();
+            state.education.push({id: newId(), institution:'', degree:'', year:'', gpa:''});
+            renderEducationEntries(); updatePreview(); scheduleSave();
         }
-
         function removeEducationEntry(id) {
             state.education = state.education.filter(e => e.id !== id);
-            renderEducationEntries();
-            updatePreview();
+            renderEducationEntries(); updatePreview(); scheduleSave();
         }
-
         function renderEducationEntries() {
             const container = document.getElementById('education');
-            container.innerHTML = state.education.map(entry => `
-                <div class="entry-item">
-                    <button class="entry-remove" onclick="removeEducationEntry(${entry.id})">×</button>
+            container.innerHTML = '';
+            state.education.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'entry-item';
+                div.dataset.id = entry.id;
+                div.innerHTML = `
+                    <div class="drag-handle"></div>
+                    <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Istituzione" value="${entry.institution}" onchange="updateEducationField(${entry.id}, 'institution', this.value)">
-                        <input type="text" placeholder="Titolo/Laurea" value="${entry.degree}" onchange="updateEducationField(${entry.id}, 'degree', this.value)">
+                        <input type="text" placeholder="Istituto" data-field="institution">
+                        <input type="text" placeholder="Titolo/Diploma" data-field="degree">
                     </div>
                     <div class="form-row">
-                        <input type="text" placeholder="Anno" value="${entry.year}" onchange="updateEducationField(${entry.id}, 'year', this.value)">
-                        <input type="text" placeholder="Voto (opzionale)" value="${entry.gpa}" onchange="updateEducationField(${entry.id}, 'gpa', this.value)">
+                        <input type="text" placeholder="Anno" data-field="year">
+                        <input type="text" placeholder="Voto (opzionale)" data-field="gpa">
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function updateEducationField(id, field, value) {
-            const entry = state.education.find(e => e.id === id);
-            if (entry) {
-                entry[field] = value;
-                updatePreview();
-            }
+                `;
+                div.querySelectorAll('[data-field]').forEach(el => {
+                    el.value = entry[el.dataset.field] || '';
+                    el.addEventListener('input', () => {
+                        entry[el.dataset.field] = el.value;
+                        updatePreview(); scheduleSave();
+                    });
+                });
+                div.querySelector('.entry-remove').addEventListener('click', () => removeEducationEntry(entry.id));
+                container.appendChild(div);
+            });
+            initSortable('education', 'education');
         }
 
         function addSkillEntry() {
-            state.skills.push({id: Date.now(), name: '', level: 3});
-            renderSkillEntries();
-            updatePreview();
+            state.skills.push({id: newId(), name:'', level:3});
+            renderSkillEntries(); updatePreview(); scheduleSave();
         }
-
         function removeSkillEntry(id) {
             state.skills = state.skills.filter(e => e.id !== id);
-            renderSkillEntries();
-            updatePreview();
+            renderSkillEntries(); updatePreview(); scheduleSave();
         }
-
         function renderSkillEntries() {
             const container = document.getElementById('skills');
-            container.innerHTML = state.skills.map(entry => `
-                <div class="entry-item">
-                    <button class="entry-remove" onclick="removeSkillEntry(${entry.id})">×</button>
-                    <div class="form-row">
-                        <input type="text" placeholder="Competenza" value="${entry.name}" onchange="updateSkillField(${entry.id}, 'name', this.value)">
-                        <select onchange="updateSkillField(${entry.id}, 'level', this.value)">
-                            <option value="1" ${entry.level == 1 ? 'selected' : ''}>Base</option>
-                            <option value="2" ${entry.level == 2 ? 'selected' : ''}>Elementare</option>
-                            <option value="3" ${entry.level == 3 ? 'selected' : ''}>Intermedio</option>
-                            <option value="4" ${entry.level == 4 ? 'selected' : ''}>Avanzato</option>
-                            <option value="5" ${entry.level == 5 ? 'selected' : ''}>Esperto</option>
-                        </select>
+            container.innerHTML = '';
+            state.skills.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'skill-item';
+                div.dataset.id = entry.id;
+                div.innerHTML = `
+                    <div class="drag-handle"></div>
+                    <input type="text" placeholder="Competenza" style="flex:1;" data-field="name">
+                    <div class="skill-stars">
+                        ${[1,2,3,4,5].map(i =>
+                            `<div class="star ${i <= entry.level ? 'filled' : ''}" data-star="${i}" title="${escapeHtml(LEVEL_LABELS[i])}"></div>`
+                        ).join('')}
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function updateSkillField(id, field, value) {
-            const entry = state.skills.find(e => e.id === id);
-            if (entry) {
-                entry[field] = value;
-                updatePreview();
-            }
+                    <button class="btn btn-danger btn-small" data-action="remove">Rimuovi</button>
+                `;
+                const nameInput = div.querySelector('[data-field="name"]');
+                nameInput.value = entry.name || '';
+                nameInput.addEventListener('input', () => { entry.name = nameInput.value; updatePreview(); scheduleSave(); });
+                div.querySelectorAll('[data-star]').forEach(s => {
+                    s.addEventListener('click', () => {
+                        entry.level = parseInt(s.dataset.star, 10);
+                        renderSkillEntries(); updatePreview(); scheduleSave();
+                    });
+                });
+                div.querySelector('[data-action="remove"]').addEventListener('click', () => removeSkillEntry(entry.id));
+                container.appendChild(div);
+            });
+            initSortable('skills', 'skills');
         }
 
         function addLanguageEntry() {
-            state.languages.push({id: Date.now(), name: '', level: 0});
-            renderLanguageEntries();
-            updatePreview();
+            state.languages.push({id: newId(), name:'', level:0});
+            renderLanguageEntries(); updatePreview(); scheduleSave();
         }
-
         function removeLanguageEntry(id) {
             state.languages = state.languages.filter(e => e.id !== id);
-            renderLanguageEntries();
-            updatePreview();
+            renderLanguageEntries(); updatePreview(); scheduleSave();
         }
-
         function renderLanguageEntries() {
             const container = document.getElementById('languages');
-            container.innerHTML = state.languages.map(entry => `
-                <div class="entry-item">
-                    <button class="entry-remove" onclick="removeLanguageEntry(${entry.id})">×</button>
+            container.innerHTML = '';
+            state.languages.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'entry-item';
+                div.dataset.id = entry.id;
+                div.innerHTML = `
+                    <div class="drag-handle"></div>
+                    <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Lingua" value="${entry.name}" onchange="updateLanguageField(${entry.id}, 'name', this.value)">
-                        <select onchange="updateLanguageField(${entry.id}, 'level', this.value)">
-                            <option value="0" ${entry.level == 0 ? 'selected' : ''}>Seleziona Livello</option>
-                            <option value="1" ${entry.level == 1 ? 'selected' : ''}>Base</option>
-                            <option value="2" ${entry.level == 2 ? 'selected' : ''}>Intermedio</option>
-                            <option value="3" ${entry.level == 3 ? 'selected' : ''}>Fluente</option>
-                            <option value="4" ${entry.level == 4 ? 'selected' : ''}>Nativo</option>
+                        <input type="text" placeholder="Lingua" data-field="name">
+                        <select data-field="level">
+                            <option value="0">Seleziona Livello</option>
+                            <option value="1">Base</option>
+                            <option value="2">Intermedio</option>
+                            <option value="3">Fluente</option>
+                            <option value="4">Madrelingua</option>
                         </select>
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function updateLanguageField(id, field, value) {
-            const entry = state.languages.find(e => e.id === id);
-            if (entry) {
-                entry[field] = value;
-                updatePreview();
-            }
+                `;
+                const nameInput = div.querySelector('[data-field="name"]');
+                nameInput.value = entry.name || '';
+                nameInput.addEventListener('input', () => { entry.name = nameInput.value; updatePreview(); scheduleSave(); });
+                const lvl = div.querySelector('[data-field="level"]');
+                lvl.value = String(entry.level ?? 0);
+                lvl.addEventListener('change', () => { entry.level = parseInt(lvl.value,10); updatePreview(); scheduleSave(); });
+                div.querySelector('.entry-remove').addEventListener('click', () => removeLanguageEntry(entry.id));
+                container.appendChild(div);
+            });
+            initSortable('languages', 'languages');
         }
 
         function addCertificationEntry() {
-            state.certifications.push({id: Date.now(), name: '', issuer: '', year: ''});
-            renderCertificationEntries();
-            updatePreview();
+            state.certifications.push({id: newId(), name:'', issuer:'', year:''});
+            renderCertificationEntries(); updatePreview(); scheduleSave();
         }
-
         function removeCertificationEntry(id) {
             state.certifications = state.certifications.filter(e => e.id !== id);
-            renderCertificationEntries();
-            updatePreview();
+            renderCertificationEntries(); updatePreview(); scheduleSave();
         }
-
         function renderCertificationEntries() {
             const container = document.getElementById('certifications');
-            container.innerHTML = state.certifications.map(entry => `
-                <div class="entry-item">
-                    <button class="entry-remove" onclick="removeCertificationEntry(${entry.id})">×</button>
+            container.innerHTML = '';
+            state.certifications.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'entry-item';
+                div.dataset.id = entry.id;
+                div.innerHTML = `
+                    <div class="drag-handle"></div>
+                    <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Nome Certificazione" value="${entry.name}" onchange="updateCertificationField(${entry.id}, 'name', this.value)">
-                        <input type="text" placeholder="Ente Certificatore" value="${entry.issuer}" onchange="updateCertificationField(${entry.id}, 'issuer', this.value)">
+                        <input type="text" placeholder="Nome Certificazione" data-field="name">
+                        <input type="text" placeholder="Ente Emittente" data-field="issuer">
                     </div>
-                    <input type="text" placeholder="Anno" value="${entry.year}" onchange="updateCertificationField(${entry.id}, 'year', this.value)">
-                </div>
-            `).join('');
+                    <input type="text" placeholder="Anno" data-field="year">
+                `;
+                div.querySelectorAll('[data-field]').forEach(el => {
+                    el.value = entry[el.dataset.field] || '';
+                    el.addEventListener('input', () => {
+                        entry[el.dataset.field] = el.value;
+                        updatePreview(); scheduleSave();
+                    });
+                });
+                div.querySelector('.entry-remove').addEventListener('click', () => removeCertificationEntry(entry.id));
+                container.appendChild(div);
+            });
+            initSortable('certifications', 'certifications');
         }
 
-        function updateCertificationField(id, field, value) {
-            const entry = state.certifications.find(e => e.id === id);
-            if (entry) {
-                entry[field] = value;
-                updatePreview();
+        function initSortable(containerId, stateKey) {
+            const el = document.getElementById(containerId);
+            if (!el || typeof Sortable === 'undefined') return;
+            if (el._sortable) el._sortable.destroy();
+            el._sortable = Sortable.create(el, {
+                handle: '.drag-handle',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                forceFallback: true,
+                fallbackTolerance: 5,
+                delayOnTouchOnly: true,
+                delay: 80,
+                touchStartThreshold: 4,
+                onEnd: () => {
+                    const newOrder = Array.from(el.children).map(c => parseFloat(c.dataset.id));
+                    state[stateKey] = newOrder.map(id => state[stateKey].find(x => x.id === id)).filter(Boolean);
+                    updatePreview(); scheduleSave();
+                }
+            });
+        }
+
+        function updateCharCounter(el) {
+            const max = parseInt(el.getAttribute('maxlength') || '0', 10);
+            if (!max) return;
+            const cur = el.value.length;
+            let counter;
+            if (el.id === 'summary') {
+                counter = document.getElementById('summaryCounter');
+            } else {
+                counter = el.parentElement.querySelector('[data-counter-for="' + el.dataset.field + '"]');
             }
+            if (!counter) return;
+            counter.textContent = `${cur} / ${max}`;
+            counter.classList.toggle('warn', cur > max * 0.85 && cur < max);
+            counter.classList.toggle('over', cur >= max);
+        }
+
+        function onFieldInput() {
+            updatePreview();
+            const sumEl = document.getElementById('summary');
+            if (sumEl) updateCharCounter(sumEl);
+            scheduleSave();
         }
 
         function updateState() {
-            state.fullName = document.getElementById('fullName').value;
-            state.title = document.getElementById('title').value;
-            state.email = document.getElementById('email').value;
-            state.phone = document.getElementById('phone').value;
-            state.location = document.getElementById('location').value;
-            state.website = document.getElementById('website').value;
-            state.linkedin = document.getElementById('linkedin').value;
-            state.summary = document.getElementById('summary').value;
-            state.customTitle = document.getElementById('customTitle').value;
-            state.customContent = document.getElementById('customContent').value;
+            ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                .forEach(id => state[id] = document.getElementById(id).value);
         }
 
         function updatePreview() {
             updateState();
 
-            document.getElementById('previewName').textContent = state.fullName || 'Il Tuo Nome';
-            document.getElementById('previewTitle').textContent = state.title || 'Titolo Professionale';
-            document.getElementById('previewEmail').textContent = state.email || 'email@example.com';
-            document.getElementById('previewPhone').textContent = state.phone || '+39 123 456 7890';
-            document.getElementById('previewLocation').textContent = state.location || 'Milano, Italia';
-            document.getElementById('previewSummary').textContent = state.summary || 'La tua descrizione professionale apparirà qui...';
+            document.getElementById('previewName').textContent = state.fullName || T.yourName;
+            document.getElementById('previewTitle').textContent = state.title || T.professionalTitle;
 
-            // Work experience
-            const workSection = document.getElementById('previewWorkSection');
-            const previewWork = document.getElementById('previewWork');
-            if (state.work.length > 0) {
-                workSection.style.display = 'block';
-                previewWork.innerHTML = state.work.map(w => `
-                    <div class="preview-entry">
-                        <div class="preview-entry-title">${w.role}</div>
-                        <div class="preview-entry-subtitle">${w.company}</div>
-                        <div class="preview-entry-date">${w.start} - ${w.end}</div>
-                        <div class="preview-entry-desc">${w.description}</div>
-                    </div>
-                `).join('');
+            const contactEl = document.getElementById('previewContact');
+            const parts = [];
+            if (state.email) parts.push(escapeHtml(state.email));
+            if (state.phone) parts.push(escapeHtml(state.phone));
+            if (state.location) parts.push(escapeHtml(state.location));
+            if (state.website) parts.push(escapeHtml(hostnameOf(state.website)));
+            if (state.linkedin) {
+                const li = state.linkedin.replace(/^https?:\/\/(www\.)?/,'');
+                parts.push(escapeHtml(li));
+            }
+            if (parts.length === 0) parts.push('email@example.com','+39 345 123 4567','Milano, Italia');
+            contactEl.innerHTML = parts.join('<span class="sep"> • </span>');
+
+            const photo = document.getElementById('previewPhoto');
+            if (state.photoData) {
+                photo.src = state.photoData;
+                photo.style.display = '';
             } else {
-                workSection.style.display = 'none';
+                photo.style.display = 'none';
             }
 
-            // Education
-            const eduSection = document.getElementById('previewEducationSection');
-            const previewEdu = document.getElementById('previewEducation');
-            if (state.education.length > 0) {
-                eduSection.style.display = 'block';
-                previewEdu.innerHTML = state.education.map(e => `
-                    <div class="preview-entry">
-                        <div class="preview-entry-title">${e.degree}</div>
-                        <div class="preview-entry-subtitle">${e.institution}</div>
-                        <div class="preview-entry-date">${e.year}${e.gpa ? ' • ' + e.gpa : ''}</div>
-                    </div>
-                `).join('');
-            } else {
-                eduSection.style.display = 'none';
-            }
+            document.getElementById('previewSummary').textContent = state.summary || T.summaryPlaceholder;
 
-            // Skills
-            const skillsSection = document.getElementById('previewSkillsSection');
-            const previewSkills = document.getElementById('previewSkills');
-            if (state.skills.length > 0) {
-                skillsSection.style.display = 'block';
-                previewSkills.innerHTML = state.skills.map(s => `
-                    <div class="preview-skill-item">
-                        <div>${s.name}</div>
-                        <div class="preview-skill-bar">
-                            <div class="preview-skill-fill" style="width: ${(s.level / 5) * 100}%"></div>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                skillsSection.style.display = 'none';
-            }
+            renderPreviewList('previewWorkSection','previewWork', state.work, w => `
+                <div class="preview-entry">
+                    <div class="preview-entry-title">${escapeHtml(w.role)}</div>
+                    <div class="preview-entry-subtitle">${escapeHtml(w.company)}</div>
+                    <div class="preview-entry-date">${escapeHtml(w.start)}${w.start || w.end ? ' - ' : ''}${escapeHtml(w.end)}</div>
+                    <div class="preview-entry-desc">${escapeHtml(w.description)}</div>
+                </div>`);
+            renderPreviewList('previewEducationSection','previewEducation', state.education, e => `
+                <div class="preview-entry">
+                    <div class="preview-entry-title">${escapeHtml(e.degree)}</div>
+                    <div class="preview-entry-subtitle">${escapeHtml(e.institution)}</div>
+                    <div class="preview-entry-date">${escapeHtml(e.year)}${e.gpa ? ' • ' + escapeHtml(e.gpa) : ''}</div>
+                </div>`);
+            renderPreviewList('previewSkillsSection','previewSkills', state.skills, s => `
+                <div class="preview-skill-item">
+                    <div>${escapeHtml(s.name)}</div>
+                    <div class="preview-skill-bar"><div class="preview-skill-fill" style="width:${(Number(s.level)/5)*100}%"></div></div>
+                </div>`);
+            renderPreviewList('previewLanguagesSection','previewLanguages', state.languages, l => `
+                <div class="preview-language-item">
+                    <div>${escapeHtml(l.name)}</div>
+                    <div class="preview-language-level">${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}</div>
+                </div>`);
+            renderPreviewList('previewCertificationsSection','previewCertifications', state.certifications, c => `
+                <div class="preview-entry">
+                    <div class="preview-entry-title">${escapeHtml(c.name)}</div>
+                    <div class="preview-entry-subtitle">${escapeHtml(c.issuer)}</div>
+                    <div class="preview-entry-date">${escapeHtml(c.year)}</div>
+                </div>`);
 
-            // Languages
-            const langSection = document.getElementById('previewLanguagesSection');
-            const previewLang = document.getElementById('previewLanguages');
-            if (state.languages.length > 0) {
-                langSection.style.display = 'block';
-                previewLang.innerHTML = state.languages.map(l => `
-                    <div class="preview-language-item">
-                        <div>${l.name}</div>
-                        <div class="preview-language-level">${languageLevels[l.level] || 'Seleziona'}</div>
-                    </div>
-                `).join('');
-            } else {
-                langSection.style.display = 'none';
-            }
-
-            // Certifications
-            const certSection = document.getElementById('previewCertificationsSection');
-            const previewCert = document.getElementById('previewCertifications');
-            if (state.certifications.length > 0) {
-                certSection.style.display = 'block';
-                previewCert.innerHTML = state.certifications.map(c => `
-                    <div class="preview-entry">
-                        <div class="preview-entry-title">${c.name}</div>
-                        <div class="preview-entry-subtitle">${c.issuer}</div>
-                        <div class="preview-entry-date">${c.year}</div>
-                    </div>
-                `).join('');
-            } else {
-                certSection.style.display = 'none';
-            }
-
-            // Custom section
             const customSection = document.getElementById('previewCustomSection');
             if (state.customTitle && state.customContent) {
                 customSection.style.display = 'block';
                 document.getElementById('previewCustomTitle').textContent = state.customTitle;
-                document.getElementById('previewCustomContent').innerHTML = state.customContent.replace(/\n/g, '<br>');
+                document.getElementById('previewCustomContent').innerHTML =
+                    `<div class="preview-entry-desc">${escapeHtml(state.customContent).replace(/\n/g,'<br>')}</div>`;
             } else {
                 customSection.style.display = 'none';
             }
+
+            applyTemplate();
+            applyFont();
+            applyPreviewMode();
         }
 
-        function loadExample() {
-            document.getElementById('fullName').value = 'Marco Rossi';
-            document.getElementById('title').value = 'Senior Software Developer';
-            document.getElementById('email').value = 'marco.rossi@example.com';
-            document.getElementById('phone').value = '+39 320 123 4567';
-            document.getElementById('location').value = 'Milano, Italia';
-            document.getElementById('website').value = 'https://marcorossi.dev';
-            document.getElementById('linkedin').value = 'https://linkedin.com/in/marcorossi';
-            document.getElementById('summary').value = 'Sviluppatore software con 8 anni di esperienza nello sviluppo full-stack. Specializzato in JavaScript, React e Node.js. Appassionato di architettura software e best practices di development.';
+        function renderPreviewList(sectionId, containerId, list, fn) {
+            const section = document.getElementById(sectionId);
+            const container = document.getElementById(containerId);
+            if (list.length > 0) {
+                section.style.display = 'block';
+                container.innerHTML = list.map(fn).join('');
+            } else {
+                section.style.display = 'none';
+            }
+        }
 
-            state.work = [
-                {id: 1, company: 'Tech Solutions Srl', role: 'Senior Developer', start: 'Gen 2021', end: 'Presente', description: 'Gestione del team di sviluppo. Implementazione di nuove features. Code review e mentoring.'},
-                {id: 2, company: 'Digital Innovate Spa', role: 'Full Stack Developer', start: 'Mar 2019', end: 'Dic 2020', description: 'Sviluppo di applicazioni web con React e Node.js. Implementazione di API REST.'}
-            ];
+        function applyTemplate() {
+            const preview = document.getElementById('preview');
+            const dark = preview.classList.contains('preview-dark');
+            preview.className = `preview-panel template-${state.template}` + (dark ? ' preview-dark' : '');
+        }
 
-            state.education = [
-                {id: 1, institution: 'Università degli Studi di Milano', degree: 'Laurea in Informatica', year: '2015', gpa: '110/110'}
-            ];
+        function applyFont() {
+            const f = FONT_MAP[state.font] || FONT_MAP.default;
+            const preview = document.getElementById('preview');
+            preview.style.setProperty('--cv-font', f.body);
+            preview.style.setProperty('--cv-heading', f.heading);
+        }
 
-            state.skills = [
-                {id: 1, name: 'JavaScript', level: 5},
-                {id: 2, name: 'React', level: 5},
-                {id: 3, name: 'Node.js', level: 4},
-                {id: 4, name: 'HTML/CSS', level: 5},
-                {id: 5, name: 'Git', level: 5}
-            ];
+        function applyPreviewMode() {
+            const preview = document.getElementById('preview');
+            preview.classList.toggle('preview-dark', state.previewMode === 'dark');
+        }
 
-            state.languages = [
-                {id: 1, name: 'Italiano', level: 4},
-                {id: 2, name: 'Inglese', level: 3}
-            ];
+        function clearAll() {
+            if (!confirm(T.confirmClear)) return;
+            ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                .forEach(id => document.getElementById(id).value = '');
+            state.photoData = '';
+            state.work = []; state.education = []; state.skills = [];
+            state.languages = []; state.certifications = [];
+            updatePhotoUI();
+            renderAll(); updatePreview(); scheduleSave();
+            showToast(T.toast.cleared);
+        }
 
-            state.certifications = [
-                {id: 1, name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', year: '2022'}
-            ];
-
-            document.getElementById('customTitle').value = 'Progetti Principali';
-            document.getElementById('customContent').value = 'E-Commerce Platform: Piattaforma di e-commerce scalabile con 50k+ utenti attivi\nTask Manager App: Applicazione web per gestione task collaborativa';
-
+        function renderAll() {
             renderWorkEntries();
             renderEducationEntries();
             renderSkillEntries();
             renderLanguageEntries();
             renderCertificationEntries();
-
-            updatePreview();
         }
 
-        function printCV() {
-            window.print();
+        function loadPreset(key) {
+            const p = PRESETS[key];
+            if (!p) return;
+            ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                .forEach(id => document.getElementById(id).value = p[id] || '');
+            state.photoData = '';
+            ['work','education','skills','languages','certifications'].forEach(k => {
+                state[k] = (p[k] || []).map(x => ({...x, id: newId()}));
+            });
+            renderAll(); updatePreview(); scheduleSave();
+            updatePhotoUI();
+            showToast(T.toast.presetLoaded);
+        }
+
+        function printResume() { window.print(); }
+
+        async function downloadPDF() {
+            updateState();
+            if (typeof html2pdf === 'undefined') {
+                showToast('Libreria PDF non caricata');
+                return;
+            }
+
+            var preview = document.getElementById('preview');
+            var previewWrap = preview.parentElement;
+            var filename = safeFilename(state.fullName) + '_cv.pdf';
+            var isDark = state.previewMode === 'dark';
+            var bgColor = isDark ? '#1a1a1a' : '#ffffff';
+
+            // Salva scroll e stili originali
+            var savedScrollY = window.scrollY;
+            var savedPreviewCss = preview.style.cssText;
+            var savedWrapCss = previewWrap.style.cssText;
+
+            // Scrolla in cima per evitare offset
+            window.scrollTo(0, 0);
+
+            // Prepara preview per cattura A4 (794px = 210mm @96dpi)
+            preview.style.width = '794px';
+            preview.style.maxWidth = 'none';
+            preview.style.boxShadow = 'none';
+            preview.style.borderRadius = '0';
+            preview.style.overflow = 'visible';
+            previewWrap.style.position = 'static';
+            previewWrap.style.overflow = 'visible';
+            previewWrap.style.height = 'auto';
+            previewWrap.style.maxHeight = 'none';
+
+            // Aspetta rendering
+            await new Promise(function(r) { setTimeout(r, 300); });
+
+            // Altezza pagina = altezza contenuto (minimo A4), sempre 1 pagina
+            var contentH = preview.scrollHeight;
+            var pageHmm = Math.max(Math.ceil(contentH * 25.4 / 96), 297);
+
+            showToast(T.toast.pdfGenerating);
+
+            try {
+                await html2pdf().set({
+                    margin: 0,
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: bgColor,
+                        logging: false
+                    },
+                    jsPDF: {
+                        unit: 'mm',
+                        format: [210, pageHmm],
+                        orientation: 'portrait',
+                        compress: true
+                    }
+                }).from(preview).save();
+                showToast(T.toast.pdfDone);
+            } catch (err) {
+                console.error('PDF error:', err);
+                showToast(T.toast.pdfError);
+            } finally {
+                // Ripristina tutto
+                preview.style.cssText = savedPreviewCss;
+                previewWrap.style.cssText = savedWrapCss;
+                window.scrollTo(0, savedScrollY);
+            }
         }
 
         function copyText() {
             updateState();
-            let text = `${state.fullName}\n${state.title}\n`;
-            text += `Email: ${state.email}\nTelefono: ${state.phone}\nCittà: ${state.location}\n\n`;
-            text += `PROFILO PROFESSIONALE\n${state.summary}\n\n`;
-
-            if (state.work.length > 0) {
-                text += `ESPERIENZE LAVORATIVE\n`;
-                state.work.forEach(w => {
-                    text += `${w.role} presso ${w.company} (${w.start} - ${w.end})\n${w.description}\n\n`;
-                });
-            }
-
-            if (state.education.length > 0) {
-                text += `FORMAZIONE\n`;
-                state.education.forEach(e => {
-                    text += `${e.degree} da ${e.institution} (${e.year})\n`;
-                });
-            }
-
-            if (state.skills.length > 0) {
-                text += `COMPETENZE\n`;
-                state.skills.forEach(s => {
-                    text += `${s.name} (${s.level}/5)\n`;
-                });
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('CV copiato negli appunti!');
-            });
+            navigator.clipboard.writeText(buildPlainText()).then(
+                () => showToast(T.toast.copied),
+                () => showToast(T.toast.copyFailed)
+            );
         }
 
-        // Template selector
+        function buildPlainText() {
+            let text = `${state.fullName}\n${state.title}\n`;
+            const contact = [state.email, state.phone, state.location, state.website, state.linkedin].filter(Boolean);
+            text += contact.join(' | ') + '\n\n';
+            text += `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n`;
+            if (state.work.length) {
+                text += `${T.sections.work.toUpperCase()}\n`;
+                state.work.forEach(w => {
+                    text += `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n\n`;
+                });
+            }
+            if (state.education.length) {
+                text += `${T.sections.education.toUpperCase()}\n`;
+                state.education.forEach(e => {
+                    text += `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | Voto: ' + e.gpa : ''}\n`;
+                });
+                text += '\n';
+            }
+            if (state.skills.length) {
+                text += `${T.sections.skills.toUpperCase()}\n`;
+                state.skills.forEach(s => { text += `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)\n`; });
+                text += '\n';
+            }
+            if (state.languages.length) {
+                text += `${T.sections.languages.toUpperCase()}\n`;
+                state.languages.forEach(l => { text += `${l.name}: ${LANG_LEVELS[l.level] || ''}\n`; });
+                text += '\n';
+            }
+            if (state.certifications.length) {
+                text += `${T.sections.certifications.toUpperCase()}\n`;
+                state.certifications.forEach(c => { text += `${c.name} - ${c.issuer} (${c.year})\n`; });
+                text += '\n';
+            }
+            if (state.customTitle && state.customContent) {
+                text += `${state.customTitle.toUpperCase()}\n${state.customContent}\n`;
+            }
+            return text.trim();
+        }
+
+        function exportATS() {
+            updateState();
+            let txt = `${T.atsHeader}\n${'='.repeat(60)}\n\n`;
+            txt += `Nome: ${state.fullName}\n`;
+            txt += `Ruolo: ${state.title}\n`;
+            if (state.email) txt += `Email: ${state.email}\n`;
+            if (state.phone) txt += `Telefono: ${state.phone}\n`;
+            if (state.location) txt += `Località: ${state.location}\n`;
+            if (state.website) txt += `Sito Web: ${state.website}\n`;
+            if (state.linkedin) txt += `LinkedIn: ${state.linkedin}\n`;
+            txt += '\n';
+
+            const sect = (title, body) => {
+                if (!body) return '';
+                return `${title.toUpperCase()}\n${'-'.repeat(60)}\n${body}\n\n`;
+            };
+
+            txt += sect(T.sections.summary, state.summary);
+
+            if (state.work.length) {
+                let body = '';
+                state.work.forEach(w => {
+                    body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`;
+                });
+                txt += sect(T.sections.work, body.trim());
+            }
+            if (state.education.length) {
+                let body = '';
+                state.education.forEach(e => {
+                    body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | Voto: ' + e.gpa : ''}\n\n`;
+                });
+                txt += sect(T.sections.education, body.trim());
+            }
+            if (state.skills.length) {
+                txt += sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n'));
+            }
+            if (state.languages.length) {
+                txt += sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n'));
+            }
+            if (state.certifications.length) {
+                let body = '';
+                state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; });
+                txt += sect(T.sections.certifications, body.trim());
+            }
+            if (state.customTitle && state.customContent) {
+                txt += sect(state.customTitle, state.customContent);
+            }
+
+            const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = safeFilename(state.fullName) + '_ATS.txt';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(T.toast.atsDownloaded);
+        }
+
+        function exportJSON() {
+            updateState();
+            const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = safeFilename(state.fullName) + '_cv.json';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(T.toast.saved);
+        }
+
+        function importJSON(e) {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
+                    // Gestisci legacy photoUrl da vecchi export JSON
+                    if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
+                    ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                        .forEach(id => { if (state[id] !== undefined) document.getElementById(id).value = state[id]; });
+                    ['work','education','skills','languages','certifications'].forEach(k => {
+                        state[k] = (state[k] || []).map(x => ({...x, id: newId()}));
+                    });
+                    renderAll();
+                    updatePreview();
+                    updatePhotoUI();
+                    scheduleSave();
+                    showToast(T.toast.loaded);
+                } catch { showToast(T.toast.invalidJson); }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+
+        let saveTimer = null;
+        function scheduleSave() {
+            const dot = document.getElementById('autosaveDot');
+            const txt = document.getElementById('autosaveText');
+            dot.classList.remove('saved');
+            dot.classList.add('saving');
+            txt.textContent = T.saving;
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                try {
+                    updateState();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                    dot.classList.remove('saving');
+                    dot.classList.add('saved');
+                    txt.textContent = T.savedAt + new Date().toLocaleTimeString();
+                } catch (e) {
+                    txt.textContent = T.saveFailed;
+                }
+            }, 500);
+        }
+
+        function restoreFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
+                // Gestisci legacy photoUrl da vecchi salvataggi
+                if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
+                ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                    .forEach(id => { document.getElementById(id).value = state[id] || ''; });
+                renderAll();
+                updatePhotoUI();
+                document.getElementById('template-select').value = state.template || 'classic';
+                document.getElementById('font-select').value = state.font || 'default';
+                setAccent(state.accent || 'green', false);
+                if (state.previewMode) setPreviewMode(state.previewMode, false);
+                updatePreview();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
         document.getElementById('template-select').addEventListener('change', (e) => {
-            document.getElementById('preview').className = `preview-panel template-${e.target.value}`;
+            state.template = e.target.value;
+            applyTemplate(); scheduleSave();
+        });
+        document.getElementById('font-select').addEventListener('change', (e) => {
+            state.font = e.target.value;
+            applyFont(); scheduleSave();
+        });
+        document.getElementById('preset-select').addEventListener('change', (e) => {
+            if (e.target.value) {
+                if (confirm(T.confirmPreset)) loadPreset(e.target.value);
+                e.target.value = '';
+            }
         });
 
-        // Accent color picker
+        function setAccent(name, save = true) {
+            state.accent = name;
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+            const btn = document.querySelector('.color-option[data-accent="'+name+'"]');
+            if (btn) btn.classList.add('active');
+            document.documentElement.style.setProperty('--accent-color', COLOR_MAP[name] || COLOR_MAP.green);
+            if (save) scheduleSave();
+        }
         document.querySelectorAll('.color-option').forEach(el => {
-            el.addEventListener('click', (e) => {
-                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
-                e.target.classList.add('active');
-
-                const accentMap = {
-                    'green': '#10b981',
-                    'blue': '#3b82f6',
-                    'red': '#ef4444',
-                    'purple': '#a855f7',
-                    'orange': '#f97316',
-                    'black': '#1f2937'
-                };
-
-                const accentColor = accentMap[e.target.dataset.accent];
-                document.getElementById('preview').style.setProperty('--accent-color', accentColor);
-            });
+            el.addEventListener('click', () => setAccent(el.dataset.accent));
         });
 
-        // Initial setup
-        updatePreview();
-    </script>
-</div><!-- /appContent -->
+        function setPreviewMode(mode, save = true) {
+            state.previewMode = mode;
+            document.querySelectorAll('#previewModeToggle button').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === mode);
+            });
+            applyPreviewMode();
+            if (save) scheduleSave();
+        }
+        document.querySelectorAll('#previewModeToggle button').forEach(b => {
+            b.addEventListener('click', () => setPreviewMode(b.dataset.mode));
+        });
 
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); printResume(); }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'd') { e.preventDefault(); downloadPDF(); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); exportJSON(); }
+        });
+
+        const restored = restoreFromStorage();
+        initPhotoUpload();
+        if (!restored) updatePreview();
+        else showToast(T.toast.restored);
+    </script>
+
+</div><!-- /appContent -->
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
