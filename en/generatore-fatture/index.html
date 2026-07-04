@@ -470,7 +470,9 @@ const I18N = {
     msgCopyNo: 'Copy not supported — use Download TXT',
     // placeholders
     phCompany: 'Your Company Inc.', phClient: 'Client Name', phDesc: 'Description',
-    phTerms: 'Net 30 days'
+    phTerms: 'Net 30 days', phAddress: '123 Main Street', phCity: 'New York, NY 10001',
+    phEmail: 'info@company.com', phPhone: '+1 555 123 4567', phTaxId: 'EIN 12-3456789',
+    phBank: 'Bank of America', phAcct: 'IBAN / Account no.', phNotes: 'Additional notes and terms…'
   },
   it: {
     _name: 'Italiano',
@@ -501,7 +503,9 @@ const I18N = {
     msgLoaded: 'Dati caricati con successo!', msgBadJson: 'Errore: file JSON non valido',
     msgCopyNo: 'Copia non supportata — usa Scarica TXT',
     phCompany: 'La Tua Azienda S.r.l.', phClient: 'Nome Cliente', phDesc: 'Descrizione',
-    phTerms: '30 giorni'
+    phTerms: '30 giorni', phAddress: 'Via Roma 12', phCity: '20100 Milano MI',
+    phEmail: 'info@azienda.it', phPhone: '+39 02 1234567', phTaxId: 'P.IVA 01234567890',
+    phBank: 'Nome banca', phAcct: 'IBAN', phNotes: 'Note e condizioni aggiuntive…'
   },
   fr: {
     _name: 'Français',
@@ -532,7 +536,9 @@ const I18N = {
     msgLoaded: 'Données chargées !', msgBadJson: 'Erreur : fichier JSON invalide',
     msgCopyNo: 'Copie non supportée — utilisez Télécharger TXT',
     phCompany: 'Votre Entreprise SARL', phClient: 'Nom du client', phDesc: 'Description',
-    phTerms: '30 jours'
+    phTerms: '30 jours', phAddress: '12 rue de la Paix', phCity: '75001 Paris',
+    phEmail: 'contact@societe.fr', phPhone: '+33 1 23 45 67 89', phTaxId: 'N° TVA FR12345678901',
+    phBank: 'Nom de la banque', phAcct: 'IBAN', phNotes: 'Notes et conditions…'
   },
   de: {
     _name: 'Deutsch',
@@ -563,7 +569,9 @@ const I18N = {
     msgLoaded: 'Daten geladen!', msgBadJson: 'Fehler: ungültige JSON-Datei',
     msgCopyNo: 'Kopieren nicht unterstützt — TXT herunterladen',
     phCompany: 'Ihre Firma GmbH', phClient: 'Kundenname', phDesc: 'Beschreibung',
-    phTerms: '30 Tage'
+    phTerms: '30 Tage', phAddress: 'Hauptstraße 12', phCity: '10115 Berlin',
+    phEmail: 'info@firma.de', phPhone: '+49 30 1234567', phTaxId: 'USt-IdNr. DE123456789',
+    phBank: 'Name der Bank', phAcct: 'IBAN', phNotes: 'Zusätzliche Anmerkungen…'
   },
   es: {
     _name: 'Español',
@@ -594,7 +602,9 @@ const I18N = {
     msgLoaded: '¡Datos cargados!', msgBadJson: 'Error: archivo JSON no válido',
     msgCopyNo: 'Copia no soportada — usa Descargar TXT',
     phCompany: 'Tu Empresa S.L.', phClient: 'Nombre del cliente', phDesc: 'Descripción',
-    phTerms: '30 días'
+    phTerms: '30 días', phAddress: 'Calle Mayor 12', phCity: '28001 Madrid',
+    phEmail: 'info@empresa.es', phPhone: '+34 91 123 45 67', phTaxId: 'NIF B12345678',
+    phBank: 'Nombre del banco', phAcct: 'IBAN', phNotes: 'Notas y condiciones…'
   }
 };
 
@@ -930,15 +940,15 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                         <input type="text" id="fromLogo" placeholder="https://example.com/logo.png">
                     </div>
                     <div class="form-row">
-                        <div class="control-group"><label data-i18n="address">Address</label><input type="text" id="fromAddress"></div>
-                        <div class="control-group"><label data-i18n="cityZip">City, State ZIP</label><input type="text" id="fromCity"></div>
+                        <div class="control-group"><label data-i18n="address">Address</label><input type="text" id="fromAddress" data-i18n-ph="phAddress"></div>
+                        <div class="control-group"><label data-i18n="cityZip">City, State ZIP</label><input type="text" id="fromCity" data-i18n-ph="phCity"></div>
                     </div>
                     <div class="form-row">
-                        <div class="control-group"><label data-i18n="email">Email</label><input type="email" id="fromEmail"></div>
-                        <div class="control-group"><label data-i18n="phone">Phone</label><input type="tel" id="fromPhone"></div>
+                        <div class="control-group"><label data-i18n="email">Email</label><input type="email" id="fromEmail" data-i18n-ph="phEmail"></div>
+                        <div class="control-group"><label data-i18n="phone">Phone</label><input type="tel" id="fromPhone" data-i18n-ph="phPhone"></div>
                     </div>
                     <div class="form-row">
-                        <div class="control-group"><label data-i18n="taxId">Tax ID</label><input type="text" id="fromTax"></div>
+                        <div class="control-group"><label data-i18n="taxId">Tax ID</label><input type="text" id="fromTax" data-i18n-ph="phTaxId"></div>
                     </div>
                 </div>
 
@@ -949,12 +959,12 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                         <input type="text" id="toName" data-i18n-ph="phClient">
                     </div>
                     <div class="form-row">
-                        <div class="control-group"><label data-i18n="address">Address</label><input type="text" id="toAddress"></div>
-                        <div class="control-group"><label data-i18n="cityZip">City, State ZIP</label><input type="text" id="toCity"></div>
+                        <div class="control-group"><label data-i18n="address">Address</label><input type="text" id="toAddress" data-i18n-ph="phAddress"></div>
+                        <div class="control-group"><label data-i18n="cityZip">City, State ZIP</label><input type="text" id="toCity" data-i18n-ph="phCity"></div>
                     </div>
                     <div class="form-row">
-                        <div class="control-group"><label data-i18n="email">Email</label><input type="email" id="toEmail"></div>
-                        <div class="control-group"><label data-i18n="taxId">Tax ID</label><input type="text" id="toTax"></div>
+                        <div class="control-group"><label data-i18n="email">Email</label><input type="email" id="toEmail" data-i18n-ph="phEmail"></div>
+                        <div class="control-group"><label data-i18n="taxId">Tax ID</label><input type="text" id="toTax" data-i18n-ph="phTaxId"></div>
                     </div>
                 </div>
 
@@ -986,13 +996,13 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
 
                 <div class="form-section">
                     <h3 class="section-header" data-i18n="payment">Payment</h3>
-                    <div class="control-group"><label data-i18n="bankName">Bank Name</label><input type="text" id="bankName"></div>
-                    <div class="control-group"><label data-i18n="accountNo">Account / Routing Number</label><input type="text" id="bankIBAN"></div>
+                    <div class="control-group"><label data-i18n="bankName">Bank Name</label><input type="text" id="bankName" data-i18n-ph="phBank"></div>
+                    <div class="control-group"><label data-i18n="accountNo">Account / Routing Number</label><input type="text" id="bankIBAN" data-i18n-ph="phAcct"></div>
                     <div class="control-group"><label data-i18n="paymentTerms">Payment Terms</label><input type="text" id="paymentTerms" data-i18n-ph="phTerms"></div>
                 </div>
 
                 <div class="form-section">
-                    <div class="control-group"><label data-i18n="notes">Notes / Terms</label><textarea id="notes" rows="4"></textarea></div>
+                    <div class="control-group"><label data-i18n="notes">Notes / Terms</label><textarea id="notes" rows="4" data-i18n-ph="phNotes"></textarea></div>
                 </div>
             </div>
 
