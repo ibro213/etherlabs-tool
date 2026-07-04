@@ -1,5 +1,5 @@
-// EtherLabs Tools — Service Worker v8
-var CACHE_NAME = 'etherlabs-v8';
+// EtherLabs Tools — Service Worker v9
+var CACHE_NAME = 'etherlabs-v9';
 var URLS_TO_CACHE = [
   "/etherlabs-tool/",
   "/etherlabs-tool/divisore-spese/",
