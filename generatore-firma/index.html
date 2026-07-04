@@ -1,504 +1,17 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Firma Email Pro ✦ - Generatore di Firme Email</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        :root {
-            --bg: #060a0a;
-            --bg2: #0a1210;
-            --bg3: #0f1a17;
-            --gold: #10b981;
-            --goldL: #34d399;
-            --goldD: #059669;
-            --t1: #e8f0ec;
-            --t2: #7a9a8e;
-            --t3: #4a6b5e;
-            --brd: #162e26;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
-            color: var(--t1);
-            overflow-x: hidden;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 20px;
-            flex: 1;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: slideDown 0.6s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--goldL), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            color: var(--t2);
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        .pro-badge {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--goldL);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        /* Main Layout */
-        .main-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .main-wrapper {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Card Styling */
-        .card {
-            background: rgba(15, 26, 23, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--brd);
-            border-radius: 16px;
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.card:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            background: rgba(15, 26, 23, 0.8);
-        }
-}
-
-        .card h2 {
-            color: var(--goldL);
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card h2::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 20px;
-            background: linear-gradient(to right, var(--gold), var(--goldL));
-            border-radius: 2px;
-        }
-
-        /* Form Section */
-        .form-section {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        label {
-            color: var(--t1);
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="url"],
-        input[type="color"],
-        select {
-            background: rgba(10, 18, 16, 0.8);
-            border: 1px solid var(--brd);
-            color: var(--t1);
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        input[type="url"]:focus,
-        input[type="color"]:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(10, 18, 16, 1);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        input[type="color"] {
-            width: 60px;
-            height: 44px;
-            cursor: pointer; touch-action: manipulation;
-            padding: 4px;
-        }
-
-        .color-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .color-presets {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .color-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            cursor: pointer; touch-action: manipulation;
-            transition: all 0.3s ease;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.color-btn:hover {
-            transform: scale(1.1);
-        }
-}
-
-        .color-btn.active {
-            border-color: var(--t1);
-            box-shadow: 0 0 12px currentColor;
-        }
-
-        .template-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .template-selector {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .template-btn {
-            padding: 12px;
-            background: rgba(10, 18, 16, 0.8);
-            border: 2px solid var(--brd);
-            color: var(--t2);
-            border-radius: 8px;
-            cursor: pointer; touch-action: manipulation;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.template-btn:hover {
-            border-color: var(--gold);
-            color: var(--goldL);
-        }
-}
-
-        .template-btn.active {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: var(--gold);
-            color: var(--goldL);
-        }
-
-        /* Toggle Switches */
-        .toggle-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background: rgba(10, 18, 16, 0.5);
-            border-radius: 8px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 28px;
-            background: var(--brd);
-            border-radius: 14px;
-            cursor: pointer; touch-action: manipulation;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: var(--gold);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: var(--bg2);
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-switch.active::after {
-            left: 24px;
-        }
-
-        /* Preview Section */
-        .preview-container {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 30px;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            border: 1px solid #e5e5e5;
-        }
-
-        .preview-header {
-            color: var(--bg);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.6;
-        }
-
-        .signature-preview {
-            flex: 1;
-            font-family: inherit;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer; touch-action: manipulation;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            justify-content: center;
-            min-height: 44px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--goldL));
-            color: var(--bg);
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-}
-
-        .btn-secondary {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--goldL);
-            border: 1px solid var(--gold);
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.btn-secondary:hover {
-            background: rgba(16, 185, 129, 0.25);
-            transform: translateY(-2px);
-        }
-}
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: var(--t3);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--brd);
-            margin-top: 40px;
-        }
-
-        .footer a {
-            color: var(--gold);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-.footer a:hover {
-            color: var(--goldL);
-        }
-}
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(16, 185, 129, 0.9);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            animation: slideInUp 0.3s ease-out;
-            z-index: 1000;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-        }
-
-        @keyframes slideInUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Watermark */
-        .watermark {
-            position: absolute;
-            bottom: 10px;
-            right: 15px;
-            font-size: 0.75rem;
-            color: var(--t3);
-            opacity: 0.5;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .main-wrapper {
-                gap: 20px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-    
-        /* === MOBILE iOS FIX (auto-applied) === */
-        html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-        button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
-        @media (max-width: 768px) {
-          button, .btn, input[type="submit"], input[type="button"] { min-height: 44px; }
-          .btn-small { min-height: 40px; }
-          input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
-        }
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Generatore Firma Email Pro — EtherLabs</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#060a0a">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+<style>
 /* ===== Lock Screen ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
@@ -518,15 +31,80 @@
 .install-hint strong{color:#34d399}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
 </style>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#060a0a">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --bg: #060a0a; --bg2: #0a1210; --bg3: #0f1a17; --gold: #10b981; --goldL: #34d399;
+        --t1: #e8f0ec; --t2: #7a9a8e; --t3: #4a6b5e; --brd: #162e26; --err: #f87171;
+        --ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    html, body { width: 100%; min-height: 100%; font-family: var(--ui); background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%); color: var(--t1); overflow-x: hidden; }
+    body { display: flex; flex-direction: column; }
+    .container { max-width: 1400px; margin: 0 auto; width: 100%; padding: 20px; flex: 1; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--goldL), var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+    .header p { color: var(--t2); font-size: 1rem; }
+    .pro-badge { display: inline-block; background: rgba(16,185,129,0.15); border: 1px solid var(--gold); color: var(--goldL); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-top: 10px; }
+    .topbar { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; background: rgba(15,26,23,0.6); border: 1px solid var(--brd); border-radius: 14px; padding: 16px; margin-bottom: 24px; }
+    .main-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 30px; align-items: start; }
+    @media (max-width: 1024px) { .main-wrapper { grid-template-columns: 1fr; } }
+    .card { background: rgba(15,26,23,0.6); border: 1px solid var(--brd); border-radius: 16px; padding: 26px; }
+    .card h2 { color: var(--goldL); font-size: 1.2rem; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+    .card h2::before { content: ''; width: 4px; height: 18px; background: linear-gradient(to right, var(--gold), var(--goldL)); border-radius: 2px; }
+    .form-section { display: flex; flex-direction: column; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    label { color: var(--t1); font-size: 0.9rem; font-weight: 600; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="url"], select {
+        background: rgba(10,18,16,0.8); border: 1px solid var(--brd); color: var(--t1); padding: 12px 14px;
+        border-radius: 8px; font-size: 16px; font-family: inherit; transition: border-color .2s, box-shadow .2s; width: 100%;
+    }
+    input:focus, select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+    input[type="color"] { width: 54px; height: 44px; cursor: pointer; padding: 3px; background: rgba(10,18,16,0.8); border: 1px solid var(--brd); border-radius: 8px; }
+    .color-group { display: flex; gap: 10px; align-items: center; }
+    .color-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-btn { width: 36px; height: 36px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .color-btn.active { border-color: var(--t1); }
+    .template-selector { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    @media (max-width: 768px) { .template-selector { grid-template-columns: 1fr; } }
+    .template-btn { padding: 12px; background: rgba(10,18,16,0.8); border: 2px solid var(--brd); color: var(--t2); border-radius: 8px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-weight: 500; font-size: 0.88rem; }
+    .template-btn.active { background: rgba(16,185,129,0.2); border-color: var(--gold); color: var(--goldL); }
+    .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(10,18,16,0.5); border-radius: 8px; }
+    .toggle-group label { margin: 0; font-weight: 500; }
+    .toggle-switch { position: relative; width: 50px; height: 28px; background: var(--brd); border-radius: 14px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background .2s; flex-shrink: 0; }
+    .toggle-switch.active { background: var(--gold); }
+    .toggle-switch::after { content: ''; position: absolute; width: 24px; height: 24px; background: var(--bg2); border-radius: 50%; top: 2px; left: 2px; transition: left .2s; }
+    .toggle-switch.active::after { left: 24px; }
+    .preview-panel { position: sticky; top: 16px; }
+    @media (max-width: 1024px) { .preview-panel { position: static; } }
+    .preview-container { background: #fff; border-radius: 12px; padding: 28px; min-height: 260px; border: 1px solid #e5e5e5; overflow-x: auto; }
+    .preview-header { color: #999; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .btn { padding: 12px 18px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; justify-content: center; min-height: 46px; flex: 1 1 auto; }
+    .btn-primary { background: linear-gradient(135deg, var(--gold), var(--goldL)); color: var(--bg); }
+    .btn-secondary { background: rgba(16,185,129,0.15); color: var(--goldL); border: 1px solid var(--gold); }
+    .hint { font-size: 0.82rem; color: var(--t2); margin-top: 12px; line-height: 1.5; }
+    .footer { text-align: center; padding: 20px; color: var(--t3); font-size: 0.82rem; border-top: 1px solid var(--brd); margin-top: 30px; }
+    .notification { position: fixed; bottom: 20px; right: 20px; background: rgba(16,185,129,0.95); color: #fff; padding: 14px 22px; border-radius: 8px; z-index: 1000; box-shadow: 0 8px 24px rgba(16,185,129,0.3); animation: slideInUp .3s ease-out; }
+    .notification.err { background: rgba(248,113,113,0.95); box-shadow: none; }
+    @keyframes slideInUp { from { transform: translateY(80px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @media (hover: hover) {
+        .card:hover { border-color: rgba(16,185,129,0.3); }
+        .template-btn:hover { border-color: var(--gold); color: var(--goldL); }
+        .color-btn:hover { transform: scale(1.1); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+        .btn-secondary:hover { background: rgba(16,185,129,0.25); transform: translateY(-2px); }
+    }
+    .btn:active { transform: translateY(0); }
+    @media (max-width: 768px) {
+        .header h1 { font-size: 1.8rem; }
+        .container { padding: 15px; }
+        .card { padding: 18px; }
+        .action-buttons { flex-direction: column; }
+        .btn { width: 100%; }
+        .topbar { grid-template-columns: 1fr 1fr; }
+    }
+</style>
 </head>
 <body>
 <div id="lockScreen">
@@ -538,420 +116,353 @@
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
-
 <div id="appContent" style="display:none">
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>Firma Email Pro ✦</h1>
-            <p>Generatore professionale di firme email</p>
-            <div class="pro-badge">🚀 Versione Pro</div>
+<div class="container">
+    <div class="header">
+        <h1 id="hTitle">Email Signature Pro ✦</h1>
+        <p data-i18n="subtitle">Professional email signature generator</p>
+        <div class="pro-badge" data-i18n="badge">🚀 Pro Version</div>
+    </div>
+
+    <div class="topbar">
+        <div class="form-group">
+            <label data-i18n="language">Language</label>
+            <select id="language"></select>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="card">
+            <h2 data-i18n="personalInfo">Personal Info</h2>
+            <div class="form-section">
+                <div class="form-group"><label data-i18n="fullName">Full Name</label><input type="text" id="fullName" value="Marco Rossi"></div>
+                <div class="form-group"><label data-i18n="jobTitle">Job Title</label><input type="text" id="jobTitle" value="Director of Operations"></div>
+                <div class="form-group"><label data-i18n="company">Company</label><input type="text" id="company" value="Digital Solutions Ltd"></div>
+                <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="email" value="marco@company.com"></div>
+                <div class="form-group"><label data-i18n="phone">Phone</label><input type="tel" id="phone" value="+39 123 456 7890"></div>
+                <div class="form-group"><label data-i18n="website">Website</label><input type="url" id="website" value="https://www.company.com"></div>
+                <div class="form-group"><label>LinkedIn</label><input type="url" id="linkedin" value="https://linkedin.com/in/marco"></div>
+                <div class="form-group"><label>Instagram</label><input type="url" id="instagram" value=""></div>
+                <div class="form-group"><label>X (Twitter)</label><input type="url" id="x" value=""></div>
+                <div class="form-group"><label>Facebook</label><input type="url" id="facebook" value=""></div>
+                <div class="form-group"><label>YouTube</label><input type="url" id="youtube" value=""></div>
+                <div class="form-group"><label data-i18n="photoUrl">Profile Photo URL</label><input type="url" id="photoUrl" value=""></div>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-wrapper">
-            <!-- Left Panel - Form -->
+        <div>
             <div class="card">
-                <h2>Informazioni Personali</h2>
+                <h2 data-i18n="design">Template &amp; Design</h2>
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="fullName">Nome Completo *</label>
-                        <input type="text" id="fullName" placeholder="es. Marco Rossi" value="Marco Rossi">
+                        <label data-i18n="selectTemplate">Select Template</label>
+                        <div class="template-selector">
+                            <button class="template-btn active" data-template="modern">Modern Minimal</button>
+                            <button class="template-btn" data-template="corporate">Corporate</button>
+                            <button class="template-btn" data-template="creative">Creative</button>
+                            <button class="template-btn" data-template="bold">Bold Impact</button>
+                            <button class="template-btn" data-template="elegant">Elegant</button>
+                            <button class="template-btn" data-template="tech">Tech</button>
+                        </div>
                     </div>
-
                     <div class="form-group">
-                        <label for="jobTitle">Titolo Professionale *</label>
-                        <input type="text" id="jobTitle" placeholder="es. Director of Operations" value="Director of Operations">
+                        <label data-i18n="accentColor">Accent Color</label>
+                        <div class="color-presets">
+                            <button class="color-btn active" data-color="#10b981" style="background:#10b981;"></button>
+                            <button class="color-btn" data-color="#3b82f6" style="background:#3b82f6;"></button>
+                            <button class="color-btn" data-color="#ef4444" style="background:#ef4444;"></button>
+                            <button class="color-btn" data-color="#8b5cf6" style="background:#8b5cf6;"></button>
+                            <button class="color-btn" data-color="#f97316" style="background:#f97316;"></button>
+                        </div>
+                        <div class="form-group" style="margin-top:10px;">
+                            <label data-i18n="customColor">Custom Color</label>
+                            <div class="color-group"><input type="color" id="customColor" value="#10b981"></div>
+                        </div>
                     </div>
-
                     <div class="form-group">
-                        <label for="company">Nome Azienda *</label>
-                        <input type="text" id="company" placeholder="es. Digital Solutions Ltd" value="Digital Solutions Ltd">
+                        <label data-i18n="font">Font</label>
+                        <select id="fontFamily">
+                            <option value="Arial, Helvetica, sans-serif">Arial (Universal)</option>
+                            <option value="'Segoe UI', Roboto, sans-serif">Segoe UI (Modern)</option>
+                            <option value="Georgia, 'Times New Roman', serif">Georgia (Classic)</option>
+                            <option value="Verdana, Geneva, sans-serif">Verdana (Clean)</option>
+                            <option value="'Courier New', monospace">Courier (Tech)</option>
+                        </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" placeholder="es. marco@company.com" value="marco@company.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Telefono</label>
-                        <input type="tel" id="phone" placeholder="es. +39 123 456 7890" value="+39 123 456 7890">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="website">Sito Web</label>
-                        <input type="url" id="website" placeholder="es. https://www.company.com" value="https://www.company.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="linkedin">LinkedIn URL</label>
-                        <input type="url" id="linkedin" placeholder="es. https://linkedin.com/in/marco" value="https://linkedin.com/in/marco">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="instagram">Instagram URL</label>
-                        <input type="url" id="instagram" placeholder="es. https://instagram.com/marco" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="photoUrl">URL Foto Profilo</label>
-                        <input type="url" id="photoUrl" placeholder="es. https://..." value="">
-                    </div>
+                    <div class="toggle-group"><label data-i18n="includePhoto">Include Profile Photo</label><div class="toggle-switch active" id="togglePhoto"></div></div>
+                    <div class="toggle-group"><label data-i18n="showSocial">Show Social Icons</label><div class="toggle-switch active" id="toggleSocial"></div></div>
+                    <div class="toggle-group"><label data-i18n="includeSeparator">Include Divider</label><div class="toggle-switch active" id="toggleSeparator"></div></div>
                 </div>
-            </div>
-
-            <!-- Right Panel - Design Options -->
-            <div>
-                <div class="card">
-                    <h2>Template & Design</h2>
-                    <div class="form-section">
-                        <div class="form-group">
-                            <label>Seleziona Template</label>
-                            <div class="template-selector">
-                                <button class="template-btn active" data-template="modern">Modern Minimal</button>
-                                <button class="template-btn" data-template="corporate">Corporate</button>
-                                <button class="template-btn" data-template="creative">Creative</button>
-                                <button class="template-btn" data-template="bold">Bold Impact</button>
-                                <button class="template-btn" data-template="elegant">Elegant</button>
-                                <button class="template-btn" data-template="tech">Tech</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Colore Accento</label>
-                            <div class="color-presets">
-                                <button class="color-btn active" data-color="#10b981" style="background: #10b981;" title="Emerald"></button>
-                                <button class="color-btn" data-color="#3b82f6" style="background: #3b82f6;" title="Blue"></button>
-                                <button class="color-btn" data-color="#ef4444" style="background: #ef4444;" title="Red"></button>
-                                <button class="color-btn" data-color="#8b5cf6" style="background: #8b5cf6;" title="Purple"></button>
-                                <button class="color-btn" data-color="#f97316" style="background: #f97316;" title="Orange"></button>
-                            </div>
-                            <div class="form-group">
-                                <label for="customColor">Colore Personalizzato</label>
-                                <div class="color-group">
-                                    <input type="color" id="customColor" value="#10b981">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="fontFamily">Font</label>
-                            <select id="fontFamily">
-                                <option value="'Segoe UI', Roboto">Segoe UI (Moderno)</option>
-                                <option value="Georgia, serif">Georgia (Classico)</option>
-                                <option value="'Courier New', monospace">Courier (Tecnico)</option>
-                                <option value="Verdana, sans-serif">Verdana (Pulito)</option>
-                            </select>
-                        </div>
-
-                        <div class="toggle-group">
-                            <label style="margin: 0; font-weight: 500;">Includi Foto Profilo</label>
-                            <div class="toggle-switch active" id="togglePhoto"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <label style="margin: 0; font-weight: 500;">Mostra Icone Social</label>
-                            <div class="toggle-switch active" id="toggleSocial"></div>
-                        </div>
-
-                        <div class="toggle-group">
-                            <label style="margin: 0; font-weight: 500;">Includi Separatore</label>
-                            <div class="toggle-switch active" id="toggleSeparator"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h2>Esporta</h2>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="copyHtmlBtn">
-                            <span>📋</span> Copia HTML
-                        </button>
-                        <button class="btn btn-secondary" id="copyTextBtn">
-                            <span>✏️</span> Copia Testo
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Preview Section -->
-        <div class="card">
-            <h2>Anteprima Firma</h2>
-            <div class="preview-container">
-                <div class="preview-header">Email Preview (Sfondo bianco)</div>
-                <div class="signature-preview" id="signaturePreview"></div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div style="position: relative; padding-bottom: 15px;">
-            © 2025 EtherLabs - Firma Email Pro ✦
-            <div class="watermark">Creato con Firma Email Pro</div>
+    <div class="card preview-panel">
+        <h2 data-i18n="preview">Signature Preview</h2>
+        <div class="preview-container">
+            <div class="preview-header" data-i18n="previewNote">This is how your signature will look (white background)</div>
+            <div id="signaturePreview"></div>
         </div>
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="copySigBtn"><span>✍️</span> <span data-i18n="copySignature">Copy signature</span></button>
+            <button class="btn btn-secondary" id="copyHtmlBtn"><span>&lt;/&gt;</span> <span data-i18n="copyHtml">Copy HTML</span></button>
+            <button class="btn btn-secondary" id="downloadBtn"><span>⬇</span> <span data-i18n="download">Download</span></button>
+            <button class="btn btn-secondary" id="copyTextBtn"><span>📄</span> <span data-i18n="copyText">Copy text</span></button>
+        </div>
+        <div class="hint" data-i18n="copyHint">Tip: "Copy signature" is the easy one — paste it straight into Gmail, Outlook or Apple Mail. See INSTRUCTIONS for each app.</div>
     </div>
+</div>
 
-    <!-- Notification Container -->
-    <div id="notificationContainer"></div>
+<div class="footer">© 2026 EtherLabs — Email Signature Pro ✦</div>
+<div id="notificationContainer"></div>
 
-    <script>
-        // ============================================
-        // SVG Icons (Inline)
-        // ============================================
-        const icons = {
-            linkedin: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`,
-            instagram: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.057-1.645.069-4.849.069-3.204 0-3.584-.012-4.849-.069-3.259-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.322a1.44 1.44 0 110-2.881 1.44 1.44 0 010 2.881z"/></svg>`,
-            website: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11.99 5V1h-11v6h2v8h-2v6h17v-6h-2v-8h2v-6h-8zm6 4v8h-12v-8h12z"/></svg>`,
-            email: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
-            phone: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.707 12.293l-5.293-5.293a1 1 0 00-1.414 1.414L15.586 12l-4.586 4.586a1 1 0 001.414 1.414l5.293-5.293a1 1 0 000-1.414zM8 5a1 1 0 00-1 1v12a1 1 0 102 0V6a1 1 0 00-1-1z"/></svg>`
-        };
+<script>/* Email Signature Pro — app (multilingual, email-safe output) */
+const ICON_B64 = {"email": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAEuElEQVR4nOycz0tUURTHj041aVGrVv1ACMFVKq1aBEKg4zALoTZFkBupRZp/QK1qn2UQtsmghbt+qeOMCNKuRVAUKCm06MfOTT/MX+P0vfmUQWPOfT/Pm/F8YLhPOPN893zfud977zxeLSmi1JIiigogjAogjAogjAogjAogjAogjAogjAogjAogjAogjAogjAogjAogjAogzB5ySWdn57GampqLxWIxjT9bcXyYdjHIwwKaj8jDy9XV1ZHJycnvbr5fYxvY1tZ2sL6+fhiH50kpx9PFxcWe6enpJZtg6wqoq6t7jaaVFI7LyFUD2rM2wQmbIAw7QyixDClWIFcnGhsbk3Nzc1NsLBeA5J/ECT+RGrZb/iwvLx+fmppaKBdkk9Qe0uR7oS6ZTF7hgtjE4u5PkeKVTi6AFQDTrOOkeAK5a+ZibCpgPxPShX/0lXYZTp+7ysUgd0eIwffYPj4+/qJQKDThgu7hzwJVPwXTV9Nn03fyic06gJ0p5fP532j6Ozo6HicSiWEct1B18g6J787lcu8pIFxvRZTDubDTmLr2ob2NEjxIVQDu+F9obmWz2fto1ylAbEzYervCYR0XOoBKaMLxGFU+Y6Yvpk8UcPINgVZAKaOjo9/QZFANxqgGUQ3HqIJwTLYXiX9OIRL6Ast0oMJMestkw06+IbQKKKWCTDpwk+XwPQvCEPMMSb3uDDlliatJezHZTCZzFGI9IJ/4HoKQxC5cyGw6nb5heb64mbRbk601fTV9Nn0nn9jshi7hHyXJDtclLGXSXkwWQ2iz2yEUi7WyOQ7ahFtwgW+R1Lvt7e0HbL4gYNKuTdb0xfTJ9I0C9i+2AlBuy2j2kUvMHYbP1YmJiXHb73i5w1ziukJTqVQa1TnktUK5CghNgE0ggrnLTKnbbtjVBm3SXkzWPHxAG0Ojr3E+6iFoB04HZgRN2pPJop0JwmQ5Qq+AbURm0lGZLIfvCvCwF1SOKEw6VibLYTMNXcHdt5cCJiSTjtxkOXybcFgCbBKESUuaLIe4CXMEYNKxNlkOmwpYxYVGsmlHIW+GRbDO2AFXAVEl1pZNkx6EEDedXVTfGJPFee/gRuoly6cBoyKOD1wlkKh+JGzWGCT5xJzDnMuck2KWfEPcKmALMyvBZwzV4Nak/xGVyfrF5rmgINcBrvFg0rEyWY7YVkApznRzAIntLmfSpSYrfN9YUxEClPBfk46zyXLYCBC3Dm2a9AXc8ddwXAxzJRs2NgKYxU3sZksm4RBhlCocfe5fGBVAGBVAmKh/D1C2oRUgjAogjAogDLsOkN4Lqna0AoRRAYRRAYRRAYRRAYRRAYRRAYTh1gG6BggZrQBhVABhVABhOAGK+PwkxRP4LeUHF2Pzg8xnUrwyzwXYPBmXI8UrWS6AFaBQKDyiEF7TUu1g5FhD7oa4OFaAXC43j5M9IcUtD/P5/BcuyGoWBCXNI38zpNjyJpvN9tkEWglgnsFcWVk5Q9XxBqxQwWgxsra2ds423vVWQyqVaoAxX6KNl5KewvEh2sU4r6//gDy8CvX19Uo46EpYGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAGBVAmL8AAAD//1THwRkAAAAGSURBVAMA1KE/uFqKY3UAAAAASUVORK5CYII=", "phone": "data:image/png;base64,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", "website": "data:image/png;base64,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", "linkedin": "data:image/png;base64,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", "instagram": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAANEUlEQVR4nOydf3BU1RXHz242hETLD4tY+dFCJSIgbQVl/FUnCiQkyI8OMLZY2urQYkfb6XQ6jJZKZbTV2jL+1WlrS6XTYWxBFEgTkvDDtFqoba2KIEhQ6IBaFFuIzQ+SQPo560u6Cbvv3t33XrIv5Dvzcl/2nffuvefcn+eee25MAkJJSclFkUjkU9xOjEajo9vb2y/hfhjXoA4ankf4fSzBaOkFEPdR4j5M2J7wcz3XCX4/fvbsWX2+j/Tvqaio+I8EgIj4hBkzZgyOxWLTSXAJ1838VCh9CMjodYKdhFXNzc07a2tr/ys+wJMA5syZM+zMmTN3kKi5MP1GOY9AnmsJNjc1Na1FGCclQ2QkgLKysstJwEqYfrv0Q4XxSwrigzU1NUclTaQlgNmzZw+lXXwExn9N+nEOEMRqBPF9BNFg+461AGbNmnUjjF/Pdan0IyUQwhsU0nnV1dX7bOijNkQ0Od9kJPBcP/PNgEeX5eTk7C0tLb3Nhj7HRMCHVvHRR6Qf6WJBYWHh0UOHDr3kRuTaBMH8h2D+CgkWJ7gOUnVbpQdBvnKJczzhRyVA0BwtraqqWpPqeUoBwPzvkLgfS4Ygc+8Q7OR6mftjhPGLxByRLAZ93RiCUXqRf72mkP4ij83vwsrKyo3JHiQVAG3+1QR/k/TxIhJ/nP6ilggPSh8CghlPvnSCuYzrM+m8iwB1VHTF1q1bj3V/lkoA+/UFsY9gC8GjRPBnCSEYXk8gD6Vc11HSdVK1q6Wl5ent27efSkYPf24iWK6vij0qKJS3dv/xHAHQ9CwnET8SO5wk0fNh/B8lhCguLh7OiOUx8ru4+zPy9TbBHeStJtX7CGIWwXquj4gFdHhKE7wl8bcuw1CYfzGJ+Z5YgAQe4oNXhZX5IALzNyZjfvxhJDKCqxql4oxUH6BEV7W1tU2DF0fEJsJIZPWiRYu6jDy7zwPuFztpahM1Nds7VDdQ2O6y0V8hpCenT5+ecqTErPcASshruD0sBhDfuIaGhqWJv3UKQBVrECwTMxqR+BxKfr2EGzdZ0g3Lzc29xY2gvLz8BK3BfPhyWgyA5l5J4HvnDVXpWwQDTB8goiUw/w0JPybaElIwP22ioTXYA909Ft8aw4hqQcf/0YQHS0wvI71KInpa+gDI79l0yG2I6BN+BY/+bqJjOLuo817/MAy7kuDjphcp/fdLHwGMeikNcmtaePSABdmtdMbx1ibqvGQznn0WDd8/pI+AUvhTS9I3T548WWFJK/BIaV8xkOXX19fH+6C4AKiORWKGbYJDAdZ4X6QW/MREh37/K7t3726S9PAzEwEFoFMAURJiHI41NjbukD4GlhPvI+8672lJ8vg4zJ9JiX5O0sezFjRxAUSYDV7BOHa/gfgVOpi09B9hwsyZMwvhwVxub6A1eJfwBQrcM17WeplnvKWTuVTPEfwpRpNDYlSFCWLGTullFBUVXZifn389CR9Nxkby08iEDL6lqgMuzfRRSvaudKwWtm3bVkew2rn8Qi3X4lQPSedgJniXqACMSjcy9oL0Apw16M9xu4AEl+lvhElp9feOZwUFBVoCy7nd1NraujGVUi1IkBbl2WI3mry8vPExmHtpqkx1QEuW9CBQck0meJB455nSlgq8N4dgzoABA9bwvc2q46Lj3Ss9BNJ+2CLtn4xJgqVaKlAKe0QA9Edj0b38kMTfFsmU88kxjzzMpVY8ybdX9IQOi3j+aZGFT8QgutBEhW48bXuXdOCohVdxu5T0xCQAOALVJmERNeJxGLSKTvA9CQinTp2qGzp0qIlstA5BXQXA83/TobVJQFBzF5h/EP7cFRTzE6FrwQR3cx2gRlwrAcGZO7iOorT513nAYHGHtZFRuqAkahu/XUcE0sMgzosIajUNEhBgsGkkNlgFcIEbBQn1xQi1Oyj5al23ie/nSS/BiXsTNeFOCQB83zSDzo9CdIGBqFF8hq4yMfz9hWQJ4MEahHCL+AxqQLO4x5tv7APEZwHorBPmPyVZBpjxFEK4TPyFaYFmoNaAfDcKBJSuIiolyOAgVpf+0BttvgWGkq5ynXGLf3CtAfA2T2tArrjDuMxmCzL4KMHlkr2YwCzaTzNM0+gxV2vAQDcKnreID1DDJvnQqCnbcTd91DjxB2cMz3OM1tHUEF/mALT7trZGvQ6djYs/cBUAhTtqY55ukqIRKNWuJwhsvB0AFlFjrxHvaHd92N5uFgBS8iwAInpIQgZqrB+1wHXhX9UjgdcANWpS62IJGUjzdLWVkgBhVQPEowDQec/1WbPZI9A0s5aQjvFtsm8YTV9sBNAu3hCmtr8LYOB88QBKeMTw/YjNKChjATi2L8USUsCf4g77naAQaA2or69Xg698CS8KGhoarE0Yu0M9Mbg918JtMwqy2kmZDIwkRkrIwUraCMkQ8NfUB+QYF0D4iHEnZSq4mWWEBRQiL3nwZSKWcQ1AeKEXgJc8mEZB2gIZawAf8VIDQt8EAS+7I32pARkLAAl7nkX3NjzOYUx6tGjGzYsNSPs7En5knAfTPEBHQUFbIYReAIyCvOTBNBFrD7QGeEx8VsBLLbZovtpthqEZT8QYwr0tIUfAecixmYhl3AmxsPGaJLe9DwtaWKJ8VTKEaaKrDkoCbYLKy8vVoqJGQgp10Ldhw4aMC5Cp8Fr1AV6aIAebJaSAQZskQKiqImrBYE+1hGYo0EwEBeXL6dOnt4g3uPax8Rpg0cZ7WkzRXeSOi8ewYeeOHTveFw+w6APOBNoHJEQUuv3FjH5WikeYNMk8bwtUHd2Bqqqq5wms99pmATZXVFTsEo8wGb3Fa4DJgFQ89gEJuE9CAnjyXfEHpj6gLWqhMjWZLlqhsrLyVb61TrIfa7du3fqa+APX5cz4PMDCW6Fv+iLa1W+IhV+d3oI6XaVAflt8At8yrSef1ubFZHzr2wYKdQFPotTU4wPJMujG6ba2tlI/3dTzTdPei+aoaReHyXw9XZDB/SRsoWQZUBwudDZs+wYT73T3kdYAVwHALN+tGhxHeF+V7MGd1dXV28VnmHin7ixVAK6b8ILaTKHOjdQZBonoNddnGreaIJKWJyQAODsy3RDvA1zbPBI4RAKCljq+P41bX6u+JdRByRRqY5B+MEzD0Pg84H0D0UVTp071ZSiaDEzSXicN6qnX9yYgFYhPjyK5Nkjfd0VFRcr8IYZ01OtO+RNiwPDhw9WdWWCJdTwwFpeWluq+YZ2wTZMAQIb/op7giU+VbF61vK7Iy8sbY0H2nkrJKADwMQlQAA7aYYxqTjc5W0bVeXip+AB1NqjegPn+n6SHgBbYaE9Emo7H9KimqME4Qn30SA/CaZd3qrsa9ZjCvQ5bZ4qFW02FapLJ3DZu1TPuZjrZQI6gMqRhtMVi4jFtgg6YqKC5UnoBzqRorV66fXTgwIE3OGeSqbHUKMfwS5sSddgUd9qUicOmgDDZgmZ/jKFgXSzmrm2IfHguWK/CYWi1hAfGnfeNjY0HojU1Ne86nsJTQoeKlMCB0g8rFBcXqwriagPZQS1UHY2/a+ekbmQKCgo+K/2wAi3KzRYrjXGeWwnAgdG1cT868SUTQccybVwAelqEaXGex19wzlfphwvUGYlJ2ahLAAwU4tYicQGw+HycGuPqoFSbIa7l0g9X0PyssLAHquwYpXVOAJDKb8QAXvy64+i7H0lQUlIyBR592YK0U/mXOANbZ6OZZOL2jM8uXfoE9Dhf5ijlJjo90ouJYSddpwCYferKmNHpNBIel5+fH4j6NszIzc39vc2eOGgekwQXBl3aKsdT7RGIjL5EkeQmOpIlWTDj7FWoOwOWMtfpnmITrXO43VinsMfRZftRXV1dc2FhYavNx6BRp9+Lx48f/zzv9YWdMGlDXW4S1EYsjjhRQLcM5r/c5bfuRKrHpon5K8RXiQUcf0JPUAoeYE019PsBbKAefil8PyDvn0/DfL+Ktv8c7W7EJQI9BcLqgLIOkKDVNGE/Z6XrkPRBMMqZhJpZDztams572vHSXE9O5g4/pfSoXnPp1TM1LVdf07rqpEuOdTq6Qun3AbWk3otP/p4ALcAQCt8gFlQGUZgGk/ZJjjJyOuHFkj6ayPt1FMqkx5q4Vh+EcC9CeFgCApnbI4Y16aDhGB0EdjgFQlzgdvKUsf0qKytTSzH1dpjxfuHzFE0w/4umY7+sOhDH0+3vIgEfftyH8Ca8mmdzXoGV5bOaj6CwmyR2h9Oc16BZ/TUd9WTbwyLS3f0SoV+4Hek+zDVK+pGIvTD/nnRPl81o+5GujrFAo5bOakJiPKWgL0OPsqUwrmSM/1vJAJ72fzknG+lhCHrIjh9+NsMEtbpYryaW4gG+eTNUnUhra6t21jMoFWUIxIubl6wDedpHnmoY2WxH8Vbr7IH2jMDcSbIyNIKEasc90bEr0vOK1Ydox+xa/58kWQBlrvzfQE1V8nq2zL+4jlCg9sH0vUGdn/w/AAAA//+xinJIAAAABklEQVQDAD4qbVlRqNtwAAAAAElFTkSuQmCC", "x": "data:image/png;base64,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", "facebook": "data:image/png;base64,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", "youtube": "data:image/png;base64,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"};
+const ICON_URL_BASE = 'https://ibro213.github.io/etherlabs-tool/assets/sig-icons/';
+const LS_KEY = 'emailSignaturePro.v1';
 
-        // ============================================
-        // State Management
-        // ============================================
-        const state = {
-            fullName: document.getElementById('fullName').value,
-            jobTitle: document.getElementById('jobTitle').value,
-            company: document.getElementById('company').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            website: document.getElementById('website').value,
-            linkedin: document.getElementById('linkedin').value,
-            instagram: document.getElementById('instagram').value,
-            photoUrl: document.getElementById('photoUrl').value,
-            template: 'modern',
-            accentColor: '#10b981',
-            fontFamily: "'Segoe UI', Roboto",
-            includePhoto: true,
-            showSocial: true,
-            includeSeparator: true
-        };
+const I18N = {
+  en: { _n:'English', subtitle:'Professional email signature generator', badge:'🚀 Pro Version',
+    language:'Language', personalInfo:'Personal Info', fullName:'Full Name', jobTitle:'Job Title',
+    company:'Company', email:'Email', phone:'Phone', website:'Website', photoUrl:'Profile Photo URL',
+    design:'Template & Design', selectTemplate:'Select Template', accentColor:'Accent Color',
+    customColor:'Custom Color', font:'Font', includePhoto:'Include Profile Photo', showSocial:'Show Social Icons',
+    includeSeparator:'Include Divider', preview:'Signature Preview',
+    previewNote:'This is how your signature will look (white background)',
+    copySignature:'Copy signature', copyHtml:'Copy HTML', download:'Download', copyText:'Copy text',
+    copyHint:'Tip: "Copy signature" is the easy one — paste it straight into Gmail, Outlook or Apple Mail. See INSTRUCTIONS for each app.',
+    msgSig:'✓ Signature copied — paste it into your email app', msgHtml:'✓ HTML code copied',
+    msgText:'✓ Plain text copied', msgDl:'✓ Signature file downloaded', msgErr:'Copy failed — try another button' },
+  it: { _n:'Italiano', subtitle:'Generatore professionale di firme email', badge:'🚀 Versione Pro',
+    language:'Lingua', personalInfo:'Informazioni Personali', fullName:'Nome Completo', jobTitle:'Titolo Professionale',
+    company:'Azienda', email:'Email', phone:'Telefono', website:'Sito Web', photoUrl:'URL Foto Profilo',
+    design:'Template e Design', selectTemplate:'Seleziona Template', accentColor:'Colore Accento',
+    customColor:'Colore Personalizzato', font:'Font', includePhoto:'Includi Foto Profilo', showSocial:'Mostra Icone Social',
+    includeSeparator:'Includi Separatore', preview:'Anteprima Firma',
+    previewNote:'Ecco come apparirà la tua firma (sfondo bianco)',
+    copySignature:'Copia firma', copyHtml:'Copia HTML', download:'Scarica', copyText:'Copia testo',
+    copyHint:'Consiglio: "Copia firma" è quella facile — incollala direttamente in Gmail, Outlook o Apple Mail. Vedi le ISTRUZIONI per ogni app.',
+    msgSig:'✓ Firma copiata — incollala nel tuo client email', msgHtml:'✓ Codice HTML copiato',
+    msgText:'✓ Testo semplice copiato', msgDl:'✓ File firma scaricato', msgErr:'Copia non riuscita — prova un altro pulsante' },
+  fr: { _n:'Français', subtitle:'Générateur professionnel de signatures email', badge:'🚀 Version Pro',
+    language:'Langue', personalInfo:'Informations personnelles', fullName:'Nom complet', jobTitle:'Poste',
+    company:'Entreprise', email:'Email', phone:'Téléphone', website:'Site web', photoUrl:'URL photo de profil',
+    design:'Modèle et design', selectTemplate:'Choisir un modèle', accentColor:'Couleur d’accent',
+    customColor:'Couleur personnalisée', font:'Police', includePhoto:'Inclure la photo', showSocial:'Afficher les icônes',
+    includeSeparator:'Inclure le séparateur', preview:'Aperçu de la signature',
+    previewNote:'Voici votre signature (fond blanc)',
+    copySignature:'Copier la signature', copyHtml:'Copier le HTML', download:'Télécharger', copyText:'Copier le texte',
+    copyHint:'Astuce : « Copier la signature » est la plus simple — collez-la directement dans Gmail, Outlook ou Apple Mail. Voir les INSTRUCTIONS.',
+    msgSig:'✓ Signature copiée — collez-la dans votre messagerie', msgHtml:'✓ Code HTML copié',
+    msgText:'✓ Texte copié', msgDl:'✓ Fichier de signature téléchargé', msgErr:'Échec de la copie — essayez un autre bouton' },
+  de: { _n:'Deutsch', subtitle:'Professioneller E-Mail-Signatur-Generator', badge:'🚀 Pro-Version',
+    language:'Sprache', personalInfo:'Persönliche Daten', fullName:'Vollständiger Name', jobTitle:'Position',
+    company:'Firma', email:'E-Mail', phone:'Telefon', website:'Webseite', photoUrl:'Profilfoto-URL',
+    design:'Vorlage & Design', selectTemplate:'Vorlage wählen', accentColor:'Akzentfarbe',
+    customColor:'Eigene Farbe', font:'Schriftart', includePhoto:'Profilfoto anzeigen', showSocial:'Social-Icons anzeigen',
+    includeSeparator:'Trennlinie anzeigen', preview:'Signaturvorschau',
+    previewNote:'So sieht Ihre Signatur aus (weißer Hintergrund)',
+    copySignature:'Signatur kopieren', copyHtml:'HTML kopieren', download:'Herunterladen', copyText:'Text kopieren',
+    copyHint:'Tipp: „Signatur kopieren“ ist am einfachsten — direkt in Gmail, Outlook oder Apple Mail einfügen. Siehe ANLEITUNG.',
+    msgSig:'✓ Signatur kopiert — in Ihr E-Mail-Programm einfügen', msgHtml:'✓ HTML-Code kopiert',
+    msgText:'✓ Text kopiert', msgDl:'✓ Signaturdatei heruntergeladen', msgErr:'Kopieren fehlgeschlagen — anderen Button versuchen' },
+  es: { _n:'Español', subtitle:'Generador profesional de firmas de correo', badge:'🚀 Versión Pro',
+    language:'Idioma', personalInfo:'Información personal', fullName:'Nombre completo', jobTitle:'Cargo',
+    company:'Empresa', email:'Email', phone:'Teléfono', website:'Sitio web', photoUrl:'URL de la foto',
+    design:'Plantilla y diseño', selectTemplate:'Elegir plantilla', accentColor:'Color de acento',
+    customColor:'Color personalizado', font:'Fuente', includePhoto:'Incluir foto', showSocial:'Mostrar iconos sociales',
+    includeSeparator:'Incluir separador', preview:'Vista previa de la firma',
+    previewNote:'Así se verá tu firma (fondo blanco)',
+    copySignature:'Copiar firma', copyHtml:'Copiar HTML', download:'Descargar', copyText:'Copiar texto',
+    copyHint:'Consejo: "Copiar firma" es la fácil — pégala directamente en Gmail, Outlook o Apple Mail. Ver INSTRUCCIONES.',
+    msgSig:'✓ Firma copiada — pégala en tu correo', msgHtml:'✓ Código HTML copiado',
+    msgText:'✓ Texto copiado', msgDl:'✓ Archivo de firma descargado', msgErr:'Error al copiar — prueba otro botón' }
+};
 
-        // ============================================
-        // Template Definitions
-        // ============================================
-        const templates = {
-            modern: {
-                name: 'Modern Minimal',
-                generate: (data, color, font) => {
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<img src="${data.photoUrl}" alt="${data.fullName}" style="width: 60px; height: 60px; border-radius: 50%; margin-bottom: 12px; display: block;">` : '';
-                    const socialHtml = generateSocialLinks(data, color, 'horizontal');
-                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; border-top: 2px solid ${color}; opacity: 0.3;"></div>` : '';
+const state = { lang: 'en', template: 'modern', accentColor: '#10b981', fontFamily: 'Arial, Helvetica, sans-serif',
+  includePhoto: true, showSocial: true, includeSeparator: true };
 
-                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
-                        ${photoHtml}
-                        <div style="margin-bottom: 16px;">
-                            <div style="font-size: 16px; font-weight: 700; color: #000;">${data.fullName}</div>
-                            <div style="font-size: 14px; color: ${color}; font-weight: 600; margin-top: 4px;">${data.jobTitle}</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 2px;">${data.company}</div>
-                        </div>
-                        ${separator}
-                        <div style="font-size: 13px; color: #555; line-height: 1.6; margin-top: 12px;">
-                            ${data.email ? `<div>📧 <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
-                            ${data.phone ? `<div>📱 ${data.phone}</div>` : ''}
-                            ${data.website ? `<div>🌐 <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Website</a></div>` : ''}
-                        </div>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${socialHtml}</div>` : ''}
-                    </div>`;
-                }
-            },
-            corporate: {
-                name: 'Corporate',
-                generate: (data, color, font) => {
-                    const separator = data.includeSeparator ? `<table width="100%" style="margin: 12px 0;"><tr><td style="border-top: 3px solid ${color}; height: 0;"></td></tr></table>` : '';
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<table style="margin-bottom: 12px;"><tr><td><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 70px; height: 70px; border-radius: 4px; border: 2px solid ${color};"></td></tr></table>` : '';
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function t(k){ const L=I18N[state.lang]||I18N.en; return L[k]!=null?L[k]:(I18N.en[k]||k); }
+function hexToRgb(h){ h=String(h||'#000').replace('#',''); if(h.length===3)h=h.split('').map(c=>c+c).join(''); const n=parseInt(h,16)||0; return [(n>>16)&255,(n>>8)&255,n&255]; }
+function textOn(hex){ const [r,g,b]=hexToRgb(hex); return (0.299*r+0.587*g+0.114*b)/255 > 0.6 ? '#111111' : '#ffffff'; }
+function domainText(u){ return String(u||'').replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/+$/,''); }
+function telHref(p){ return 'tel:'+String(p||'').replace(/[^\d+]/g,''); }
+function iconSrc(name, mode){ return mode==='export' ? (ICON_URL_BASE+name+'.png') : (ICON_B64[name]||''); }
 
-                    return `<div style="font-family: ${font}; color: #000; max-width: 600px;">
-                        ${photoHtml}
-                        <table width="100%" style="margin-bottom: 16px;">
-                            <tr><td style="font-size: 18px; font-weight: 700; color: #000; padding-bottom: 4px;">${data.fullName}</td></tr>
-                            <tr><td style="font-size: 14px; font-weight: 600; color: ${color};">${data.jobTitle}</td></tr>
-                            <tr><td style="font-size: 13px; color: #666;">${data.company}</td></tr>
-                        </table>
-                        ${separator}
-                        <table width="100%" style="margin-top: 12px; font-size: 13px; color: #555;">
-                            ${data.email ? `<tr><td style="padding: 2px 0;"><strong>Email:</strong> <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></td></tr>` : ''}
-                            ${data.phone ? `<tr><td style="padding: 2px 0;"><strong>Phone:</strong> ${data.phone}</td></tr>` : ''}
-                            ${data.website ? `<tr><td style="padding: 2px 0;"><strong>Web:</strong> <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Visit us</a></td></tr>` : ''}
-                        </table>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
-                    </div>`;
-                }
-            },
-            creative: {
-                name: 'Creative',
-                generate: (data, color, font) => {
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 12px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid ${color}; display: block;"></div>` : '';
-                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; height: 4px; background: linear-gradient(to right, ${color}, transparent);"></div>` : '';
+function collectData(){
+  const g = id => $(id).value.trim();
+  return { fullName:g('fullName')||'Your Name', jobTitle:g('jobTitle'), company:g('company'),
+    email:g('email'), phone:g('phone'), website:g('website'),
+    linkedin:g('linkedin'), instagram:g('instagram'), x:g('x'), facebook:g('facebook'), youtube:g('youtube'),
+    photoUrl:g('photoUrl'), template:state.template, accentColor:state.accentColor, font:state.fontFamily,
+    includePhoto:state.includePhoto, showSocial:state.showSocial, includeSeparator:state.includeSeparator };
+}
 
-                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
-                        <div style="background: linear-gradient(135deg, ${color}15, transparent); padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                            ${photoHtml}
-                            <div style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px;">${data.fullName}</div>
-                            <div style="font-size: 14px; color: ${color}; font-weight: 600; margin-bottom: 4px;">${data.jobTitle}</div>
-                            <div style="font-size: 13px; color: #666;">${data.company}</div>
-                        </div>
-                        ${separator}
-                        <div style="font-size: 13px; color: #555; line-height: 1.8; margin-top: 12px;">
-                            ${data.email ? `<div>💌 <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none; font-weight: 500;">${data.email}</a></div>` : ''}
-                            ${data.phone ? `<div>📞 <span style="font-weight: 500;">${data.phone}</span></div>` : ''}
-                            ${data.website ? `<div>🔗 <a href="${data.website}" style="color: ${color}; text-decoration: none; font-weight: 500;" target="_blank">Visita il nostro sito</a></div>` : ''}
-                        </div>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 10px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
-                    </div>`;
-                }
-            },
-            bold: {
-                name: 'Bold Impact',
-                generate: (data, color, font) => {
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 16px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 90px; height: 90px; border-radius: 8px; border: 3px solid ${color};"></div>` : '';
-                    const separator = data.includeSeparator ? `<div style="margin: 16px 0; padding-left: 8px; border-left: 4px solid ${color};"></div>` : '';
+/* ---------- email-safe building blocks ---------- */
+function photo(d, size, round){ if(!(d.includePhoto && d.photoUrl)) return '';
+  return `<img src="${esc(d.photoUrl)}" width="${size}" height="${size}" alt="${esc(d.fullName)}" style="display:block;border:0;width:${size}px;height:${size}px;${round?'border-radius:50%;':''}">`; }
+function nameBlock(d, color, center){ const c = center?'text-align:center;':'';
+  return `<div style="font-family:${d.font};${c}">`
+    + `<div style="font-size:17px;font-weight:700;color:#111111;line-height:1.2;">${esc(d.fullName)}</div>`
+    + (d.jobTitle?`<div style="font-size:14px;font-weight:600;color:${color};margin-top:3px;">${esc(d.jobTitle)}</div>`:'')
+    + (d.company?`<div style="font-size:13px;color:#666666;margin-top:2px;">${esc(d.company)}</div>`:'')
+    + `</div>`; }
+function divider(d, color){ return d.includeSeparator
+  ? `<table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%" style="margin:10px 0;"><tbody><tr><td style="height:2px;background-color:${color};font-size:0;line-height:0;">&#160;</td></tr></tbody></table>` : ''; }
+function contactBlock(d, color, mode, center){
+  const rows=[]; const al = center?'text-align:center;':'';
+  const mk=(ic,inner)=>`<tr><td style="padding:2px 0;font-size:13px;color:#555555;font-family:${d.font};${al}"><img src="${iconSrc(ic,mode)}" width="15" height="15" alt="" style="border:0;vertical-align:middle;margin-right:7px;">${inner}</td></tr>`;
+  if(d.email) rows.push(mk('email',`<a href="mailto:${esc(d.email)}" style="color:${color};text-decoration:none;">${esc(d.email)}</a>`));
+  if(d.phone) rows.push(mk('phone',`<a href="${esc(telHref(d.phone))}" style="color:#555555;text-decoration:none;">${esc(d.phone)}</a>`));
+  if(d.website) rows.push(mk('website',`<a href="${esc(d.website)}" style="color:${color};text-decoration:none;">${esc(domainText(d.website))}</a>`));
+  if(!rows.length) return '';
+  return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" ${center?'align="center"':''} style="margin-top:8px;"><tbody>${rows.join('')}</tbody></table>`;
+}
+function socialBlock(d, mode, center){
+  if(!d.showSocial) return '';
+  const items=[['linkedin',d.linkedin],['instagram',d.instagram],['x',d.x],['facebook',d.facebook],['youtube',d.youtube]].filter(a=>a[1]);
+  if(!items.length) return '';
+  const cells=items.map(([k,url])=>`<td style="padding-right:8px;"><a href="${esc(url)}" target="_blank" style="text-decoration:none;"><img src="${iconSrc(k,mode)}" width="22" height="22" alt="${k}" style="border:0;display:block;"></a></td>`).join('');
+  return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" ${center?'align="center"':''} style="margin-top:10px;"><tbody><tr>${cells}</tr></tbody></table>`;
+}
+function root(inner){ return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;"><tbody><tr><td style="padding:0;">${inner}</td></tr></tbody></table>`; }
 
-                    return `<div style="font-family: ${font}; color: #000; max-width: 600px;">
-                        <div style="background: ${color}; color: white; padding: 20px; border-radius: 4px; margin-bottom: 16px;">
-                            <div style="font-size: 20px; font-weight: 900;">${data.fullName.toUpperCase()}</div>
-                            <div style="font-size: 14px; margin-top: 6px; opacity: 0.9;">${data.jobTitle}</div>
-                        </div>
-                        ${photoHtml}
-                        <div style="font-size: 13px; color: #333; margin-bottom: 12px;">
-                            <div style="font-weight: 600; color: ${color}; margin-bottom: 4px;">${data.company}</div>
-                        </div>
-                        ${separator}
-                        <div style="font-size: 13px; color: #555; margin-top: 12px;">
-                            ${data.email ? `<div style="margin-bottom: 4px;"><a href="mailto:${data.email}" style="color: ${color}; text-decoration: none; font-weight: 600;">${data.email}</a></div>` : ''}
-                            ${data.phone ? `<div style="margin-bottom: 4px; font-weight: 500;">${data.phone}</div>` : ''}
-                            ${data.website ? `<div><a href="${data.website}" style="color: ${color}; text-decoration: none; font-weight: 600;" target="_blank">www.company.com</a></div>` : ''}
-                        </div>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 10px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
-                    </div>`;
-                }
-            },
-            elegant: {
-                name: 'Elegant',
-                generate: (data, color, font) => {
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<img src="${data.photoUrl}" alt="${data.fullName}" style="width: 75px; height: 75px; border-radius: 50%; margin-bottom: 12px; display: block; border: 3px solid ${color};">` : '';
-                    const separator = data.includeSeparator ? `<div style="margin: 16px 0; height: 1px; background: ${color}; opacity: 0.4;"></div>` : '';
+/* ---------- templates (all email-safe: tables + inline styles) ---------- */
+const TEMPLATES = {
+  modern: (d,color,mode)=> root(
+    (photo(d,64,true)?`<div style="margin-bottom:10px;">${photo(d,64,true)}</div>`:'')
+    + nameBlock(d,color) + divider(d,color) + contactBlock(d,color,mode) + socialBlock(d,mode)),
+  corporate: (d,color,mode)=> root(
+    `<table cellpadding="0" cellspacing="0" border="0" role="presentation"><tbody><tr>`
+    + (photo(d,72,false)?`<td valign="top" style="padding-right:16px;">${photo(d,72,false)}</td>`:'')
+    + `<td valign="top">${nameBlock(d,color)}</td></tr></tbody></table>`
+    + divider(d,color) + contactBlock(d,color,mode) + socialBlock(d,mode)),
+  creative: (d,color,mode)=> root(
+    `<table cellpadding="0" cellspacing="0" border="0" role="presentation"><tbody><tr><td style="border-left:4px solid ${color};padding-left:14px;">`
+    + (photo(d,70,true)?`<div style="margin-bottom:10px;">${photo(d,70,true)}</div>`:'')
+    + nameBlock(d,color) + contactBlock(d,color,mode) + socialBlock(d,mode)
+    + `</td></tr></tbody></table>`),
+  bold: (d,color,mode)=> { const tc=textOn(color); return root(
+    `<table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%"><tbody><tr><td style="background-color:${color};padding:14px 18px;">`
+    + `<div style="font-family:${d.font};font-size:18px;font-weight:800;color:${tc};">${esc(String(d.fullName).toUpperCase())}</div>`
+    + (d.jobTitle?`<div style="font-family:${d.font};font-size:13px;color:${tc};margin-top:4px;">${esc(d.jobTitle)}</div>`:'')
+    + `</td></tr></tbody></table>`
+    + (d.company?`<div style="font-family:${d.font};font-size:13px;font-weight:600;color:${color};margin-top:10px;">${esc(d.company)}</div>`:'')
+    + (photo(d,80,false)?`<div style="margin-top:10px;">${photo(d,80,false)}</div>`:'')
+    + contactBlock(d,color,mode) + socialBlock(d,mode)); },
+  elegant: (d,color,mode)=> root(
+    `<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tbody><tr><td align="center" style="text-align:center;">`
+    + (photo(d,76,true)?`<div style="margin-bottom:10px;">${photo(d,76,true)}</div>`:'')
+    + nameBlock(d,color,true) + divider(d,color) + contactBlock(d,color,mode,true) + socialBlock(d,mode,true)
+    + `</td></tr></tbody></table>`),
+  tech: (d,color,mode)=> { const dm={...d, font:"'Courier New', monospace"}; return root(
+    (photo(dm,66,false)?`<div style="margin-bottom:10px;">${photo(dm,66,false)}</div>`:'')
+    + `<div style="font-family:${dm.font};font-size:15px;font-weight:700;color:#111111;">&gt; ${esc(dm.fullName)}</div>`
+    + (dm.jobTitle?`<div style="font-family:${dm.font};font-size:13px;color:${color};margin-top:2px;">$ ${esc(dm.jobTitle)}</div>`:'')
+    + (dm.company?`<div style="font-family:${dm.font};font-size:12px;color:#888888;margin-top:2px;">@ ${esc(dm.company)}</div>`:'')
+    + divider(dm,color) + contactBlock(dm,color,mode) + socialBlock(dm,mode)); }
+};
 
-                    return `<div style="font-family: ${font}; color: #2c3e50; max-width: 600px; text-align: center;">
-                        ${photoHtml}
-                        <div style="font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px;">${data.fullName}</div>
-                        <div style="font-size: 13px; color: ${color}; font-weight: 600; letter-spacing: 1px; margin-bottom: 2px;">${data.jobTitle}</div>
-                        <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 12px;">${data.company}</div>
-                        ${separator}
-                        <div style="font-size: 12px; color: #555; line-height: 1.8;">
-                            ${data.email ? `<div><a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
-                            ${data.phone ? `<div>${data.phone}</div>` : ''}
-                            ${data.website ? `<div><a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">Visit Website</a></div>` : ''}
-                        </div>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px; justify-content: center;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
-                    </div>`;
-                }
-            },
-            tech: {
-                name: 'Tech',
-                generate: (data, color, font) => {
-                    const photoHtml = data.includePhoto && data.photoUrl ? `<div style="margin-bottom: 12px;"><img src="${data.photoUrl}" alt="${data.fullName}" style="width: 70px; height: 70px; border: 2px solid ${color}; display: block;"></div>` : '';
-                    const separator = data.includeSeparator ? `<div style="margin: 12px 0; background: linear-gradient(to right, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%); background-size: 8px 2px; height: 2px;"></div>` : '';
+function buildSignature(mode){ const d=collectData(); return (TEMPLATES[d.template]||TEMPLATES.modern)(d,d.accentColor,mode); }
+function fullDoc(frag){ return `<!DOCTYPE html>\n<html>\n<head><meta charset="UTF-8"></head>\n<body>\n${frag}\n</body>\n</html>`; }
+function plainText(){ const d=collectData(); const L=[d.fullName]; if(d.jobTitle)L.push(d.jobTitle); if(d.company)L.push(d.company); L.push('');
+  if(d.email)L.push('Email: '+d.email); if(d.phone)L.push('Tel: '+d.phone); if(d.website)L.push('Web: '+domainText(d.website));
+  if(d.linkedin)L.push('LinkedIn: '+d.linkedin); if(d.instagram)L.push('Instagram: '+d.instagram);
+  if(d.x)L.push('X: '+d.x); if(d.facebook)L.push('Facebook: '+d.facebook); if(d.youtube)L.push('YouTube: '+d.youtube);
+  return L.join('\n'); }
 
-                    return `<div style="font-family: ${font}; color: #333; max-width: 600px;">
-                        ${photoHtml}
-                        <div style="margin-bottom: 12px;">
-                            <div style="font-size: 16px; font-weight: 700; color: #000; font-family: 'Courier New', monospace;">&gt; ${data.fullName}</div>
-                            <div style="font-size: 13px; color: ${color}; font-family: 'Courier New', monospace; margin-top: 2px;">$ ${data.jobTitle}</div>
-                            <div style="font-size: 12px; color: #888; font-family: 'Courier New', monospace;">@ ${data.company}</div>
-                        </div>
-                        ${separator}
-                        <div style="font-size: 12px; color: #555; font-family: 'Courier New', monospace; line-height: 1.6;">
-                            ${data.email ? `<div>→ <a href="mailto:${data.email}" style="color: ${color}; text-decoration: none;">${data.email}</a></div>` : ''}
-                            ${data.phone ? `<div>→ ${data.phone}</div>` : ''}
-                            ${data.website ? `<div>→ <a href="${data.website}" style="color: ${color}; text-decoration: none;" target="_blank">${data.website}</a></div>` : ''}
-                        </div>
-                        ${data.showSocial ? `<div style="margin-top: 12px; display: flex; gap: 8px;">${generateSocialLinks(data, color, 'horizontal')}</div>` : ''}
-                    </div>`;
-                }
-            }
-        };
+/* ---------- i18n + preview ---------- */
+function applyI18n(){ const L=I18N[state.lang]||I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(L[k]!=null||I18N.en[k]!=null) el.textContent = t(k); });
+  document.documentElement.lang = state.lang; }
+function updatePreview(){ $('signaturePreview').innerHTML = buildSignature('preview'); saveState(); }
 
-        // ============================================
-        // Helper Functions
-        // ============================================
-        function generateSocialLinks(data, color, layout) {
-            let html = '';
+/* ---------- copy / export ---------- */
+function notify(msg, err){ const n=document.createElement('div'); n.className='notification'+(err?' err':''); n.textContent=msg;
+  $('notificationContainer').appendChild(n); setTimeout(()=>n.remove(), 2600); }
 
-            if (data.email) {
-                html += `<a href="mailto:${data.email}" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Email">${icons.email}</a>`;
-            }
-            if (data.phone) {
-                html += `<a href="tel:${data.phone}" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Phone">${icons.phone}</a>`;
-            }
-            if (data.linkedin) {
-                html += `<a href="${data.linkedin}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="LinkedIn">${icons.linkedin}</a>`;
-            }
-            if (data.instagram) {
-                html += `<a href="${data.instagram}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Instagram">${icons.instagram}</a>`;
-            }
-            if (data.website) {
-                html += `<a href="${data.website}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: ${color}20; border-radius: 4px; color: ${color}; transition: all 0.3s;" title="Website">${icons.website}</a>`;
-            }
+async function copySignature(){
+  const html = buildSignature('export'); const text = plainText();
+  try { if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+      await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html],{type:'text/html'}), 'text/plain': new Blob([text],{type:'text/plain'}) })]);
+      notify(t('msgSig')); return; } } catch(e){}
+  // fallback: rich copy via selection
+  const div=document.createElement('div'); div.contentEditable='true'; div.innerHTML=html;
+  div.style.position='fixed'; div.style.left='-9999px'; div.style.top='0'; document.body.appendChild(div);
+  const range=document.createRange(); range.selectNodeContents(div); const sel=window.getSelection();
+  sel.removeAllRanges(); sel.addRange(range);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  sel.removeAllRanges(); document.body.removeChild(div);
+  notify(ok?t('msgSig'):t('msgErr'), !ok);
+}
+function copyPlain(str, okMsg){
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(str).then(()=>notify(okMsg)).catch(()=>fb()); }
+  else fb();
+  function fb(){ const ta=document.createElement('textarea'); ta.value=str; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();
+    let ok=false; try{ok=document.execCommand('copy');}catch(e){} document.body.removeChild(ta); notify(ok?okMsg:t('msgErr'), !ok); }
+}
+function downloadHtml(){ const blob=new Blob([fullDoc(buildSignature('export'))],{type:'text/html'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='email-signature.html'; a.click();
+  URL.revokeObjectURL(url); notify(t('msgDl')); }
 
-            return html;
-        }
+/* ---------- persistence ---------- */
+function buildData(){ const g=id=>$(id).value; const d={ lang:state.lang, template:state.template, accentColor:state.accentColor, fontFamily:state.fontFamily,
+  includePhoto:state.includePhoto, showSocial:state.showSocial, includeSeparator:state.includeSeparator };
+  ['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl'].forEach(k=>d[k]=g(k)); return d; }
+function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(buildData())); }catch(e){} }
+function loadState(){ try{ const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null; }catch(e){ return null; } }
+function applyData(d){ if(!d) return;
+  ['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl'].forEach(k=>{ if($(k)&&d[k]!=null)$(k).value=d[k]; });
+  if(I18N[d.lang]) state.lang=d.lang;
+  if(TEMPLATES[d.template]) state.template=d.template;
+  if(d.accentColor) state.accentColor=d.accentColor;
+  if(d.fontFamily) state.fontFamily=d.fontFamily;
+  ['includePhoto','showSocial','includeSeparator'].forEach(k=>{ if(typeof d[k]==='boolean') state[k]=d[k]; });
+  // reflect in UI
+  $('language').value=state.lang;
+  $('fontFamily').value=state.fontFamily;
+  $('customColor').value=state.accentColor;
+  document.querySelectorAll('.template-btn').forEach(b=>b.classList.toggle('active', b.dataset.template===state.template));
+  document.querySelectorAll('.color-btn').forEach(b=>b.classList.toggle('active', b.dataset.color===state.accentColor));
+  $('togglePhoto').classList.toggle('active', state.includePhoto);
+  $('toggleSocial').classList.toggle('active', state.showSocial);
+  $('toggleSeparator').classList.toggle('active', state.includeSeparator);
+}
 
-        function updatePreview() {
-            const template = templates[state.template];
-            const html = template.generate(state, state.accentColor, state.fontFamily);
-            document.getElementById('signaturePreview').innerHTML = html;
-        }
+/* ---------- init selects + events ---------- */
+function detectLang(){ const langs=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);
+  for(const raw of langs){ const l=String(raw||'').toLowerCase(); for(const k of ['it','fr','de','es']) if(l.startsWith(k)) return k; if(l.startsWith('en')) return 'en'; } return 'en'; }
 
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            document.getElementById('notificationContainer').appendChild(notification);
-            setTimeout(() => notification.remove(), 2500);
-        }
+$('language').innerHTML = Object.keys(I18N).map(k=>`<option value="${k}">${I18N[k]._n}</option>`).join('');
 
-        function copyToClipboard(text, type) {
-            navigator.clipboard.writeText(text).then(() => {
-                showNotification(`✓ ${type} copiato negli appunti!`);
-            }).catch(() => {
-                showNotification('Errore nella copia');
-            });
-        }
+['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl']
+  .forEach(id=>$(id).addEventListener('input', updatePreview));
+$('language').addEventListener('change', e=>{ state.lang=e.target.value; applyI18n(); updatePreview(); });
+$('fontFamily').addEventListener('change', e=>{ state.fontFamily=e.target.value; updatePreview(); });
+document.querySelectorAll('.template-btn').forEach(b=>b.addEventListener('click', function(){ document.querySelectorAll('.template-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active'); state.template=this.dataset.template; updatePreview(); }));
+document.querySelectorAll('.color-btn').forEach(b=>b.addEventListener('click', function(){ document.querySelectorAll('.color-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active'); state.accentColor=this.dataset.color; $('customColor').value=this.dataset.color; updatePreview(); }));
+$('customColor').addEventListener('input', e=>{ state.accentColor=e.target.value; document.querySelectorAll('.color-btn').forEach(x=>x.classList.remove('active')); updatePreview(); });
+['togglePhoto','toggleSocial','toggleSeparator'].forEach(id=>$(id).addEventListener('click', function(){ this.classList.toggle('active'); const on=this.classList.contains('active');
+  if(id==='togglePhoto')state.includePhoto=on; else if(id==='toggleSocial')state.showSocial=on; else state.includeSeparator=on; updatePreview(); }));
+$('copySigBtn').addEventListener('click', copySignature);
+$('copyHtmlBtn').addEventListener('click', ()=>copyPlain(buildSignature('export'), t('msgHtml')));
+$('copyTextBtn').addEventListener('click', ()=>copyPlain(plainText(), t('msgText')));
+$('downloadBtn').addEventListener('click', downloadHtml);
 
-        function generatePlainText() {
-            const lines = [
-                state.fullName,
-                state.jobTitle,
-                state.company,
-                ''
-            ];
-            if (state.email) lines.push(`Email: ${state.email}`);
-            if (state.phone) lines.push(`Phone: ${state.phone}`);
-            if (state.website) lines.push(`Web: ${state.website}`);
-            if (state.linkedin) lines.push(`LinkedIn: ${state.linkedin}`);
-            if (state.instagram) lines.push(`Instagram: ${state.instagram}`);
-            return lines.join('\n');
-        }
+/* ---------- boot ---------- */
+(function init(){ const saved=loadState();
+  if(saved){ applyData(saved); } else { state.lang=detectLang(); $('language').value=state.lang; }
+  applyI18n(); updatePreview();
+})();
+</script>
 
-        function generateHTMLSignature() {
-            const template = templates[state.template];
-            return `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-${template.generate(state, state.accentColor, state.fontFamily)}
-
-</div><!-- /appContent -->
+</div>
 <script>
 (function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
@@ -966,125 +477,5 @@ if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=documen
 if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
 })();
 </script>
-</body>
-</html>`;
-        }
-
-        // ============================================
-        // Event Listeners
-        // ============================================
-        // Input fields
-        document.getElementById('fullName').addEventListener('input', (e) => {
-            state.fullName = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('jobTitle').addEventListener('input', (e) => {
-            state.jobTitle = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('company').addEventListener('input', (e) => {
-            state.company = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('email').addEventListener('input', (e) => {
-            state.email = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('phone').addEventListener('input', (e) => {
-            state.phone = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('website').addEventListener('input', (e) => {
-            state.website = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('linkedin').addEventListener('input', (e) => {
-            state.linkedin = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('instagram').addEventListener('input', (e) => {
-            state.instagram = e.target.value;
-            updatePreview();
-        });
-
-        document.getElementById('photoUrl').addEventListener('input', (e) => {
-            state.photoUrl = e.target.value;
-            updatePreview();
-        });
-
-        // Template selector
-        document.querySelectorAll('.template-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                state.template = e.target.dataset.template;
-                updatePreview();
-            });
-        });
-
-        // Color selector
-        document.querySelectorAll('.color-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                state.accentColor = e.target.dataset.color;
-                document.getElementById('customColor').value = state.accentColor;
-                updatePreview();
-            });
-        });
-
-        // Custom color
-        document.getElementById('customColor').addEventListener('input', (e) => {
-            state.accentColor = e.target.value;
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-            updatePreview();
-        });
-
-        // Font selector
-        document.getElementById('fontFamily').addEventListener('change', (e) => {
-            state.fontFamily = e.target.value;
-            updatePreview();
-        });
-
-        // Toggles
-        document.getElementById('togglePhoto').addEventListener('click', function() {
-            this.classList.toggle('active');
-            state.includePhoto = this.classList.contains('active');
-            updatePreview();
-        });
-
-        document.getElementById('toggleSocial').addEventListener('click', function() {
-            this.classList.toggle('active');
-            state.showSocial = this.classList.contains('active');
-            updatePreview();
-        });
-
-        document.getElementById('toggleSeparator').addEventListener('click', function() {
-            this.classList.toggle('active');
-            state.includeSeparator = this.classList.contains('active');
-            updatePreview();
-        });
-
-        // Action buttons
-        document.getElementById('copyHtmlBtn').addEventListener('click', () => {
-            const html = generateHTMLSignature();
-            copyToClipboard(html, 'HTML');
-        });
-
-        document.getElementById('copyTextBtn').addEventListener('click', () => {
-            const text = generatePlainText();
-            copyToClipboard(text, 'Testo');
-        });
-
-        // Initial preview
-        updatePreview();
-    </script>
 </body>
 </html>
