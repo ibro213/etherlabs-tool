@@ -1018,7 +1018,7 @@ button.secondary:hover {
             ctx.fill();
 
             // Settore Interessi
-            ctx.fillStyle = '#059669';
+            ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, radius, angoloBorgo, angoloBorgo + angoloInteressi);
@@ -1100,7 +1100,7 @@ button.secondary:hover {
                 ctx.fillRect(x, yCapitale, barWidth, heightCapitale);
 
                 // Barra Interessi
-                ctx.fillStyle = '#059669';
+                ctx.fillStyle = '#f59e0b';
                 ctx.fillRect(xInteressi, yInteressi, barWidth, heightInteressi);
             });
 
@@ -1144,7 +1144,7 @@ button.secondary:hover {
             ctx.font = '12px Segoe UI';
             ctx.fillText('Quota Capitale', margin.left + chartWidth - 230, margin.top + 22);
 
-            ctx.fillStyle = '#059669';
+            ctx.fillStyle = '#f59e0b';
             ctx.fillRect(margin.left + chartWidth - 120, margin.top + 10, 15, 15);
             ctx.fillStyle = '#e8f0ec';
             ctx.fillText('Quota Interessi', margin.left + chartWidth - 100, margin.top + 22);

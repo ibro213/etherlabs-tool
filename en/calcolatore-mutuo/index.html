@@ -1018,7 +1018,7 @@ button.secondary:hover {
             ctx.fill();
 
             // Interest sector
-            ctx.fillStyle = '#059669';
+            ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, radius, principalAngle, principalAngle + interestAngle);
@@ -1100,7 +1100,7 @@ button.secondary:hover {
                 ctx.fillRect(x, yPrincipal, barWidth, heightPrincipal);
 
                 // Interest bar
-                ctx.fillStyle = '#059669';
+                ctx.fillStyle = '#f59e0b';
                 ctx.fillRect(xInterest, yInterest, barWidth, heightInterest);
             });
 
@@ -1144,7 +1144,7 @@ button.secondary:hover {
             ctx.font = '12px Segoe UI';
             ctx.fillText('Principal', margin.left + chartWidth - 230, margin.top + 22);
 
-            ctx.fillStyle = '#059669';
+            ctx.fillStyle = '#f59e0b';
             ctx.fillRect(margin.left + chartWidth - 120, margin.top + 10, 15, 15);
             ctx.fillStyle = '#e8f0ec';
             ctx.fillText('Interest', margin.left + chartWidth - 100, margin.top + 22);
