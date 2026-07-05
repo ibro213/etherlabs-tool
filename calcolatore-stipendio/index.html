@@ -757,7 +757,7 @@ button:hover {
                     <h3>Stipendio Lordo Annuo</h3>
                     <div class="form-group">
                         <label for="ral">RAL (€)</label>
-                        <input type="range" id="ralSlider" min="15000" max="150000" step="1000" value="30000" oninput="updateRAL()">
+                        <input type="range" id="ralSlider" min="0" max="150000" step="1000" value="30000" oninput="updateRAL()">
                         <input type="number" id="ral" min="0" step="100" value="30000" oninput="updateRAL()">
                         <div class="slider-value" id="ralDisplay">€ 30.000</div>
                     </div>
@@ -784,22 +784,6 @@ button:hover {
                         <select id="mensilita" onchange="calculate()">
                             <option value="13">13 Mensilità</option>
                             <option value="14">14 Mensilità</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- CCNL Sector -->
-                <div class="card">
-                    <h3>Settore CCNL</h3>
-                    <div class="form-group">
-                        <label for="ccnl">Categoria Contrattuale</label>
-                        <select id="ccnl" onchange="calculate()">
-                            <option value="commercio">Commercio</option>
-                            <option value="metalmeccanico">Metalmeccanico</option>
-                            <option value="pubblico">Pubblico Impiego</option>
-                            <option value="turismo">Turismo</option>
-                            <option value="edilizia">Edilizia</option>
-                            <option value="altro">Altro</option>
                         </select>
                     </div>
                 </div>
@@ -843,8 +827,9 @@ button:hover {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="figli">Numero di Figli a carico</label>
+                        <label for="figli">Figli a carico ≥ 21 anni</label>
                         <input type="number" id="figli" min="0" max="10" value="0" onchange="calculate()">
+                        <small style="color: var(--t3); display: block; margin-top: 0.35rem;">I figli sotto i 21 anni danno diritto all'Assegno Unico, non alla detrazione IRPEF.</small>
                     </div>
                 </div>
             </div>
@@ -880,6 +865,10 @@ button:hover {
                     <div class="result-box">
                         <div class="result-label">Addizionali</div>
                         <div class="result-value" id="addizionali">€ 492</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Bonus / Tratt. Integrativo</div>
+                        <div class="result-value" id="bonus">€ 0</div>
                     </div>
                     <div class="result-box">
                         <div class="result-label">Netto Annuo</div>
@@ -1009,12 +998,13 @@ button:hover {
                 <h3>Come Funziona il Calcolo</h3>
                 <div style="color: var(--t2); line-height: 1.8;">
                     <p><strong style="color: var(--goldL);">Lordo Annuo (RAL):</strong> Lo stipendio lordo dichiarato nel contratto di lavoro.</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Contributi INPS:</strong> Circa il 9,19% del lordo, versato dal dipendente per la previdenza sociale.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Contributi INPS:</strong> 9,19% del lordo per il regime ordinario (5,84% per l'apprendistato), versati dal dipendente per la previdenza sociale.</p>
                     <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Imponibile IRPEF:</strong> Lordo meno contributi INPS.</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">IRPEF Lorda:</strong> Imposta progressiva calcolata con aliquote italiane (23%, 25%, 35%, 43%).</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Detrazioni:</strong> Riduzioni di imposta per coniuge e figli a carico, circa € 92 mensili per il lavoro dipendente.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">IRPEF Lorda:</strong> Imposta progressiva calcolata con le aliquote 2025: 23%, 35% e 43%.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Detrazioni:</strong> Detrazione per lavoro dipendente (art. 13 TUIR, fino a 1.955€), detrazioni per familiari a carico (art. 12) e ulteriore detrazione "taglio del cuneo" 2025 (1.000€ per redditi 20.000-32.000€, decrescente fino a 40.000€).</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Bonus / Tratt. Integrativo:</strong> Somma non tassata per i redditi bassi: trattamento integrativo 1.200€ (redditi ≤ 15.000€) e bonus 2025 pari al 7,1%-5,3%-4,8% del reddito (redditi ≤ 20.000€).</p>
                     <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Addizionali:</strong> Tasse regionali e comunali aggiunte all'IRPEF, variano per regione (1,23%-3,33% regionale, ~0,8% comunale).</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Netto Annuo:</strong> Lordo - INPS - IRPEF Netta - Addizionali.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--goldL);">Netto Annuo:</strong> Lordo − INPS − IRPEF Netta − Addizionali + Bonus/Trattamento integrativo.</p>
                 </div>
             </div>
 
@@ -1027,14 +1017,10 @@ button:hover {
                     </div>
                     <div style="margin-bottom: 1.5rem;">
                         <div style="color: var(--goldL); font-weight: 700;">Da € 28.001 a € 50.000</div>
-                        <div>Aliquota: 25%</div>
-                    </div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <div style="color: var(--goldL); font-weight: 700;">Da € 50.001 a € 100.000</div>
                         <div>Aliquota: 35%</div>
                     </div>
                     <div>
-                        <div style="color: var(--goldL); font-weight: 700;">Oltre € 100.000</div>
+                        <div style="color: var(--goldL); font-weight: 700;">Oltre € 50.000</div>
                         <div>Aliquota: 43%</div>
                     </div>
                 </div>
@@ -1102,19 +1088,91 @@ button:hover {
         // Municipal tax average (~0.8%)
         const municipalRate = 0.80;
 
-        // INPS contribution rate for employees
-        const inpsRate = 0.0919;
+        // Aliquote contributive INPS a carico dipendente
+        const inpsRateStd = 0.0919;          // regime ordinario
+        const inpsRateApprendistato = 0.0584; // apprendistato
 
-        // IRPEF tax brackets for 2025
+        // Scaglioni IRPEF 2025 (D.Lgs 216/2023, L.207/2024): 23% <=28k, 35% 28-50k, 43% >50k
         const taxBrackets = [
             { max: 28000, rate: 0.23 },
-            { max: 50000, rate: 0.25 },
-            { max: 100000, rate: 0.35 },
+            { max: 50000, rate: 0.35 },
             { max: Infinity, rate: 0.43 }
         ];
 
-        // Monthly tax deduction for dependent
-        const monthlyDeductionPerDependent = 92;
+        // Detrazione per lavoro dipendente — art. 13 TUIR, valori 2025
+        function detrazioneLavoroDip(rc) {
+            let d;
+            if (rc <= 15000) d = 1955;
+            else if (rc <= 28000) d = 1910 + 1190 * (28000 - rc) / 13000;
+            else if (rc <= 50000) d = 1910 * (50000 - rc) / 22000;
+            else d = 0;
+            // comma 1-bis: ulteriore detrazione di 65€ per redditi 25.000-35.000
+            if (rc > 25000 && rc <= 35000) d += 65;
+            return Math.max(d, 0);
+        }
+
+        // Detrazioni per familiari a carico — art. 12 TUIR (figli solo >=21 dopo Assegno Unico)
+        function detrazioniFamiliari(rc, coniuge, figli) {
+            let dc = 0;
+            if (coniuge) {
+                if (rc <= 15000) dc = 800 - 110 * rc / 15000;
+                else if (rc <= 40000) {
+                    dc = 690;
+                    if (rc > 29000 && rc <= 29200) dc += 10;
+                    else if (rc > 29200 && rc <= 34700) dc += 20;
+                    else if (rc > 34700 && rc <= 35000) dc += 30;
+                    else if (rc > 35000 && rc <= 35100) dc += 20;
+                    else if (rc > 35100 && rc <= 35200) dc += 10;
+                } else if (rc <= 80000) dc = 690 * (80000 - rc) / 40000;
+            }
+            let df = 0;
+            for (let i = 0; i < figli; i++) {
+                const base = 95000 + i * 15000;
+                const q = (base - rc) / base;
+                if (q > 0) df += 950 * q;
+            }
+            return Math.max(dc, 0) + Math.max(df, 0);
+        }
+
+        // Ulteriore detrazione "taglio cuneo" 2025 (L.207/2024): redditi 20.000-40.000
+        function ulterioreDetrazione2025(rc) {
+            if (rc > 20000 && rc <= 32000) return 1000;
+            if (rc > 32000 && rc <= 40000) return 1000 * (40000 - rc) / 8000;
+            return 0;
+        }
+
+        // Somma integrativa 2025 non tassata (L.207/2024): redditi <=20.000
+        function bonus2025(rc) {
+            if (rc <= 8500) return rc * 0.071;
+            if (rc <= 15000) return rc * 0.053;
+            if (rc <= 20000) return rc * 0.048;
+            return 0;
+        }
+
+        // Trattamento integrativo (DL 3/2020): 1.200€ per redditi <=15.000 con capienza
+        function trattamentoIntegrativo(rc, irpefLorda, detLavDip) {
+            return (rc <= 15000 && irpefLorda > detLavDip) ? 1200 : 0;
+        }
+
+        // Motore unico: da RAL a netto (2025)
+        function computeNet(ral, mensilita, apprendistato, coniuge, figli, region) {
+            const inpsRate = apprendistato ? inpsRateApprendistato : inpsRateStd;
+            const inps = ral * inpsRate;
+            const rc = ral - inps;                     // reddito complessivo (imponibile IRPEF)
+            const irpefLorda = calculateIRPEF(rc);
+            const detLavDip = detrazioneLavoroDip(rc);
+            const detFam = detrazioniFamiliari(rc, coniuge, figli);
+            const ult = ulterioreDetrazione2025(rc);
+            const detrazioni = detLavDip + detFam + ult;
+            const irpefNetta = Math.max(0, irpefLorda - detrazioni);
+            const regionalRate = (regionalRates[region] || 1.23) / 100;
+            const addizionali = rc * regionalRate + rc * (municipalRate / 100);
+            const bonusTot = trattamentoIntegrativo(rc, irpefLorda, detLavDip) + bonus2025(rc);
+            const nettoAnnuo = ral - inps - irpefNetta - addizionali + bonusTot;
+            const nettoMensile = mensilita > 0 ? nettoAnnuo / mensilita : 0;
+            return { ral, inps, imponibile: rc, irpefLorda, detrazioni, irpefNetta,
+                     addizionali, bonusTot, nettoAnnuo, nettoMensile };
+        }
 
         function updateRAL() {
             const slider = document.getElementById('ralSlider');
@@ -1157,58 +1215,40 @@ button:hover {
 
         function calculate() {
             const ral = parseFloat(document.getElementById('ral').value) || 0;
-            const mensilita = parseInt(document.getElementById('mensilita').value);
+            const mensilita = parseInt(document.getElementById('mensilita').value) || 13;
             const region = document.getElementById('region').value;
+            const apprendistato = document.getElementById('contractType').value === 'apprendistato';
             const coniuge = document.getElementById('coniuge').checked;
             const figli = parseInt(document.getElementById('figli').value) || 0;
 
-            // Calculate INPS contributions
-            const inps = ral * inpsRate;
-            const imponibile = ral - inps;
-
-            // Calculate IRPEF gross
-            const irpefLorda = calculateIRPEF(imponibile);
-
-            // Calculate deductions (monthly deduction for spouse and children)
-            const monthlyDeduction = (coniuge ? monthlyDeductionPerDependent : 0) + (figli * 87);
-            const detrazioni = monthlyDeduction * mensilita;
-
-            // IRPEF net
-            const irpefNetta = Math.max(0, irpefLorda - detrazioni);
-
-            // Regional and municipal tax
-            const regionalRate = (regionalRates[region] || 1.23) / 100;
-            const addizionali = (imponibile * regionalRate) + (imponibile * (municipalRate / 100));
-
-            // Net annual
-            const nettoAnnuo = ral - inps - irpefNetta - addizionali;
-            const nettoMensile = nettoAnnuo / mensilita;
+            const r = computeNet(ral, mensilita, apprendistato, coniuge, figli, region);
 
             // Update results
-            document.getElementById('lordo').textContent = formatCurrency(ral);
-            document.getElementById('inps').textContent = formatCurrency(inps);
-            document.getElementById('imponibile').textContent = formatCurrency(imponibile);
-            document.getElementById('irpefLorda').textContent = formatCurrency(irpefLorda);
-            document.getElementById('detrazioni').textContent = formatCurrency(detrazioni);
-            document.getElementById('irpefNetta').textContent = formatCurrency(irpefNetta);
-            document.getElementById('addizionali').textContent = formatCurrency(addizionali);
-            document.getElementById('nettoAnnuo').textContent = formatCurrency(nettoAnnuo);
-            document.getElementById('nettoMensile').textContent = formatCurrency(nettoMensile);
+            document.getElementById('lordo').textContent = formatCurrency(r.ral);
+            document.getElementById('inps').textContent = formatCurrency(r.inps);
+            document.getElementById('imponibile').textContent = formatCurrency(r.imponibile);
+            document.getElementById('irpefLorda').textContent = formatCurrency(r.irpefLorda);
+            document.getElementById('detrazioni').textContent = formatCurrency(r.detrazioni);
+            document.getElementById('irpefNetta').textContent = formatCurrency(r.irpefNetta);
+            document.getElementById('addizionali').textContent = formatCurrency(r.addizionali);
+            document.getElementById('bonus').textContent = formatCurrency(r.bonusTot);
+            document.getElementById('nettoAnnuo').textContent = formatCurrency(r.nettoAnnuo);
+            document.getElementById('nettoMensile').textContent = formatCurrency(r.nettoMensile);
 
             // Update charts
-            updateBarChart(ral, inps, irpefNetta, addizionali, nettoAnnuo);
-            updatePieChart(nettoAnnuo, inps, irpefNetta, addizionali);
+            updateBarChart(r.ral, r.inps, r.irpefNetta, r.addizionali, r.nettoAnnuo);
+            updatePieChart(r.nettoAnnuo, r.inps, r.irpefNetta, r.addizionali);
 
             // Update export text
-            updateExportText(ral, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile);
+            updateExportText(r);
         }
 
         function updateBarChart(lordo, inps, irpef, addizionali, netto) {
-            const total = lordo;
+            const total = lordo > 0 ? lordo : 1;
             const inpsPercent = (inps / total) * 100;
             const irpefPercent = (irpef / total) * 100;
             const addizionaliPercent = (addizionali / total) * 100;
-            const nettoPercent = (netto / total) * 100;
+            const nettoPercent = Math.min(100, (netto / total) * 100);
 
             const chart = document.getElementById('barChart');
             chart.innerHTML = `
@@ -1242,7 +1282,7 @@ button:hover {
         function updatePieChart(netto, inps, irpef, addizionali) {
             const canvas = document.getElementById('pieCanvas');
             const ctx = canvas.getContext('2d');
-            const total = netto + inps + irpef + addizionali;
+            const total = (netto + inps + irpef + addizionali) || 1;
 
             const nettoPercent = (netto / total) * 100;
             const inpsPercent = (inps / total) * 100;
@@ -1288,54 +1328,59 @@ button:hover {
             }
         }
 
-        function updateExportText(lordo, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile) {
-            const mensilita = parseInt(document.getElementById('mensilita').value);
+        function updateExportText(r) {
+            const mensilita = parseInt(document.getElementById('mensilita').value) || 13;
             const region = document.getElementById('region').value;
             const contractType = document.getElementById('contractType').value;
+            const contractLabels = { indeterminato: 'Tempo Indeterminato', determinato: 'Tempo Determinato', apprendistato: 'Apprendistato' };
+            const inpsRate = contractType === 'apprendistato' ? '5,84' : '9,19';
+            const lordo = r.ral || 1;
 
             const text = `
-RIEPILOGO CALCOLO STIPENDIO NETTO - DIGITAL TOOLS PRO
+RIEPILOGO CALCOLO STIPENDIO NETTO — EtherLabs
 
 Data Calcolo: ${new Date().toLocaleDateString('it-IT')}
 
 DATI INSERITI
 ─────────────────────────────────────────────
-Lordo Annuo (RAL):           ${formatCurrency(lordo)}
+Lordo Annuo (RAL):           ${formatCurrency(r.ral)}
 Mensilità:                   ${mensilita}
-Tipo Contratto:              ${contractType.replace(/([A-Z])/g, ' $1').trim()}
+Tipo Contratto:              ${contractLabels[contractType] || contractType}
 Regione:                     ${region}
 
 DETTAGLI CALCOLO
 ─────────────────────────────────────────────
-Lordo Annuo:                 ${formatCurrency(lordo)}
-Contributi INPS (-9,19%):    ${formatCurrency(inps)}
-Imponibile IRPEF:            ${formatCurrency(imponibile)}
+Lordo Annuo:                 ${formatCurrency(r.ral)}
+Contributi INPS (-${inpsRate}%):    ${formatCurrency(r.inps)}
+Imponibile IRPEF:            ${formatCurrency(r.imponibile)}
 
-CALCOLO IRPEF
+CALCOLO IRPEF 2025
 ─────────────────────────────────────────────
-IRPEF Lorda:                 ${formatCurrency(irpefLorda)}
-Detrazioni Fiscali:          ${formatCurrency(detrazioni)}
-IRPEF Netta:                 ${formatCurrency(irpefNetta)}
+IRPEF Lorda:                 ${formatCurrency(r.irpefLorda)}
+Detrazioni Fiscali:          ${formatCurrency(r.detrazioni)}
+IRPEF Netta:                 ${formatCurrency(r.irpefNetta)}
+Bonus / Tratt. Integrativo:  ${formatCurrency(r.bonusTot)}
 
 ADDIZIONALI (Reg. + Com.):
 ─────────────────────────────────────────────
-Importo Addizionali:         ${formatCurrency(addizionali)}
+Importo Addizionali:         ${formatCurrency(r.addizionali)}
 
 RIEPILOGO NETTO
 ─────────────────────────────────────────────
-Netto Annuo:                 ${formatCurrency(nettoAnnuo)}
-Netto Mensile (${mensilita}):        ${formatCurrency(nettoMensile)}
+Netto Annuo:                 ${formatCurrency(r.nettoAnnuo)}
+Netto Mensile (${mensilita}):        ${formatCurrency(r.nettoMensile)}
 
 COMPOSIZIONE STIPENDIO LORDO
 ─────────────────────────────────────────────
-Netto:                       ${((nettoAnnuo / lordo) * 100).toFixed(2)}%
-INPS:                        ${((inps / lordo) * 100).toFixed(2)}%
-IRPEF:                       ${((irpefNetta / lordo) * 100).toFixed(2)}%
-Addizionali:                 ${((addizionali / lordo) * 100).toFixed(2)}%
+Netto:                       ${((r.nettoAnnuo / lordo) * 100).toFixed(2)}%
+INPS:                        ${((r.inps / lordo) * 100).toFixed(2)}%
+IRPEF:                       ${((r.irpefNetta / lordo) * 100).toFixed(2)}%
+Addizionali:                 ${((r.addizionali / lordo) * 100).toFixed(2)}%
 
 ─────────────────────────────────────────────
-© 2025 EtherLabs
-www.etherlabs.it
+Scaglioni IRPEF 2025: 23% fino a 28.000€ · 35% 28-50.000€ · 43% oltre 50.000€
+Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
+© 2026 EtherLabs · etsy.com/shop/EtherLabsStudio
             `;
 
             document.getElementById('exportText').textContent = text.trim();
@@ -1362,7 +1407,11 @@ www.etherlabs.it
         function printResults() {
             const text = document.getElementById('exportText').textContent;
             const printWindow = window.open('', '', 'height=600,width=800');
-            printWindow.document.write('<pre>' + text + '</pre>');
+            if (!printWindow) {
+                alert('Impossibile aprire la finestra di stampa. Disattiva il blocco popup e riprova.');
+                return;
+            }
+            printWindow.document.write('<pre style="font-family:monospace;font-size:13px;padding:24px;">' + text + '</pre>');
             printWindow.document.close();
             printWindow.print();
         }
@@ -1401,18 +1450,7 @@ www.etherlabs.it
         }
 
         function calculateScenario(ral, region) {
-            const mensilita = 13;
-            const inps = ral * inpsRate;
-            const imponibile = ral - inps;
-            const irpefLorda = calculateIRPEF(imponibile);
-            const detrazioni = monthlyDeductionPerDependent * mensilita;
-            const irpefNetta = Math.max(0, irpefLorda - detrazioni);
-            const regionalRate = (regionalRates[region] || 1.23) / 100;
-            const addizionali = (imponibile * regionalRate) + (imponibile * (municipalRate / 100));
-            const nettoAnnuo = ral - inps - irpefNetta - addizionali;
-            const nettoMensile = nettoAnnuo / mensilita;
-
-            return { ral, inps, imponibile, irpefLorda, detrazioni, irpefNetta, addizionali, nettoAnnuo, nettoMensile };
+            return computeNet(ral, 13, false, false, 0, region);
         }
 
         function displayComparisonResults(result1, result2) {
