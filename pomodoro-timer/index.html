@@ -792,8 +792,9 @@ button.secondary:hover {
 
             // Load data from localStorage
             loadData() {
+                let saved = null;
                 try {
-                const saved = localStorage.getItem('pompro');
+                    saved = localStorage.getItem('pompro');
                 } catch(e) {}
                 if (saved) {
                     const data = JSON.parse(saved);
@@ -844,15 +845,18 @@ button.secondary:hover {
                     if (this.state.isRunning) {
                         const now = Date.now();
                         const elapsed = Math.floor((now - this.state.lastTick) / 1000);
-                        this.state.timeRemaining -= elapsed;
-                        this.state.lastTick = now;
+                        if (elapsed >= 1) {
+                            this.state.timeRemaining -= elapsed;
+                            this.state.lastTick += elapsed * 1000;
 
-                        if (this.state.timeRemaining <= 0) {
-                            this.completeSession();
+                            if (this.state.timeRemaining <= 0) {
+                                this.state.timeRemaining = 0;
+                                this.completeSession();
+                            }
+
+                            this.updateDisplay();
+                            this.saveData();
                         }
-
-                        this.updateDisplay();
-                        this.saveData();
                     } else {
                         this.state.lastTick = Date.now();
                     }

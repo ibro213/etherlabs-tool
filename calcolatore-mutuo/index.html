@@ -808,14 +808,14 @@ button.secondary:hover {
             document.getElementById('importoRange').addEventListener('input', (e) => {
                 document.getElementById('importoNum').value = e.target.value;
                 dataCalcolo.importo = parseFloat(e.target.value);
-                aggiornaSliderValue('importoVal', format€(dataCalcolo.importo));
+                aggiornaSliderValue('importoVal', formatEuro(dataCalcolo.importo));
                 calcolaMutuo();
             });
 
             document.getElementById('importoNum').addEventListener('input', (e) => {
                 document.getElementById('importoRange').value = e.target.value;
                 dataCalcolo.importo = parseFloat(e.target.value);
-                aggiornaSliderValue('importoVal', format€(dataCalcolo.importo));
+                aggiornaSliderValue('importoVal', formatEuro(dataCalcolo.importo));
                 calcolaMutuo();
             });
 
@@ -974,9 +974,9 @@ button.secondary:hover {
             const costoTotale = dataCalcolo.importo + totaleInteressi;
             const rapporto = (totaleInteressi / dataCalcolo.importo) * 100;
 
-            document.getElementById('rataMensile').textContent = format€(rata);
-            document.getElementById('totaleInteressi').textContent = format€(totaleInteressi);
-            document.getElementById('costoTotale').textContent = format€(costoTotale);
+            document.getElementById('rataMensile').textContent = formatEuro(rata);
+            document.getElementById('totaleInteressi').textContent = formatEuro(totaleInteressi);
+            document.getElementById('costoTotale').textContent = formatEuro(costoTotale);
             document.getElementById('rapportoInteressi').textContent = rapporto.toFixed(1) + '%';
         }
 
@@ -1041,13 +1041,13 @@ button.secondary:hover {
             const x1 = centerX + radius * 0.65 * Math.cos(angoloBorgoMid);
             const y1 = centerY + radius * 0.65 * Math.sin(angoloBorgoMid);
             ctx.fillText('Capitale', x1, y1);
-            ctx.fillText(format€(capitale), x1, y1 + 20);
+            ctx.fillText(formatEuro(capitale), x1, y1 + 20);
 
             const angoloInteressiMid = angoloBorgo + angoloInteressi / 2;
             const x2 = centerX + radius * 0.65 * Math.cos(angoloInteressiMid);
             const y2 = centerY + radius * 0.65 * Math.sin(angoloInteressiMid);
             ctx.fillText('Interessi', x2, y2);
-            ctx.fillText(format€(totaleInteressi), x2, y2 + 20);
+            ctx.fillText(formatEuro(totaleInteressi), x2, y2 + 20);
         }
 
         function disegnaBarreAnnuali() {
@@ -1127,7 +1127,7 @@ button.secondary:hover {
             for (let i = 0; i <= 5; i++) {
                 const val = (maxVal / 5) * i;
                 const y = margin.top + chartHeight - (val / maxVal) * chartHeight;
-                ctx.fillText(format€(val), margin.left - 10, y + 5);
+                ctx.fillText(formatEuro(val), margin.left - 10, y + 5);
                 ctx.strokeStyle = '#162e26';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
@@ -1166,10 +1166,10 @@ button.secondary:hover {
 
                     tr.innerHTML = `
                         <td>Mese ${m.mese}</td>
-                        <td>${format€(m.rata)}</td>
-                        <td>${format€(m.capitale)}</td>
-                        <td>${format€(m.interessi)}</td>
-                        <td>${format€(m.debitoResiduo)}</td>
+                        <td>${formatEuro(m.rata)}</td>
+                        <td>${formatEuro(m.capitale)}</td>
+                        <td>${formatEuro(m.interessi)}</td>
+                        <td>${formatEuro(m.debitoResiduo)}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1194,10 +1194,10 @@ button.secondary:hover {
 
                     tr.innerHTML = `
                         <td>Anno ${anno}</td>
-                        <td>${format€(data.rata)}</td>
-                        <td>${format€(data.capitale)}</td>
-                        <td>${format€(data.interessi)}</td>
-                        <td>${format€(data.debitoResiduo)}</td>
+                        <td>${formatEuro(data.rata)}</td>
+                        <td>${formatEuro(data.capitale)}</td>
+                        <td>${formatEuro(data.interessi)}</td>
+                        <td>${formatEuro(data.debitoResiduo)}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1302,7 +1302,7 @@ button.secondary:hover {
                         <h3 style="color: var(--gold-light); margin-bottom: 15px;">Scenario ${r.idx}</h3>
                         <div class="comparison-item">
                             <span class="comparison-label">Importo:</span>
-                            <span class="comparison-value">${format€(r.importo)}</span>
+                            <span class="comparison-value">${formatEuro(r.importo)}</span>
                         </div>
                         <div class="comparison-item">
                             <span class="comparison-label">Tasso:</span>
@@ -1314,15 +1314,15 @@ button.secondary:hover {
                         </div>
                         <div class="comparison-item" style="padding-top: 15px; border-top: 1px solid var(--border); margin-top: 10px;">
                             <span class="comparison-label">Rata Mensile:</span>
-                            <span class="comparison-value">${format€(r.rata)}</span>
+                            <span class="comparison-value">${formatEuro(r.rata)}</span>
                         </div>
                         <div class="comparison-item">
                             <span class="comparison-label">Totale Interessi:</span>
-                            <span class="comparison-value">${format€(r.totaleInteressi)}</span>
+                            <span class="comparison-value">${formatEuro(r.totaleInteressi)}</span>
                         </div>
                         <div class="comparison-item">
                             <span class="comparison-label">Costo Totale:</span>
-                            <span class="comparison-value">${format€(r.costoTotale)}</span>
+                            <span class="comparison-value">${formatEuro(r.costoTotale)}</span>
                         </div>
                     </div>
                 `;
@@ -1381,15 +1381,15 @@ button.secondary:hover {
                     </div>
                     <div class="result-card">
                         <div class="result-label">Risparmio Interessi</div>
-                        <div class="result-value">${format€(risparmi)}</div>
+                        <div class="result-value">${formatEuro(risparmi)}</div>
                     </div>
                 </div>
             `;
         }
 
         // ========== UTILITIES ==========
-        function format€(value) {
-            return '€ ' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        function formatEuro(value) {
+            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
         }
 
         function aggiornaSliderValue(id, val) {
@@ -1457,7 +1457,7 @@ button.secondary:hover {
                         document.getElementById('variabileOptions').style.display = 'block';
                     }
 
-                    aggiornaSliderValue('importoVal', format€(dataCalcolo.importo));
+                    aggiornaSliderValue('importoVal', formatEuro(dataCalcolo.importo));
                     aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1) + '%');
                     aggiornaSliderValue('durataVal', dataCalcolo.durata + ' anni');
                 } catch (e) {

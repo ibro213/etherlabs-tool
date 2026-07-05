@@ -1094,7 +1094,7 @@
                 </div>
             </div>
             <div class="health-item">
-                <div class="health-name">Q3 - Delegatete</div>
+                <div class="health-name">Q3 - Delegate</div>
                 <div class="health-bar">
                     <div class="health-fill" id="health-q3" style="width: 0%"></div>
                 </div>
@@ -1188,9 +1188,9 @@
             // Filter buttons
             document.querySelectorAll('.control-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    if (!e.target.textContent.includes('Pulisci') && !e.target.textContent.includes('Export')) {
+                    if (e.target.dataset.filter) {
                         document.querySelectorAll('.control-btn').forEach(b => {
-                            if (!b.textContent.includes('Pulisci') && !b.textContent.includes('Export')) {
+                            if (b.dataset.filter) {
                                 b.classList.remove('active');
                             }
                         });
@@ -1572,7 +1572,7 @@
             const q4Tasks = tasks.filter(t => t.quad === 'q4');
 
             if (q1Tasks.length > 5) {
-                addAlertToContainer(`⚠️ Troppe urgenze! Hai ${q1Tasks.length} tasks urgenti. Schedule meglio e considera di rinviare alcuni tasks a Q2.`);
+                addAlertToContainer(`⚠️ Too many urgent tasks! You have ${q1Tasks.length} urgent tasks. Plan ahead and consider moving some to Q2.`);
             }
 
             if (q4Tasks.length > 3) {
@@ -1616,8 +1616,9 @@
         }
 
         function loadTasks() {
+            let saved = null;
             try {
-            const saved = localStorage.getItem('matrix_tasks');
+                saved = localStorage.getItem('matrix_tasks');
             } catch(e) {}
             tasks = saved ? JSON.parse(saved) : [];
         }

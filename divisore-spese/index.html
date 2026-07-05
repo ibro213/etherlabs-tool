@@ -1264,6 +1264,7 @@ select:hover {
             const group = getCurrentGroup();
             group.participants = group.participants.filter(p => p.id !== participantId);
             group.expenses = group.expenses.filter(e => e.paidBy !== participantId);
+            group.expenses.forEach(e => { if (e.splits) delete e.splits[participantId]; });
             saveData();
             updateUI();
             renderParticipants();

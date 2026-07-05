@@ -846,10 +846,10 @@ select:hover {
 
             <!-- Tabs Navigation -->
             <div class="tabs">
-                <button class="tab-btn active" onclick=\"switchTab('expenses', this)\">Expenses</button>
-                <button class="tab-btn" onclick=\"switchTab('participants', this)\">Participants</button>
-                <button class="tab-btn" onclick=\"switchTab('balances', this)\">Balances</button>
-                <button class="tab-btn" onclick=\"switchTab('settlement', this)\">Settlement</button>
+                <button class="tab-btn active" onclick="switchTab('expenses', this)">Expenses</button>
+                <button class="tab-btn" onclick="switchTab('participants', this)">Participants</button>
+                <button class="tab-btn" onclick="switchTab('balances', this)">Balances</button>
+                <button class="tab-btn" onclick="switchTab('settlement', this)">Settlement</button>
             </div>
 
             <!-- Expenses Tab -->
@@ -1047,8 +1047,9 @@ select:hover {
 
         // LocalStorage
         function loadData() {
+            let saved = null;
             try {
-            const saved = localStorage.getItem('divisoreExpensesData');
+                saved = localStorage.getItem('divisoreExpensesData');
             } catch(e) {}
             if (saved) {
                 appData = JSON.parse(saved);
@@ -1257,6 +1258,7 @@ select:hover {
             const group = getCurrentGroup();
             group.participants = group.participants.filter(p => p.id !== participantId);
             group.expenses = group.expenses.filter(e => e.paidBy !== participantId);
+            group.expenses.forEach(e => { if (e.splits) delete e.splits[participantId]; });
             saveData();
             updateUI();
             renderParticipants();

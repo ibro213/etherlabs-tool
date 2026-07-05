@@ -1188,9 +1188,9 @@
             // Filter buttons
             document.querySelectorAll('.control-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    if (!e.target.textContent.includes('Pulisci') && !e.target.textContent.includes('Esporta')) {
+                    if (e.target.dataset.filter) {
                         document.querySelectorAll('.control-btn').forEach(b => {
-                            if (!b.textContent.includes('Pulisci') && !b.textContent.includes('Esporta')) {
+                            if (b.dataset.filter) {
                                 b.classList.remove('active');
                             }
                         });
@@ -1616,8 +1616,9 @@
         }
 
         function loadTasks() {
+            let saved = null;
             try {
-            const saved = localStorage.getItem('matrice_tasks');
+                saved = localStorage.getItem('matrice_tasks');
             } catch(e) {}
             tasks = saved ? JSON.parse(saved) : [];
         }
