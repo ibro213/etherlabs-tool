@@ -48,6 +48,8 @@
     .pro-badge { display: inline-block; background: rgba(16,185,129,0.15); border: 1px solid var(--gold); color: var(--goldL); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-top: 10px; }
     .topbar { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; background: rgba(15,26,23,0.6); border: 1px solid var(--brd); border-radius: 14px; padding: 16px; margin-bottom: 24px; }
     .main-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 30px; align-items: start; }
+    .col-left { display: flex; flex-direction: column; gap: 26px; min-width: 0; }
+    input[type="file"] { background: rgba(10,18,16,0.8); border: 1px solid var(--brd); color: var(--t1); padding: 10px 12px; border-radius: 8px; font-size: 0.9rem; width: 100%; cursor: pointer; font-family: inherit; }
     @media (max-width: 1024px) { .main-wrapper { grid-template-columns: 1fr; } }
     .card { background: rgba(15,26,23,0.6); border: 1px solid var(--brd); border-radius: 16px; padding: 26px; }
     .card h2 { color: var(--goldL); font-size: 1.2rem; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
@@ -142,25 +144,27 @@
     </div>
 
     <div class="main-wrapper">
-        <div class="card">
-            <h2 data-i18n="personalInfo">Personal Info</h2>
-            <div class="form-section">
-                <div class="form-group"><label data-i18n="fullName">Full Name</label><input type="text" id="fullName" value="Marco Rossi" data-i18n-ph="phName"></div>
-                <div class="form-group"><label data-i18n="jobTitle">Job Title</label><input type="text" id="jobTitle" value="Director of Operations" data-i18n-ph="phTitle"></div>
-                <div class="form-group"><label data-i18n="company">Company</label><input type="text" id="company" value="Digital Solutions Ltd" data-i18n-ph="phCo"></div>
-                <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="email" value="marco@company.com" data-i18n-ph="phEmail"></div>
-                <div class="form-group"><label data-i18n="phone">Phone</label><input type="tel" id="phone" value="+39 123 456 7890" data-i18n-ph="phPhone"></div>
-                <div class="form-group"><label data-i18n="website">Website</label><input type="url" id="website" value="https://www.company.com" data-i18n-ph="phWebsite"></div>
-                <div class="form-group"><label>LinkedIn</label><input type="url" id="linkedin" value="https://linkedin.com/in/marco" placeholder="https://linkedin.com/in/username"></div>
-                <div class="form-group"><label>Instagram</label><input type="url" id="instagram" value="" placeholder="https://instagram.com/username"></div>
-                <div class="form-group"><label>X (Twitter)</label><input type="url" id="x" value="" placeholder="https://x.com/username"></div>
-                <div class="form-group"><label>Facebook</label><input type="url" id="facebook" value="" placeholder="https://facebook.com/username"></div>
-                <div class="form-group"><label>YouTube</label><input type="url" id="youtube" value="" placeholder="https://youtube.com/@channel"></div>
-                <div class="form-group"><label data-i18n="photoUrl">Profile Photo URL</label><input type="url" id="photoUrl" value="" placeholder="https://.../photo.jpg"></div>
+        <div class="col-left">
+            <div class="card">
+                <h2 data-i18n="personalInfo">Personal Info</h2>
+                <div class="form-section">
+                    <div class="form-group"><label data-i18n="fullName">Full Name</label><input type="text" id="fullName" value="Marco Rossi" data-i18n-ph="phName"></div>
+                    <div class="form-group"><label data-i18n="jobTitle">Job Title</label><input type="text" id="jobTitle" value="Director of Operations" data-i18n-ph="phTitle"></div>
+                    <div class="form-group"><label data-i18n="company">Company</label><input type="text" id="company" value="Digital Solutions Ltd" data-i18n-ph="phCo"></div>
+                    <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="email" value="marco@company.com" data-i18n-ph="phEmail"></div>
+                    <div class="form-group"><label data-i18n="phone">Phone</label><input type="tel" id="phone" value="+39 123 456 7890" data-i18n-ph="phPhone"></div>
+                    <div class="form-group"><label data-i18n="website">Website</label><input type="url" id="website" value="https://www.company.com" data-i18n-ph="phWebsite"></div>
+                    <div class="form-group"><label>LinkedIn</label><input type="url" id="linkedin" value="https://linkedin.com/in/marco" placeholder="https://linkedin.com/in/username"></div>
+                    <div class="form-group"><label>Instagram</label><input type="url" id="instagram" value="" placeholder="https://instagram.com/username"></div>
+                    <div class="form-group"><label>X (Twitter)</label><input type="url" id="x" value="" placeholder="https://x.com/username"></div>
+                    <div class="form-group"><label>Facebook</label><input type="url" id="facebook" value="" placeholder="https://facebook.com/username"></div>
+                    <div class="form-group"><label>YouTube</label><input type="url" id="youtube" value="" placeholder="https://youtube.com/@channel"></div>
+                    <div class="form-group"><label data-i18n="photo">Profile Photo</label><input type="file" id="photoFile" accept="image/*"></div>
+                    <div class="form-group"><label data-i18n="orPasteUrl">Or paste URL</label><input type="url" id="photoUrl" value="" placeholder="https://.../photo.jpg"></div>
+                    <div class="hint" data-i18n="photoHint">Uploaded photos are embedded and work best via "Copy signature". For Gmail / Outlook, a hosted image URL is the most reliable.</div>
+                </div>
             </div>
-        </div>
 
-        <div>
             <div class="card">
                 <h2 data-i18n="design">Template &amp; Design</h2>
                 <div class="form-section">
@@ -205,21 +209,21 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="card preview-panel">
-        <h2 data-i18n="preview">Signature Preview</h2>
-        <div class="preview-container">
-            <div class="preview-header" data-i18n="previewNote">This is how your signature will look (white background)</div>
-            <div id="signaturePreview"></div>
+        <div class="card preview-panel">
+            <h2 data-i18n="preview">Signature Preview</h2>
+            <div class="preview-container">
+                <div class="preview-header" data-i18n="previewNote">This is how your signature will look (white background)</div>
+                <div id="signaturePreview"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="copySigBtn"><span>✍️</span> <span data-i18n="copySignature">Copy signature</span></button>
+                <button class="btn btn-secondary" id="copyHtmlBtn"><span>&lt;/&gt;</span> <span data-i18n="copyHtml">Copy HTML</span></button>
+                <button class="btn btn-secondary" id="downloadBtn"><span>⬇</span> <span data-i18n="download">Download</span></button>
+                <button class="btn btn-secondary" id="copyTextBtn"><span>📄</span> <span data-i18n="copyText">Copy text</span></button>
+            </div>
+            <div class="hint" data-i18n="copyHint">Tip: "Copy signature" is the easy one — paste it straight into Gmail, Outlook or Apple Mail. See INSTRUCTIONS for each app.</div>
         </div>
-        <div class="action-buttons">
-            <button class="btn btn-primary" id="copySigBtn"><span>✍️</span> <span data-i18n="copySignature">Copy signature</span></button>
-            <button class="btn btn-secondary" id="copyHtmlBtn"><span>&lt;/&gt;</span> <span data-i18n="copyHtml">Copy HTML</span></button>
-            <button class="btn btn-secondary" id="downloadBtn"><span>⬇</span> <span data-i18n="download">Download</span></button>
-            <button class="btn btn-secondary" id="copyTextBtn"><span>📄</span> <span data-i18n="copyText">Copy text</span></button>
-        </div>
-        <div class="hint" data-i18n="copyHint">Tip: "Copy signature" is the easy one — paste it straight into Gmail, Outlook or Apple Mail. See INSTRUCTIONS for each app.</div>
     </div>
 </div>
 
@@ -244,7 +248,8 @@ const I18N = {
     msgSig:'✓ Signature copied — paste it into your email app', msgHtml:'✓ HTML code copied',
     msgText:'✓ Plain text copied', msgDl:'✓ Signature file downloaded', msgErr:'Copy failed — try another button',
     reset:'New signature', resetConfirm:'Clear all fields and start a new signature?', msgReset:'✓ Cleared — start your new signature',
-    phName:'John Smith', phTitle:'Marketing Manager', phCo:'Acme Inc.', phEmail:'john@company.com', phPhone:'+1 555 123 4567', phWebsite:'https://company.com' },
+    phName:'John Smith', phTitle:'Marketing Manager', phCo:'Acme Inc.', phEmail:'john@company.com', phPhone:'+1 555 123 4567', phWebsite:'https://company.com',
+    photo:'Profile Photo', orPasteUrl:'Or paste URL', photoHint:'Uploaded photos are embedded and work best via "Copy signature". For Gmail / Outlook, a hosted image URL is the most reliable.' },
   it: { _n:'Italiano', subtitle:'Generatore professionale di firme email', badge:'🚀 Versione Pro',
     language:'Lingua', personalInfo:'Informazioni Personali', fullName:'Nome Completo', jobTitle:'Titolo Professionale',
     company:'Azienda', email:'Email', phone:'Telefono', website:'Sito Web', photoUrl:'URL Foto Profilo',
@@ -257,7 +262,8 @@ const I18N = {
     msgSig:'✓ Firma copiata — incollala nel tuo client email', msgHtml:'✓ Codice HTML copiato',
     msgText:'✓ Testo semplice copiato', msgDl:'✓ File firma scaricato', msgErr:'Copia non riuscita — prova un altro pulsante',
     reset:'Nuova firma', resetConfirm:'Svuotare tutti i campi e iniziare una nuova firma?', msgReset:'✓ Campi svuotati — crea la tua nuova firma',
-    phName:'Mario Rossi', phTitle:'Responsabile Marketing', phCo:'Azienda S.r.l.', phEmail:'mario@azienda.it', phPhone:'+39 02 1234567', phWebsite:'https://azienda.it' },
+    phName:'Mario Rossi', phTitle:'Responsabile Marketing', phCo:'Azienda S.r.l.', phEmail:'mario@azienda.it', phPhone:'+39 02 1234567', phWebsite:'https://azienda.it',
+    photo:'Foto Profilo', orPasteUrl:'Oppure incolla URL', photoHint:'Le foto caricate vengono incorporate e funzionano meglio con "Copia firma". Per Gmail / Outlook, un URL immagine ospitato è più affidabile.' },
   fr: { _n:'Français', subtitle:'Générateur professionnel de signatures email', badge:'🚀 Version Pro',
     language:'Langue', personalInfo:'Informations personnelles', fullName:'Nom complet', jobTitle:'Poste',
     company:'Entreprise', email:'Email', phone:'Téléphone', website:'Site web', photoUrl:'URL photo de profil',
@@ -270,7 +276,8 @@ const I18N = {
     msgSig:'✓ Signature copiée — collez-la dans votre messagerie', msgHtml:'✓ Code HTML copié',
     msgText:'✓ Texte copié', msgDl:'✓ Fichier de signature téléchargé', msgErr:'Échec de la copie — essayez un autre bouton',
     reset:'Nouvelle signature', resetConfirm:'Effacer tous les champs et créer une nouvelle signature ?', msgReset:'✓ Champs effacés — créez votre nouvelle signature',
-    phName:'Jean Dupont', phTitle:'Responsable Marketing', phCo:'Société SARL', phEmail:'jean@societe.fr', phPhone:'+33 1 23 45 67 89', phWebsite:'https://societe.fr' },
+    phName:'Jean Dupont', phTitle:'Responsable Marketing', phCo:'Société SARL', phEmail:'jean@societe.fr', phPhone:'+33 1 23 45 67 89', phWebsite:'https://societe.fr',
+    photo:'Photo de profil', orPasteUrl:'Ou coller une URL', photoHint:'Les photos importées sont intégrées et fonctionnent mieux via « Copier la signature ». Pour Gmail / Outlook, une URL hébergée est plus fiable.' },
   de: { _n:'Deutsch', subtitle:'Professioneller E-Mail-Signatur-Generator', badge:'🚀 Pro-Version',
     language:'Sprache', personalInfo:'Persönliche Daten', fullName:'Vollständiger Name', jobTitle:'Position',
     company:'Firma', email:'E-Mail', phone:'Telefon', website:'Webseite', photoUrl:'Profilfoto-URL',
@@ -283,7 +290,8 @@ const I18N = {
     msgSig:'✓ Signatur kopiert — in Ihr E-Mail-Programm einfügen', msgHtml:'✓ HTML-Code kopiert',
     msgText:'✓ Text kopiert', msgDl:'✓ Signaturdatei heruntergeladen', msgErr:'Kopieren fehlgeschlagen — anderen Button versuchen',
     reset:'Neue Signatur', resetConfirm:'Alle Felder löschen und neue Signatur beginnen?', msgReset:'✓ Gelöscht — beginnen Sie Ihre neue Signatur',
-    phName:'Max Mustermann', phTitle:'Marketing Manager', phCo:'Firma GmbH', phEmail:'max@firma.de', phPhone:'+49 30 1234567', phWebsite:'https://firma.de' },
+    phName:'Max Mustermann', phTitle:'Marketing Manager', phCo:'Firma GmbH', phEmail:'max@firma.de', phPhone:'+49 30 1234567', phWebsite:'https://firma.de',
+    photo:'Profilfoto', orPasteUrl:'Oder URL einfügen', photoHint:'Hochgeladene Fotos werden eingebettet und funktionieren am besten über „Signatur kopieren". Für Gmail / Outlook ist eine gehostete Bild-URL zuverlässiger.' },
   es: { _n:'Español', subtitle:'Generador profesional de firmas de correo', badge:'🚀 Versión Pro',
     language:'Idioma', personalInfo:'Información personal', fullName:'Nombre completo', jobTitle:'Cargo',
     company:'Empresa', email:'Email', phone:'Teléfono', website:'Sitio web', photoUrl:'URL de la foto',
@@ -296,11 +304,12 @@ const I18N = {
     msgSig:'✓ Firma copiada — pégala en tu correo', msgHtml:'✓ Código HTML copiado',
     msgText:'✓ Texto copiado', msgDl:'✓ Archivo de firma descargado', msgErr:'Error al copiar — prueba otro botón',
     reset:'Nueva firma', resetConfirm:'¿Borrar todos los campos y crear una nueva firma?', msgReset:'✓ Campos borrados — crea tu nueva firma',
-    phName:'Juan Pérez', phTitle:'Gerente de Marketing', phCo:'Empresa S.L.', phEmail:'juan@empresa.es', phPhone:'+34 91 123 45 67', phWebsite:'https://empresa.es' }
+    phName:'Juan Pérez', phTitle:'Gerente de Marketing', phCo:'Empresa S.L.', phEmail:'juan@empresa.es', phPhone:'+34 91 123 45 67', phWebsite:'https://empresa.es',
+    photo:'Foto de perfil', orPasteUrl:'O pega una URL', photoHint:'Las fotos subidas se incrustan y funcionan mejor con "Copiar firma". Para Gmail / Outlook, una URL de imagen alojada es más fiable.' }
 };
 
 const state = { lang: 'en', template: 'modern', accentColor: '#10b981', fontFamily: 'Arial, Helvetica, sans-serif',
-  includePhoto: true, showSocial: true, includeSeparator: true };
+  includePhoto: true, showSocial: true, includeSeparator: true, photoData: null };
 
 const $ = id => document.getElementById(id);
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -316,7 +325,7 @@ function collectData(){
   return { fullName:g('fullName')||'Your Name', jobTitle:g('jobTitle'), company:g('company'),
     email:g('email'), phone:g('phone'), website:g('website'),
     linkedin:g('linkedin'), instagram:g('instagram'), x:g('x'), facebook:g('facebook'), youtube:g('youtube'),
-    photoUrl:g('photoUrl'), template:state.template, accentColor:state.accentColor, font:state.fontFamily,
+    photoUrl:state.photoData||g('photoUrl'), template:state.template, accentColor:state.accentColor, font:state.fontFamily,
     includePhoto:state.includePhoto, showSocial:state.showSocial, includeSeparator:state.includeSeparator };
 }
 
@@ -404,6 +413,7 @@ function updatePreview(){ $('signaturePreview').innerHTML = buildSignature('prev
 function resetAll(){
   if(!confirm(t('resetConfirm'))) return;
   ['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl'].forEach(id=>{ $(id).value=''; });
+  state.photoData=null; if($('photoFile')) $('photoFile').value='';
   state.template='modern'; state.accentColor='#10b981'; state.fontFamily='Arial, Helvetica, sans-serif';
   state.includePhoto=true; state.showSocial=true; state.includeSeparator=true;
   document.querySelectorAll('.template-btn').forEach(b=>b.classList.toggle('active', b.dataset.template==='modern'));
@@ -413,6 +423,22 @@ function resetAll(){
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
   updatePreview();
   notify(t('msgReset'));
+}
+
+/* ---------- local photo upload (resized to keep the signature light) ---------- */
+function loadPhotoFile(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ const img=new Image(); img.onload=()=>{
+    const max=220; let w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+    const r=Math.min(1, max/Math.max(w,h)); w=Math.max(1,Math.round(w*r)); h=Math.max(1,Math.round(h*r));
+    try { const cv=document.createElement('canvas'); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(img,0,0,w,h);
+      state.photoData=cv.toDataURL('image/jpeg',0.85); }
+    catch(err){ state.photoData=e.target.result; }
+    if(!state.includePhoto){ state.includePhoto=true; $('togglePhoto').classList.add('active'); }
+    updatePreview();
+  }; img.onerror=()=>{ state.photoData=e.target.result; updatePreview(); }; img.src=e.target.result; };
+  reader.readAsDataURL(file);
 }
 
 /* ---------- copy / export ---------- */
@@ -445,7 +471,7 @@ function downloadHtml(){ const blob=new Blob([fullDoc(buildSignature('export'))]
 
 /* ---------- persistence ---------- */
 function buildData(){ const g=id=>$(id).value; const d={ lang:state.lang, template:state.template, accentColor:state.accentColor, fontFamily:state.fontFamily,
-  includePhoto:state.includePhoto, showSocial:state.showSocial, includeSeparator:state.includeSeparator };
+  includePhoto:state.includePhoto, showSocial:state.showSocial, includeSeparator:state.includeSeparator, photoData:state.photoData };
   ['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl'].forEach(k=>d[k]=g(k)); return d; }
 function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(buildData())); }catch(e){} }
 function loadState(){ try{ const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null; }catch(e){ return null; } }
@@ -456,6 +482,7 @@ function applyData(d){ if(!d) return;
   if(d.accentColor) state.accentColor=d.accentColor;
   if(d.fontFamily) state.fontFamily=d.fontFamily;
   ['includePhoto','showSocial','includeSeparator'].forEach(k=>{ if(typeof d[k]==='boolean') state[k]=d[k]; });
+  state.photoData = d.photoData || null;
   // reflect in UI
   $('language').value=state.lang;
   $('fontFamily').value=state.fontFamily;
@@ -483,6 +510,8 @@ $('customColor').addEventListener('input', e=>{ state.accentColor=e.target.value
 ['togglePhoto','toggleSocial','toggleSeparator'].forEach(id=>$(id).addEventListener('click', function(){ this.classList.toggle('active'); const on=this.classList.contains('active');
   if(id==='togglePhoto')state.includePhoto=on; else if(id==='toggleSocial')state.showSocial=on; else state.includeSeparator=on; updatePreview(); }));
 $('resetBtn').addEventListener('click', resetAll);
+$('photoFile').addEventListener('change', e=>loadPhotoFile(e.target.files[0]));
+$('photoUrl').addEventListener('input', e=>{ if(e.target.value.trim()){ state.photoData=null; if($('photoFile'))$('photoFile').value=''; updatePreview(); } });
 $('copySigBtn').addEventListener('click', copySignature);
 $('copyHtmlBtn').addEventListener('click', ()=>copyPlain(buildSignature('export'), t('msgHtml')));
 $('copyTextBtn').addEventListener('click', ()=>copyPlain(plainText(), t('msgText')));
