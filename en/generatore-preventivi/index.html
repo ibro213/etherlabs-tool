@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,16 +39,16 @@
         }
 
         :root {
-            --bg: #060a0a;
-            --bg2: #0a1210;
-            --bg3: #0f1a17;
-            --gold: #10b981;
-            --goldL: #34d399;
-            --goldD: #059669;
-            --t1: #e8f0ec;
-            --t2: #7a9a8e;
-            --t3: #4a6b5e;
-            --brd: #162e26;
+            --bg: var(--el-bg);
+            --bg2: var(--el-bg2);
+            --bg3: var(--el-bg3);
+            --emerald: var(--el-emerald);
+            --emeraldL: var(--el-emerald-light);
+            --emeraldD: var(--el-emerald-dark);
+            --t1: var(--el-text1);
+            --t2: var(--el-text2);
+            --t3: var(--el-text3);
+            --brd: var(--el-border);
         }
 
         body {
@@ -82,14 +103,14 @@
 
         h1 {
             font-size: 28px;
-            color: var(--goldL);
+            color: var(--emeraldL);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .pro-badge {
-            background: var(--gold);
+            background: var(--emerald);
             color: var(--bg);
             padding: 4px 12px;
             border-radius: 20px;
@@ -104,7 +125,7 @@
         }
 
         button {
-            background: var(--gold);
+            background: var(--emerald);
             border: none;
             color: var(--bg);
             padding: 10px 18px;
@@ -116,7 +137,7 @@
         }
 
         button:hover {
-            background: var(--goldL);
+            background: var(--emeraldL);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
@@ -127,13 +148,13 @@
 
         .btn-secondary {
             background: var(--bg3);
-            color: var(--goldL);
-            border: 1px solid var(--gold);
+            color: var(--emeraldL);
+            border: 1px solid var(--emerald);
         }
 
         .btn-secondary:hover {
             background: var(--brd);
-            color: var(--goldL);
+            color: var(--emeraldL);
         }
 
         .btn-danger {
@@ -154,7 +175,7 @@
         }
 
         section h2 {
-            color: var(--goldL);
+            color: var(--emeraldL);
             font-size: 16px;
             margin-bottom: 15px;
             text-transform: uppercase;
@@ -211,7 +232,7 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
             background: var(--bg2);
         }
@@ -261,7 +282,7 @@
             border: 1px solid var(--brd);
             border-radius: 4px;
             font-weight: bold;
-            color: var(--goldL);
+            color: var(--emeraldL);
             text-align: right;
         }
 
@@ -269,8 +290,8 @@
             padding: 8px 12px;
             font-size: 12px;
             background: var(--bg);
-            color: var(--goldL);
-            border: 1px solid var(--gold);
+            color: var(--emeraldL);
+            border: 1px solid var(--emerald);
             min-width: auto;
         }
 
@@ -293,8 +314,8 @@
             width: 100%;
             margin-top: 10px;
             background: var(--bg3);
-            border: 1px dashed var(--gold);
-            color: var(--goldL);
+            border: 1px dashed var(--emerald);
+            color: var(--emeraldL);
         }
 
         .add-line-btn:hover {
@@ -317,10 +338,10 @@
         }
 
         .total-row:last-child {
-            border-bottom: 2px solid var(--gold);
+            border-bottom: 2px solid var(--emerald);
             background: var(--bg);
             font-weight: bold;
-            color: var(--goldL);
+            color: var(--emeraldL);
             padding: 12px;
         }
 
@@ -344,7 +365,7 @@
             width: 18px;
             height: 18px;
             cursor: pointer;
-            accent-color: var(--gold);
+            accent-color: var(--emerald);
         }
 
         .checkbox-group label {
@@ -373,14 +394,14 @@
         }
 
         .template-btn.active {
-            background: var(--gold);
+            background: var(--emerald);
             color: var(--bg);
-            border-color: var(--gold);
+            border-color: var(--emerald);
         }
 
         .template-btn:hover {
-            border-color: var(--gold);
-            color: var(--goldL);
+            border-color: var(--emerald);
+            color: var(--emeraldL);
         }
 
         .quote-preview {
@@ -428,7 +449,7 @@
         .company-name {
             font-size: 22px;
             font-weight: bold;
-            color: #059669;
+            color: var(--el-emerald-dark);
             margin-bottom: 8px;
         }
 
@@ -442,7 +463,7 @@
             text-align: center;
             font-size: 32px;
             font-weight: bold;
-            color: #059669;
+            color: var(--el-emerald-dark);
             margin-bottom: 20px;
             letter-spacing: 2px;
         }
@@ -479,7 +500,7 @@
         .section-title {
             font-size: 14px;
             font-weight: bold;
-            color: #059669;
+            color: var(--el-emerald-dark);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 25px;
@@ -521,8 +542,8 @@
 
         .items-table thead {
             background: #f3f4f6;
-            border-top: 2px solid #059669;
-            border-bottom: 2px solid #059669;
+            border-top: 2px solid var(--el-emerald-dark);
+            border-bottom: 2px solid var(--el-emerald-dark);
         }
 
         .items-table th {
@@ -580,12 +601,12 @@
         }
 
         .totals-table .total-final {
-            border-top: 2px solid #059669;
-            border-bottom: 2px solid #059669;
+            border-top: 2px solid var(--el-emerald-dark);
+            border-bottom: 2px solid var(--el-emerald-dark);
             background: #f0fdf4;
             font-weight: bold;
             font-size: 16px;
-            color: #059669;
+            color: var(--el-emerald-dark);
         }
 
         .notes-section {
@@ -593,13 +614,13 @@
             padding: 20px;
             background: #f9fafb;
             border-radius: 4px;
-            border-left: 4px solid #059669;
+            border-left: 4px solid var(--el-emerald-dark);
         }
 
         .notes-section h3 {
             font-size: 12px;
             text-transform: uppercase;
-            color: #059669;
+            color: var(--el-emerald-dark);
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
@@ -636,13 +657,13 @@
         }
 
         .template-corporate .items-table th {
-            background: #059669;
+            background: var(--el-emerald-dark);
             color: white;
         }
 
         .template-corporate .section-title {
-            color: #059669;
-            border-bottom: 3px solid #059669;
+            color: var(--el-emerald-dark);
+            border-bottom: 3px solid var(--el-emerald-dark);
         }
 
         .template-creative .items-table {
@@ -650,7 +671,7 @@
         }
 
         .template-creative .items-table thead {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, var(--el-emerald-dark) 0%, var(--el-emerald) 100%);
             color: white;
         }
 
@@ -660,7 +681,7 @@
         }
 
         .template-creative .quote-title {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, var(--el-emerald-dark) 0%, var(--el-emerald) 100%);
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -671,7 +692,7 @@
         }
 
         .template-classic .section-title {
-            border-bottom: 2px dotted #059669;
+            border-bottom: 2px dotted var(--el-emerald-dark);
         }
 
         @media print {
@@ -746,7 +767,7 @@
         }
 
         .modal h3 {
-            color: var(--goldL);
+            color: var(--emeraldL);
             margin-bottom: 20px;
             font-size: 18px;
         }
@@ -819,20 +840,20 @@
         }
     
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 #lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
+.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:var(--el-emerald)}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
 .lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -848,7 +869,7 @@
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
 
@@ -856,7 +877,7 @@
 
     <header>
         <div>
-            <h1>Quote Generator Pro <span style="color: var(--goldL);">✦</span> <span class="pro-badge">Pro</span></h1>
+            <h1>Quote Generator Pro <span style="color: var(--emeraldL);">✦</span> <span class="pro-badge">Pro</span></h1>
         </div>
         <div class="header-actions">
             <button onclick="app.loadQuoteModal()">📂 Load</button>
@@ -1068,7 +1089,7 @@
                     <span class="total-value" id="withholdingAmount">$0.00</span>
                 </div>
 
-                <div class="totals-section" style="margin-top: 15px; border-top: 2px solid var(--gold); padding-top: 15px;">
+                <div class="totals-section" style="margin-top: 15px; border-top: 2px solid var(--emerald); padding-top: 15px;">
                     <span class="total-label" style="font-size: 16px;">GRAND TOTAL:</span>
                     <span class="total-value" id="finalTotal" style="font-size: 18px;">$0.00</span>
                 </div>
@@ -1357,7 +1378,7 @@
                         <td class="text-left">${item.unit}</td>
                         <td class="text-right">${cs}${item.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         <td class="text-right">${item.discount}%</td>
-                        <td class="text-right" style="font-weight: bold; color: #059669;">${cs}${this.calculateLineTotal(item).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        <td class="text-right" style="font-weight: bold; color: var(--el-emerald-dark);">${cs}${this.calculateLineTotal(item).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     </tr>
                 `).join('');
 
@@ -1375,7 +1396,7 @@
                                     ${ownerName ? `<div>${ownerName}</div>` : ''}
                                     ${companyAddress ? `<div>${companyAddress}</div>` : ''}
                                     ${companyVat ? `<div>VAT Number: ${companyVat}</div>` : ''}
-                                    ${companyEmail ? `<div><a href="mailto:${companyEmail}" style="color: #059669; text-decoration: none;">${companyEmail}</a></div>` : ''}
+                                    ${companyEmail ? `<div><a href="mailto:${companyEmail}" style="color: var(--el-emerald-dark); text-decoration: none;">${companyEmail}</a></div>` : ''}
                                     ${companyPhone ? `<div>${companyPhone}</div>` : ''}
                                 </div>
                             </div>
@@ -1480,7 +1501,7 @@
                         </div>` : ''}
 
                         <div class="footer">
-                            © 2025 EtherLabs - Quote Generator Pro ✦
+                            © 2026 EtherLabs - Quote Generator Pro ✦
                         </div>
                     </div>
                 `;
@@ -1562,7 +1583,7 @@
                 } else {
                     list.innerHTML = Object.entries(quotes).map(([key, quote]) => `
                         <div style="padding: 10px; background: var(--bg); border: 1px solid var(--brd); border-radius: 4px; margin-bottom: 10px;">
-                            <div style="color: var(--goldL); font-weight: bold; margin-bottom: 5px;">${quote.name}</div>
+                            <div style="color: var(--emeraldL); font-weight: bold; margin-bottom: 5px;">${quote.name}</div>
                             <div style="color: var(--t2); font-size: 12px; margin-bottom: 10px;">
                                 ${new Date(quote.date).toLocaleDateString('en-US')}
                             </div>
@@ -1836,8 +1857,11 @@ function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();
 </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>

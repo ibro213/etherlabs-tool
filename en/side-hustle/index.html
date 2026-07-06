@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Side Hustle Scorecard & Evaluator Pro</title>
     <style>
         :root {
-            --bg: #060a0a;
-            --bg2: #0a1210;
-            --bg3: #0f1a17;
-            --gold: #10b981;
-            --gold-light: #34d399;
-            --gold-dark: #059669;
-            --text1: #e8f0ec;
-            --text2: #7a9a8e;
-            --text3: #4a6b5e;
-            --border: #162e26;
+            --bg: var(--el-bg);
+            --bg2: var(--el-bg2);
+            --bg3: var(--el-bg3);
+            --emerald: var(--el-emerald);
+            --emerald-light: var(--el-emerald-light);
+            --emerald-dark: var(--el-emerald-dark);
+            --text1: var(--el-text1);
+            --text2: var(--el-text2);
+            --text3: var(--el-text3);
+            --border: var(--el-border);
             --accent-red: #e74c3c;
             --accent-yellow: #f39c12;
             --accent-green: #27ae60;
@@ -53,7 +74,7 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            background: linear-gradient(135deg, var(--emerald-light) 0%, var(--emerald) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -88,16 +109,16 @@
 
         @media (hover: hover) and (pointer: fine) {
 .tab-btn:hover {
-            border-color: var(--gold);
-            color: var(--gold-light);
+            border-color: var(--emerald);
+            color: var(--emerald-light);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
 }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 100%);
             color: var(--bg);
-            border-color: var(--gold-light);
+            border-color: var(--emerald-light);
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
@@ -162,7 +183,7 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
             background: rgba(16, 185, 129, 0.05);
         }
@@ -189,7 +210,7 @@
             padding: 20px;
             background: rgba(16, 185, 129, 0.05);
             border-radius: 10px;
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
         }
 
         .slider-label {
@@ -209,7 +230,7 @@
             font-weight: bold;
             min-width: 50px;
             text-align: right;
-            color: var(--gold);
+            color: var(--emerald);
         }
 
         input[type="range"] {
@@ -229,7 +250,7 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 100%);
             cursor: pointer; touch-action: manipulation;
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
             border: 2px solid var(--bg);
@@ -247,7 +268,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 100%);
             cursor: pointer; touch-action: manipulation;
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
             border: 2px solid var(--bg);
@@ -281,7 +302,7 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 100%);
             color: var(--bg);
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
@@ -295,8 +316,8 @@ input[type="range"]::-moz-range-thumb:hover {
 
         .btn-secondary {
             background: var(--bg3);
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            border: 2px solid var(--emerald);
+            color: var(--emerald);
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -329,14 +350,14 @@ input[type="range"]::-moz-range-thumb:hover {
 
         @media (hover: hover) and (pointer: fine) {
 .template-card:hover {
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
             transform: translateY(-5px);
         }
 }
 
         .template-card h3 {
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 8px;
             font-size: 1.2em;
         }
@@ -362,7 +383,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         .score-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-            border: 2px solid var(--gold);
+            border: 2px solid var(--emerald);
             border-radius: 15px;
             padding: 40px;
             text-align: center;
@@ -372,7 +393,7 @@ input[type="range"]::-moz-range-thumb:hover {
         .score-number {
             font-size: 4em;
             font-weight: bold;
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin: 20px 0;
             text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
@@ -385,7 +406,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         .rating {
             font-size: 2.5em;
-            color: var(--gold);
+            color: var(--emerald);
             margin: 20px 0;
             letter-spacing: 5px;
         }
@@ -395,7 +416,7 @@ input[type="range"]::-moz-range-thumb:hover {
             background: var(--bg3);
             border-radius: 10px;
             margin-top: 20px;
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
             color: var(--text1);
             font-weight: 500;
         }
@@ -418,12 +439,12 @@ input[type="range"]::-moz-range-thumb:hover {
             background: var(--bg3);
             border-radius: 10px;
             padding: 20px;
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
         }
 
         .strength-box h4,
         .weakness-box h4 {
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 12px;
             font-size: 1.1em;
         }
@@ -464,7 +485,7 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         .suggestions h4 {
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 15px;
             font-size: 1.1em;
         }
@@ -473,7 +494,7 @@ input[type="range"]::-moz-range-thumb:hover {
             padding: 12px;
             margin-bottom: 10px;
             background: rgba(16, 185, 129, 0.05);
-            border-left: 3px solid var(--gold);
+            border-left: 3px solid var(--emerald);
             border-radius: 5px;
             color: var(--text1);
         }
@@ -510,7 +531,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         .comparison-table th {
             background: rgba(16, 185, 129, 0.1);
-            color: var(--gold-light);
+            color: var(--emerald-light);
             font-weight: 600;
         }
 
@@ -535,7 +556,7 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         .action-plan h3 {
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 15px;
             font-size: 1.2em;
         }
@@ -543,13 +564,13 @@ input[type="range"]::-moz-range-thumb:hover {
         .action-step {
             padding: 15px;
             background: rgba(16, 185, 129, 0.05);
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
             margin-bottom: 12px;
             border-radius: 5px;
         }
 
         .action-step h4 {
-            color: var(--gold);
+            color: var(--emerald);
             margin-bottom: 8px;
         }
 
@@ -563,7 +584,7 @@ input[type="range"]::-moz-range-thumb:hover {
             padding: 20px;
             background: rgba(16, 185, 129, 0.05);
             border-radius: 10px;
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
         }
 
         .timeline-item {
@@ -581,7 +602,7 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         .timeline-marker {
-            color: var(--gold);
+            color: var(--emerald);
             font-weight: bold;
             min-width: 100px;
         }
@@ -611,13 +632,13 @@ input[type="range"]::-moz-range-thumb:hover {
 
         @media (hover: hover) and (pointer: fine) {
 .idea-item:hover {
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
         }
 }
 
         .idea-item-info h4 {
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 5px;
         }
 
@@ -681,7 +702,7 @@ input[type="range"]::-moz-range-thumb:hover {
             height: 20px;
             border: 3px solid var(--border);
             border-radius: 50%;
-            border-top-color: var(--gold);
+            border-top-color: var(--emerald);
             animation: spin 0.8s linear infinite;
         }
 
@@ -704,8 +725,8 @@ input[type="range"]::-moz-range-thumb:hover {
 
         .alert-info {
             background: rgba(16, 185, 129, 0.1);
-            border-color: var(--gold);
-            color: var(--gold);
+            border-color: var(--emerald);
+            color: var(--emerald);
         }
 
         @media (max-width: 768px) {
@@ -746,22 +767,22 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:#10b981}
+.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
+.lock-input:focus{border-color:var(--el-emerald)}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
 @media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
 .lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
-.install-hint strong{color:#34d399}
+.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
+.install-hint strong{color:var(--el-emerald-light)}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -784,7 +805,7 @@ input[type="range"]::-moz-range-thumb:hover {
 <button id="lockBtn" class="lock-btn">UNLOCK</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
 
@@ -807,7 +828,7 @@ input[type="range"]::-moz-range-thumb:hover {
         <!-- EVALUATOR TAB -->
         <div id="evaluator" class="tab-content active">
             <div class="form-section">
-                <h2 style="color: var(--gold-light); margin-bottom: 20px;">📝 Idea Details</h2>
+                <h2 style="color: var(--emerald-light); margin-bottom: 20px;">📝 Idea Details</h2>
 
                 <div class="form-group-row">
                     <div class="form-group">
@@ -839,7 +860,7 @@ input[type="range"]::-moz-range-thumb:hover {
             </div>
 
             <div class="form-section">
-                <h2 style="color: var(--gold-light); margin-bottom: 20px;">⚙️ Evaluation Criteria</h2>
+                <h2 style="color: var(--emerald-light); margin-bottom: 20px;">⚙️ Evaluation Criteria</h2>
                 <p style="color: var(--text2); margin-bottom: 25px;">Rate each criterion from 1 (low) to 10 (high)</p>
 
                 <div id="slidersContainer"></div>
@@ -854,7 +875,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         <!-- TEMPLATES TAB -->
         <div id="templates" class="tab-content">
-            <h2 style="color: var(--gold-light); margin-bottom: 20px;">📋 Templates Predefiniti</h2>
+            <h2 style="color: var(--emerald-light); margin-bottom: 20px;">📋 Templates Predefiniti</h2>
             <p style="color: var(--text2); margin-bottom: 25px;">Select a template to get started quickly</p>
             <div class="template-grid" id="templatesGrid"></div>
         </div>
@@ -869,7 +890,7 @@ input[type="range"]::-moz-range-thumb:hover {
         <!-- COMPARE TAB -->
         <div id="compare" class="tab-content">
             <div class="form-section">
-                <h2 style="color: var(--gold-light); margin-bottom: 20px;">⚖️ Compare le Tue Idee</h2>
+                <h2 style="color: var(--emerald-light); margin-bottom: 20px;">⚖️ Compare le Tue Idee</h2>
                 <p style="color: var(--text2); margin-bottom: 20px;">You can compare up to 3 saved ideas</p>
 
                 <div class="idea-list" id="savedIdeasList">
@@ -1005,7 +1026,7 @@ input[type="range"]::-moz-range-thumb:hover {
                 <div class="template-card" onclick="loadTemplate(${index})">
                     <h3>${template.name}</h3>
                     <p>${template.description}</p>
-                    <p style="color: var(--gold); font-size: 0.9em;">📂 ${template.category}</p>
+                    <p style="color: var(--emerald); font-size: 0.9em;">📂 ${template.category}</p>
                     <button class="btn-primary btn-small" onclick="loadTemplate(${index}); event.stopPropagation();">
                         Load Template
                     </button>
@@ -1399,7 +1420,7 @@ input[type="range"]::-moz-range-thumb:hover {
             const ideasToCompare = savedIdeas.filter(i => selectedIdeasForComparison.includes(i.id));
 
             // Create comparison table
-            let comparisonHTML = '<div class="form-section" style="margin-top: 30px;"><h2 style="color: var(--gold-light); margin-bottom: 20px;">📊 Detailed Comparison</h2>';
+            let comparisonHTML = '<div class="form-section" style="margin-top: 30px;"><h2 style="color: var(--emerald-light); margin-bottom: 20px;">📊 Detailed Comparison</h2>';
 
             // Summary table
             comparisonHTML += '<table class="comparison-table"><thead><tr><th>Criterion</th>';
@@ -1441,7 +1462,7 @@ input[type="range"]::-moz-range-thumb:hover {
             // Recommendation
             const winner = totalScores.reduce((prev, current) => (prev.score > current.score) ? prev : current);
             comparisonHTML += `<div class="verdict" style="margin-top: 20px;">
-                🏆 <strong>Vincitore:</strong> <span style="color: var(--gold-light);">${winner.idea}</span> con ${winner.score}/100
+                🏆 <strong>Vincitore:</strong> <span style="color: var(--emerald-light);">${winner.idea}</span> con ${winner.score}/100
             </div>`;
 
             comparisonHTML += '</div>';
@@ -1551,13 +1572,13 @@ input[type="range"]::-moz-range-thumb:hover {
 
                     <div class="action-plan">
                         <h3>💰 Suggested Initial Investment</h3>
-                        <div style="background: rgba(16, 185, 129, 0.15); padding: 20px; border-radius: 8px; border-left: 4px solid var(--gold); font-size: 1.2em; font-weight: bold;">
+                        <div style="background: rgba(16, 185, 129, 0.15); padding: 20px; border-radius: 8px; border-left: 4px solid var(--emerald); font-size: 1.2em; font-weight: bold;">
                             ${initialBudget}
                         </div>
                     </div>
 
                     <div class="timeline">
-                        <h3 style="color: var(--gold-light); margin-bottom: 20px;">📅 Estimated Timeline</h3>
+                        <h3 style="color: var(--emerald-light); margin-bottom: 20px;">📅 Estimated Timeline</h3>
                         ${timelineItems.map(item => `
                             <div class="timeline-item">
                                 <div class="timeline-marker">${item.period}</div>
@@ -1653,8 +1674,11 @@ function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();
 </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>

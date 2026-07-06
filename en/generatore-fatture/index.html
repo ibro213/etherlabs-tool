@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Invoice Generator Pro — EtherLabs</title>
@@ -13,22 +34,22 @@
 <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
 <style>
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:#10b981}
+.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
+.lock-input:focus{border-color:var(--el-emerald)}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
 @media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
 .lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
-.install-hint strong{color:#34d399}
+.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
+.install-hint strong{color:var(--el-emerald-light)}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -642,11 +663,11 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
 </script>
 <style>
         :root {
-            --bg: #060a0a; --bg2: #0a1210; --bg3: #0f1a17; --bg4: #142420;
-            --gold: #10b981; --gold-light: #34d399; --gold-dark: #059669;
-            --gold-glow: rgba(16,185,129,0.15); --gold-glow2: rgba(16,185,129,0.08);
-            --text1: #e8f0ec; --text2: #7a9a8e; --text3: #4a6b5e;
-            --border: #162e26; --border2: #1f3d33; --success: #34d399; --error: #f87171;
+            --bg: var(--el-bg); --bg2: var(--el-bg2); --bg3: var(--el-bg3); --bg4: var(--el-bg4);
+            --emerald: var(--el-emerald); --emerald-light: var(--el-emerald-light); --emerald-dark: var(--el-emerald-dark);
+            --emerald-glow: rgba(16,185,129,0.15); --emerald-glow2: rgba(16,185,129,0.08);
+            --text1: var(--el-text1); --text2: var(--el-text2); --text3: var(--el-text3);
+            --border: var(--el-border); --border2: var(--el-border2); --success: var(--el-emerald-light); --error: #f87171;
             --ui-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             --display-font: 'Playfair Display', Georgia, 'Times New Roman', serif;
         }
@@ -658,11 +679,11 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
             border-bottom: 2px solid var(--border2); padding: 2rem; text-align: center;
         }
         .header-content { max-width: 1400px; margin: 0 auto; }
-        .header-title { font-family: var(--display-font); font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--gold-light); }
+        .header-title { font-family: var(--display-font); font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--emerald-light); }
         .premium-badge {
-            display: inline-block; background: var(--gold-glow); color: var(--gold-light);
+            display: inline-block; background: var(--emerald-glow); color: var(--emerald-light);
             padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 600;
-            border: 1px solid var(--gold); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            border: 1px solid var(--emerald); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;
         }
         .header-subtitle { color: var(--text2); font-size: 0.95rem; }
 
@@ -674,52 +695,52 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
         }
         .control-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .control-group.span2 { grid-column: span 2; }
-        label { font-size: 0.85rem; font-weight: 600; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem; }
+        label { font-size: 0.85rem; font-weight: 600; color: var(--emerald-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem; }
 
         input, select, textarea {
             background: var(--bg4); border: 1px solid var(--border); color: var(--text1);
             padding: 0.85rem; border-radius: 0.5rem; font-family: inherit; font-size: 16px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold-light); box-shadow: 0 0 0 3px var(--gold-glow); background: var(--bg2); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--emerald-light); box-shadow: 0 0 0 3px var(--emerald-glow); background: var(--bg2); }
         input:disabled, select:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .check-row { display: flex; align-items: center; gap: 0.6rem; }
-        .check-row input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; accent-color: var(--gold); cursor: pointer; }
+        .check-row input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; accent-color: var(--emerald); cursor: pointer; }
         .check-row label { margin: 0; text-transform: none; letter-spacing: 0; color: var(--text1); font-weight: 500; font-size: 0.9rem; cursor: pointer; }
         .color-row { display: flex; align-items: center; gap: 0.6rem; }
         input[type="color"] { padding: 2px; width: 52px; height: 44px; cursor: pointer; background: var(--bg4); }
-        .color-reset { background: var(--bg4); color: var(--gold-light); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0 0.75rem; height: 44px; font-size: 0.8rem; cursor: pointer; text-transform: none; letter-spacing: 0; }
+        .color-reset { background: var(--bg4); color: var(--emerald-light); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0 0.75rem; height: 44px; font-size: 0.8rem; cursor: pointer; text-transform: none; letter-spacing: 0; }
 
         .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; align-items: start; }
         .panel { background: var(--bg2); border: 1px solid var(--border2); border-radius: 0.75rem; padding: 2rem; }
-        .panel-title { font-family: var(--display-font); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gold-glow); }
-        .section-header { color: var(--gold-light); font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; margin-top: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .panel-title { font-family: var(--display-font); font-size: 1.5rem; color: var(--emerald-light); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--emerald-glow); }
+        .section-header { color: var(--emerald-light); font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; margin-top: 0; text-transform: uppercase; letter-spacing: 0.5px; }
         .form-section { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
         .form-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
         .form-row:last-child { margin-bottom: 0; }
 
         button {
-            background: var(--gold); color: var(--bg); border: none; padding: 0.85rem 1.75rem; border-radius: 0.5rem;
+            background: var(--emerald); color: var(--bg); border: none; padding: 0.85rem 1.75rem; border-radius: 0.5rem;
             cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-weight: 600; font-size: 0.9rem;
             transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px;
             min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
         }
         @media (hover: hover) {
-            button:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 4px 12px var(--gold-glow); }
-            button.secondary:hover { background: var(--border2); border-color: var(--gold-light); }
+            button:hover { background: var(--emerald-light); transform: translateY(-2px); box-shadow: 0 4px 12px var(--emerald-glow); }
+            button.secondary:hover { background: var(--border2); border-color: var(--emerald-light); }
             .line-item-remove:hover { background: #f45c5c; transform: scale(1.05); }
-            .template-btn:hover { border-color: var(--gold-light); background: var(--bg4); }
-            .color-reset:hover { border-color: var(--gold-light); }
+            .template-btn:hover { border-color: var(--emerald-light); background: var(--bg4); }
+            .color-reset:hover { border-color: var(--emerald-light); }
         }
         button:active { transform: translateY(0); }
-        button.secondary { background: var(--bg3); color: var(--gold-light); border: 1px solid var(--gold); }
+        button.secondary { background: var(--bg3); color: var(--emerald-light); border: 1px solid var(--emerald); }
 
         .line-items { margin-top: 1rem; margin-bottom: 1.5rem; }
         .li-header {
             display: grid; grid-template-columns: 2fr 1fr 1.2fr 1fr 1.2fr 0.6fr; gap: 1rem;
-            padding: 0 1.25rem 0.5rem; font-size: 0.72rem; font-weight: 700; color: var(--gold-light);
+            padding: 0 1.25rem 0.5rem; font-size: 0.72rem; font-weight: 700; color: var(--emerald-light);
             text-transform: uppercase; letter-spacing: 0.5px;
         }
         .li-header span:nth-child(2), .li-header span:nth-child(4) { text-align: center; }
@@ -731,7 +752,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
         .li-field { display: flex; flex-direction: column; gap: 0.3rem; }
         .li-mini { display: none; font-size: 0.7rem; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; margin: 0; }
         .line-item input { width: 100%; padding: 0.7rem; }
-        .line-item-total { padding: 0.75rem; background: var(--gold-glow); border-radius: 0.5rem; color: var(--gold-light); font-weight: 600; text-align: right; min-height: 44px; display: flex; align-items: center; justify-content: flex-end; }
+        .line-item-total { padding: 0.75rem; background: var(--emerald-glow); border-radius: 0.5rem; color: var(--emerald-light); font-weight: 600; text-align: right; min-height: 44px; display: flex; align-items: center; justify-content: flex-end; }
         .line-item-remove { padding: 0.75rem; background: var(--error); color: white; border: none; border-radius: 0.5rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-weight: 600; min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease, transform 0.2s ease; align-self: center; }
 
         .preview { background: white; color: #000; padding: 2.5rem; border-radius: 0.5rem; min-height: 500px; font-family: 'Arial', 'Helvetica', sans-serif; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
@@ -762,18 +783,18 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
         .summary-row.total .summary-label, .summary-row.total .summary-value { color: #000; font-weight: 800; }
         .payment-section { margin-top: 2rem; padding: 1.25rem; background: #f5f5f5; border-radius: 0.5rem; border-left: 4px solid #000; font-size: 0.95rem; }
         .payment-section strong { display: block; margin-bottom: 0.75rem; color: #000; }
-        .preview-notes { margin-top: 1.5rem; font-size: 0.9rem; color: #333; white-space: pre-wrap; word-wrap: break-word; padding: 1rem; background: #f9f9f9; border-radius: 0.5rem; border-left: 4px solid #10b981; }
+        .preview-notes { margin-top: 1.5rem; font-size: 0.9rem; color: #333; white-space: pre-wrap; word-wrap: break-word; padding: 1rem; background: #f9f9f9; border-radius: 0.5rem; border-left: 4px solid var(--el-emerald); }
         .forf-note { margin-top: 1.5rem; padding: 1rem; background: #fff8e1; border-left: 4px solid #f59e0b; font-size: 0.82rem; color: #555; }
         .forf-bollo { margin-top: 0.75rem; padding: 0.75rem; background: #f5f5f5; font-size: 0.82rem; color: #666; border-radius: 4px; }
 
         .template-buttons { display: flex; gap: 0.6rem; flex-wrap: wrap; }
         .template-btn { padding: 0.6rem 1.1rem; font-size: 0.82rem; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; border-radius: 0.5rem; transition: border-color 0.2s ease, background 0.2s ease; min-height: 40px; display: inline-flex; align-items: center; }
-        .template-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+        .template-btn.active { background: var(--emerald); color: var(--bg); border-color: var(--emerald); }
 
         .export-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
         .export-btn { flex: 1; min-width: 120px; padding: 1rem; font-size: 0.85rem; min-height: 48px; }
 
-        .success-message { background: var(--gold-glow); color: var(--success); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; border: 1px solid var(--success); border-left: 4px solid var(--gold-light); }
+        .success-message { background: var(--emerald-glow); color: var(--success); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; border: 1px solid var(--success); border-left: 4px solid var(--emerald-light); }
         .success-message.show { display: block; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -835,7 +856,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
 <button id="lockBtn" class="lock-btn">UNLOCK</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
 <div id="appContent" style="display:none">
@@ -1000,7 +1021,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                     </div>
                     <div class="form-row">
                         <div class="control-group"><label data-i18n="totalTax">Total Tax</label><input type="text" id="taxTotal" readonly></div>
-                        <div class="control-group"><label data-i18n="grandTotal">Grand Total</label><input type="text" id="grandTotal" readonly style="font-weight: bold; background: var(--gold-glow); color: var(--gold-light); border-color: var(--gold);"></div>
+                        <div class="control-group"><label data-i18n="grandTotal">Grand Total</label><input type="text" id="grandTotal" readonly style="font-weight: bold; background: var(--emerald-glow); color: var(--emerald-light); border-color: var(--emerald);"></div>
                     </div>
                     <div class="form-row">
                         <div class="control-group"><label data-i18n="cassaLabel">Contribution (%)</label><input type="number" id="cassaRate" min="0" max="100" step="0.01" placeholder="0"></div>
@@ -1883,8 +1904,11 @@ function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../../sw.js').catch(function(){});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();
 </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>

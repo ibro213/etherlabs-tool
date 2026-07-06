@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calcolatore Estinzione Debiti Pro - Pianifica il tuo riscatto finanziario</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #060a0a;
-            --bg2: #0a1210;
-            --bg3: #0f1a17;
-            --bg4: #142420;
-            --gold: #10b981;
-            --gold-light: #34d399;
-            --gold-lighter: #6ee7b7;
-            --gold-dark: #059669;
-            --gold-glow: rgba(16,185,129,0.15);
-            --gold-glow2: rgba(16,185,129,0.08);
-            --text1: #e8f0ec;
-            --text2: #7a9a8e;
-            --text3: #4a6b5e;
-            --border: #162e26;
-            --border2: #1f3d33;
-            --success: #34d399;
+            --bg: var(--el-bg);
+            --bg2: var(--el-bg2);
+            --bg3: var(--el-bg3);
+            --bg4: var(--el-bg4);
+            --emerald: var(--el-emerald);
+            --emerald-light: var(--el-emerald-light);
+            --emerald-lighter: var(--el-emerald-lighter);
+            --emerald-dark: var(--el-emerald-dark);
+            --emerald-glow: rgba(16,185,129,0.15);
+            --emerald-glow2: rgba(16,185,129,0.08);
+            --text1: var(--el-text1);
+            --text2: var(--el-text2);
+            --text3: var(--el-text3);
+            --border: var(--el-border);
+            --border2: var(--el-border2);
+            --success: var(--el-emerald-light);
             --error: #f87171;
         }
 
@@ -32,7 +52,7 @@
             box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: system-ui, sans-serif;
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
             color: var(--text1);
             line-height: 1.6;
@@ -53,7 +73,7 @@
 
         .brand-pill {
             display: inline-block;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
             color: var(--bg);
             padding: 8px 20px;
             border-radius: 50px;
@@ -62,15 +82,15 @@
             letter-spacing: 1px;
             margin-bottom: 15px;
             text-transform: uppercase;
-            box-shadow: 0 0 30px var(--gold-glow);
+            box-shadow: 0 0 30px var(--emerald-glow);
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Georgia', serif;
             font-size: clamp(28px, 5vw, 48px);
             font-weight: 800;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-lighter));
+            background: linear-gradient(135deg, var(--emerald-light), var(--emerald-lighter));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -107,18 +127,18 @@
 
         @media (hover: hover) and (pointer: fine) {
 .card:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 30px var(--gold-glow);
+            border-color: var(--emerald);
+            box-shadow: 0 0 30px var(--emerald-glow);
         }
 }
 
         .card-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Georgia', serif;
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            color: var(--gold-light);
+            color: var(--emerald-light);
             border-bottom: 2px solid var(--border2);
         }
 
@@ -146,7 +166,7 @@
             border: 1px solid var(--border2);
             border-radius: 8px;
             color: var(--text1);
-            font-family: 'Inter', sans-serif;
+            font-family: system-ui, sans-serif;
             font-size: 14px;
             transition: all 0.3s ease;
         }
@@ -154,13 +174,13 @@
         input[type="text"]:focus,
         input[type="number"]:focus {
             outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 15px var(--gold-glow2);
+            border-color: var(--emerald);
+            box-shadow: 0 0 15px var(--emerald-glow2);
             background: rgba(16, 185, 129, 0.05);
         }
 
         button {
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
             color: var(--bg);
             border: none;
             padding: 12px 30px;
@@ -169,14 +189,14 @@
             cursor: pointer; touch-action: manipulation;
             font-size: 14px;
             transition: all 0.3s ease;
-            box-shadow: 0 0 20px var(--gold-glow);
+            box-shadow: 0 0 20px var(--emerald-glow);
         }
 
         @media (hover: hover) and (pointer: fine) {
 button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 30px var(--gold-glow);
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-lighter));
+            box-shadow: 0 5px 30px var(--emerald-glow);
+            background: linear-gradient(135deg, var(--emerald-light), var(--emerald-lighter));
         }
 }
 
@@ -186,14 +206,14 @@ button:hover {
 
         .btn-secondary {
             background: var(--bg4);
-            color: var(--gold-light);
+            color: var(--emerald-light);
             border: 1px solid var(--border2);
             box-shadow: none;
         }
 
         @media (hover: hover) and (pointer: fine) {
 .btn-secondary:hover {
-            border-color: var(--gold);
+            border-color: var(--emerald);
             background: rgba(16, 185, 129, 0.1);
             transform: translateY(-2px);
         }
@@ -219,7 +239,7 @@ button:hover {
 
         .debt-item {
             background: linear-gradient(135deg, var(--bg2), var(--bg3));
-            border-left: 4px solid var(--gold);
+            border-left: 4px solid var(--emerald);
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 14px;
@@ -259,7 +279,7 @@ button:hover {
 
         .debt-balance {
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-right: 20px;
             min-width: 120px;
             text-align: right;
@@ -279,10 +299,10 @@ button:hover {
         }
 
         .stat-value {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Georgia', serif;
             font-size: 28px;
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--emerald-light);
         }
 
         .comparison-row {
@@ -301,7 +321,7 @@ button:hover {
 
         .comparison-title {
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 18px;
             font-size: 16px;
             padding-bottom: 12px;
@@ -329,12 +349,12 @@ button:hover {
         .metric-value {
             font-size: 20px;
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--emerald-light);
         }
 
         .winner-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
             color: var(--bg);
             padding: 4px 12px;
             border-radius: 20px;
@@ -362,7 +382,7 @@ button:hover {
 
         th {
             background: var(--bg4);
-            color: var(--gold-light);
+            color: var(--emerald-light);
             padding: 14px 12px;
             text-align: left;
             font-weight: 600;
@@ -382,12 +402,12 @@ tr:hover {
 
         .debt-free-section {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
-            border: 2px solid var(--gold);
+            border: 2px solid var(--emerald);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
             margin: 30px 0;
-            box-shadow: 0 0 40px var(--gold-glow);
+            box-shadow: 0 0 40px var(--emerald-glow);
             margin-bottom: 30px;
         }
 
@@ -400,10 +420,10 @@ tr:hover {
         }
 
         .debt-free-date {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Georgia', serif;
             font-size: clamp(32px, 6vw, 52px);
             font-weight: 800;
-            color: var(--gold-light);
+            color: var(--emerald-light);
             margin-bottom: 15px;
         }
 
@@ -453,9 +473,9 @@ tr:hover {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: var(--gold);
+            background: var(--emerald);
             cursor: pointer; touch-action: manipulation;
-            box-shadow: 0 0 15px var(--gold-glow);
+            box-shadow: 0 0 15px var(--emerald-glow);
             transition: all 0.2s ease;
         }
 
@@ -463,7 +483,7 @@ tr:hover {
 input[type="range"]::-webkit-slider-thumb:hover {
             width: 24px;
             height: 24px;
-            box-shadow: 0 0 20px var(--gold-glow);
+            box-shadow: 0 0 20px var(--emerald-glow);
         }
 }
 
@@ -471,10 +491,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: var(--gold);
+            background: var(--emerald);
             cursor: pointer; touch-action: manipulation;
             border: none;
-            box-shadow: 0 0 15px var(--gold-glow);
+            box-shadow: 0 0 15px var(--emerald-glow);
             transition: all 0.2s ease;
         }
 
@@ -482,7 +502,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 input[type="range"]::-moz-range-thumb:hover {
             width: 24px;
             height: 24px;
-            box-shadow: 0 0 20px var(--gold-glow);
+            box-shadow: 0 0 20px var(--emerald-glow);
         }
 }
 
@@ -505,7 +525,7 @@ input[type="range"]::-moz-range-thumb:hover {
         .toggle-btn {
             background: var(--bg4);
             border: 1px solid var(--border2);
-            color: var(--gold-light);
+            color: var(--emerald-light);
             padding: 11px 22px;
             border-radius: 8px;
             cursor: pointer; touch-action: manipulation;
@@ -518,15 +538,15 @@ input[type="range"]::-moz-range-thumb:hover {
 
         @media (hover: hover) and (pointer: fine) {
 .toggle-btn:hover {
-            border-color: var(--gold);
+            border-color: var(--emerald);
             background: rgba(16, 185, 129, 0.1);
         }
 }
 
         .toggle-btn.active {
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
             color: var(--bg);
-            border-color: var(--gold);
+            border-color: var(--emerald);
         }
 
         .toggle-btn:last-of-type {
@@ -572,7 +592,7 @@ input[type="range"]::-moz-range-thumb:hover {
         .summary-box-value {
             font-size: 24px;
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--emerald-light);
         }
 
         @media (max-width: 768px) {
@@ -627,22 +647,22 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:#10b981}
+.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
+.lock-input:focus{border-color:var(--el-emerald)}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
 @media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
 .lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
-.install-hint strong{color:#34d399}
+.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
+.install-hint strong{color:var(--el-emerald-light)}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -665,7 +685,7 @@ input[type="range"]::-moz-range-thumb:hover {
 <button id="lockBtn" class="lock-btn">SBLOCCA</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
 
@@ -1290,8 +1310,11 @@ function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();
 </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>

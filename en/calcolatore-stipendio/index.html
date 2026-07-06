@@ -1,22 +1,42 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Net Salary Calculator Pro — International</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --bg: #060a0a;
-            --bg2: #0a1210;
-            --bg3: #0f1a17;
-            --gold: #10b981;
-            --goldL: #34d399;
-            --goldD: #059669;
-            --t1: #e8f0ec;
-            --t2: #7a9a8e;
-            --t3: #4a6b5e;
-            --brd: #162e26;
+            --bg: var(--el-bg);
+            --bg2: var(--el-bg2);
+            --bg3: var(--el-bg3);
+            --emerald: var(--el-emerald);
+            --emeraldL: var(--el-emerald-light);
+            --emeraldD: var(--el-emerald-dark);
+            --t1: var(--el-text1);
+            --t2: var(--el-text2);
+            --t3: var(--el-text3);
+            --brd: var(--el-border);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -31,7 +51,7 @@
 
         header {
             background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
-            border-bottom: 2px solid var(--gold);
+            border-bottom: 2px solid var(--emerald);
             padding: 2rem 1rem;
             text-align: center;
             position: relative;
@@ -49,7 +69,7 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--goldL) 0%, var(--gold) 100%);
+            background: linear-gradient(135deg, var(--emeraldL) 0%, var(--emerald) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -59,7 +79,7 @@
 
         .pro-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             color: var(--bg);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
@@ -103,7 +123,7 @@
 
         @media (hover: hover) and (pointer: fine) {
 .card:hover {
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
             transform: translateY(-2px);
         }
@@ -114,7 +134,7 @@
         .card:nth-child(4) { animation-delay: 0.3s; }
 
         .card h3 {
-            color: var(--goldL);
+            color: var(--emeraldL);
             margin-bottom: 1.5rem;
             font-size: 1.1rem;
             text-transform: uppercase;
@@ -149,7 +169,7 @@
         input[type="number"]:focus,
         select:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--emerald);
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
             background-color: var(--bg2);
         }
@@ -178,11 +198,11 @@
             appearance: none;
             width: 24px; height: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             cursor: grab;
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
             margin-top: -8px;
-            border: 2px solid var(--goldD);
+            border: 2px solid var(--emeraldD);
         }
 
         input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.2); }
@@ -197,9 +217,9 @@
         input[type="range"]::-moz-range-thumb {
             width: 24px; height: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             cursor: grab;
-            border: 2px solid var(--goldD);
+            border: 2px solid var(--emeraldD);
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
         }
 
@@ -213,7 +233,7 @@
 
         .slider-value {
             display: inline-block;
-            color: var(--goldL);
+            color: var(--emeraldL);
             font-weight: 700;
             font-size: 1.05rem;
             min-width: 52px;
@@ -221,7 +241,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--goldL) 100%);
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             color: var(--bg);
             border: none;
             padding: 0.75rem 1.5rem;
@@ -245,8 +265,8 @@ button:hover {
 
         .btn-secondary {
             background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
-            color: var(--goldL);
-            border: 1px solid var(--gold);
+            color: var(--emeraldL);
+            border: 1px solid var(--emerald);
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -285,7 +305,7 @@ button:hover {
         }
 
         .result-value {
-            color: var(--goldL);
+            color: var(--emeraldL);
             font-size: 1.8rem;
             font-weight: 700;
             font-family: 'Courier New', monospace;
@@ -306,7 +326,7 @@ button:hover {
         }
 
         .chart-title {
-            color: var(--goldL);
+            color: var(--emeraldL);
             margin-bottom: 1.5rem;
             font-size: 1.2rem;
             font-weight: 700;
@@ -341,11 +361,11 @@ button:hover {
         .breakdown-table td.amount {
             font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: var(--goldL);
+            color: var(--emeraldL);
         }
 
         .breakdown-table tr.total-row td {
-            border-top: 2px solid var(--gold);
+            border-top: 2px solid var(--emerald);
             font-weight: 700;
             font-size: 1.05rem;
             color: #4ade80;
@@ -420,7 +440,7 @@ button:hover {
         .effective-rate-box .rate {
             font-size: 2.2rem;
             font-weight: 700;
-            color: var(--goldL);
+            color: var(--emeraldL);
             font-family: 'Courier New', monospace;
         }
 
@@ -462,8 +482,8 @@ button:hover {
 
         .message.info {
             background-color: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--gold);
-            color: var(--goldL);
+            border: 1px solid var(--emerald);
+            color: var(--emeraldL);
         }
 
         footer {
@@ -497,7 +517,7 @@ button:hover {
         @media print {
             body { background: #fff; color: #222; }
             .card, .chart-container, .export-area { background: #fff; border-color: #ccc; box-shadow: none; }
-            header { border-color: #059669; }
+            header { border-color: var(--el-emerald-dark); }
             button { display: none; }
         }
     
@@ -513,22 +533,22 @@ button:hover {
         }
 
 /* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
 .lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:#10b981}
+.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
+.lock-input:focus{border-color:var(--el-emerald)}
 .lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
 @media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
 .lock-btn:active{transform:translateY(0)}
 .lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem;line-height:1.5}
-.install-hint strong{color:#34d399}
+.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
+.install-hint strong{color:var(--el-emerald-light)}
 @keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -551,7 +571,7 @@ button:hover {
 <button id="lockBtn" class="lock-btn">UNLOCK</button>
 <div id="lockError" class="lock-error"></div>
 <div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2025 EtherLabs</div>
+<div class="lock-footer">© 2026 EtherLabs</div>
 </div>
 </div>
 
@@ -663,7 +683,7 @@ button:hover {
 
     <!-- ====== RESULTS ====== -->
     <div class="chart-container" id="resultsPanel">
-        <h2 style="color: var(--goldL); margin-bottom: 1.5rem;">📋 Salary Breakdown</h2>
+        <h2 style="color: var(--emeraldL); margin-bottom: 1.5rem;">📋 Salary Breakdown</h2>
 
         <!-- Net summary boxes -->
         <div class="results-grid" id="summaryBoxes"></div>
@@ -729,7 +749,8 @@ const PRESET_LABELS = {
 
 const CURRENCY_MAP = { USD: '$', EUR: '€', GBP: '£' };
 
-let donutInstance = null;
+let donutState = null;
+let donutBound = false;
 
 /* ---------- helpers ---------- */
 function fmt(n, cur) {
@@ -875,6 +896,56 @@ function renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur) {
 /* ---------- donut chart (Chart.js) ---------- */
 const COLORS = ['#ef4444','#f59e0b','#3b82f6','#a855f7','#6b7280','#10b981'];
 
+function drawDonutChart(labels, data, colors, cur) {
+    const canvas = $('donutChart');
+    const size = 280, dpr = Math.min(3, window.devicePixelRatio || 1);
+    canvas.width = size * dpr; canvas.height = size * dpr;
+    canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
+    const cx = size / 2, cy = size / 2, R = size / 2 - 4, r = R * 0.62;
+    const total = data.reduce((a, b) => a + b, 0) || 1;
+    const segs = [];
+    let a0 = -Math.PI / 2;
+    for (let i = 0; i < data.length; i++) {
+        const a1 = a0 + data[i] / total * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, a0, a1);
+        ctx.arc(cx, cy, r, a1, a0, true);
+        ctx.closePath();
+        ctx.fillStyle = colors[i]; ctx.fill();
+        segs.push({ a0: a0, a1: a1, label: labels[i], value: data[i], color: colors[i] });
+        a0 = a1;
+    }
+    donutState = { segs: segs, total: total, cx: cx, cy: cy, R: R, r: r, cur: cur };
+    bindDonutHover(canvas);
+}
+function bindDonutHover(canvas) {
+    if (donutBound) return; donutBound = true;
+    let tip = document.getElementById('donutTip');
+    if (!tip) {
+        tip = document.createElement('div'); tip.id = 'donutTip';
+        tip.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;background:#0f1a17;color:#e8f0ec;border:1px solid #1f3d33;border-radius:8px;padding:6px 10px;font-size:12px;display:none;box-shadow:0 6px 20px rgba(0,0,0,.4);';
+        document.body.appendChild(tip);
+    }
+    canvas.addEventListener('mousemove', function(e) {
+        if (!donutState) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left - donutState.cx, y = e.clientY - rect.top - donutState.cy;
+        const dist = Math.sqrt(x * x + y * y);
+        if (dist < donutState.r || dist > donutState.R) { tip.style.display = 'none'; return; }
+        let ang = Math.atan2(y, x); if (ang < -Math.PI / 2) ang += Math.PI * 2;
+        const seg = donutState.segs.find(s => ang >= s.a0 && ang < s.a1);
+        if (!seg) { tip.style.display = 'none'; return; }
+        const pctv = (seg.value / donutState.total * 100).toFixed(1);
+        tip.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:' + seg.color + ';margin-right:6px;"></span>' + seg.label + ': ' + fmt(seg.value, donutState.cur) + ' (' + pctv + '%)';
+        tip.style.display = 'block';
+        tip.style.left = (e.clientX + 12) + 'px'; tip.style.top = (e.clientY + 12) + 'px';
+    });
+    canvas.addEventListener('mouseleave', function() { tip.style.display = 'none'; });
+}
+
 function renderDonut(net, amounts, labels, cur) {
     const data = [];
     const dataLabels = [];
@@ -900,28 +971,7 @@ function renderDonut(net, amounts, labels, cur) {
         '<li><span class="legend-swatch" style="background:' + colors[i] + '"></span>' + l + ' — ' + fmt(data[i], cur) + '</li>'
     ).join('');
 
-    const ctx = $('donutChart').getContext('2d');
-    if (donutInstance) donutInstance.destroy();
-
-    donutInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: { labels: dataLabels, datasets: [{ data, backgroundColor: colors, borderWidth: 0 }] },
-        options: {
-            cutout: '62%',
-            responsive: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(tip) {
-                            const total = tip.dataset.data.reduce((a,b) => a+b, 0);
-                            return tip.label + ': ' + fmt(tip.raw, cur) + ' (' + (tip.raw / total * 100).toFixed(1) + '%)';
-                        }
-                    }
-                }
-            }
-        }
-    });
+    drawDonutChart(dataLabels, data, colors, cur);
 }
 
 /* ---------- export text ---------- */
@@ -983,7 +1033,7 @@ function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===
 lb.addEventListener('click',tryU);
 li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(function(){});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();
 </script>
 </body></html>');
@@ -995,5 +1045,8 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').cat
 updateSliderLabels('us');
 calculate();
 </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>

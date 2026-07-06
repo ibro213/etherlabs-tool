@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+<style id="el-theme">
+:root{
+  --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
+  --el-border:#e3e7ec; --el-border2:#d6dce2;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
+  color-scheme: light;
+}
+:root[data-theme="dark"]{
+  --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
+  --el-border:#24272e; --el-border2:#2e333b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
+  color-scheme: dark;
+}
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -9,25 +30,26 @@
     <title>EtherLabs Tools</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#060a0a,#0a1210);color:#e8f0ec;min-height:100vh;padding:40px 20px}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,var(--el-bg),var(--el-bg2));color:var(--el-text1);min-height:100vh;padding:40px 20px}
         .page{max-width:700px;margin:0 auto}
         h1{font-size:2rem;margin-bottom:8px}
-        h1 span{color:#10b981}
-        h2{color:#34d399;font-size:1.3rem;margin:35px 0 15px;padding-bottom:8px;border-bottom:1px solid #162e26}
-        .sub{color:#7a9a8e;margin-bottom:30px}
-        .tool-card{display:block;text-decoration:none;color:inherit;background:rgba(16,185,129,0.05);border:1px solid #162e26;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .3s ease}
-        .tool-card:hover{border-color:#10b981;transform:translateY(-3px);box-shadow:0 10px 30px rgba(16,185,129,0.15)}
+        h1 span{color:var(--el-emerald)}
+        h2{color:var(--el-emerald-light);font-size:1.3rem;margin:35px 0 15px;padding-bottom:8px;border-bottom:1px solid var(--el-border)}
+        .sub{color:var(--el-text2);margin-bottom:30px}
+        .tool-card{display:block;text-decoration:none;color:inherit;background:rgba(16,185,129,0.05);border:1px solid var(--el-border);border-radius:16px;padding:24px;margin-bottom:16px;transition:all .3s ease}
+        .tool-card:hover{border-color:var(--el-emerald);transform:translateY(-3px);box-shadow:0 10px 30px rgba(16,185,129,0.15)}
         .tool-icon{font-size:2rem;margin-bottom:8px}
-        .tool-name{font-size:1.15rem;font-weight:700;color:#34d399}
-        .tool-desc{color:#7a9a8e;font-size:.9rem;margin-top:6px}
-        .badge{display:inline-block;background:linear-gradient(135deg,#10b981,#34d399);color:#060a0a;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
+        .tool-name{font-size:1.15rem;font-weight:700;color:var(--el-emerald-light)}
+        .tool-desc{color:var(--el-text2);font-size:.9rem;margin-top:6px}
+        .badge{display:inline-block;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));color:var(--el-bg);font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
         .lang-switch{display:inline-flex;gap:8px;margin-bottom:25px}
-        .lang-btn{padding:8px 16px;border-radius:8px;border:1px solid #162e26;background:none;color:#7a9a8e;cursor:pointer;font-size:.9rem;transition:all .3s}
-        .lang-btn.active{background:rgba(16,185,129,0.15);border-color:#10b981;color:#10b981}
+        .lang-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--el-border);background:none;color:var(--el-text2);cursor:pointer;font-size:.9rem;transition:all .3s}
+        .lang-btn.active{background:rgba(16,185,129,0.15);border-color:var(--el-emerald);color:var(--el-emerald)}
         .lang-section{display:none}
         .lang-section.active{display:block}
-        footer{text-align:center;color:#4a6b5e;font-size:.8rem;margin-top:40px}
+        footer{text-align:center;color:var(--el-text3);font-size:.8rem;margin-top:40px}
     </style>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
     <div class="page">
@@ -249,7 +271,7 @@
         </a>
         </div>
 
-        <footer>© 2025 EtherLabs — Tutti i diritti riservati</footer>
+        <footer>© 2026 EtherLabs — Tutti i diritti riservati</footer>
     </div>
     <script>
     function switchLang(lang) {
@@ -259,5 +281,11 @@
         event.target.classList.add('active');
     }
     </script>
+    <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+    </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>
