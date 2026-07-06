@@ -2159,7 +2159,7 @@ const PRESETS_ALL = { en: {
                 nameInput.value = entry.name || '';
                 nameInput.addEventListener('input', () => { entry.name = nameInput.value; updatePreview(); scheduleSave(); });
                 const lvl = div.querySelector('[data-field="level"]');
-                lvl.value = String(entry.level ?? 0);
+                lvl.value = String(entry.level != null ? entry.level : 0);
                 lvl.addEventListener('change', () => { entry.level = parseInt(lvl.value,10); updatePreview(); scheduleSave(); });
                 div.querySelector('.entry-remove').addEventListener('click', () => removeLanguageEntry(entry.id));
                 container.appendChild(div);
