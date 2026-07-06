@@ -23,7 +23,13 @@
 </style>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Debt Payoff">
+    <meta name="theme-color" content="#0a0b0d">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <title>Debt Payoff Calculator Pro - Accelerate Your Financial Freedom</title>
     <style>
         :root {
@@ -645,52 +651,15 @@ input[type="range"]::-moz-range-thumb:hover {
           .btn-small { min-height: 40px; }
           input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
         }
-
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
-@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
-.lock-btn:active{transform:translateY(0)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
-.install-hint strong{color:var(--el-emerald-light)}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Debt Payoff Calculator</div>
-<div class="lock-sub">Enter the unlock code you received with your purchase</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
-<div id="appContent" style="display:none">
-
     <div class="container">
         <header>
             <div class="brand-pill">🎯 PREMIUM TOOL</div>
@@ -867,6 +836,11 @@ input[type="range"]::-moz-range-thumb:hover {
     <script>
         let debts = [];
         const LS_KEY = 'etherlabs_debtpayoff_v1';
+        const EXTRA_KEY = 'etherlabs_debtpayoff_extra_v1';
+        const NF = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        function fmtC(n) { return NF.format(Number(n) || 0); }
+        function fmtP(n) { return (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'; }
+        function cssv(name, fb) { try { const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fb; } catch (e) { return fb; } }
         function escapeHtml(s) {
             return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
@@ -923,10 +897,10 @@ input[type="range"]::-moz-range-thumb:hover {
                     <div class="debt-info">
                         <div class="debt-name">${escapeHtml(debt.name)}</div>
                         <div class="debt-details">
-                            Rate: ${debt.rate.toFixed(2)}% | Min: $${debt.minPayment.toFixed(2)}/month
+                            Rate: ${fmtP(debt.rate)} | Min: ${fmtC(debt.minPayment)}/month
                         </div>
                     </div>
-                    <div class="debt-balance">$${debt.balance.toFixed(2)}</div>
+                    <div class="debt-balance">${fmtC(debt.balance)}</div>
                     <button class="btn-danger" onclick="removeDebt(${debt.id})">✕</button>
                 </div>
             `).join('');
@@ -941,9 +915,9 @@ input[type="range"]::-moz-range-thumb:hover {
                 ? debts.reduce((sum, d) => sum + (d.rate * d.balance), 0) / (totalDebt || 1)
                 : 0;
 
-            document.getElementById('totalDebt').textContent = `$${totalDebt.toFixed(2)}`;
-            document.getElementById('avgRate').textContent = `${avgRate.toFixed(2)}%`;
-            document.getElementById('totalMinPayment').textContent = `$${totalMinPayment.toFixed(2)}`;
+            document.getElementById('totalDebt').textContent = fmtC(totalDebt);
+            document.getElementById('avgRate').textContent = fmtP(avgRate);
+            document.getElementById('totalMinPayment').textContent = fmtC(totalMinPayment);
             document.getElementById('debtCount').textContent = debts.length;
         }
 
@@ -1078,11 +1052,11 @@ input[type="range"]::-moz-range-thumb:hover {
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Interest</div>
-                        <div class="metric-value">$${snowball.totalInterest.toFixed(2)}</div>
+                        <div class="metric-value">${fmtC(snowball.totalInterest)}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Amount Paid</div>
-                        <div class="metric-value">$${snowball.totalPaid.toFixed(2)}</div>
+                        <div class="metric-value">${fmtC(snowball.totalPaid)}</div>
                     </div>
                     ${saved < 0 ? `<div class="winner-badge">🏆 Best Choice!</div>` : ''}
                 </div>
@@ -1095,11 +1069,11 @@ input[type="range"]::-moz-range-thumb:hover {
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Interest</div>
-                        <div class="metric-value">$${avalanche.totalInterest.toFixed(2)}</div>
+                        <div class="metric-value">${fmtC(avalanche.totalInterest)}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Amount Paid</div>
-                        <div class="metric-value">$${avalanche.totalPaid.toFixed(2)}</div>
+                        <div class="metric-value">${fmtC(avalanche.totalPaid)}</div>
                     </div>
                     ${saved >= 0 ? `<div class="winner-badge">🏆 Best Choice!</div>` : ''}
                 </div>
@@ -1125,10 +1099,10 @@ input[type="range"]::-moz-range-thumb:hover {
                 <tr>
                     <td>${item.month}</td>
                     <td>${escapeHtml(item.targeted)}</td>
-                    <td>$${item.payment.toFixed(2)}</td>
-                    <td>$${(item.payment - item.interest).toFixed(2)}</td>
-                    <td>$${item.interest.toFixed(2)}</td>
-                    <td>$${Math.max(0, item.remaining).toFixed(2)}</td>
+                    <td>${fmtC(item.payment)}</td>
+                    <td>${fmtC(item.payment - item.interest)}</td>
+                    <td>${fmtC(item.interest)}</td>
+                    <td>${fmtC(Math.max(0, item.remaining))}</td>
                 </tr>
             `).join('');
 
@@ -1136,10 +1110,10 @@ input[type="range"]::-moz-range-thumb:hover {
                 <tr>
                     <td>${item.month}</td>
                     <td>${escapeHtml(item.targeted)}</td>
-                    <td>$${item.payment.toFixed(2)}</td>
-                    <td>$${(item.payment - item.interest).toFixed(2)}</td>
-                    <td>$${item.interest.toFixed(2)}</td>
-                    <td>$${Math.max(0, item.remaining).toFixed(2)}</td>
+                    <td>${fmtC(item.payment)}</td>
+                    <td>${fmtC(item.payment - item.interest)}</td>
+                    <td>${fmtC(item.interest)}</td>
+                    <td>${fmtC(Math.max(0, item.remaining))}</td>
                 </tr>
             `).join('');
 
@@ -1162,12 +1136,20 @@ input[type="range"]::-moz-range-thumb:hover {
             const width = canvas.width - padding * 2;
             const height = canvas.height - padding * 2;
 
+            const cBg = cssv('--el-bg2', '#ffffff');
+            const cGrid = cssv('--el-border', '#e3e7ec');
+            const cAxis = cssv('--el-emerald', '#10b981');
+            const cLabel = cssv('--el-text2', '#5a616a');
+            const cLegend = cssv('--el-text1', '#1b1e22');
+            const cSnow = '#10b981';
+            const cAval = '#f59e0b';
+
             // Background
-            ctx.fillStyle = 'rgb(10, 18, 16)';
+            ctx.fillStyle = cBg;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Grid
-            ctx.strokeStyle = 'rgb(22, 46, 38)';
+            ctx.strokeStyle = cGrid;
             ctx.lineWidth = 1;
             for (let i = 0; i <= 10; i++) {
                 const y = padding + (height / 10) * i;
@@ -1178,7 +1160,7 @@ input[type="range"]::-moz-range-thumb:hover {
             }
 
             // Axes
-            ctx.strokeStyle = 'rgb(52, 211, 153)';
+            ctx.strokeStyle = cAxis;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(padding, canvas.height - padding);
@@ -1191,8 +1173,8 @@ input[type="range"]::-moz-range-thumb:hover {
             ctx.stroke();
 
             // Labels
-            ctx.fillStyle = 'rgb(122, 154, 142)';
-            ctx.font = '12px Inter';
+            ctx.fillStyle = cLabel;
+            ctx.font = '12px system-ui, sans-serif';
             ctx.textAlign = 'center';
             for (let i = 0; i <= 5; i++) {
                 const month = Math.floor((maxMonths / 5) * i);
@@ -1204,7 +1186,7 @@ input[type="range"]::-moz-range-thumb:hover {
             for (let i = 0; i <= 5; i++) {
                 const amount = (maxDebt / 5) * (5 - i);
                 const y = padding + (height / 5) * i;
-                ctx.fillText(`$${(amount / 1000).toFixed(0)}k`, padding - 10, y + 5);
+                ctx.fillText(`$${Math.round(amount / 1000)}k`, padding - 10, y + 5);
             }
 
             // Draw lines
@@ -1221,25 +1203,27 @@ input[type="range"]::-moz-range-thumb:hover {
                 ctx.stroke();
             };
 
-            drawLine(snowball.debtHistory, 'rgb(52, 211, 153)');
-            drawLine(avalanche.debtHistory, 'rgb(16, 185, 129)');
+            drawLine(snowball.debtHistory, cSnow);
+            drawLine(avalanche.debtHistory, cAval);
 
             // Legend
-            ctx.font = 'bold 13px Inter';
-            ctx.fillStyle = 'rgb(52, 211, 153)';
+            ctx.font = 'bold 13px system-ui, sans-serif';
+            ctx.fillStyle = cSnow;
             ctx.fillRect(canvas.width - 200, 15, 15, 15);
-            ctx.fillStyle = 'rgb(232, 240, 236)';
+            ctx.fillStyle = cLegend;
             ctx.textAlign = 'left';
             ctx.fillText('Snowball', canvas.width - 175, 27);
 
-            ctx.fillStyle = 'rgb(16, 185, 129)';
+            ctx.fillStyle = cAval;
             ctx.fillRect(canvas.width - 200, 40, 15, 15);
-            ctx.fillStyle = 'rgb(232, 240, 236)';
+            ctx.fillStyle = cLegend;
             ctx.fillText('Avalanche', canvas.width - 175, 52);
         }
 
         function renderMotivation(snowball, avalanche) {
             document.getElementById('motivationSection').style.display = 'block';
+
+            // Real minimum-only baseline (no extra, no rollover) vs the chosen best strategy
             const minOnly = simulateMinOnly(debts);
             const best = avalanche.months <= snowball.months ? avalanche : snowball;
             const monthsSaved = Math.max(0, minOnly.months - best.months);
@@ -1251,7 +1235,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         function calculateWhatIf() {
             const extra = parseFloat(document.getElementById('whatIfSlider').value);
-            document.getElementById('whatIfAmount').textContent = `$${extra.toFixed(2)}`;
+            document.getElementById('whatIfAmount').textContent = fmtC(extra);
 
             if (debts.length === 0) return;
 
@@ -1279,42 +1263,60 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         function exportData() {
-            let csv = 'Debt Payoff Calculator\n\n';
-            csv += 'Debts\n';
+            const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+            let csv = 'Name,Balance,Rate,MinPayment\n';
             debts.forEach(d => {
-                const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
                 csv += `${q(d.name)},${d.balance.toFixed(2)},${d.rate.toFixed(2)},${d.minPayment.toFixed(2)}\n`;
             });
 
             const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
             element.setAttribute('download', 'debts_' + new Date().toISOString().slice(0, 10) + '.csv');
             element.click();
         }
+
+        // Restore persisted extra payment
+        try { const ex = localStorage.getItem(EXTRA_KEY); if (ex !== null) document.getElementById('extraPayment').value = ex; } catch (e) {}
 
         // Initialize
         loadDebts();
         renderDebts();
         if (debts.length > 0) calculatePayoff();
-    </script>
 
-</div><!-- /appContent -->
-<script>
-(function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='xtsqyitvcp',K='etherlabs_calcolatore-debiti_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+        // Persist extra payment on change
+        document.getElementById('extraPayment').addEventListener('input', function () {
+            try { localStorage.setItem(EXTRA_KEY, this.value); } catch (e) {}
+        });
+
+        // Redraw theme-aware chart when the theme toggles
+        new MutationObserver(function () { if (debts.length > 0) calculatePayoff(); })
+            .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+        // Always print in the light theme (avoids a dark chart / dark background on paper)
+        let __printPrevTheme = null;
+        window.addEventListener('beforeprint', function () {
+            const R = document.documentElement;
+            if (R.getAttribute('data-theme') === 'dark') {
+                __printPrevTheme = 'dark';
+                R.setAttribute('data-theme', 'light');
+                if (debts.length > 0) calculatePayoff();
+            }
+        });
+        window.addEventListener('afterprint', function () {
+            if (__printPrevTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                __printPrevTheme = null;
+                if (debts.length > 0) calculatePayoff();
+            }
+        });
+    </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
+<script>
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+</script>
 </body>
 </html>
