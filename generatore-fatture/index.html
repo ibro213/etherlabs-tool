@@ -444,6 +444,8 @@ const I18N = {
     country: 'Country', language: 'Language', currency: 'Currency', template: 'Template',
     defaultTax: 'Default Rate', invoiceCounter: 'Invoice Counter', accent: 'Brand Color',
     status: 'Status', pricesInclTax: 'Prices include {tax}', forfettario: 'Flat-rate scheme (IT)',
+    cassaLabel: 'Contribution / markup (%)', ritenutaLabel: 'Withholding tax (%)', rivalsaInRit: 'Contribution subject to withholding',
+    cassaRow: 'Contribution', ritenutaRow: 'Withholding tax', nettoAPagare: 'Net payable',
     detailsTitle: 'Invoice Details', previewTitle: 'Invoice Preview',
     invoiceNumber: 'Invoice Number', invoiceDate: 'Invoice Date', dueDate: 'Due Date',
     fromSender: 'From (Sender)', companyName: 'Company Name', uploadLogo: 'Upload Logo',
@@ -481,6 +483,8 @@ const I18N = {
     country: 'Paese', language: 'Lingua', currency: 'Valuta', template: 'Modello',
     defaultTax: 'Aliquota predefinita', invoiceCounter: 'Contatore fattura', accent: 'Colore brand',
     status: 'Stato', pricesInclTax: 'Prezzi {tax} inclusa', forfettario: 'Regime Forfettario',
+    cassaLabel: 'Cassa / Rivalsa INPS (%)', ritenutaLabel: "Ritenuta d'acconto (%)", rivalsaInRit: 'Rivalsa soggetta a ritenuta',
+    cassaRow: 'Cassa / Rivalsa', ritenutaRow: "Ritenuta d'acconto", nettoAPagare: 'Netto a pagare',
     detailsTitle: 'Dati Fattura', previewTitle: 'Anteprima Fattura',
     invoiceNumber: 'Numero Fattura', invoiceDate: 'Data Fattura', dueDate: 'Scadenza',
     fromSender: 'Da (Mittente)', companyName: 'Ragione Sociale', uploadLogo: 'Carica Logo',
@@ -514,6 +518,8 @@ const I18N = {
     country: 'Pays', language: 'Langue', currency: 'Devise', template: 'Modèle',
     defaultTax: 'Taux par défaut', invoiceCounter: 'Compteur facture', accent: 'Couleur marque',
     status: 'Statut', pricesInclTax: 'Prix {tax} incluse', forfettario: 'Régime forfaitaire (IT)',
+    cassaLabel: 'Cotisation / majoration (%)', ritenutaLabel: 'Retenue à la source (%)', rivalsaInRit: 'Cotisation soumise à la retenue',
+    cassaRow: 'Cotisation', ritenutaRow: 'Retenue à la source', nettoAPagare: 'Net à payer',
     detailsTitle: 'Détails de la facture', previewTitle: 'Aperçu de la facture',
     invoiceNumber: 'Numéro de facture', invoiceDate: 'Date de facture', dueDate: 'Échéance',
     fromSender: 'De (Émetteur)', companyName: 'Nom de l’entreprise', uploadLogo: 'Charger logo',
@@ -547,6 +553,8 @@ const I18N = {
     country: 'Land', language: 'Sprache', currency: 'Währung', template: 'Vorlage',
     defaultTax: 'Standardsatz', invoiceCounter: 'Rechnungszähler', accent: 'Markenfarbe',
     status: 'Status', pricesInclTax: 'Preise inkl. {tax}', forfettario: 'Pauschalregelung (IT)',
+    cassaLabel: 'Beitrag / Aufschlag (%)', ritenutaLabel: 'Quellensteuer (%)', rivalsaInRit: 'Beitrag unterliegt Quellensteuer',
+    cassaRow: 'Beitrag', ritenutaRow: 'Quellensteuer', nettoAPagare: 'Nettobetrag',
     detailsTitle: 'Rechnungsdaten', previewTitle: 'Rechnungsvorschau',
     invoiceNumber: 'Rechnungsnummer', invoiceDate: 'Rechnungsdatum', dueDate: 'Fällig am',
     fromSender: 'Von (Absender)', companyName: 'Firmenname', uploadLogo: 'Logo hochladen',
@@ -580,6 +588,8 @@ const I18N = {
     country: 'País', language: 'Idioma', currency: 'Moneda', template: 'Plantilla',
     defaultTax: 'Tipo por defecto', invoiceCounter: 'Contador de factura', accent: 'Color de marca',
     status: 'Estado', pricesInclTax: 'Precios con {tax} incluido', forfettario: 'Régimen forfait (IT)',
+    cassaLabel: 'Cotización / recargo (%)', ritenutaLabel: 'Retención (%)', rivalsaInRit: 'Cotización sujeta a retención',
+    cassaRow: 'Cotización', ritenutaRow: 'Retención', nettoAPagare: 'Neto a pagar',
     detailsTitle: 'Datos de la factura', previewTitle: 'Vista previa',
     invoiceNumber: 'Número de factura', invoiceDate: 'Fecha de factura', dueDate: 'Vencimiento',
     fromSender: 'De (Emisor)', companyName: 'Nombre de empresa', uploadLogo: 'Subir logo',
@@ -619,7 +629,7 @@ const I18N = {
    forfettario = show the Italian flat-rate module
 */
 const COUNTRIES = {
-  IT:  { name: 'Italia',          lang: 'it', locale: 'it-IT', currency: '€',   taxLabel: 'IVA',  rates: [22,10,5,0],    prefix: 'FATT', forfettario: true  },
+  IT:  { name: 'Italia',          lang: 'it', locale: 'it-IT', currency: '€',   taxLabel: 'IVA',  rates: [22,10,5,4,0],  prefix: 'FATT', forfettario: true  },
   GB:  { name: 'United Kingdom',  lang: 'en', locale: 'en-GB', currency: '£',   taxLabel: 'VAT',  rates: [20,5,0],       prefix: 'INV',  forfettario: false },
   US:  { name: 'United States',   lang: 'en', locale: 'en-US', currency: '$',   taxLabel: 'Tax',  rates: [0,5,8,10],     prefix: 'INV',  forfettario: false },
   FR:  { name: 'France',          lang: 'fr', locale: 'fr-FR', currency: '€',   taxLabel: 'TVA',  rates: [20,10,5.5,0],  prefix: 'FACT', forfettario: false },
@@ -992,6 +1002,14 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                         <div class="control-group"><label data-i18n="totalTax">Total Tax</label><input type="text" id="taxTotal" readonly></div>
                         <div class="control-group"><label data-i18n="grandTotal">Grand Total</label><input type="text" id="grandTotal" readonly style="font-weight: bold; background: var(--gold-glow); color: var(--gold-light); border-color: var(--gold);"></div>
                     </div>
+                    <div class="form-row">
+                        <div class="control-group"><label data-i18n="cassaLabel">Contribution (%)</label><input type="number" id="cassaRate" min="0" max="100" step="0.01" placeholder="0"></div>
+                        <div class="control-group"><label data-i18n="ritenutaLabel">Withholding (%)</label><input type="number" id="ritenutaRate" min="0" max="100" step="0.01" placeholder="0"></div>
+                    </div>
+                    <div class="control-group" style="flex-direction:row;align-items:center;gap:8px;">
+                        <input type="checkbox" id="rivalsaInRitenuta" checked style="width:auto;">
+                        <label for="rivalsaInRitenuta" data-i18n="rivalsaInRit" style="margin:0;">Contribution subject to withholding</label>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -1091,6 +1109,10 @@ function fmtMoney(value) {
     // normalize special spaces (jsPDF Helvetica can't render them) and fix euro-before-digit overlap
     return s.replace(/[\u00A0\u202F\u2009]/g, " ").replace(/\u20AC(?=\d)/, "\u20AC ");
 }
+function fmtPct(n) {
+    const v = Number(n) || 0;
+    return (Number.isInteger(v) ? v.toString() : v.toFixed(2).replace('.', ',')) + '%';
+}
 function fmtDate(v) {
     if (!v) return '—';
     const d = new Date(v + 'T00:00:00');
@@ -1135,7 +1157,10 @@ function applyCountry(code, opts) {
 /* ---------- invoice number ---------- */
 function updateInvoiceNumber() {
     const counter = $('invoiceCounter').value;
-    const year = new Date().getFullYear();
+    // anno dall'anno fiscale della data fattura, non dalla data odierna
+    const dv = $('invoiceDate').value;
+    const d = dv ? new Date(dv + 'T00:00:00') : null;
+    const year = (d && !isNaN(d.getTime())) ? d.getFullYear() : new Date().getFullYear();
     const prefix = COUNTRIES[state.country].prefix;
     $('invoiceNumber').value = `${prefix}-${year}-${String(counter).padStart(3, '0')}`;
 }
@@ -1171,7 +1196,7 @@ function computeInvoice() {
     const forf = state.forfettario && COUNTRIES[state.country].forfettario;
     const incl = state.taxInclusive && !forf;
     const items = [];
-    let subtotal = 0, taxTotal = 0;
+    let subtotal = 0;
 
     document.querySelectorAll('.line-item').forEach(row => {
         const desc = row.querySelector('.description').value || '-';
@@ -1186,18 +1211,42 @@ function computeInvoice() {
         else { net = gross; lineTax = gross * rate / 100; }
 
         subtotal += net;
-        taxTotal += lineTax;
-        items.push({ desc, qty, price, rate, exempt: forf, lineTotal: net + lineTax });
+        items.push({ desc, qty, price, rate, net, lineTax, exempt: forf, lineTotal: net + lineTax });
     });
 
+    // sconto
     const raw = $('discount').value.trim();
     const dNum = parseFloat(raw) || 0;
     let discountAmount = raw.includes('%') ? subtotal * (dNum / 100) : dNum;
     if (discountAmount < 0) discountAmount = 0;
     if (discountAmount > subtotal) discountAmount = subtotal;
+    const discountFactor = subtotal > 0 ? (subtotal - discountAmount) / subtotal : 1;
 
-    const grandTotal = subtotal - discountAmount + taxTotal;
-    return { items, subtotal, taxTotal, discountAmount, grandTotal, forf, incl };
+    // cassa previdenziale / rivalsa INPS e ritenuta d'acconto (Italia)
+    const cassaRate = parseFloat($('cassaRate').value) || 0;
+    let ritenutaRate = parseFloat($('ritenutaRate').value) || 0;
+    if (forf) ritenutaRate = 0;                       // i forfettari non subiscono ritenuta
+    const rivalsaInRit = $('rivalsaInRitenuta') ? $('rivalsaInRitenuta').checked : true;
+
+    const imponibile = subtotal - discountAmount;     // base scontata
+    const cassaTotal = imponibile * cassaRate / 100;
+
+    // IVA sulla base SCONTATA + quota cassa, ripartita pro-quota per riga (aliquote miste ok)
+    let taxTotal = 0;
+    items.forEach(it => {
+        const discNet = it.net * discountFactor;
+        const cassaShare = discNet * cassaRate / 100;
+        it.taxDue = (discNet + cassaShare) * it.rate / 100;
+        taxTotal += it.taxDue;
+    });
+
+    const grandTotal = imponibile + cassaTotal + taxTotal;            // totale fattura (lordo)
+    const ritBase = imponibile + (rivalsaInRit ? cassaTotal : 0);     // rivalsa GS soggetta a ritenuta
+    const ritenutaAmount = ritBase * ritenutaRate / 100;
+    const nettoAPagare = grandTotal - ritenutaAmount;
+
+    return { items, subtotal, discountAmount, imponibile, cassaRate, cassaTotal,
+             taxTotal, grandTotal, ritenutaRate, ritenutaAmount, nettoAPagare, forf, incl };
 }
 
 function updateTotals(calc) {
@@ -1291,11 +1340,17 @@ function renderPreview(calc) {
     let forfHTML = '';
     if (calc.forf) {
         forfHTML = `<div class="forf-note">${esc(FORF_TEXT)}</div>`;
-        if (calc.grandTotal >= 77.47) forfHTML += `<div class="forf-bollo">${esc(FORF_BOLLO)}</div>`;
+        if (calc.grandTotal > 77.47) forfHTML += `<div class="forf-bollo">${esc(FORF_BOLLO)}</div>`;
     }
 
     const discRow = calc.discountAmount > 0
         ? `<div class="summary-row"><span class="summary-label">${esc(t('discount').replace(/\s*\(.*\)/, ''))}:</span><span class="summary-value">-${esc(fmtMoney(calc.discountAmount))}</span></div>` : '';
+    const cassaRow = calc.cassaTotal > 0
+        ? `<div class="summary-row"><span class="summary-label">${esc(t('cassaRow'))} (${fmtPct(calc.cassaRate)}):</span><span class="summary-value">${esc(fmtMoney(calc.cassaTotal))}</span></div>` : '';
+    const ritRow = calc.ritenutaAmount > 0
+        ? `<div class="summary-row"><span class="summary-label">${esc(t('ritenutaRow'))} (${fmtPct(calc.ritenutaRate)}):</span><span class="summary-value">-${esc(fmtMoney(calc.ritenutaAmount))}</span></div>` : '';
+    const nettoRow = calc.ritenutaAmount > 0
+        ? `<div class="summary-row total"><span class="summary-label">${esc(t('nettoAPagare'))}:</span><span class="summary-value" style="color:${st.accentCss};">${esc(fmtMoney(calc.nettoAPagare))}</span></div>` : '';
     const inclNote = calc.incl ? `<div class="incl-note">${esc(t('inclTaxNote'))}</div>` : '';
 
     preview.style.borderLeft = st.tpl.leftBorder ? `5px solid ${st.accentCss}` : 'none';
@@ -1339,8 +1394,11 @@ function renderPreview(calc) {
         <div class="totals-section">
             <div class="summary-row"><span class="summary-label">${esc(t('subtotal'))}:</span><span class="summary-value">${esc(fmtMoney(calc.subtotal))}</span></div>
             ${discRow}
+            ${cassaRow}
             <div class="summary-row"><span class="summary-label">${esc(taxWord())}:</span><span class="summary-value">${esc(fmtMoney(calc.taxTotal))}</span></div>
             <div class="summary-row total"><span class="summary-label">${esc(t('grandTotal'))}:</span><span class="summary-value" style="color:${st.accentCss};">${esc(fmtMoney(calc.grandTotal))}</span></div>
+            ${ritRow}
+            ${nettoRow}
         </div>
         ${inclNote}
 
@@ -1531,8 +1589,10 @@ async function buildInvoicePdf() {
     const boxX = PW - M - 78;
     const rows = [[t('subtotal'), fmtMoney(calc.subtotal)]];
     if (calc.discountAmount > 0) rows.push([t('discount').replace(/\s*\(.*\)/, ''), '-' + fmtMoney(calc.discountAmount)]);
+    if (calc.cassaTotal > 0) rows.push([`${t('cassaRow')} (${fmtPct(calc.cassaRate)})`, fmtMoney(calc.cassaTotal)]);
     rows.push([taxWord(), fmtMoney(calc.taxTotal)]);
-    const totalsH = rows.length * 6.5 + 14 + (calc.incl ? 5 : 0);
+    const hasRit = calc.ritenutaAmount > 0;
+    const totalsH = rows.length * 6.5 + 14 + (calc.incl ? 5 : 0) + (hasRit ? 13 : 0);
     if (y + totalsH > BOTTOM) { doc.addPage(); y = M; }
     doc.setFontSize(10);
     rows.forEach(([label, value]) => {
@@ -1548,6 +1608,16 @@ async function buildInvoicePdf() {
     doc.setTextColor(0, 0, 0); doc.text(t('grandTotal'), boxX, y);
     doc.setTextColor(accent[0], accent[1], accent[2]); doc.text(fmtMoney(calc.grandTotal), PW - M, y, { align: 'right' });
     y += 6;
+    if (hasRit) {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(70, 70, 70);
+        doc.text(`${t('ritenutaRow')} (${fmtPct(calc.ritenutaRate)})`, boxX, y + 4.5);
+        doc.setTextColor(0, 0, 0); doc.text('-' + fmtMoney(calc.ritenutaAmount), PW - M, y + 4.5, { align: 'right' });
+        y += 8;
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5);
+        doc.setTextColor(0, 0, 0); doc.text(t('nettoAPagare'), boxX, y);
+        doc.setTextColor(accent[0], accent[1], accent[2]); doc.text(fmtMoney(calc.nettoAPagare), PW - M, y, { align: 'right' });
+        y += 6;
+    }
     if (calc.incl) {
         doc.setFont('helvetica', 'italic'); doc.setFontSize(8); doc.setTextColor(120, 120, 120);
         doc.text(t('inclTaxNote'), PW - M, y, { align: 'right' }); y += 6;
@@ -1575,7 +1645,7 @@ async function buildInvoicePdf() {
     // forfettario legal block
     if (calc.forf) {
         const parts = [FORF_TEXT];
-        if (calc.grandTotal >= 77.47) parts.push(FORF_BOLLO);
+        if (calc.grandTotal > 77.47) parts.push(FORF_BOLLO);
         parts.forEach(txt => {
             const lines = doc.splitTextToSize(txt, CW - 8);
             const h = lines.length * 4.2 + 5;
@@ -1657,6 +1727,7 @@ function buildData() {
         toName: $('toName').value, toAddress: $('toAddress').value, toCity: $('toCity').value,
         toEmail: $('toEmail').value, toTax: $('toTax').value,
         discount: $('discount').value, bankName: $('bankName').value, bankIBAN: $('bankIBAN').value,
+        cassaRate: $('cassaRate').value, ritenutaRate: $('ritenutaRate').value, rivalsaInRitenuta: $('rivalsaInRitenuta').checked,
         paymentTerms: $('paymentTerms').value, notes: $('notes').value, lineItems: []
     };
     document.querySelectorAll('.line-item').forEach(row => data.lineItems.push({
@@ -1705,8 +1776,9 @@ function applyData(data) {
     $('fromName').value = data.fromName || '';
     $('fromLogo').value = data.fromLogo || '';
     state.logoDataUrl = data.fromLogoFile || null;
-    ['fromAddress','fromCity','fromEmail','fromPhone','fromTax','toName','toAddress','toCity','toEmail','toTax','discount','bankName','bankIBAN','paymentTerms','notes']
+    ['fromAddress','fromCity','fromEmail','fromPhone','fromTax','toName','toAddress','toCity','toEmail','toTax','discount','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate']
         .forEach(k => { if ($(k)) $(k).value = data[k] || ''; });
+    $('rivalsaInRitenuta').checked = data.rivalsaInRitenuta !== undefined ? !!data.rivalsaInRitenuta : true;
 
     state.status = data.status || 'none'; $('status').value = state.status;
     state.taxInclusive = !!data.taxInclusive; $('taxInclusive').checked = state.taxInclusive;
@@ -1744,8 +1816,9 @@ $('taxInclusive').addEventListener('change', e => { state.taxInclusive = e.targe
 $('forfettario').addEventListener('change', e => { state.forfettario = e.target.checked; updatePreview(); });
 $('accentColor').addEventListener('input', e => { state.accent = e.target.value; updatePreview(); });
 $('accentReset').addEventListener('click', () => { state.accent = null; $('accentColor').value = TEMPLATES[state.template].defAccent; updatePreview(); });
-['defaultTax','invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes']
+['defaultTax','invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate']
     .forEach(id => $(id).addEventListener('input', updatePreview));
+$('rivalsaInRitenuta').addEventListener('change', updatePreview);
 
 $('fromLogoFile').addEventListener('change', function (e) {
     const file = e.target.files[0]; if (!file) return;

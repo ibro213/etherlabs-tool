@@ -1293,11 +1293,11 @@ button.secondary:hover {
             });
 
             const container = document.getElementById('risultatiConfronti');
-            container.innerHTML = '<div class="results-grid">';
+            let html = '<div class="results-grid">';
 
             results.forEach(r => {
                 const highlighted = results.length === 1 ? 'highlighted' : (r.rata === Math.min(...results.map(x => x.rata)) ? 'highlighted' : '');
-                container.innerHTML += `
+                html += `
                     <div class="comparison-card ${highlighted}">
                         <h3 style="color: var(--gold-light); margin-bottom: 15px;">Scenario ${r.idx}</h3>
                         <div class="comparison-item">
@@ -1328,7 +1328,8 @@ button.secondary:hover {
                 `;
             });
 
-            container.innerHTML += '</div>';
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         // ========== ESTINZIONE ANTICIPATA ==========
@@ -1345,21 +1346,26 @@ button.secondary:hover {
 
             let debitoResiduo = dataCalcolo.importo;
             let mesiRimanenti = ammort.length;
-            let risparmi = 0;
+            let totalePagatoNuovo = 0;
+            const r = getTassoAttuale() / 100 / 12;
 
             ammort.forEach(m => {
                 if (debitoResiduo <= 0) return;
 
-                const r = getTassoAttuale() / 100 / 12;
                 const interessi = debitoResiduo * r;
-                const capitale = Math.min(rataTotale - interessi, debitoResiduo);
-                debitoResiduo -= capitale;
+                const capitale = rataTotale - interessi;
 
-                if (debitoResiduo <= 0) {
+                if (capitale >= debitoResiduo) {
+                    totalePagatoNuovo += debitoResiduo + interessi;
+                    debitoResiduo = 0;
                     mesiRimanenti = m.mese;
-                    risparmi = ammort.length * rata - m.mese * rataTotale;
+                } else {
+                    debitoResiduo -= capitale;
+                    totalePagatoNuovo += rataTotale;
                 }
             });
+
+            const risparmi = Math.max(0, (ammort.length * rata) - totalePagatoNuovo);
 
             const nuovaDurata = (mesiRimanenti / 12).toFixed(1);
             const durataOriginale = (ammort.length / 12).toFixed(1);
@@ -1389,7 +1395,8 @@ button.secondary:hover {
 
         // ========== UTILITIES ==========
         function formatEuro(value) {
-            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
+            const v = Number.isFinite(value) ? value : 0;
+            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(v);
         }
 
         function aggiornaSliderValue(id, val) {

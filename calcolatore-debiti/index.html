@@ -846,6 +846,12 @@ input[type="range"]::-moz-range-thumb:hover {
 
     <script>
         let debts = [];
+        const LS_KEY = 'etherlabs_debtpayoff_v1';
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function saveDebts() { try { localStorage.setItem(LS_KEY, JSON.stringify(debts)); } catch (e) {} }
+        function loadDebts() { try { const s = localStorage.getItem(LS_KEY); if (s) debts = JSON.parse(s) || []; } catch (e) {} }
 
         function addDebt() {
             const name = document.getElementById('debtName').value.trim();
@@ -872,12 +878,14 @@ input[type="range"]::-moz-range-thumb:hover {
             document.getElementById('debtRate').value = '';
             document.getElementById('debtMinPayment').value = '';
 
+            saveDebts();
             renderDebts();
             calculatePayoff();
         }
 
         function removeDebt(id) {
             debts = debts.filter(d => d.id !== id);
+            saveDebts();
             renderDebts();
             calculatePayoff();
         }
@@ -893,7 +901,7 @@ input[type="range"]::-moz-range-thumb:hover {
             list.innerHTML = debts.map(debt => `
                 <div class="debt-item">
                     <div class="debt-info">
-                        <div class="debt-name">${debt.name}</div>
+                        <div class="debt-name">${escapeHtml(debt.name)}</div>
                         <div class="debt-details">
                             Tasso: ${debt.rate.toFixed(2)}% | Min: €${debt.minPayment.toFixed(2)}/mese
                         </div>
@@ -950,76 +958,91 @@ input[type="range"]::-moz-range-thumb:hover {
             const schedule = [];
             let month = 0;
             const maxMonths = 600;
-            const totalInterest = [0];
-            const totalPaid = [0];
+            let totalInterest = 0;
+            let totalPaid = 0;
             const debtHistory = [];
+
+            // Fixed monthly budget: sum of ORIGINAL minimums + extra.
+            // When a debt is paid off, its freed minimum rolls over to the target (snowball/avalanche).
+            const budget = debtsArray.reduce((sum, d) => sum + d.minPayment, 0) + extra;
 
             while (debtsArray.some(d => d.balance > 0.01) && month < maxMonths) {
                 month++;
                 let monthInterest = 0;
                 let monthPayment = 0;
 
-                // Calculate interest
-                debtsArray.forEach(debt => {
-                    const monthlyRate = debt.rate / 100 / 12;
-                    const interest = debt.balance * monthlyRate;
-                    debt.interest = interest;
-                    monthInterest += interest;
-                });
-
-                // Allocate minimum payments
-                let remainingExtra = extra;
-                let targeted = null;
-
-                if (strategy === 'snowball') {
-                    const sorted = [...debtsArray].sort((a, b) => a.balance - b.balance);
-                    targeted = sorted.find(d => d.balance > 0.01);
-                } else {
-                    const sorted = [...debtsArray].sort((a, b) => b.rate - a.rate);
-                    targeted = sorted.find(d => d.balance > 0.01);
-                }
-
+                // Accrue and capitalize interest (models negative amortization correctly)
                 debtsArray.forEach(debt => {
                     if (debt.balance <= 0.01) return;
+                    const interest = debt.balance * debt.rate / 100 / 12;
+                    debt.balance += interest;
+                    monthInterest += interest;
+                });
+                totalInterest += monthInterest;
 
-                    let payment = debt.minPayment;
-                    let principal = Math.max(0, payment - debt.interest);
-
-                    if (debt === targeted) {
-                        payment += remainingExtra;
-                        principal = Math.max(0, payment - debt.interest);
-                        remainingExtra = 0;
-                    }
-
-                    payment = Math.min(payment, debt.balance + debt.interest);
-                    principal = Math.min(principal, debt.balance);
-
-                    debt.balance = Math.max(0, debt.balance - principal);
-                    monthPayment += payment;
+                // 1) Pay each active debt its minimum (capped at balance)
+                let avail = budget;
+                debtsArray.forEach(debt => {
+                    if (debt.balance <= 0.01) return;
+                    const pay = Math.min(debt.minPayment, debt.balance);
+                    debt.balance -= pay;
+                    avail -= pay;
+                    monthPayment += pay;
                 });
 
-                totalInterest[0] += monthInterest;
-                totalPaid[0] += monthPayment;
+                // 2) Remaining budget (extra + freed minimums) → the target debt by strategy
+                const active = debtsArray.filter(d => d.balance > 0.01);
+                active.sort((a, b) => strategy === 'snowball' ? a.balance - b.balance : b.rate - a.rate);
+                const targeted = active[0] || null;
+                for (const debt of active) {
+                    if (avail <= 0.005) break;
+                    const pay = Math.min(avail, debt.balance);
+                    debt.balance -= pay;
+                    avail -= pay;
+                    monthPayment += pay;
+                }
 
-                const totalRemaining = debtsArray.reduce((sum, d) => sum + d.balance, 0);
+                totalPaid += monthPayment;
+
+                const totalRemaining = debtsArray.reduce((sum, d) => sum + Math.max(0, d.balance), 0);
                 debtHistory.push(totalRemaining);
 
                 if (month <= 360) {
                     schedule.push({
                         month,
                         interest: monthInterest,
-                        payment: monthPayment
+                        payment: monthPayment,
+                        remaining: totalRemaining,
+                        targeted: targeted ? targeted.name : '—'
                     });
                 }
             }
 
             return {
                 months: month,
-                totalInterest: totalInterest[0],
-                totalPaid: totalPaid[0],
+                totalInterest: totalInterest,
+                totalPaid: totalPaid,
                 schedule: schedule.slice(0, 60),
                 debtHistory: debtHistory
             };
+        }
+
+        // Baseline: pay ONLY the minimums on each debt, no extra, no rollover (worst case)
+        function simulateMinOnly(debtsArray) {
+            const d = debtsArray.map(x => ({ balance: x.balance, rate: x.rate, minPayment: x.minPayment }));
+            let month = 0, interest = 0;
+            const cap = 1200;
+            while (d.some(x => x.balance > 0.01) && month < cap) {
+                month++;
+                d.forEach(x => {
+                    if (x.balance <= 0.01) return;
+                    const i = x.balance * x.rate / 100 / 12;
+                    interest += i;
+                    x.balance += i;
+                    x.balance -= Math.min(x.minPayment, x.balance);
+                });
+            }
+            return { months: month, interest: interest };
         }
 
         function renderComparison(snowball, avalanche) {
@@ -1078,25 +1101,25 @@ input[type="range"]::-moz-range-thumb:hover {
         function renderSchedules(snowball, avalanche) {
             document.getElementById('scheduleSection').style.display = 'block';
 
-            const snowballHtml = snowball.schedule.map((item, idx) => `
+            const snowballHtml = snowball.schedule.map((item) => `
                 <tr>
                     <td>${item.month}</td>
-                    <td>Prioritario</td>
+                    <td>${escapeHtml(item.targeted)}</td>
                     <td>€${item.payment.toFixed(2)}</td>
                     <td>€${(item.payment - item.interest).toFixed(2)}</td>
                     <td>€${item.interest.toFixed(2)}</td>
-                    <td>€${(debts.reduce((s,d)=>s+d.originalBalance,0) - snowball.debtHistory.slice(0, idx+1).reduce((s,d)=>s+d, 0)).toFixed(2)}</td>
+                    <td>€${Math.max(0, item.remaining).toFixed(2)}</td>
                 </tr>
             `).join('');
 
-            const avalancheHtml = avalanche.schedule.map((item, idx) => `
+            const avalancheHtml = avalanche.schedule.map((item) => `
                 <tr>
                     <td>${item.month}</td>
-                    <td>Prioritario</td>
+                    <td>${escapeHtml(item.targeted)}</td>
                     <td>€${item.payment.toFixed(2)}</td>
                     <td>€${(item.payment - item.interest).toFixed(2)}</td>
                     <td>€${item.interest.toFixed(2)}</td>
-                    <td>€${(debts.reduce((s,d)=>s+d.originalBalance,0) - avalanche.debtHistory.slice(0, idx+1).reduce((s,d)=>s+d, 0)).toFixed(2)}</td>
+                    <td>€${Math.max(0, item.remaining).toFixed(2)}</td>
                 </tr>
             `).join('');
 
@@ -1197,21 +1220,10 @@ input[type="range"]::-moz-range-thumb:hover {
 
         function renderMotivation(snowball, avalanche) {
             document.getElementById('motivationSection').style.display = 'block';
-            const minOnlyMonths = 600;
-            const minOnlyInterest = debts.reduce((s, d) => {
-                let balance = d.originalBalance;
-                let totalInt = 0;
-                for (let m = 0; m < minOnlyMonths; m++) {
-                    const monthlyRate = d.rate / 100 / 12;
-                    totalInt += balance * monthlyRate;
-                    balance -= (d.minPayment - balance * monthlyRate);
-                    if (balance <= 0) break;
-                }
-                return s + totalInt;
-            }, 0);
-
-            const saved = minOnlyInterest - avalanche.totalInterest;
-            const monthsSaved = Math.max(0, minOnlyMonths - avalanche.months);
+            const minOnly = simulateMinOnly(debts);
+            const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            const monthsSaved = Math.max(0, minOnly.months - best.months);
+            const saved = Math.max(0, minOnly.interest - best.totalInterest);
 
             document.getElementById('interestSaved').textContent = `€${saved.toFixed(2)}`;
             document.getElementById('monthsSaved').textContent = Math.floor(monthsSaved);
@@ -1250,7 +1262,8 @@ input[type="range"]::-moz-range-thumb:hover {
             let csv = 'Calcolatore Estinzione Debiti\n\n';
             csv += 'Debiti\n';
             debts.forEach(d => {
-                csv += `${d.name},€${d.balance.toFixed(2)},${d.rate.toFixed(2)}%,€${d.minPayment.toFixed(2)}\n`;
+                const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+                csv += `${q(d.name)},${d.balance.toFixed(2)},${d.rate.toFixed(2)},${d.minPayment.toFixed(2)}\n`;
             });
 
             const element = document.createElement('a');
@@ -1260,7 +1273,9 @@ input[type="range"]::-moz-range-thumb:hover {
         }
 
         // Initialize
+        loadDebts();
         renderDebts();
+        if (debts.length > 0) calculatePayoff();
     </script>
 
 </div><!-- /appContent -->

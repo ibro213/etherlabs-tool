@@ -1268,20 +1268,21 @@
                 let discountAmount = discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal;
 
                 const afterDiscount = subtotal - discountAmount;
-                const vatRate = this.getVatRate() / 100;
-                const vatAmount = afterDiscount * vatRate;
 
-                let total = afterDiscount + vatAmount;
-
+                // Social security markup: computed first, part of the VAT and withholding base
                 const additionalTaxChecked = document.getElementById('additionalTax').checked;
                 const additionalTaxRate = parseFloat(document.getElementById('additionalTaxRate').value) || 0;
                 const additionalTaxAmount = additionalTaxChecked ? afterDiscount * (additionalTaxRate / 100) : 0;
-                total += additionalTaxAmount;
+                const baseImponibile = afterDiscount + additionalTaxAmount;
+
+                const vatRate = this.getVatRate() / 100;
+                const vatAmount = baseImponibile * vatRate;
 
                 const withholdingTax = document.getElementById('withholdingTax').checked;
                 const withholdingTaxRate = parseFloat(document.getElementById('withholdingTaxRate').value) || 0;
-                const withholdingAmount = withholdingTax ? afterDiscount * (withholdingTaxRate / 100) : 0;
-                total -= withholdingAmount;
+                const withholdingAmount = withholdingTax ? baseImponibile * (withholdingTaxRate / 100) : 0;
+
+                let total = afterDiscount + additionalTaxAmount + vatAmount - withholdingAmount;
 
                 const cs = this.getCurrencySymbol();
                 const fmt = (v) => cs + v.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});

@@ -513,28 +513,23 @@ button:hover {
         }
 
         @media print {
-            body {
-                background: white;
-                padding: 0;
+            :root {
+                --bg: #ffffff; --bg-card: #ffffff; --bg-input: #ffffff;
+                --text: #111111; --text-dim: #333333; --text-muted: #555555;
+                --border: #cccccc;
             }
-
-            .print-hide {
-                display: none;
+            html, body, .section, .chart-container, .card, table, td, th, .stat-card, .timeline-item {
+                background: #ffffff !important;
+                color: #111111 !important;
             }
-
-            .section, .chart-container {
-                break-inside: avoid;
-                page-break-inside: avoid;
+            body { padding: 0; }
+            label, span, div, p, h1, h2, h3, td, th, .slider-value, .form-info, .section-title {
+                color: #111111 !important;
             }
-
-            button {
-                display: none;
-            }
-
-            footer {
-                border-top: 1px solid #ccc;
-                color: #666;
-            }
+            .print-hide, button, input[type="range"] { display: none; }
+            .section, .chart-container { break-inside: avoid; page-break-inside: avoid; }
+            #growthChart { display: none; }
+            footer { border-top: 1px solid #ccc; color: #666 !important; }
         }
     
         /* === MOBILE iOS FIX (auto-applied) === */
@@ -783,7 +778,7 @@ button:hover {
             <div class="slider-group">
                 <div class="slider-label">
                     <label>Additional Monthly Savings</label>
-                    <span class="slider-value">$0</span>
+                    <span class="slider-value" id="addSavingsValue">$0</span>
                 </div>
                 <input type="range" id="additionalSavings" min="0" max="2000" step="100" value="0">
                 <div class="form-info" id="addSavingsResult">With $0 additional per month: no change</div>
@@ -792,7 +787,7 @@ button:hover {
             <div class="slider-group">
                 <div class="slider-label">
                     <label>Expense Reduction (%)</label>
-                    <span class="slider-value">0%</span>
+                    <span class="slider-value" id="expenseReductionValue">0%</span>
                 </div>
                 <input type="range" id="expenseReduction" min="0" max="50" step="5" value="0">
                 <div class="form-info" id="expenseResult">With 0% reduction: no change</div>
@@ -801,7 +796,7 @@ button:hover {
             <div class="slider-group">
                 <div class="slider-label">
                     <label>Income Increase (%)</label>
-                    <span class="slider-value">0%</span>
+                    <span class="slider-value" id="incomeIncreaseValue">0%</span>
                 </div>
                 <input type="range" id="incomeIncrease" min="0" max="100" step="5" value="0">
                 <div class="form-info" id="incomeResult">With 0% increase: no change</div>
@@ -871,17 +866,17 @@ button:hover {
 
                 // Sensitivity analysis
                 document.getElementById('additionalSavings').addEventListener('input', (e) => {
-                    document.querySelector('.slider-group:nth-child(1) .slider-value').textContent = '$' + parseInt(e.target.value).toLocaleString('en-US');
+                    document.getElementById('addSavingsValue').textContent = '$' + parseInt(e.target.value).toLocaleString('en-US');
                     this.updateSensitivityAnalysis();
                 });
 
                 document.getElementById('expenseReduction').addEventListener('input', (e) => {
-                    document.querySelector('.slider-group:nth-child(2) .slider-value').textContent = e.target.value + '%';
+                    document.getElementById('expenseReductionValue').textContent = e.target.value + '%';
                     this.updateSensitivityAnalysis();
                 });
 
                 document.getElementById('incomeIncrease').addEventListener('input', (e) => {
-                    document.querySelector('.slider-group:nth-child(3) .slider-value').textContent = e.target.value + '%';
+                    document.getElementById('incomeIncreaseValue').textContent = e.target.value + '%';
                     this.updateSensitivityAnalysis();
                 });
             }
@@ -931,50 +926,53 @@ button:hover {
             }
 
             calculateYearsToFIRE(principal, annualContribution, annualReturn, fireNumber) {
+                if (principal >= fireNumber) return 0;
                 let value = principal;
                 let years = 0;
                 const maxYears = 100;
 
                 while (value < fireNumber && years < maxYears) {
+                    const prev = value;
                     value = value * (1 + annualReturn) + annualContribution;
                     years++;
+                    if (value >= fireNumber) {
+                        return (years - 1) + (fireNumber - prev) / (value - prev);
+                    }
                 }
 
-                return years < maxYears ? years : maxYears;
+                return maxYears;
             }
 
             calculateAll() {
                 const inputs = this.getInputs();
 
-                // Adjust expenses by FIRE type
+                const realReturn = (1 + inputs.investmentReturn) / (1 + inputs.inflationRate) - 1;
+                inputs.realReturn = realReturn;
+
                 const targetExpenses = this.adjustExpensesByFireType(inputs.annualExpenses, inputs.fireType);
-
-                // Calculate FIRE number
-                const fireNumber = this.calculateFIRENumber(targetExpenses, inputs.withdrawalRate);
-
-                // Calculate annual savings
+                const fullFireNumber = this.calculateFIRENumber(targetExpenses, inputs.withdrawalRate);
                 const annualSavings = inputs.annualIncome * inputs.savingsRate;
 
-                // Calculate years to FIRE
+                let fireNumber = fullFireNumber;
+                if (inputs.fireType === 'coast') {
+                    const yearsToTarget = Math.max(0, inputs.targetAge - inputs.currentAge);
+                    fireNumber = fullFireNumber / Math.pow(1 + realReturn, yearsToTarget);
+                }
+
                 const yearsToFire = this.calculateYearsToFIRE(
                     inputs.currentAssets,
                     annualSavings,
-                    inputs.investmentReturn,
+                    realReturn,
                     fireNumber
                 );
 
-                // Calculate FIRE date
                 const fireDate = new Date().getFullYear() + yearsToFire;
-
-                // Calculate gap
                 const currentGap = Math.max(0, fireNumber - inputs.currentAssets);
-
-                // Calculate progress percentage
                 const progressPercentage = Math.min(100, (inputs.currentAssets / fireNumber) * 100);
-
-                // Calculate monthly values
                 const monthlySavings = annualSavings / 12;
-                const monthlyIncome = (fireNumber * inputs.withdrawalRate) / 12;
+                const monthlyIncome = targetExpenses / 12;
+                this.results = { fireNumber, fullFireNumber, yearsToFire, fireDate: Math.floor(fireDate),
+                                 currentGap, progressPercentage, monthlySavings, monthlyIncome, realReturn };
 
                 // Update UI
                 document.getElementById('fireNumber').textContent = '$' + fireNumber.toLocaleString('en-US', {maximumFractionDigits: 0});
@@ -1009,16 +1007,17 @@ button:hover {
                 ];
 
                 scenarios.forEach(scenario => {
+                    const realRate = (1 + scenario.rate) / (1 + inputs.inflationRate) - 1;
                     const yearsToFire = this.calculateYearsToFIRE(
                         inputs.currentAssets,
                         inputs.annualIncome * inputs.savingsRate,
-                        scenario.rate,
+                        realRate,
                         this.calculateFIRENumber(targetExpenses, withdrawalRate)
                     );
 
                     const finalWealth = this.calculateCompoundGrowth(
                         inputs.currentAssets,
-                        scenario.rate,
+                        realRate,
                         yearsToFire,
                         inputs.annualIncome * inputs.savingsRate
                     );
@@ -1044,7 +1043,7 @@ button:hover {
                     const yearsToMilestone = this.calculateYearsToFIRE(
                         inputs.currentAssets,
                         annualSavings,
-                        inputs.investmentReturn,
+                        inputs.realReturn,
                         targetAmount
                     );
 
@@ -1069,7 +1068,7 @@ button:hover {
                 for (let year = 0; year <= years; year++) {
                     const withInvestment = this.calculateCompoundGrowth(
                         inputs.currentAssets,
-                        inputs.investmentReturn,
+                        (inputs.realReturn != null ? inputs.realReturn : inputs.investmentReturn),
                         year,
                         annualSavings
                     );
@@ -1177,49 +1176,39 @@ button:hover {
                 const targetExpenses = this.adjustExpensesByFireType(inputs.annualExpenses, inputs.fireType);
                 const fireNumber = this.calculateFIRENumber(targetExpenses, inputs.withdrawalRate);
 
-                // Calculate with adjustments
-                const adjustedAnnualSavings = (inputs.annualIncome * inputs.savingsRate) + (additionalSavings * 12);
-                const adjustedExpenses = targetExpenses * (1 - expenseReduction);
-                const adjustedIncome = inputs.annualIncome * (1 + incomeIncrease);
-                const adjustedSavings = adjustedIncome - inputs.annualExpenses;
-                const adjustedFireNumber = this.calculateFIRENumber(adjustedExpenses, inputs.withdrawalRate);
+                const realReturn = (1 + inputs.investmentReturn) / (1 + inputs.inflationRate) - 1;
+                const baseSavings = inputs.annualIncome * inputs.savingsRate;
+                const originalYears = this.calculateYearsToFIRE(inputs.currentAssets, baseSavings, realReturn, fireNumber);
+                const fmtSaved = (saved) => (saved >= 0 ? '−' : '+') + Math.abs(saved).toFixed(1) + ' years';
 
-                // Calculate impact
-                const yearsWithAdjustment = this.calculateYearsToFIRE(
-                    inputs.currentAssets,
-                    adjustedAnnualSavings,
-                    inputs.investmentReturn,
-                    adjustedFireNumber
-                );
-
-                const originalYears = this.calculateYearsToFIRE(
-                    inputs.currentAssets,
-                    inputs.annualIncome * inputs.savingsRate,
-                    inputs.investmentReturn,
-                    fireNumber
-                );
-
-                const yearsSaved = (originalYears - yearsWithAdjustment).toFixed(1);
-
-                // Update info texts
                 if (additionalSavings > 0) {
+                    const y = this.calculateYearsToFIRE(inputs.currentAssets, baseSavings + additionalSavings * 12, realReturn, fireNumber);
                     document.getElementById('addSavingsResult').textContent =
                         'With $' + additionalSavings.toLocaleString('en-US', {maximumFractionDigits: 0}) +
-                        ' additional per month: ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                        ' additional per month: ' + fmtSaved(originalYears - y);
+                } else {
+                    document.getElementById('addSavingsResult').textContent = 'With $0 additional per month: no change';
                 }
 
                 if (expenseReduction > 0) {
-                    const newExpenses = adjustedExpenses;
+                    const newExpenses = targetExpenses * (1 - expenseReduction);
+                    const newFire = this.calculateFIRENumber(newExpenses, inputs.withdrawalRate);
+                    const y = this.calculateYearsToFIRE(inputs.currentAssets, baseSavings, realReturn, newFire);
                     document.getElementById('expenseResult').textContent =
                         'Expenses reduced to $' + newExpenses.toLocaleString('en-US', {maximumFractionDigits: 0}) +
-                        '/year: ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                        '/year: ' + fmtSaved(originalYears - y);
+                } else {
+                    document.getElementById('expenseResult').textContent = 'With 0% reduction: no change';
                 }
 
                 if (incomeIncrease > 0) {
-                    const newIncome = adjustedIncome;
+                    const extraIncome = inputs.annualIncome * incomeIncrease;
+                    const y = this.calculateYearsToFIRE(inputs.currentAssets, baseSavings + extraIncome, realReturn, fireNumber);
                     document.getElementById('incomeResult').textContent =
-                        'Income increased to $' + newIncome.toLocaleString('en-US', {maximumFractionDigits: 0}) +
-                        ': ' + (yearsSaved > 0 ? '−' : '+') + Math.abs(yearsSaved) + ' years';
+                        'Income increased to $' + (inputs.annualIncome * (1 + incomeIncrease)).toLocaleString('en-US', {maximumFractionDigits: 0}) +
+                        ': ' + fmtSaved(originalYears - y);
+                } else {
+                    document.getElementById('incomeResult').textContent = 'With 0% increase: no change';
                 }
             }
         }
@@ -1227,9 +1216,10 @@ button:hover {
         // Export functionality
         function exportData() {
             const inputs = calculator.getInputs();
-            const fireNumber = parseFloat(document.getElementById('fireNumber').textContent.replace(/[^0-9,-]/g, '').replace('.', '').replace(',', '.'));
-            const yearsToFire = parseFloat(document.getElementById('yearsToFire').textContent);
-            const fireDate = document.getElementById('fireDate').textContent;
+            const r = calculator.results || {};
+            const fireNumber = r.fireNumber || 0;
+            const yearsToFire = (r.yearsToFire != null ? r.yearsToFire : 0).toFixed(1);
+            const fireDate = r.fireDate;
 
             let content = 'FIRE ANALYSIS REPORT - Financial Independence\n';
             content += '='.repeat(50) + '\n\n';
@@ -1244,7 +1234,7 @@ button:hover {
             content += 'FIRE Number: $' + fireNumber.toLocaleString('en-US') + '\n';
             content += 'Years Remaining: ' + yearsToFire + '\n';
             content += 'Estimated FIRE Date: ' + fireDate + '\n';
-            content += 'Monthly Savings: $' + document.getElementById('monthlySavings').textContent.replace(/[^0-9,-]/g, '').replace('.', '').replace(',', '.') + '\n';
+            content += 'Monthly Savings: $' + (r.monthlySavings || 0).toLocaleString('en-US', {maximumFractionDigits: 0}) + '\n';
 
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));

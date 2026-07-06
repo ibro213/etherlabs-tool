@@ -525,22 +525,33 @@ button.secondary:hover {
                     <div class="input-row">
                         <label>Regime Fiscale</label>
                         <select id="regime_fiscale">
-                            <option value="forfettario5">Forfettario 5%</option>
-                            <option value="forfettario15">Forfettario 15%</option>
-                            <option value="ordinario">Ordinario (IRPEF + IRAP)</option>
+                            <option value="forfettario5">Forfettario (imposta 5%)</option>
+                            <option value="forfettario15">Forfettario (imposta 15%)</option>
+                            <option value="ordinario">Ordinario (IRPEF + INPS)</option>
                         </select>
                     </div>
                     <div class="input-row">
-                        <label>Contributi INPS (%)</label>
+                        <label>Coefficiente di redditività ATECO (%)</label>
+                        <select id="coefficiente">
+                            <option value="78">78% — Attività professionali, tecniche, sanitarie</option>
+                            <option value="86">86% — Costruzioni e attività immobiliari</option>
+                            <option value="67">67% — Intermediari del commercio</option>
+                            <option value="62">62% — Alloggio e ristorazione</option>
+                            <option value="54">54% — Commercio ambulante altri beni</option>
+                            <option value="40">40% — Alimentari, bevande, ambulante alimentari</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Contributi INPS / Cassa (%)</label>
                         <input type="number" id="contributi_inps" min="0" max="100" step="0.1" value="26.07" placeholder="26.07">
                     </div>
                     <div class="input-row">
-                        <label>Aliquota IRPEF stimata (%)</label>
+                        <label>Aliquota IRPEF stimata (%) — solo ordinario</label>
                         <input type="number" id="irpef" min="0" max="100" step="0.1" value="23" placeholder="23">
                     </div>
                 </div>
                 <div class="info-box">
-                    <strong>Nota:</strong> Per il regime forfettario, l'imposta è calcolata sulla base del reddito lordo secondo l'aliquota scelta. Per il regime ordinario, si aggiungono contributi INPS e aliquota IRPEF personalizzata.
+                    <strong>Nota:</strong> Nel regime <em>forfettario</em> l'imponibile è il fatturato × coefficiente ATECO; su di esso si pagano i contributi INPS/Cassa (deducibili) e l'imposta sostitutiva 5% o 15% sul residuo. Carico effettivo tipico ≈ 23–29% del fatturato. Nel regime <em>ordinario</em> i contributi INPS sono deducibili e l'IRPEF si applica al netto.
                 </div>
             </div>
         </div>
@@ -561,6 +572,10 @@ button.secondary:hover {
                     <div class="input-row">
                         <label>Giorni Malattia / Formazione (stimati)</label>
                         <input type="number" id="giorni_malattia" min="0" max="365" step="1" value="5" placeholder="5">
+                    </div>
+                    <div class="input-row">
+                        <label>Festività nazionali (giorni lavorativi/anno)</label>
+                        <input type="number" id="giorni_festivi" min="0" max="365" step="1" value="8" placeholder="8">
                     </div>
                     <div class="input-row">
                         <label>Ore Produttive / Giorno</label>
@@ -640,8 +655,8 @@ button.secondary:hover {
 
         <!-- FOOTER -->
         <div class="footer">
-            <p>Calcolatore Tariffa Pro v1.0 | I dati vengono salvati localmente nel tuo browser</p>
-            <p style="margin-top: 10px; font-size: 0.8rem; color: #4a6b5e;">⚠️ Questo calcolatore è uno strumento di orientamento. Consulta un commercialista per dati fiscali precisi.</p>
+            <p>✦ Made by EtherLabs — <a href="https://etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:#34d399;">etsy.com/shop/EtherLabsStudio</a> | I dati vengono salvati localmente nel tuo browser</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #4a6b5e;">⚠️ Questo calcolatore è uno strumento di orientamento basato sulla normativa forfettario 2025. Consulta un commercialista per dati fiscali precisi.</p>
         </div>
     </div>
 
@@ -663,11 +678,13 @@ button.secondary:hover {
             ...personalExpenses,
             ...profExpenses,
             'regime_fiscale',
+            'coefficiente',
             'contributi_inps',
             'irpef',
             'giorni_lavorativi',
             'settimane_ferie',
             'giorni_malattia',
+            'giorni_festivi',
             'ore_produttive'
         ];
 
@@ -711,11 +728,13 @@ button.secondary:hover {
                 } catch(e) {}
                 document.querySelectorAll('input, select').forEach(el => {
                     if (el.id === 'regime_fiscale') el.value = 'forfettario5';
+                    else if (el.id === 'coefficiente') el.value = '78';
                     else if (el.id === 'contributi_inps') el.value = '26.07';
                     else if (el.id === 'irpef') el.value = '23';
                     else if (el.id === 'giorni_lavorativi') el.value = '5';
                     else if (el.id === 'settimane_ferie') el.value = '4';
                     else if (el.id === 'giorni_malattia') el.value = '5';
+                    else if (el.id === 'giorni_festivi') el.value = '8';
                     else if (el.id === 'ore_produttive') el.value = '6';
                     else el.value = '0';
                 });
@@ -742,31 +761,27 @@ button.secondary:hover {
 
             // Get tax regime
             const regime = document.getElementById('regime_fiscale').value;
-            const contributi = parseFloat(document.getElementById('contributi_inps').value) || 26.07;
-            const irpef = parseFloat(document.getElementById('irpef').value) || 23;
+            const contributiRate = (parseFloat(document.getElementById('contributi_inps').value) || 26.07) / 100;
+            const irpefRate = (parseFloat(document.getElementById('irpef').value) || 23) / 100;
+            const coefRate = (parseFloat(document.getElementById('coefficiente').value) || 78) / 100;
 
-            // Calculate required turnover
-            let fatturatoCopriSpese = speseMensili * 12;
-            let percentualeImposta = 0;
-
-            if (regime === 'forfettario5') {
-                percentualeImposta = 5;
-            } else if (regime === 'forfettario15') {
-                percentualeImposta = 15;
+            // Carico fiscale effettivo per euro di fatturato (0-1)
+            let aliquotaEffettiva;
+            if (regime === 'forfettario5' || regime === 'forfettario15') {
+                // Imponibile = fatturato × coefficiente; INPS deducibile; imposta sostitutiva sul residuo
+                const impostaRate = (regime === 'forfettario5') ? 0.05 : 0.15;
+                const contributi = coefRate * contributiRate;                 // su fatturato
+                const imposta = coefRate * (1 - contributiRate) * impostaRate; // su fatturato
+                aliquotaEffettiva = contributi + imposta;
             } else {
-                // Regime ordinario: contributi + irpef
-                percentualeImposta = (contributi + irpef) / 100;
+                // Ordinario: contributi INPS deducibili, IRPEF sul netto
+                aliquotaEffettiva = contributiRate + (1 - contributiRate) * irpefRate;
             }
+            aliquotaEffettiva = Math.min(0.95, Math.max(0, aliquotaEffettiva));
 
-            // Fatturato necessario = spese / (1 - imposte%)
-            let fatturatoAnnuo;
-            if (regime === 'ordinario') {
-                // For ordinario, assume approximate calculation
-                fatturatoAnnuo = fatturatoCopriSpese / (1 - percentualeImposta);
-            } else {
-                // For forfettario
-                fatturatoAnnuo = fatturatoCopriSpese / (1 - percentualeImposta / 100);
-            }
+            // Fatturato necessario = spese / (1 - carico effettivo)
+            const fatturatoCopriSpese = speseMensili * 12;
+            const fatturatoAnnuo = fatturatoCopriSpese / (1 - aliquotaEffettiva);
 
             document.getElementById('fatturato_annuo').textContent = '€ ' + fatturatoAnnuo.toLocaleString('it-IT', { maximumFractionDigits: 0 });
 
@@ -776,7 +791,8 @@ button.secondary:hover {
             const giorniAnnuali = giorniLavorativi * settimane;
             const settimaneFerite = parseFloat(document.getElementById('settimane_ferie').value) || 4;
             const giorniMalattia = parseFloat(document.getElementById('giorni_malattia').value) || 5;
-            const giorniEffettivi = giorniAnnuali - (settimaneFerite * giorniLavorativi) - giorniMalattia;
+            const giorniFestivi = parseFloat(document.getElementById('giorni_festivi').value) || 0;
+            const giorniEffettivi = giorniAnnuali - (settimaneFerite * giorniLavorativi) - giorniMalattia - giorniFestivi;
 
             document.getElementById('giorni_effettivi').textContent = Math.max(0, Math.round(giorniEffettivi));
 
@@ -798,20 +814,18 @@ button.secondary:hover {
             document.getElementById('tariffa_consigliata').textContent = '€ ' + fatturatoGiornalieroConsigliato.toLocaleString('it-IT', { maximumFractionDigits: 0 });
             document.getElementById('tariffa_oraria_consigliata').textContent = '€ ' + fatturatoOrarioConsigliato.toLocaleString('it-IT', { maximumFractionDigits: 2 });
 
-            // Monthly net income simulations
-            const imposta = regime === 'ordinario'
-                ? percentualeImposta
-                : (percentualeImposta / 100);
+            // Monthly net income simulations (aliquota effettiva sul fatturato)
+            const guadagno100Min = (100 * fatturatoOrario * (1 - aliquotaEffettiva)) - speseMensili;
+            const guadagno100Cons = (100 * fatturatoOrarioConsigliato * (1 - aliquotaEffettiva)) - speseMensili;
+            const guadagno160Min = (160 * fatturatoOrario * (1 - aliquotaEffettiva)) - speseMensili;
+            const guadagno160Cons = (160 * fatturatoOrarioConsigliato * (1 - aliquotaEffettiva)) - speseMensili;
 
-            const guadagno100Min = (100 * fatturatoOrario * (1 - imposta)) - speseMensili;
-            const guadagno100Cons = (100 * fatturatoOrarioConsigliato * (1 - imposta)) - speseMensili;
-            const guadagno160Min = (160 * fatturatoOrario * (1 - imposta)) - speseMensili;
-            const guadagno160Cons = (160 * fatturatoOrarioConsigliato * (1 - imposta)) - speseMensili;
-
-            document.getElementById('guadagno_100_min').textContent = '€ ' + Math.max(0, guadagno100Min).toLocaleString('it-IT', { maximumFractionDigits: 0 });
-            document.getElementById('guadagno_100_cons').textContent = '€ ' + Math.max(0, guadagno100Cons).toLocaleString('it-IT', { maximumFractionDigits: 0 });
-            document.getElementById('guadagno_160_min').textContent = '€ ' + Math.max(0, guadagno160Min).toLocaleString('it-IT', { maximumFractionDigits: 0 });
-            document.getElementById('guadagno_160_cons').textContent = '€ ' + Math.max(0, guadagno160Cons).toLocaleString('it-IT', { maximumFractionDigits: 0 });
+            const fmtGuadagno = v => (v < 0 ? '−€ ' + Math.abs(v).toLocaleString('it-IT', { maximumFractionDigits: 0 })
+                                            : '€ ' + v.toLocaleString('it-IT', { maximumFractionDigits: 0 }));
+            document.getElementById('guadagno_100_min').textContent = fmtGuadagno(guadagno100Min);
+            document.getElementById('guadagno_100_cons').textContent = fmtGuadagno(guadagno100Cons);
+            document.getElementById('guadagno_160_min').textContent = fmtGuadagno(guadagno160Min);
+            document.getElementById('guadagno_160_cons').textContent = fmtGuadagno(guadagno160Cons);
         }
 
         // Attach event listeners to all inputs

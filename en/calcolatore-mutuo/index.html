@@ -1293,11 +1293,11 @@ button.secondary:hover {
             });
 
             const container = document.getElementById('comparisonResults');
-            container.innerHTML = '<div class="results-grid">';
+            let html = '<div class="results-grid">';
 
             results.forEach(r => {
                 const highlighted = results.length === 1 ? 'highlighted' : (r.payment === Math.min(...results.map(x => x.payment)) ? 'highlighted' : '');
-                container.innerHTML += `
+                html += `
                     <div class="comparison-card ${highlighted}">
                         <h3 style="color: var(--gold-light); margin-bottom: 15px;">Scenario ${r.idx}</h3>
                         <div class="comparison-item">
@@ -1328,7 +1328,8 @@ button.secondary:hover {
                 `;
             });
 
-            container.innerHTML += '</div>';
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         // ========== EARLY REPAYMENT ==========
@@ -1345,21 +1346,26 @@ button.secondary:hover {
 
             let remainingBalance = calcData.amount;
             let monthsRemaining = amort.length;
-            let savings = 0;
+            let newTotalPaid = 0;
+            const r = getCurrentRate() / 100 / 12;
 
             amort.forEach(m => {
                 if (remainingBalance <= 0) return;
 
-                const r = getCurrentRate() / 100 / 12;
                 const interest = remainingBalance * r;
-                const principal = Math.min(totalPayment - interest, remainingBalance);
-                remainingBalance -= principal;
+                const principal = totalPayment - interest;
 
-                if (remainingBalance <= 0) {
+                if (principal >= remainingBalance) {
+                    newTotalPaid += remainingBalance + interest;
+                    remainingBalance = 0;
                     monthsRemaining = m.month;
-                    savings = amort.length * payment - m.month * totalPayment;
+                } else {
+                    remainingBalance -= principal;
+                    newTotalPaid += totalPayment;
                 }
             });
+
+            const savings = Math.max(0, (amort.length * payment) - newTotalPaid);
 
             const newTerm = (monthsRemaining / 12).toFixed(1);
             const originalTerm = (amort.length / 12).toFixed(1);
@@ -1389,7 +1395,8 @@ button.secondary:hover {
 
         // ========== UTILITIES ==========
         function formatCurrency(value) {
-            return '$ ' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const v = Number.isFinite(value) ? value : 0;
+            return '$ ' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
         function updateSliderValue(id, val) {

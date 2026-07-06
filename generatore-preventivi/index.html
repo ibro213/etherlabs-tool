@@ -1261,18 +1261,19 @@
                 let discountAmount = discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal;
 
                 const afterDiscount = subtotal - discountAmount;
-                const ivaRate = parseFloat(document.getElementById('ivaRate').value) / 100;
-                const ivaAmount = afterDiscount * ivaRate;
 
-                let total = afterDiscount + ivaAmount;
-
+                // Rivalsa INPS: calcolata per prima, è imponibile IVA e ritenuta (Gestione Separata)
                 const inpsCharge = document.getElementById('inpsCharge').checked;
                 const inpsAmount = inpsCharge ? afterDiscount * 0.04 : 0;
-                total += inpsAmount;
+                const baseImponibile = afterDiscount + inpsAmount;
+
+                const ivaRate = parseFloat(document.getElementById('ivaRate').value) / 100;
+                const ivaAmount = baseImponibile * ivaRate;
 
                 const withholdingTax = document.getElementById('withholdingTax').checked;
-                const withholdingAmount = withholdingTax ? afterDiscount * 0.20 : 0;
-                total -= withholdingAmount;
+                const withholdingAmount = withholdingTax ? baseImponibile * 0.20 : 0;
+
+                let total = afterDiscount + inpsAmount + ivaAmount - withholdingAmount;
 
                 const bollo = document.getElementById('bollo').checked;
                 const ivaExempt = parseFloat(document.getElementById('ivaRate').value) === 0;

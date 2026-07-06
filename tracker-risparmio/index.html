@@ -1267,10 +1267,16 @@
     </svg>
 
     <script>
-        // In-memory storage (no localStorage dependency)
+        const LS_KEY = 'etherlabs_savings_v1';
         let goals = [];
         let selectedEmoji = '💰';
         let activeDepositGoalId = null;
+
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function saveGoals() { try { localStorage.setItem(LS_KEY, JSON.stringify(goals)); } catch (e) {} }
+        function loadGoals() { try { const s = localStorage.getItem(LS_KEY); if (s) goals = JSON.parse(s) || []; } catch (e) {} }
 
         const templates = {
             emergency: { name: 'Fondo Emergenza', amount: 15000, emoji: '🚨', priority: 'high', months: 12 },
@@ -1484,6 +1490,7 @@
         }
 
         function render() {
+            saveGoals();
             renderSummary();
             renderGoals();
             renderLogs();
@@ -1558,7 +1565,7 @@
                         <div class="goal-header">
                             <div class="goal-title">
                                 <div class="goal-emoji">${goal.emoji}</div>
-                                <div class="goal-name">${goal.name}</div>
+                                <div class="goal-name">${esc(goal.name)}</div>
                             </div>
                             <span class="status-badge ${statusInfo.badge}">${statusInfo.text}</span>
                         </div>
@@ -1620,7 +1627,7 @@
                 return `
                     <div class="log-card">
                         <div class="log-header">
-                            <div class="log-title">${goal.emoji} ${goal.name}</div>
+                            <div class="log-title">${goal.emoji} ${esc(goal.name)}</div>
                             <span style="color: var(--text3); font-size: 0.8rem;">${goal.deposits.length} depositi</span>
                         </div>
                         ${sortedDeposits.map(d => `
@@ -1675,7 +1682,7 @@
                 ctx.fillStyle = 'rgba(122,154,142,0.6)';
                 ctx.font = '11px Inter';
                 ctx.textAlign = 'right';
-                ctx.fillText(formatCurrency(val).replace(/,\d{2}$/, ''), padding.left - 8, y + 4);
+                ctx.fillText(new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val), padding.left - 8, y + 4);
             }
 
             // Axes
@@ -1744,7 +1751,7 @@
             document.getElementById('chartLegend').innerHTML = goals.map((goal, idx) => `
                 <div class="legend-item">
                     <div class="legend-dot" style="background: ${chartColors[idx % chartColors.length]}"></div>
-                    ${goal.emoji} ${goal.name}
+                    ${goal.emoji} ${esc(goal.name)}
                 </div>
             `).join('');
         }
@@ -1770,7 +1777,7 @@
 
                 return `
                     <div class="result-item">
-                        <div class="result-label">${goal.emoji} ${goal.name}</div>
+                        <div class="result-label">${goal.emoji} ${esc(goal.name)}</div>
                         <div class="result-value">${completionDate.toLocaleDateString('it-IT', { month: 'short', year: 'numeric' })}</div>
                         ${savedMonths > 0 ? `<div style="color: var(--success); font-size: 0.8rem; margin-top: 6px;">${savedMonths} mesi risparmiati</div>` : ''}
                     </div>
@@ -1835,6 +1842,7 @@
         });
 
         // Initial render
+        loadGoals();
         render();
     </script>
 
