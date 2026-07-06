@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
 <style id="el-theme">
 :root{
@@ -23,14 +23,14 @@
 </style>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CV Builder">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#060a0a">
-    <meta name="format-detection" content="telephone=no">
-    <title>CVBuilder Pro - Crea il tuo Curriculum Professionale</title>
+    <meta name="theme-color" content="#0a0b0d">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <script>/* jsPDF UMD inline (vettoriale, offline) */
     /** @license
  *
@@ -460,20 +460,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             --cv-line: #ddd;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: system-ui, sans-serif;
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
             color: var(--text1);
             min-height: 100vh;
-            min-height: 100dvh;
             padding: 20px;
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            overscroll-behavior-y: contain;
-            -webkit-text-size-adjust: 100%;
         }
 
         .container { max-width: 1600px; margin: 0 auto; }
@@ -565,8 +559,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         input[type="text"], input[type="email"], input[type="tel"],
-        input[type="number"], input[type="url"], input[type="date"],
-        input[type="month"], textarea, select {
+        input[type="number"], input[type="url"], textarea, select {
             width: 100%;
             padding: 12px 14px;
             background: var(--bg4);
@@ -574,11 +567,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 8px;
             color: var(--text1);
             font-family: system-ui, sans-serif;
-            font-size: 16px;
-            line-height: 1.4;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            font-size: 14px;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
@@ -639,24 +628,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
             color: #000;
         }
-        @media (hover: hover) and (pointer: fine) {
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-}
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
 
         .btn-secondary {
             background: var(--bg4);
             color: var(--emerald-light);
             border: 1px solid var(--emerald);
         }
-        @media (hover: hover) and (pointer: fine) {
-.btn-secondary:hover { background: var(--emerald-glow); transform: translateY(-2px); }
-}
+        .btn-secondary:hover { background: var(--emerald-glow); transform: translateY(-2px); }
 
         .btn-small { padding: 8px 12px; font-size: 12px; }
         .btn-danger { background: var(--error); color: white; }
-        @media (hover: hover) and (pointer: fine) {
-.btn-danger:hover { opacity: 0.9; }
-}
+        .btn-danger:hover { opacity: 0.9; }
 
         .entry-item {
             background: var(--bg2);
@@ -686,13 +669,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-size: 18px;
             line-height: 1;
             user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
         }
         .drag-handle::before { content: "⋮⋮"; letter-spacing: -2px; }
-        @media (hover: hover) and (pointer: fine) {
-.drag-handle:hover { color: var(--emerald-light); }
-}
+        .drag-handle:hover { color: var(--emerald-light); }
         .drag-handle:active { cursor: grabbing; }
 
         .sortable-ghost { opacity: 0.4; }
@@ -708,15 +687,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 4px;
             width: 24px;
             height: 24px;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        @media (hover: hover) and (pointer: fine) {
-.entry-remove:hover { opacity: 0.9; }
-}
+        .entry-remove:hover { opacity: 0.9; }
 
         .skill-item {
             display: flex;
@@ -735,13 +712,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .star {
             width: 16px; height: 16px; border-radius: 50%;
             background: var(--border);
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             transition: all 0.2s;
         }
         .star.filled { background: var(--emerald-light); box-shadow: 0 0 8px var(--emerald-glow); }
-        @media (hover: hover) and (pointer: fine) {
-.star:hover { background: var(--emerald); }
-}
+        .star:hover { background: var(--emerald); }
 
         .controls {
             display: flex;
@@ -754,6 +729,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .control-group label { margin-bottom: 0; color: var(--text2); text-transform: capitalize; font-size: 13px; }
         .control-group select { min-width: 150px; }
 
+        /* ============ PREVIEW PANEL ============ */
         .preview-wrap {
             position: sticky;
             top: 20px;
@@ -786,7 +762,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             color: var(--text2);
             padding: 6px 12px;
             font-size: 11px;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -908,6 +884,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             text-transform: uppercase;
         }
 
+        /* ===== TEMPLATES ===== */
+
+        /* CLASSIC (default centered) - no override needed */
+
+        /* MODERN: two columns with sidebar */
         .preview-panel.template-modern {
             display: grid;
             grid-template-columns: 1fr 220px;
@@ -925,6 +906,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             grid-template-columns: 1fr;
         }
 
+        /* MINIMAL: thin lines, more whitespace */
         .preview-panel.template-minimal .preview-header {
             border-bottom: 1px solid var(--cv-line);
         }
@@ -939,6 +921,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .preview-panel.template-minimal .preview-name { font-weight: 400; letter-spacing: 1px; }
 
+        /* EXECUTIVE: bold header bar, serif */
         .preview-panel.template-executive {
             --cv-font: 'Georgia', serif;
             --cv-heading: 'Georgia', serif;
@@ -966,6 +949,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             letter-spacing: 2px;
         }
 
+        /* CREATIVE: colored name, playful */
         .preview-panel.template-creative {
             --cv-font: 'Trebuchet MS', sans-serif;
             --cv-heading: 'Trebuchet MS', sans-serif;
@@ -996,6 +980,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 4px;
         }
 
+        /* TECH: monospaced, minimalist */
         .preview-panel.template-tech {
             --cv-font: system-ui, sans-serif;
             --cv-heading: system-ui, sans-serif;
@@ -1012,6 +997,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .preview-panel.template-tech .preview-section-title { border-bottom: 1px dashed var(--accent-color); }
         .preview-panel.template-tech .preview-photo { margin: 0 0 15px 0; border-radius: 8px; }
 
+        /* Dark preview toggle */
         .preview-panel.preview-dark {
             --cv-bg: #1a1a1a;
             --cv-text: #f0f0f0;
@@ -1021,6 +1007,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .preview-panel.template-executive.preview-dark .preview-header { background: var(--accent-color); }
 
+        /* Accent Colors */
         /* Template Banda: header con banda accent a tutta larghezza */
         .preview-panel.template-sidebar .preview-header {
             background: var(--accent-color);
@@ -1072,13 +1059,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .color-option {
             width: 30px; height: 30px;
             border-radius: 50%;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s;
         }
-        @media (hover: hover) and (pointer: fine) {
-.color-option:hover { transform: scale(1.1); }
-}
+        .color-option:hover { transform: scale(1.1); }
         .color-option.active {
             border-color: var(--text1);
             box-shadow: 0 0 10px currentColor;
@@ -1104,7 +1089,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 8px;
             padding: 20px;
             text-align: center;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             transition: all 0.3s;
             background: var(--bg4);
             min-height: 80px;
@@ -1113,12 +1098,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             justify-content: center;
             gap: 12px;
         }
-        @media (hover: hover) and (pointer: fine) {
-.photo-upload-area:hover, .photo-upload-area.dragover {
+        .photo-upload-area:hover, .photo-upload-area.dragover {
             border-color: var(--emerald);
             background: var(--emerald-glow2);
         }
-}
         .photo-upload-text {
             display: flex; flex-direction: column; gap: 4px;
             color: var(--text2); font-size: 13px;
@@ -1132,12 +1115,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             position: absolute; top: 5px; right: 5px;
             background: var(--error); color: white; border: none;
             border-radius: 50%; width: 22px; height: 22px;
-            cursor: pointer; touch-action: manipulation; font-size: 12px;
+            cursor: pointer; font-size: 12px;
             display: flex; align-items: center; justify-content: center; line-height: 1;
         }
-        @media (hover: hover) and (pointer: fine) {
-.photo-remove-btn:hover { opacity: 0.85; }
-}
+        .photo-remove-btn:hover { opacity: 0.85; }
 
         .toast {
             position: fixed;
@@ -1158,11 +1139,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
 
+        /* PDF export offscreen container */
         #pdf-render-area {
             position: fixed;
             left: -10000px;
             top: 0;
-            width: 794px;
+            width: 794px; /* ~210mm @ 96dpi */
             background: #fff;
             z-index: -1;
         }
@@ -1175,6 +1157,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             position: static !important;
         }
 
+        /* ============ PRINT ============ */
         @page { size: A4; margin: 12mm 14mm; }
 
         @media print {
@@ -1217,152 +1200,107 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
             a { color: inherit !important; text-decoration: none !important; }
         }
-
-        /* === MOBILE / iPhone touch enhancements === */
-        @media (max-width: 768px) {
-            body { padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); }
-            .header h1 { font-size: 30px; }
-            .panel { padding: 18px; border-radius: 14px; }
-            .btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
-            .btn-small { min-height: 40px; padding: 10px 14px; font-size: 13px; }
-            .entry-remove { width: 36px; height: 36px; font-size: 18px; top: 6px; right: 6px; }
-            .entry-item { padding: 14px 14px 14px 44px; }
-            .skill-item { padding: 12px 14px 12px 40px; }
-            .skill-stars { gap: 6px; }
-            .star { width: 24px; height: 24px; }
-            .toggle-switch button { padding: 10px 14px; font-size: 12px; min-height: 40px; }
-            .drag-handle { width: 32px; height: 48px; left: 4px; font-size: 22px; }
-            .controls { gap: 10px; }
-            .control-group select { min-width: 0; flex: 1; }
-            .form-row { grid-template-columns: 1fr; gap: 12px; }
-            .preview-panel { padding: 22px; }
-            .preview-name { font-size: 28px; }
-            .preview-photo { width: 90px; height: 90px; }
-            input[type="text"], input[type="email"], input[type="tel"],
-            input[type="number"], input[type="url"], input[type="date"],
-            input[type="month"], textarea, select { font-size: 16px; }
-        }
-
-        /* prevent iOS double-tap zoom on interactive elements */
-        button, a, label, [role="button"], .star, .toggle-switch button,
-        .tab, .template-btn, .color-option { touch-action: manipulation; }
-    
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
-@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
-.lock-btn:active{transform:translateY(0)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
-.install-hint strong{color:var(--el-emerald-light)}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
+    </style>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+.profile-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;background:var(--el-bg3,#f5f7f9);border:1px solid var(--el-border,#e3e7ec);border-radius:12px}
+.profile-bar label{font-weight:600;font-size:.85rem;color:var(--el-text2,#5a616a)}
+.profile-bar select{padding:7px 10px;border-radius:8px;border:1px solid var(--el-border,#e3e7ec);background:var(--el-bg2,#fff);color:var(--el-text1,#1b1e22);font-size:.9rem;min-width:150px;max-width:60%}
+.btn-sm{padding:6px 10px !important;font-size:.8rem !important}
+.section-order-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.section-order-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--el-bg2,#fff);border:1px solid var(--el-border,#e3e7ec);border-radius:9px;font-size:.9rem;color:var(--el-text1,#1b1e22);touch-action:none;-webkit-user-select:none;user-select:none}
+.section-order-item .drag-handle{position:static;height:auto;width:20px;cursor:grab;color:var(--el-text3,#9198a1);flex:0 0 auto}
+.section-order-item .drag-handle:active{cursor:grabbing}
+.section-order-item.sortable-chosen{box-shadow:0 6px 18px rgba(0,0,0,.16);border-color:var(--el-emerald,#10b981)}
+.section-order-item .so-num{color:var(--el-text3,#9198a1);font-variant-numeric:tabular-nums;font-size:.8rem;min-width:16px}
 </style>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">CV Builder</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
-<div id="appContent" style="display:none">
-
     <div class="container">
         <div class="header">
-            <div class="brand-tag">Strumento Premium</div>
-            <h1>CVBuilder Pro</h1>
-            <p>Crea il tuo curriculum professionale con stile e facilità
+            <div class="brand-tag">Premium Tool</div>
+            <h1>ResumeBuilder Pro</h1>
+            <p>Build your professional resume with style and ease
                 <span class="autosave-indicator">
                     <span class="autosave-dot" id="autosaveDot"></span>
-                    <span id="autosaveText">Salvataggio automatico attivo</span>
+                    <span id="autosaveText">Autosave enabled</span>
                 </span>
             </p>
+        </div>
+
+        <div class="profile-bar" id="profileBar">
+            <label for="profileSelect" id="profileBarLabel">Profile:</label>
+            <select id="profileSelect" aria-label="Active profile"></select>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileNew">+ New</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileRename">Rename</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileDup">Duplicate</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileDelete">Delete</button>
         </div>
 
         <div class="controls">
             <div class="control-group">
                 <label for="template-select">Template:</label>
                 <select id="template-select">
-                    <option value="classic">Classico</option>
-                    <option value="modern">Moderno</option>
+                    <option value="classic">Classic</option>
+                    <option value="modern">Modern</option>
                     <option value="minimal">Minimal</option>
                     <option value="executive">Executive</option>
-                    <option value="creative">Creativo</option>
+                    <option value="creative">Creative</option>
                     <option value="tech">Tech</option>
-                    <option value="sidebar">Banda (accent)</option>
-                    <option value="compact">Compatto</option>
+                    <option value="sidebar">Band (accent)</option>
+                    <option value="compact">Compact</option>
                 </select>
             </div>
             <div class="control-group">
                 <label for="font-select">Font:</label>
                 <select id="font-select">
-                    <option value="default">Moderno (sans + serif)</option>
-                    <option value="roboto">Sans pulito</option>
-                    <option value="lora">Serif elegante</option>
-                    <option value="montserrat">Geometrico</option>
-                    <option value="book">Editoriale (serif)</option>
-                    <option value="mono">Tecnico (mono)</option>
+                    <option value="default">Modern (sans + serif)</option>
+                    <option value="roboto">Clean sans</option>
+                    <option value="lora">Elegant serif</option>
+                    <option value="montserrat">Geometric</option>
+                    <option value="book">Editorial (serif)</option>
+                    <option value="mono">Technical (mono)</option>
                 </select>
             </div>
             <div class="control-group">
-                <label>Colore:</label>
+                <label>Accent:</label>
                 <div class="color-picker" id="colorPicker">
-                    <div class="color-option active color-green" data-accent="green" title="Verde"></div>
-                    <div class="color-option color-blue" data-accent="blue" title="Blu"></div>
+                    <div class="color-option active color-green" data-accent="green" title="Green"></div>
+                    <div class="color-option color-blue" data-accent="blue" title="Blue"></div>
                     <div class="color-option color-teal" data-accent="teal" title="Teal"></div>
-                    <div class="color-option color-purple" data-accent="purple" title="Viola"></div>
-                    <div class="color-option color-rose" data-accent="rose" title="Rosa"></div>
-                    <div class="color-option color-red" data-accent="red" title="Rosso"></div>
-                    <div class="color-option color-orange" data-accent="orange" title="Arancione"></div>
-                    <div class="color-option color-black" data-accent="black" title="Nero"></div>
+                    <div class="color-option color-purple" data-accent="purple" title="Purple"></div>
+                    <div class="color-option color-rose" data-accent="rose" title="Rose"></div>
+                    <div class="color-option color-red" data-accent="red" title="Red"></div>
+                    <div class="color-option color-orange" data-accent="orange" title="Orange"></div>
+                    <div class="color-option color-black" data-accent="black" title="Black"></div>
                     <span id="customSwatches"></span>
-                    <label class="color-option color-add" title="Aggiungi colore personalizzato">
+                    <label class="color-option color-add" title="Add custom color">
                         <span class="color-add-plus">+</span>
-                        <input type="color" id="customColor" value="#10b981" aria-label="Aggiungi colore personalizzato">
+                        <input type="color" id="customColor" value="#10b981" aria-label="Add custom color">
                     </label>
                 </div>
             </div>
             <div class="control-group">
                 <label for="preset-select">Preset:</label>
                 <select id="preset-select">
-                    <option value="">Carica Esempio...</option>
-                    <option value="developer">Sviluppatore Software</option>
-                    <option value="designer">Designer UX/UI</option>
-                    <option value="marketing">Responsabile Marketing</option>
-                    <option value="sales">Account Commerciale</option>
-                    <option value="student">Neolaureato</option>
+                    <option value="">Load Preset...</option>
+                    <option value="developer">Software Developer</option>
+                    <option value="designer">UX/UI Designer</option>
+                    <option value="marketing">Marketing Manager</option>
+                    <option value="sales">Sales Executive</option>
+                    <option value="student">Recent Graduate</option>
                 </select>
             </div>
-            <button class="btn btn-secondary" onclick="clearAll()">Pulisci Tutto</button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
         </div>
 
         <details class="ats-panel">
-            <summary>🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti</summary>
+            <summary>🎯 ATS check — paste the job post and find the missing keywords</summary>
             <div class="ats-body">
-                <p class="ats-hint">I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.</p>
-                <textarea id="atsJob" rows="4" placeholder="Incolla qui il testo dell'annuncio di lavoro..."></textarea>
+                <p class="ats-hint">ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.</p>
+                <textarea id="atsJob" rows="4" placeholder="Paste the job description here..."></textarea>
                 <div class="ats-actions">
-                    <button class="btn btn-primary" onclick="analyzeATS()">Analizza corrispondenza</button>
+                    <button class="btn btn-primary" onclick="analyzeATS()">Analyze match</button>
                     <span id="atsScore" class="ats-score"></span>
                 </div>
                 <div id="atsReadiness" class="ats-readiness"></div>
@@ -1370,143 +1308,153 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             </div>
         </details>
 
-        <div class="main-layout">
-            <div class="panel">
-                <div class="panel-title">Informazioni Professionali</div>
+        <details class="ats-panel section-order-panel">
+            <summary id="sectionOrderSummary">↕ Section order</summary>
+            <div class="ats-body">
+                <p class="ats-hint" id="sectionOrderHint">Drag the handles to reorder the sections of your CV (applies to preview, PDF and exports).</p>
+                <div id="sectionOrderList" class="section-order-list"></div>
+            </div>
+        </details>
 
-                <div class="section-header"><h3>Dati Personali</h3></div>
+        <div class="main-layout">
+            <!-- LEFT: FORM -->
+            <div class="panel">
+                <div class="panel-title">Professional Information</div>
+
+                <div class="section-header"><h3>Personal Details</h3></div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fullName">Nome e Cognome</label>
-                        <input type="text" id="fullName" placeholder="es. Mario Rossi" oninput="onFieldInput()">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="e.g. John Smith" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
-                        <label for="title">Ruolo/Posizione</label>
-                        <input type="text" id="title" placeholder="es. Sviluppatore Senior" oninput="onFieldInput()">
+                        <label for="title">Job Title/Role</label>
+                        <input type="text" id="title" placeholder="e.g. Senior Developer" oninput="onFieldInput()">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="mario@example.com" oninput="onFieldInput()">
+                        <input type="email" id="email" placeholder="john@example.com" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
-                        <label for="phone">Telefono</label>
-                        <input type="tel" id="phone" placeholder="+39 345 123 4567" oninput="onFieldInput()">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567" oninput="onFieldInput()">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="location">Città/Paese</label>
-                        <input type="text" id="location" placeholder="Milano, Italia" oninput="onFieldInput()">
+                        <label for="location">City/Country</label>
+                        <input type="text" id="location" placeholder="New York, USA" oninput="onFieldInput()">
                     </div>
                     <div class="form-group">
-                        <label for="website">Sito Web</label>
-                        <input type="url" id="website" placeholder="https://mariorossi.it" oninput="onFieldInput()">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" placeholder="https://johnsmith.com" oninput="onFieldInput()">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="linkedin">LinkedIn</label>
-                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/mariorossi" oninput="onFieldInput()">
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/johnsmith" oninput="onFieldInput()">
                     </div>
                     <div class="form-group" style="flex-basis:100%">
-                        <label>Foto Profilo</label>
+                        <label>Profile Photo</label>
                         <div class="photo-upload-area" id="photoUploadArea">
                             <input type="file" id="photoFileInput" accept="image/*" style="display:none">
                             <div class="photo-upload-text">
-                                <span>📷 Clicca o trascina un'immagine qui</span>
+                                <span>📷 Click or drag an image here</span>
                                 <small>JPG, PNG, WebP — max 2 MB</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="section-header"><h3>Profilo Professionale</h3></div>
+                <div class="section-header"><h3>Professional Summary</h3></div>
                 <div class="form-group form-row full">
-                    <label for="summary">Descrizione</label>
-                    <textarea id="summary" placeholder="Descrivi la tua esperienza, competenze e obiettivi professionali..." oninput="onFieldInput()" maxlength="800"></textarea>
+                    <label for="summary">Description</label>
+                    <textarea id="summary" placeholder="Describe your experience, skills and professional goals..." oninput="onFieldInput()" maxlength="800"></textarea>
                     <span class="char-counter" id="summaryCounter">0 / 800</span>
                 </div>
 
                 <div class="section-header">
-                    <h3>Esperienza Lavorativa</h3>
-                    <button class="btn btn-primary btn-small" onclick="addWorkEntry()">+ Aggiungi</button>
+                    <h3>Work Experience</h3>
+                    <button class="btn btn-primary btn-small" onclick="addWorkEntry()">+ Add</button>
                 </div>
                 <div id="workExperience"></div>
 
                 <div class="section-header">
-                    <h3>Istruzione</h3>
-                    <button class="btn btn-primary btn-small" onclick="addEducationEntry()">+ Aggiungi</button>
+                    <h3>Education</h3>
+                    <button class="btn btn-primary btn-small" onclick="addEducationEntry()">+ Add</button>
                 </div>
                 <div id="education"></div>
 
                 <div class="section-header">
-                    <h3>Competenze</h3>
-                    <button class="btn btn-primary btn-small" onclick="addSkillEntry()">+ Aggiungi</button>
+                    <h3>Skills</h3>
+                    <button class="btn btn-primary btn-small" onclick="addSkillEntry()">+ Add</button>
                 </div>
                 <div id="skills"></div>
 
                 <div class="section-header">
-                    <h3>Lingue</h3>
-                    <button class="btn btn-primary btn-small" onclick="addLanguageEntry()">+ Aggiungi</button>
+                    <h3>Languages</h3>
+                    <button class="btn btn-primary btn-small" onclick="addLanguageEntry()">+ Add</button>
                 </div>
                 <div id="languages"></div>
 
                 <div class="section-header">
-                    <h3>Certificazioni</h3>
-                    <button class="btn btn-primary btn-small" onclick="addCertificationEntry()">+ Aggiungi</button>
+                    <h3>Certifications</h3>
+                    <button class="btn btn-primary btn-small" onclick="addCertificationEntry()">+ Add</button>
                 </div>
                 <div id="certifications"></div>
 
-                <div class="section-header"><h3>Sezione Personalizzata</h3></div>
+                <div class="section-header"><h3>Custom Section</h3></div>
                 <div class="form-group">
-                    <label for="customTitle">Titolo Sezione</label>
-                    <input type="text" id="customTitle" placeholder="es. Progetti, Pubblicazioni..." oninput="onFieldInput()">
+                    <label for="customTitle">Section Title</label>
+                    <input type="text" id="customTitle" placeholder="e.g. Projects, Publications..." oninput="onFieldInput()">
                 </div>
                 <div class="form-group form-row full">
-                    <label for="customContent">Contenuto</label>
-                    <textarea id="customContent" placeholder="Aggiungi il contenuto della tua sezione personalizzata..." oninput="onFieldInput()"></textarea>
+                    <label for="customContent">Content</label>
+                    <textarea id="customContent" placeholder="Add your custom section content..." oninput="onFieldInput()"></textarea>
                 </div>
 
                 <div class="bottom-actions">
-                    <button class="btn btn-primary" onclick="downloadPDF()">⬇ Scarica PDF</button>
-                    <button class="btn btn-secondary" onclick="printResume()">🖨 Stampa</button>
-                    <button class="btn btn-secondary" onclick="exportATS()">📄 Export ATS (.txt)</button>
-                    <button class="btn btn-secondary" onclick="copyText()">📋 Copia Testo</button>
-                    <button class="btn btn-secondary" onclick="exportJSON()">💾 Salva (JSON)</button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 Carica (JSON)</button>
+                    <button class="btn btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
+                    <button class="btn btn-secondary" onclick="printResume()">🖨 Print</button>
+                    <button class="btn btn-secondary" onclick="exportATS()">📄 ATS Export (.txt)</button>
+                    <button class="btn btn-secondary" onclick="copyText()">📋 Copy Text</button>
+                    <button class="btn btn-secondary" onclick="exportJSON()">💾 Save (JSON)</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 Load (JSON)</button>
                     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
                 </div>
             </div>
 
+            <!-- RIGHT: PREVIEW -->
             <div class="preview-wrap">
                 <div class="preview-toolbar">
-                    <span>Anteprima:</span>
+                    <span>Preview:</span>
                     <div class="toggle-switch" id="previewModeToggle">
-                        <button class="active" data-mode="light">Chiara</button>
-                        <button data-mode="dark">Scura</button>
+                        <button class="active" data-mode="light">Light</button>
+                        <button data-mode="dark">Dark</button>
                     </div>
                 </div>
                 <div class="preview-panel template-classic" id="preview">
                     <div class="preview-main-col">
                         <div class="preview-header" id="previewHeader">
                             <img id="previewPhoto" class="preview-photo" style="display:none;" alt="">
-                            <div class="preview-name" id="previewName">Nome e Cognome</div>
-                            <div class="preview-title" id="previewTitle">Titolo Professionale</div>
+                            <div class="preview-name" id="previewName">Your Name</div>
+                            <div class="preview-title" id="previewTitle">Professional Title</div>
                             <div class="preview-contact" id="previewContact"></div>
                         </div>
-                        <div class="preview-section">
-                            <div class="preview-section-title">Profilo Professionale</div>
-                            <div class="preview-entry-desc" id="previewSummary">Il tuo profilo professionale apparirà qui...</div>
+                        <div class="preview-section" id="previewSummarySection">
+                            <div class="preview-section-title">Professional Summary</div>
+                            <div class="preview-entry-desc" id="previewSummary">Your professional summary will appear here...</div>
                         </div>
                         <div class="preview-section" id="previewWorkSection" style="display:none;">
-                            <div class="preview-section-title">Esperienza Lavorativa</div>
+                            <div class="preview-section-title">Work Experience</div>
                             <div id="previewWork"></div>
                         </div>
                         <div class="preview-section" id="previewEducationSection" style="display:none;">
-                            <div class="preview-section-title">Istruzione</div>
+                            <div class="preview-section-title">Education</div>
                             <div id="previewEducation"></div>
                         </div>
                         <div class="preview-section" id="previewCustomSection" style="display:none;">
@@ -1516,15 +1464,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     </div>
                     <div class="preview-side-col">
                         <div class="preview-section" id="previewSkillsSection" style="display:none;">
-                            <div class="preview-section-title">Competenze</div>
+                            <div class="preview-section-title">Skills</div>
                             <div class="preview-skills" id="previewSkills"></div>
                         </div>
                         <div class="preview-section" id="previewLanguagesSection" style="display:none;">
-                            <div class="preview-section-title">Lingue</div>
+                            <div class="preview-section-title">Languages</div>
                             <div class="preview-languages" id="previewLanguages"></div>
                         </div>
                         <div class="preview-section" id="previewCertificationsSection" style="display:none;">
-                            <div class="preview-section-title">Certificazioni</div>
+                            <div class="preview-section-title">Certifications</div>
                             <div id="previewCertifications"></div>
                         </div>
                     </div>
@@ -1534,10 +1482,42 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     </div>
 
     <div id="pdf-render-area"></div>
-    <div class="toast" id="toast">Messaggio</div>
+    <div class="toast" id="toast">Message</div>
 
     <script>
-        const T = {
+        // ============ I18N ============
+        // ===== EtherLabs i18n bootstrap =====
+        const __CVLANG__ = (function(){try{var s=localStorage.getItem('cv-lang');if(s==='it'||s==='en')return s;}catch(e){}var n=(navigator.language||'en').slice(0,2).toLowerCase();return n==='it'?'it':'en';})();
+const T_ALL = { en: {
+            yourName: 'Your Name',
+            professionalTitle: 'Professional Title',
+            summaryPlaceholder: 'Your professional summary will appear here...',
+            sections: {
+                summary: 'Professional Summary',
+                work: 'Work Experience',
+                education: 'Education',
+                skills: 'Skills',
+                languages: 'Languages',
+                certifications: 'Certifications'
+            },
+            toast: {
+                cleared: 'All cleared',
+                saved: 'Saved',
+                loaded: 'Loaded',
+                invalidJson: 'Invalid JSON file',
+                copied: 'Resume copied to clipboard',
+                copyFailed: 'Copy failed',
+                atsDownloaded: 'ATS version downloaded',
+                pdfGenerating: 'Generating PDF...',
+                pdfDone: 'PDF downloaded',
+                pdfError: 'PDF error - opening print dialog',
+                presetLoaded: 'Preset loaded',
+                restored: 'Draft restored from last session',
+                colorSaved: 'Color saved to palette',
+                atsAnalyzed: 'Analysis complete'
+            },
+            confirmClear: 'Clear all fields? This cannot be undone.',
+            atsHeader: 'ATS-OPTIMIZED RESUME', expName: "Name: ", expTitle: "Title: ", expPhone: "Phone: ", expLocation: "Location: ", expWebsite: "Website: ", fileSuffix: "_resume", atsPaste: "Paste a job post to see the keywords.", atsMatch: "match", atsPresent: "Present in resume", atsToAdd: "To add", atsNone: "none", atsAll: "all present ✓", rd1: "Summary present", rd2: "At least 1 experience", rd3: "At least 3 skills", rd4: "Email and phone", rd5: "Summary 200-700 chars", saving: "Saving...", savedAt: "Saved ", saveFailed: "Save failed" }, it: {
             yourName: 'Nome e Cognome',
             professionalTitle: 'Titolo Professionale',
             summaryPlaceholder: 'Il tuo profilo professionale apparirà qui...',
@@ -1571,12 +1551,30 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             savedAt: 'Salvato ',
             saveFailed: 'Salvataggio fallito',
             atsHeader: 'CURRICULUM OTTIMIZZATO ATS',
-            loadPresetPrompt: 'Carica Esempio...'
-        };
+            loadPresetPrompt: 'Carica Esempio...', expName: "Nome: ", expTitle: "Ruolo: ", expPhone: "Telefono: ", expLocation: "Località: ", expWebsite: "Sito Web: ", fileSuffix: "_cv", atsPaste: "Incolla un annuncio per vedere le parole chiave.", atsMatch: "corrispondenza", atsPresent: "Presenti nel CV", atsToAdd: "Da aggiungere", atsNone: "nessuna", atsAll: "tutte presenti ✓", rd1: "Riepilogo presente", rd2: "Almeno 1 esperienza", rd3: "Almeno 3 competenze", rd4: "Email e telefono", rd5: "Riepilogo 200-700 caratteri" } };
+        T_ALL.en.ui = { profile:'Profile', newP:'+ New', rename:'Rename', duplicate:'Duplicate', del:'Delete', confirmDel:'Delete this profile? This cannot be undone.', promptName:'Profile name:', secOrder:'↕ Section order', secHint:'Drag the handles to reorder the sections of your CV (applies to preview, PDF and exports).', pCreated:'Profile created', pDeleted:'Profile deleted', pRenamed:'Profile renamed', pDup:'Profile duplicated' };
+        T_ALL.it.ui = { profile:'Profilo', newP:'+ Nuovo', rename:'Rinomina', duplicate:'Duplica', del:'Elimina', confirmDel:'Eliminare questo profilo? L\'operazione è irreversibile.', promptName:'Nome profilo:', secOrder:'↕ Ordine sezioni', secHint:'Trascina le maniglie per riordinare le sezioni del CV (vale per anteprima, PDF ed export).', pCreated:'Profilo creato', pDeleted:'Profilo eliminato', pRenamed:'Profilo rinominato', pDup:'Profilo duplicato' };
+        let T = T_ALL[__CVLANG__];
 
-        const LEVEL_LABELS = { 1: 'Base', 2: 'Elementare', 3: 'Intermedio', 4: 'Avanzato', 5: 'Esperto' };
-        const LANG_LEVELS = ['Seleziona', 'Base', 'Intermedio', 'Fluente', 'Madrelingua'];
-        const STORAGE_KEY = 'cvBuilderPro_v2';
+        // ============ CONSTANTS ============
+const LEVEL_LABELS_ALL = { en: { 1: 'Beginner', 2: 'Elementary', 3: 'Intermediate', 4: 'Advanced', 5: 'Expert' }, it: { 1: 'Base', 2: 'Elementare', 3: 'Intermedio', 4: 'Avanzato', 5: 'Esperto' } };
+        let LEVEL_LABELS = LEVEL_LABELS_ALL[__CVLANG__];
+const LANG_LEVELS_ALL = { en: ['Select', 'Basic', 'Intermediate', 'Fluent', 'Native'], it: ['Seleziona', 'Base', 'Intermedio', 'Fluente', 'Madrelingua'] };
+        let LANG_LEVELS = LANG_LEVELS_ALL[__CVLANG__];
+        const STORAGE_KEY = 'resumeBuilderPro_v2';
+        const SECTION_KEYS = ['summary','work','education','skills','languages','certifications','custom'];
+        function orderedSections(){
+            var o = (state.sectionOrder || []).filter(function(k){ return SECTION_KEYS.indexOf(k) >= 0; });
+            SECTION_KEYS.forEach(function(k){ if (o.indexOf(k) < 0) o.push(k); });
+            return o;
+        }
+        // key -> preview wrapper id + column ('main'|'side')
+        const SECTION_DOM = {
+            summary:{el:'previewSummarySection',col:'main'}, work:{el:'previewWorkSection',col:'main'},
+            education:{el:'previewEducationSection',col:'main'}, custom:{el:'previewCustomSection',col:'main'},
+            skills:{el:'previewSkillsSection',col:'side'}, languages:{el:'previewLanguagesSection',col:'side'},
+            certifications:{el:'previewCertificationsSection',col:'side'}
+        };
 
         const COLOR_MAP = {
             green: '#10b981', blue: '#3b82f6', teal: '#14b8a6',
@@ -1593,7 +1591,150 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             mono:       { body:"ui-monospace,'SF Mono','Menlo','Courier New',monospace", heading:"ui-monospace,'Courier New',monospace", pdf:'courier' }
         };
 
-        const PRESETS = {
+        // ============ PRESETS ============
+const PRESETS_ALL = { en: {
+            developer: {
+                fullName: 'Alex Martinez',
+                title: 'Senior Full Stack Developer',
+                email: 'alex.martinez@example.com',
+                phone: '+1 (415) 555-0192',
+                location: 'San Francisco, CA',
+                website: 'https://alexmartinez.dev',
+                linkedin: 'https://linkedin.com/in/alexmartinez',
+                summary: 'Full-stack engineer with 9+ years building scalable web applications. Expert in React, Node.js, and cloud architecture on AWS. Led teams of 5-8 engineers, shipped features serving 2M+ monthly users. Passionate about clean code, test-driven development, and mentoring junior developers.',
+                work: [
+                    {company:'Stripe', role:'Senior Software Engineer', start:'Jan 2022', end:'Present', description:'Architected payment reconciliation service processing $500M+ monthly. Reduced API latency by 40% through caching and query optimization. Mentored 4 engineers and led quarterly architecture reviews.'},
+                    {company:'Airbnb', role:'Software Engineer II', start:'Mar 2019', end:'Dec 2021', description:'Built real-time messaging infrastructure serving 150M+ users. Migrated legacy Ruby services to Node.js microservices. Reduced deployment time from 45min to 8min via CI/CD improvements.'}
+                ],
+                education: [{institution:'UC Berkeley', degree:'B.S. Computer Science', year:'2015', gpa:'3.8/4.0'}],
+                skills: [
+                    {name:'JavaScript/TypeScript', level:5},
+                    {name:'React/Next.js', level:5},
+                    {name:'Node.js', level:5},
+                    {name:'AWS/Cloud', level:4},
+                    {name:'PostgreSQL', level:4},
+                    {name:'Docker/K8s', level:4}
+                ],
+                languages: [{name:'English', level:4}, {name:'Spanish', level:4}],
+                certifications: [{name:'AWS Solutions Architect Professional', issuer:'Amazon Web Services', year:'2023'}],
+                customTitle: 'Open Source',
+                customContent: 'Contributor to React, Next.js and TanStack Query\nAuthor of react-query-utils (5k GitHub stars)'
+            },
+            designer: {
+                fullName: 'Sofia Chen',
+                title: 'Senior UX/UI Designer',
+                email: 'sofia@sofiachen.design',
+                phone: '+1 (212) 555-0144',
+                location: 'New York, NY',
+                website: 'https://sofiachen.design',
+                linkedin: 'https://linkedin.com/in/sofiachen',
+                summary: 'Product designer with 7+ years shaping digital experiences for SaaS, fintech, and e-commerce. Specialize in design systems, user research, and turning complex workflows into simple interfaces. Worked with cross-functional teams to ship features that moved key metrics.',
+                work: [
+                    {company:'Notion', role:'Senior Product Designer', start:'Apr 2022', end:'Present', description:'Lead designer for AI features used by 30M+ users. Created comprehensive design system adopted across 4 product areas. Increased onboarding completion by 28% through research-driven redesign.'},
+                    {company:'Shopify', role:'Product Designer', start:'Jun 2019', end:'Mar 2022', description:'Designed checkout flows converting $3B+ in GMV. Led accessibility initiative bringing platform to WCAG 2.1 AA compliance. Facilitated 40+ user research sessions.'}
+                ],
+                education: [{institution:'Rhode Island School of Design', degree:'BFA Graphic Design', year:'2017', gpa:''}],
+                skills: [
+                    {name:'Figma', level:5},
+                    {name:'Design Systems', level:5},
+                    {name:'User Research', level:4},
+                    {name:'Prototyping', level:5},
+                    {name:'Motion Design', level:3},
+                    {name:'HTML/CSS', level:3}
+                ],
+                languages: [{name:'English', level:4}, {name:'Mandarin', level:3}],
+                certifications: [{name:'Nielsen Norman UX Certification', issuer:'NN/g', year:'2021'}],
+                customTitle: 'Speaking',
+                customContent: 'Config 2023 - "Scaling Design Systems Past 100 Components"\nUX Week 2022 - Panel on accessibility in fintech'
+            },
+            marketing: {
+                fullName: 'James Wilson',
+                title: 'Senior Marketing Manager',
+                email: 'j.wilson@example.com',
+                phone: '+44 20 7946 0958',
+                location: 'London, UK',
+                website: '',
+                linkedin: 'https://linkedin.com/in/jameswilson',
+                summary: 'Growth marketing leader with 8+ years scaling B2B SaaS from $1M to $50M ARR. Deep expertise in demand gen, content strategy, and marketing operations. Built and led cross-functional teams of 12, ran campaigns with budgets up to £4M annually.',
+                work: [
+                    {company:'Monday.com', role:'Senior Marketing Manager - EMEA', start:'Sep 2021', end:'Present', description:'Own £4M/year demand gen budget across paid, SEO, and events. Delivered 180% YoY pipeline growth. Launched ABM program generating £12M in qualified pipeline.'},
+                    {company:'HubSpot', role:'Marketing Manager', start:'Jan 2018', end:'Aug 2021', description:'Led content strategy driving 2.5M monthly organic visitors. Scaled email program from 50k to 400k subscribers with 28% avg open rate. Managed £1.5M paid acquisition budget.'}
+                ],
+                education: [{institution:'London School of Economics', degree:'BSc Business Management', year:'2016', gpa:'First Class Honours'}],
+                skills: [
+                    {name:'Demand Generation', level:5},
+                    {name:'Content Strategy', level:5},
+                    {name:'SEO/SEM', level:4},
+                    {name:'HubSpot/Salesforce', level:5},
+                    {name:'Analytics (GA4, Amplitude)', level:4},
+                    {name:'Team Leadership', level:4}
+                ],
+                languages: [{name:'English', level:4}, {name:'French', level:3}],
+                certifications: [
+                    {name:'Google Ads Professional', issuer:'Google', year:'2023'},
+                    {name:'HubSpot Inbound Marketing', issuer:'HubSpot', year:'2022'}
+                ],
+                customTitle: 'Achievements',
+                customContent: 'Grew company blog to #1 in category (SimilarWeb)\nFeatured speaker at SaaStr Europe 2023'
+            },
+            sales: {
+                fullName: 'Michael Rodriguez',
+                title: 'Enterprise Account Executive',
+                email: 'michael.r@example.com',
+                phone: '+1 (312) 555-0167',
+                location: 'Chicago, IL',
+                website: '',
+                linkedin: 'https://linkedin.com/in/mrodriguezsales',
+                summary: 'Enterprise sales leader with 10+ years closing complex deals in B2B SaaS. Consistent top performer - exceeded quota 8 of last 10 quarters. Specialize in Fortune 500 accounts with deal sizes $250k-$2M. Strong consultative selling and executive engagement skills.',
+                work: [
+                    {company:'Salesforce', role:'Senior Enterprise AE', start:'Feb 2020', end:'Present', description:'115% attainment over 4 years on $3M+ quota. Closed largest deal in region ($4.2M ARR, 3-year contract). Top 5% of global sales org 3 years running.'},
+                    {company:'Oracle', role:'Account Executive', start:'Jul 2015', end:'Jan 2020', description:'Grew territory from $800k to $4.5M ARR. Built pipeline through outbound prospecting and partner channels. Promoted twice in 5 years.'}
+                ],
+                education: [{institution:'Northwestern University - Kellogg', degree:'MBA', year:'2015', gpa:''}],
+                skills: [
+                    {name:'Enterprise Sales', level:5},
+                    {name:'Consultative Selling', level:5},
+                    {name:'Salesforce CRM', level:5},
+                    {name:'Negotiation', level:5},
+                    {name:'C-Suite Engagement', level:4},
+                    {name:'Pipeline Management', level:5}
+                ],
+                languages: [{name:'English', level:4}, {name:'Spanish', level:4}],
+                certifications: [{name:"President's Club", issuer:'Salesforce', year:'2023'}],
+                customTitle: 'Awards',
+                customContent: "President's Club Winner - 2021, 2022, 2023\nRookie of the Year 2016 - Oracle North America"
+            },
+            student: {
+                fullName: 'Emma Thompson',
+                title: 'Computer Science Graduate',
+                email: 'emma.thompson@example.com',
+                phone: '+1 (617) 555-0121',
+                location: 'Boston, MA',
+                website: 'https://emmathompson.io',
+                linkedin: 'https://linkedin.com/in/emmathompsoncs',
+                summary: 'Recent CS graduate with hands-on experience in full-stack web development and machine learning. Completed 3 internships at startups and a research assistantship in NLP. Eager to join a team where I can contribute to meaningful products while continuing to grow.',
+                work: [
+                    {company:'Dropbox', role:'Software Engineering Intern', start:'Jun 2024', end:'Aug 2024', description:'Built internal tool for team capacity planning. Wrote React frontend and Python API, shipped to production for 200+ employees. Returned offer received.'},
+                    {company:'MIT CSAIL', role:'Research Assistant', start:'Sep 2023', end:'May 2024', description:'NLP research under Prof. Jane Doe. Co-authored paper accepted at EMNLP 2024. Implemented benchmark evaluation framework.'}
+                ],
+                education: [
+                    {institution:'Massachusetts Institute of Technology', degree:'B.S. Computer Science', year:'2025', gpa:'3.92/4.0'},
+                    {institution:'Boston Latin School', degree:'High School Diploma', year:'2021', gpa:''}
+                ],
+                skills: [
+                    {name:'Python', level:5},
+                    {name:'JavaScript/React', level:4},
+                    {name:'Machine Learning', level:3},
+                    {name:'SQL', level:4},
+                    {name:'Git', level:4},
+                    {name:'Data Structures & Algorithms', level:5}
+                ],
+                languages: [{name:'English', level:4}, {name:'French', level:2}],
+                certifications: [{name:'AWS Cloud Practitioner', issuer:'Amazon', year:'2024'}],
+                customTitle: 'Projects',
+                customContent: 'Senior Capstone: Real-time transcription app for students (React + Whisper API)\nHackathon winner - HackMIT 2023 (Best AI Project)'
+            }
+        }, it: {
             developer: {
                 fullName: 'Alessandro Bianchi',
                 title: 'Sviluppatore Full Stack Senior',
@@ -1735,17 +1876,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 customTitle: 'Progetti',
                 customContent: 'Tesi di laurea: App di trascrizione in tempo reale per studenti (React + Whisper API)\nVincitrice hackathon - HackUnibo 2023 (Miglior Progetto AI)'
             }
-        };
+        } };
+        let PRESETS = PRESETS_ALL[__CVLANG__];
 
+        // ============ STATE ============
         const state = {
             fullName: '', title: '', email: '', phone: '', location: '',
             website: '', linkedin: '', photoData: '', summary: '',
             work: [], education: [], skills: [], languages: [], certifications: [],
             customTitle: '', customContent: '',
             template: 'classic', font: 'default', accent: 'green', previewMode: 'light',
-            customColors: []
+            customColors: [],
+            sectionOrder: ['summary','work','education','skills','languages','certifications','custom']
         };
 
+        // ============ UTILITIES ============
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -1760,7 +1905,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             showToast._timer = setTimeout(() => t.classList.remove('show'), 2500);
         }
         function safeFilename(s) {
-            return (s || 'cv').replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'cv';
+            return (s || (__CVLANG__==='it'?'cv':'resume')).replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'resume';
         }
         function hostnameOf(url) {
             try { return new URL(url).hostname.replace(/^www\./,''); }
@@ -1768,7 +1913,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         function newId() { return Date.now() + Math.random(); }
 
-        // ============ CARICAMENTO FOTO ============
+        // ============ PHOTO UPLOAD ============
         function initPhotoUpload() {
             const area = document.getElementById('photoUploadArea');
             const fileInput = document.getElementById('photoFileInput');
@@ -1786,8 +1931,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             });
         }
         function handlePhotoFile(file) {
-            if (!file.type.startsWith('image/')) { showToast('Seleziona un file immagine'); return; }
-            if (file.size > 12 * 1024 * 1024) { showToast('Immagine troppo grande (max 12 MB)'); return; }
+            if (!file.type.startsWith('image/')) { showToast('Please select an image file'); return; }
+            if (file.size > 12 * 1024 * 1024) { showToast('Image too large (max 12 MB)'); return; }
             resizePhoto(file, 512).then(function(dataUrl) {
                 state.photoData = dataUrl;
                 updatePhotoUI(); updatePreview(); scheduleSave();
@@ -1833,15 +1978,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const area = document.getElementById('photoUploadArea');
             if (state.photoData) {
                 area.innerHTML = `
-                    <img src="${state.photoData}" class="photo-preview-thumb" alt="Foto">
-                    <div class="photo-upload-text"><span>Foto caricata ✓</span><small>Clicca per sostituire</small></div>
-                    <button type="button" class="photo-remove-btn" onclick="event.stopPropagation();removePhoto()" title="Rimuovi">✕</button>
+                    <img src="${state.photoData}" class="photo-preview-thumb" alt="Photo">
+                    <div class="photo-upload-text"><span>Photo loaded ✓</span><small>Click to replace</small></div>
+                    <button type="button" class="photo-remove-btn" onclick="event.stopPropagation();removePhoto()" title="Remove">✕</button>
                     <input type="file" id="photoFileInput" accept="image/*" style="display:none">
                 `;
             } else {
                 area.innerHTML = `
                     <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-                    <div class="photo-upload-text"><span>📷 Clicca o trascina un'immagine qui</span><small>JPG, PNG, WebP — max 2 MB</small></div>
+                    <div class="photo-upload-text"><span>📷 Click or drag an image here</span><small>JPG, PNG, WebP — max 2 MB</small></div>
                 `;
             }
             const fileInput = area.querySelector('#photoFileInput');
@@ -1852,6 +1997,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             });
         }
 
+        // ============ WORK ============
         function addWorkEntry() {
             state.work.push({id: newId(), company:'', role:'', start:'', end:'', description:''});
             renderWorkEntries(); updatePreview(); scheduleSave();
@@ -1869,16 +2015,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 div.dataset.id = entry.id;
                 div.innerHTML = `
                     <div class="drag-handle"></div>
-                    <button class="entry-remove" title="Rimuovi">×</button>
+                    <button class="entry-remove" title="Remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Azienda" data-field="company">
-                        <input type="text" placeholder="Ruolo" data-field="role">
+                        <input type="text" placeholder="Company" data-field="company">
+                        <input type="text" placeholder="Job Title" data-field="role">
                     </div>
                     <div class="form-row">
-                        <input type="text" placeholder="Data Inizio (es. Gen 2020)" data-field="start">
-                        <input type="text" placeholder="Data Fine (es. Dic 2023 o Presente)" data-field="end">
+                        <input type="text" placeholder="Start Date (e.g. Jan 2020)" data-field="start">
+                        <input type="text" placeholder="End Date (e.g. Dec 2023 or Present)" data-field="end">
                     </div>
-                    <textarea placeholder="Descrizione del ruolo (puoi aggiungere più righe)" data-field="description" maxlength="1000"></textarea>
+                    <textarea placeholder="Job description (you can add multiple lines)" data-field="description" maxlength="1000"></textarea>
                     <span class="char-counter" data-counter-for="description"></span>
                 `;
                 div.querySelectorAll('[data-field]').forEach(el => {
@@ -1897,6 +2043,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             initSortable('workExperience', 'work');
         }
 
+        // ============ EDUCATION ============
         function addEducationEntry() {
             state.education.push({id: newId(), institution:'', degree:'', year:'', gpa:''});
             renderEducationEntries(); updatePreview(); scheduleSave();
@@ -1916,12 +2063,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="drag-handle"></div>
                     <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Istituto" data-field="institution">
-                        <input type="text" placeholder="Titolo/Diploma" data-field="degree">
+                        <input type="text" placeholder="Institution" data-field="institution">
+                        <input type="text" placeholder="Degree/Title" data-field="degree">
                     </div>
                     <div class="form-row">
-                        <input type="text" placeholder="Anno" data-field="year">
-                        <input type="text" placeholder="Voto (opzionale)" data-field="gpa">
+                        <input type="text" placeholder="Year" data-field="year">
+                        <input type="text" placeholder="GPA (optional)" data-field="gpa">
                     </div>
                 `;
                 div.querySelectorAll('[data-field]').forEach(el => {
@@ -1937,6 +2084,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             initSortable('education', 'education');
         }
 
+        // ============ SKILLS ============
         function addSkillEntry() {
             state.skills.push({id: newId(), name:'', level:3});
             renderSkillEntries(); updatePreview(); scheduleSave();
@@ -1954,13 +2102,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 div.dataset.id = entry.id;
                 div.innerHTML = `
                     <div class="drag-handle"></div>
-                    <input type="text" placeholder="Competenza" style="flex:1;" data-field="name">
+                    <input type="text" placeholder="Skill" style="flex:1;" data-field="name">
                     <div class="skill-stars">
                         ${[1,2,3,4,5].map(i =>
                             `<div class="star ${i <= entry.level ? 'filled' : ''}" data-star="${i}" title="${escapeHtml(LEVEL_LABELS[i])}"></div>`
                         ).join('')}
                     </div>
-                    <button class="btn btn-danger btn-small" data-action="remove">Rimuovi</button>
+                    <button class="btn btn-danger btn-small" data-action="remove">Remove</button>
                 `;
                 const nameInput = div.querySelector('[data-field="name"]');
                 nameInput.value = entry.name || '';
@@ -1977,6 +2125,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             initSortable('skills', 'skills');
         }
 
+        // ============ LANGUAGES ============
         function addLanguageEntry() {
             state.languages.push({id: newId(), name:'', level:0});
             renderLanguageEntries(); updatePreview(); scheduleSave();
@@ -1996,13 +2145,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="drag-handle"></div>
                     <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Lingua" data-field="name">
+                        <input type="text" placeholder="Language" data-field="name">
                         <select data-field="level">
-                            <option value="0">Seleziona Livello</option>
-                            <option value="1">Base</option>
-                            <option value="2">Intermedio</option>
-                            <option value="3">Fluente</option>
-                            <option value="4">Madrelingua</option>
+                            <option value="0">Select Level</option>
+                            <option value="1">Basic</option>
+                            <option value="2">Intermediate</option>
+                            <option value="3">Fluent</option>
+                            <option value="4">Native</option>
                         </select>
                     </div>
                 `;
@@ -2018,6 +2167,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             initSortable('languages', 'languages');
         }
 
+        // ============ CERTIFICATIONS ============
         function addCertificationEntry() {
             state.certifications.push({id: newId(), name:'', issuer:'', year:''});
             renderCertificationEntries(); updatePreview(); scheduleSave();
@@ -2037,10 +2187,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="drag-handle"></div>
                     <button class="entry-remove">×</button>
                     <div class="form-row">
-                        <input type="text" placeholder="Nome Certificazione" data-field="name">
-                        <input type="text" placeholder="Ente Emittente" data-field="issuer">
+                        <input type="text" placeholder="Certification Name" data-field="name">
+                        <input type="text" placeholder="Issuing Organization" data-field="issuer">
                     </div>
-                    <input type="text" placeholder="Anno" data-field="year">
+                    <input type="text" placeholder="Year" data-field="year">
                 `;
                 div.querySelectorAll('[data-field]').forEach(el => {
                     el.value = entry[el.dataset.field] || '';
@@ -2055,6 +2205,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             initSortable('certifications', 'certifications');
         }
 
+        // ============ SORTABLE (drag & drop) ============
         function makeSortable(el, onEnd) {
             if (!el || el._nativeSort) return;
             el._nativeSort = true;
@@ -2113,6 +2264,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             });
         }
 
+        // ============ CHAR COUNTERS ============
         function updateCharCounter(el) {
             const max = parseInt(el.getAttribute('maxlength') || '0', 10);
             if (!max) return;
@@ -2129,6 +2281,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             counter.classList.toggle('over', cur >= max);
         }
 
+        // ============ PREVIEW ============
         function onFieldInput() {
             updatePreview();
             const sumEl = document.getElementById('summary');
@@ -2143,10 +2296,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function updatePreview() {
             updateState();
+            const preview = document.getElementById('preview');
 
             document.getElementById('previewName').textContent = state.fullName || T.yourName;
             document.getElementById('previewTitle').textContent = state.title || T.professionalTitle;
 
+            // Contact row
             const contactEl = document.getElementById('previewContact');
             const parts = [];
             if (state.email) parts.push(escapeHtml(state.email));
@@ -2157,7 +2312,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const li = state.linkedin.replace(/^https?:\/\/(www\.)?/,'');
                 parts.push(escapeHtml(li));
             }
-            if (parts.length === 0) parts.push('email@example.com','+39 345 123 4567','Milano, Italia');
+            if (parts.length === 0) parts.push('email@example.com','+1 (555) 123-4567','New York, USA');
             contactEl.innerHTML = parts.join('<span class="sep"> • </span>');
 
             const photo = document.getElementById('previewPhoto');
@@ -2191,7 +2346,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderPreviewList('previewLanguagesSection','previewLanguages', state.languages, l => `
                 <div class="preview-language-item">
                     <div>${escapeHtml(l.name)}</div>
-                    <div class="preview-language-level">${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}</div>
+                    <div class="preview-language-level">${escapeHtml(LANG_LEVELS[l.level] || 'Select')}</div>
                 </div>`);
             renderPreviewList('previewCertificationsSection','previewCertifications', state.certifications, c => `
                 <div class="preview-entry">
@@ -2200,6 +2355,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="preview-entry-date">${escapeHtml(c.year)}</div>
                 </div>`);
 
+            // Custom
             const customSection = document.getElementById('previewCustomSection');
             if (state.customTitle && state.customContent) {
                 customSection.style.display = 'block';
@@ -2213,6 +2369,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             applyTemplate();
             applyFont();
             applyPreviewMode();
+            applySectionOrder();
         }
 
         function renderPreviewList(sectionId, containerId, list, fn) {
@@ -2244,6 +2401,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             preview.classList.toggle('preview-dark', state.previewMode === 'dark');
         }
 
+        // ============ ACTIONS ============
         function clearAll() {
             if (!confirm(T.confirmClear)) return;
             ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
@@ -2262,6 +2420,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderSkillEntries();
             renderLanguageEntries();
             renderCertificationEntries();
+            if (typeof renderSectionOrderList === 'function') renderSectionOrderList();
+            if (typeof renderProfileBar === 'function') renderProfileBar();
         }
 
         function loadPreset(key) {
@@ -2280,6 +2440,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function printResume() { window.print(); }
 
+        // PROPER PDF DOWNLOAD: clone preview into offscreen A4 container
         function currentAccentHex() {
             var a = state.accent || 'green';
             return (a.charAt(0) === '#') ? a : (COLOR_MAP[a] || COLOR_MAP.green);
@@ -2367,18 +2528,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 }});
             }
             var S = (typeof T!=='undefined' && T.sections) ? T.sections : {summary:'Summary',work:'Experience',education:'Education',skills:'Skills',languages:'Languages',certifications:'Certifications'};
-            if (state.summary){ pushHeading(S.summary); pushText(state.summary); }
-            if (state.work && state.work.length){ pushHeading(S.work);
-                state.work.forEach(function(w){ pushEntry(w.role, w.company, [w.start,w.end].filter(Boolean).join(' - '), w.description); }); }
-            if (state.education && state.education.length){ pushHeading(S.education);
-                state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' | ')); }); }
-            if (state.skills && state.skills.length){ pushHeading(S.skills);
-                pushText(state.skills.map(function(sk){ return sk.name + (sk.level? ' ('+ (typeof LEVEL_LABELS!=='undefined'?(LEVEL_LABELS[sk.level]||sk.level):sk.level) +'/5)':''); }).join('   •   ')); }
-            if (state.languages && state.languages.length){ pushHeading(S.languages);
-                pushText(state.languages.map(function(l){ return l.name + (l.level!==undefined? ': '+ (typeof LANG_LEVELS!=='undefined'?(LANG_LEVELS[l.level]||''):'') :''); }).join('   •   ')); }
-            if (state.certifications && state.certifications.length){ pushHeading(S.certifications);
-                state.certifications.forEach(function(c){ pushEntry(c.name, c.issuer, c.year); }); }
-            if (state.customTitle && state.customContent){ pushHeading(state.customTitle); pushText(state.customContent); }
+            var SEC = {
+                summary:function(){ if (state.summary){ pushHeading(S.summary); pushText(state.summary); } },
+                work:function(){ if (state.work && state.work.length){ pushHeading(S.work);
+                    state.work.forEach(function(w){ pushEntry(w.role, w.company, [w.start,w.end].filter(Boolean).join(' - '), w.description); }); } },
+                education:function(){ if (state.education && state.education.length){ pushHeading(S.education);
+                    state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' | ')); }); } },
+                skills:function(){ if (state.skills && state.skills.length){ pushHeading(S.skills);
+                    pushText(state.skills.map(function(sk){ return sk.name + (sk.level? ' ('+ (typeof LEVEL_LABELS!=='undefined'?(LEVEL_LABELS[sk.level]||sk.level):sk.level) +'/5)':''); }).join('   •   ')); } },
+                languages:function(){ if (state.languages && state.languages.length){ pushHeading(S.languages);
+                    pushText(state.languages.map(function(l){ return l.name + (l.level!==undefined? ': '+ (typeof LANG_LEVELS!=='undefined'?(LANG_LEVELS[l.level]||''):'') :''); }).join('   •   ')); } },
+                certifications:function(){ if (state.certifications && state.certifications.length){ pushHeading(S.certifications);
+                    state.certifications.forEach(function(c){ pushEntry(c.name, c.issuer, c.year); }); } },
+                custom:function(){ if (state.customTitle && state.customContent){ pushHeading(state.customTitle); pushText(state.customContent); } }
+            };
+            orderedSections().forEach(function(k){ if (SEC[k]) SEC[k](); });
             return blocks;
         }
         async function downloadPDF() {
@@ -2430,50 +2594,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             let text = `${state.fullName}\n${state.title}\n`;
             const contact = [state.email, state.phone, state.location, state.website, state.linkedin].filter(Boolean);
             text += contact.join(' | ') + '\n\n';
-            text += `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n`;
-            if (state.work.length) {
-                text += `${T.sections.work.toUpperCase()}\n`;
-                state.work.forEach(w => {
-                    text += `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n\n`;
-                });
-            }
-            if (state.education.length) {
-                text += `${T.sections.education.toUpperCase()}\n`;
-                state.education.forEach(e => {
-                    text += `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | Voto: ' + e.gpa : ''}\n`;
-                });
-                text += '\n';
-            }
-            if (state.skills.length) {
-                text += `${T.sections.skills.toUpperCase()}\n`;
-                state.skills.forEach(s => { text += `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)\n`; });
-                text += '\n';
-            }
-            if (state.languages.length) {
-                text += `${T.sections.languages.toUpperCase()}\n`;
-                state.languages.forEach(l => { text += `${l.name}: ${LANG_LEVELS[l.level] || ''}\n`; });
-                text += '\n';
-            }
-            if (state.certifications.length) {
-                text += `${T.sections.certifications.toUpperCase()}\n`;
-                state.certifications.forEach(c => { text += `${c.name} - ${c.issuer} (${c.year})\n`; });
-                text += '\n';
-            }
-            if (state.customTitle && state.customContent) {
-                text += `${state.customTitle.toUpperCase()}\n${state.customContent}\n`;
-            }
+            const P = {
+                summary: () => state.summary ? `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n` : '',
+                work: () => state.work.length ? `${T.sections.work.toUpperCase()}\n` + state.work.map(w => `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n`).join('\n') + '\n' : '',
+                education: () => state.education.length ? `${T.sections.education.toUpperCase()}\n` + state.education.map(e => `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | GPA: ' + e.gpa : ''}`).join('\n') + '\n\n' : '',
+                skills: () => state.skills.length ? `${T.sections.skills.toUpperCase()}\n` + state.skills.map(s => `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)`).join('\n') + '\n\n' : '',
+                languages: () => state.languages.length ? `${T.sections.languages.toUpperCase()}\n` + state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n') + '\n\n' : '',
+                certifications: () => state.certifications.length ? `${T.sections.certifications.toUpperCase()}\n` + state.certifications.map(c => `${c.name} - ${c.issuer} (${c.year})`).join('\n') + '\n\n' : '',
+                custom: () => (state.customTitle && state.customContent) ? `${state.customTitle.toUpperCase()}\n${state.customContent}\n` : ''
+            };
+            orderedSections().forEach(k => { if (P[k]) text += P[k](); });
             return text.trim();
         }
 
+        // ATS-friendly plain text export (single column, no decorations)
         function exportATS() {
             updateState();
             let txt = `${T.atsHeader}\n${'='.repeat(60)}\n\n`;
-            txt += `Nome: ${state.fullName}\n`;
-            txt += `Ruolo: ${state.title}\n`;
+            txt += `${T.expName}${state.fullName}\n`;
+            txt += `${T.expTitle}${state.title}\n`;
             if (state.email) txt += `Email: ${state.email}\n`;
-            if (state.phone) txt += `Telefono: ${state.phone}\n`;
-            if (state.location) txt += `Località: ${state.location}\n`;
-            if (state.website) txt += `Sito Web: ${state.website}\n`;
+            if (state.phone) txt += `${T.expPhone}${state.phone}\n`;
+            if (state.location) txt += `${T.expLocation}${state.location}\n`;
+            if (state.website) txt += `${T.expWebsite}${state.website}\n`;
             if (state.linkedin) txt += `LinkedIn: ${state.linkedin}\n`;
             txt += '\n';
 
@@ -2482,36 +2625,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return `${title.toUpperCase()}\n${'-'.repeat(60)}\n${body}\n\n`;
             };
 
-            txt += sect(T.sections.summary, state.summary);
-
-            if (state.work.length) {
-                let body = '';
-                state.work.forEach(w => {
-                    body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`;
-                });
-                txt += sect(T.sections.work, body.trim());
-            }
-            if (state.education.length) {
-                let body = '';
-                state.education.forEach(e => {
-                    body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | Voto: ' + e.gpa : ''}\n\n`;
-                });
-                txt += sect(T.sections.education, body.trim());
-            }
-            if (state.skills.length) {
-                txt += sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n'));
-            }
-            if (state.languages.length) {
-                txt += sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n'));
-            }
-            if (state.certifications.length) {
-                let body = '';
-                state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; });
-                txt += sect(T.sections.certifications, body.trim());
-            }
-            if (state.customTitle && state.customContent) {
-                txt += sect(state.customTitle, state.customContent);
-            }
+            const A = {
+                summary: () => sect(T.sections.summary, state.summary),
+                work: () => { if (!state.work.length) return ''; let body = ''; state.work.forEach(w => { body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`; }); return sect(T.sections.work, body.trim()); },
+                education: () => { if (!state.education.length) return ''; let body = ''; state.education.forEach(e => { body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | GPA: ' + e.gpa : ''}\n\n`; }); return sect(T.sections.education, body.trim()); },
+                skills: () => state.skills.length ? sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n')) : '',
+                languages: () => state.languages.length ? sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n')) : '',
+                certifications: () => { if (!state.certifications.length) return ''; let body = ''; state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; }); return sect(T.sections.certifications, body.trim()); },
+                custom: () => (state.customTitle && state.customContent) ? sect(state.customTitle, state.customContent) : ''
+            };
+            orderedSections().forEach(k => { if (A[k]) txt += A[k](); });
 
             const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
             const url = URL.createObjectURL(blob);
@@ -2529,7 +2652,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = safeFilename(state.fullName) + '_cv.json';
+            a.download = safeFilename(state.fullName) + T.fileSuffix + '.json';
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast(T.toast.saved);
@@ -2543,7 +2666,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 try {
                     const data = JSON.parse(ev.target.result);
                     Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
-                    // Gestisci legacy photoUrl da vecchi export JSON
+                    // Handle legacy photoUrl from old JSON exports
                     if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
                     ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
                         .forEach(id => { if (state[id] !== undefined) document.getElementById(id).value = state[id]; });
@@ -2561,6 +2684,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             e.target.value = '';
         }
 
+        // ============ AUTOSAVE ============
         let saveTimer = null;
         function scheduleSave() {
             const dot = document.getElementById('autosaveDot');
@@ -2572,7 +2696,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             saveTimer = setTimeout(() => {
                 try {
                     updateState();
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                    localStorage.setItem(activeProfileKey(), JSON.stringify(state));
                     dot.classList.remove('saving');
                     dot.classList.add('saved');
                     txt.textContent = T.savedAt + new Date().toLocaleTimeString();
@@ -2582,41 +2706,157 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }, 500);
         }
 
-        function restoreFromStorage() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return false;
-                const data = JSON.parse(raw);
-                Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
-                // Gestisci legacy photoUrl da vecchi salvataggi
-                if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
-                ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
-                    .forEach(id => { document.getElementById(id).value = state[id] || ''; });
-                renderAll();
-                updatePhotoUI();
-                document.getElementById('template-select').value = state.template || 'classic';
-                document.getElementById('font-select').value = state.font || 'default';
-                renderCustomSwatches();
-                setAccent(state.accent || 'green', false);
-                if (state.previewMode) setPreviewMode(state.previewMode, false);
-                updatePreview();
-                return true;
-            } catch {
-                return false;
+        // ============ MULTI-PROFILE ============
+        const PIDX_KEY = 'cvProfilesIndex_v1';
+        function pkey(id){ return 'cvProfile_' + id; }
+        let profiles = { activeId: null, list: [] };
+        function loadProfilesIndex(){ try{ var r = localStorage.getItem(PIDX_KEY); if (r){ var o = JSON.parse(r); if (o && o.list) profiles = o; } }catch(e){} }
+        function saveProfilesIndex(){ try{ localStorage.setItem(PIDX_KEY, JSON.stringify(profiles)); }catch(e){} }
+        function genPid(){ return 'p' + Date.now().toString(36) + Math.floor(Math.random()*1e5).toString(36); }
+        function activeProfileKey(){ return pkey(profiles.activeId || 'default'); }
+        function defaultProfileName(){ return (T.ui.profile) + ' ' + (profiles.list.length + 1); }
+        function initProfiles(){
+            loadProfilesIndex();
+            if (!profiles.list || !profiles.list.length){
+                var id = genPid();
+                profiles = { activeId: id, list: [{ id: id, name: (T.ui.profile) + ' 1' }] };
+                try{ var legacy = localStorage.getItem(STORAGE_KEY); if (legacy) localStorage.setItem(pkey(id), legacy); }catch(e){}
+                saveProfilesIndex();
             }
+            if (!profiles.activeId || !profiles.list.some(function(p){ return p.id === profiles.activeId; })) profiles.activeId = profiles.list[0].id;
+        }
+        function saveActiveProfile(){ try{ updateState(); localStorage.setItem(activeProfileKey(), JSON.stringify(state)); }catch(e){} }
+
+        function defaultStateObj(){
+            return { fullName:'',title:'',email:'',phone:'',location:'',website:'',linkedin:'',photoData:'',summary:'',
+                work:[],education:[],skills:[],languages:[],certifications:[], customTitle:'',customContent:'',
+                template:'classic',font:'default',accent:'green',previewMode:'light',customColors:[],
+                sectionOrder: SECTION_KEYS.slice() };
+        }
+        function applyDataToState(data){
+            var d = defaultStateObj();
+            if (data){ Object.keys(d).forEach(function(k){ if (data[k] !== undefined) d[k] = data[k]; }); if (data.photoUrl && !d.photoData) d.photoData = data.photoUrl; }
+            Object.keys(d).forEach(function(k){ state[k] = d[k]; });
+        }
+        function syncUIFromState(){
+            ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                .forEach(function(id){ var el = document.getElementById(id); if (el) el.value = state[id] || ''; });
+            renderAll();
+            updatePhotoUI();
+            document.getElementById('template-select').value = state.template || 'classic';
+            document.getElementById('font-select').value = state.font || 'default';
+            renderCustomSwatches();
+            setAccent(state.accent || 'green', false);
+            if (state.previewMode) setPreviewMode(state.previewMode, false);
+            renderSectionOrderList();
+            updatePreview();
+        }
+        function loadActiveProfile(){
+            var raw = null; try{ raw = localStorage.getItem(activeProfileKey()); }catch(e){}
+            var data = null; try{ data = raw ? JSON.parse(raw) : null; }catch(e){}
+            applyDataToState(data);
+            syncUIFromState();
+            return !!data;
+        }
+        function switchProfile(id){
+            if (!id || id === profiles.activeId) return;
+            saveActiveProfile();
+            profiles.activeId = id; saveProfilesIndex();
+            loadActiveProfile(); renderProfileBar();
+        }
+        function newProfile(){
+            var name = prompt(T.ui.promptName, defaultProfileName());
+            if (name === null) return; name = (name || '').trim() || defaultProfileName();
+            saveActiveProfile();
+            var id = genPid(); profiles.list.push({ id: id, name: name }); profiles.activeId = id; saveProfilesIndex();
+            applyDataToState(null);
+            try{ localStorage.setItem(activeProfileKey(), JSON.stringify(state)); }catch(e){}
+            syncUIFromState(); renderProfileBar(); showToast(T.ui.pCreated);
+        }
+        function duplicateProfile(){
+            saveActiveProfile();
+            var src = profiles.list.find(function(p){ return p.id === profiles.activeId; });
+            var base = src ? src.name : 'CV';
+            var id = genPid(); profiles.list.push({ id: id, name: base + (__CVLANG__==='it'?' (copia)':' (copy)') });
+            try{ localStorage.setItem(pkey(id), localStorage.getItem(activeProfileKey()) || JSON.stringify(state)); }catch(e){}
+            profiles.activeId = id; saveProfilesIndex(); loadActiveProfile(); renderProfileBar(); showToast(T.ui.pDup);
+        }
+        function renameProfile(){
+            var p = profiles.list.find(function(x){ return x.id === profiles.activeId; }); if (!p) return;
+            var name = prompt(T.ui.promptName, p.name); if (name === null) return; name = (name || '').trim(); if (!name) return;
+            p.name = name; saveProfilesIndex(); renderProfileBar(); showToast(T.ui.pRenamed);
+        }
+        function deleteProfile(){
+            if (profiles.list.length <= 1) return;
+            if (!confirm(T.ui.confirmDel)) return;
+            var idx = profiles.list.findIndex(function(x){ return x.id === profiles.activeId; });
+            try{ localStorage.removeItem(activeProfileKey()); }catch(e){}
+            profiles.list.splice(idx, 1);
+            profiles.activeId = profiles.list[Math.max(0, idx - 1)].id;
+            saveProfilesIndex(); loadActiveProfile(); renderProfileBar(); showToast(T.ui.pDeleted);
+        }
+        function _setTxt(id, txt){ var b = document.getElementById(id); if (b) b.textContent = txt; }
+        function renderProfileBar(){
+            var sel = document.getElementById('profileSelect'); if (!sel) return;
+            sel.innerHTML = profiles.list.map(function(p){ return '<option value="' + p.id + '"' + (p.id === profiles.activeId ? ' selected' : '') + '>' + escapeHtml(p.name) + '</option>'; }).join('');
+            _setTxt('profileBarLabel', T.ui.profile + ':');
+            _setTxt('profileNew', T.ui.newP); _setTxt('profileRename', T.ui.rename); _setTxt('profileDup', T.ui.duplicate); _setTxt('profileDelete', T.ui.del);
+            var db = document.getElementById('profileDelete'); if (db) db.disabled = profiles.list.length <= 1;
+        }
+        function wireProfileBar(){
+            var sel = document.getElementById('profileSelect'); if (sel) sel.addEventListener('change', function(){ switchProfile(this.value); });
+            var m = { profileNew:newProfile, profileRename:renameProfile, profileDup:duplicateProfile, profileDelete:deleteProfile };
+            Object.keys(m).forEach(function(id){ var b = document.getElementById(id); if (b) b.addEventListener('click', m[id]); });
         }
 
+        // ============ SECTION ORDER ============
+        function sectionLabel(k){
+            var s = T.sections || {};
+            if (k === 'custom') return state.customTitle || (__CVLANG__==='it' ? 'Sezione personalizzata' : 'Custom section');
+            return s[k] || k;
+        }
+        function renderSectionOrderList(){
+            var el = document.getElementById('sectionOrderList'); if (!el) return;
+            var oo = orderedSections();
+            el.innerHTML = oo.map(function(k, i){
+                return '<div class="section-order-item" data-id="' + k + '"><span class="drag-handle"></span><span class="so-num">' + (i+1) + '</span><span>' + escapeHtml(sectionLabel(k)) + '</span></div>';
+            }).join('');
+            makeSortable(el, function(){
+                var newOrder = Array.prototype.slice.call(el.children).map(function(c){ return c.dataset && c.dataset.id; }).filter(Boolean);
+                if (newOrder.length) state.sectionOrder = newOrder;
+                renderSectionOrderList(); updatePreview(); scheduleSave();
+            });
+            _setTxt('sectionOrderSummary', T.ui.secOrder);
+            _setTxt('sectionOrderHint', T.ui.secHint);
+        }
+        function applySectionOrder(){
+            ['main','side'].forEach(function(col){
+                var keys = orderedSections().filter(function(k){ return SECTION_DOM[k] && SECTION_DOM[k].col === col; });
+                var parent = null;
+                keys.forEach(function(k){
+                    var node = document.getElementById(SECTION_DOM[k].el); if (!node) return;
+                    parent = parent || node.parentElement;
+                    if (parent) parent.appendChild(node);
+                });
+            });
+        }
+
+        // ============ CONTROLS WIRING ============
         document.getElementById('template-select').addEventListener('change', (e) => {
             state.template = e.target.value;
             applyTemplate(); scheduleSave();
         });
+
         document.getElementById('font-select').addEventListener('change', (e) => {
             state.font = e.target.value;
             applyFont(); scheduleSave();
         });
+
         document.getElementById('preset-select').addEventListener('change', (e) => {
             if (e.target.value) {
-                if (confirm(T.confirmPreset)) loadPreset(e.target.value);
+                if (confirm('Load this preset? Current data will be replaced.')) {
+                    loadPreset(e.target.value);
+                }
                 e.target.value = '';
             }
         });
@@ -2637,7 +2877,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const wrap = document.getElementById('customSwatches');
             if (!wrap) return;
             wrap.innerHTML = (state.customColors || []).map(function(hex) {
-                return '<div class="color-option custom-swatch" data-accent="'+hex+'" title="'+hex+' — doppio click per rimuovere" style="background:'+hex+'"></div>';
+                return '<div class="color-option custom-swatch" data-accent="'+hex+'" title="'+hex+' — double-click to remove" style="background:'+hex+'"></div>';
             }).join('');
         }
         function addCustomColor(hex) {
@@ -2650,7 +2890,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 renderCustomSwatches();
             }
             setAccent(hex);
-            showToast(T.toast && T.toast.colorSaved ? T.toast.colorSaved : 'Colore salvato nella palette');
+            showToast(T.toast && T.toast.colorSaved ? T.toast.colorSaved : 'Color saved to palette');
         }
         function removeCustomColor(hex) {
             state.customColors = (state.customColors || []).filter(function(c){ return c !== hex; });
@@ -2670,7 +2910,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             addCustomColor(e.target.value);
         });
 
-const ATS_STOP = new Set(('della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa').split(' '));
+const ATS_STOP = new Set(('the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around').split(' '));
         function atsTokens(text) {
             return (String(text).toLowerCase().match(/[a-z\u00e0\u00e8\u00e9\u00ec\u00f2\u00f9\u00e70-9+.#]{3,}/g) || [])
                 .map(function(w){ return w.replace(/^[.#]+|[.#]+$/g,''); })
@@ -2680,11 +2920,11 @@ const ATS_STOP = new Set(('della delle degli dello alla alle allo agli dalla dal
             updateState();
             var s = state;
             var checks = [
-                ['Riepilogo presente', !!s.summary && s.summary.length >= 80],
-                ['Almeno 1 esperienza', s.work.length >= 1],
-                ['Almeno 3 competenze', s.skills.length >= 3],
-                ['Email e telefono', !!s.email && !!s.phone],
-                ['Riepilogo 200-700 caratteri', s.summary.length >= 200 && s.summary.length <= 700]
+                [T.rd1, !!s.summary && s.summary.length >= 80],
+                [T.rd2, s.work.length >= 1],
+                [T.rd3, s.skills.length >= 3],
+                [T.rd4, !!s.email && !!s.phone],
+                [T.rd5, s.summary.length >= 200 && s.summary.length <= 700]
             ];
             return checks.map(function(c){ return '<span class="ats-check '+(c[1]?'ok':'no')+'">'+(c[1]?'\u2713':'\u25cb')+' '+c[0]+'</span>'; }).join('');
         }
@@ -2693,7 +2933,7 @@ const ATS_STOP = new Set(('della delle degli dello alla alle allo agli dalla dal
             var kwEl = document.getElementById('atsKeywords');
             var scoreEl = document.getElementById('atsScore');
             document.getElementById('atsReadiness').innerHTML = buildReadiness();
-            if (!job) { kwEl.innerHTML = ''; scoreEl.textContent = 'Incolla un annuncio per vedere le parole chiave.'; return; }
+            if (!job) { kwEl.innerHTML = ''; scoreEl.textContent = T.atsPaste; return; }
             var freq = {};
             atsTokens(job).forEach(function(w){ freq[w] = (freq[w]||0) + 1; });
             var top = Object.keys(freq).sort(function(a,b){ return freq[b]-freq[a]; }).slice(0, 24);
@@ -2701,13 +2941,13 @@ const ATS_STOP = new Set(('della delle degli dello alla alle allo agli dalla dal
             var matched = top.filter(function(w){ return cv[w]; });
             var missing = top.filter(function(w){ return !cv[w]; });
             var pct = top.length ? Math.round(matched.length / top.length * 100) : 0;
-            scoreEl.innerHTML = '<b>' + pct + '%</b> corrispondenza (' + matched.length + '/' + top.length + ')';
+            scoreEl.innerHTML = '<b>' + pct + '%</b> ' + T.atsMatch + ' (' + matched.length + '/' + top.length + ')';
             scoreEl.style.color = pct >= 70 ? 'var(--emerald)' : (pct >= 40 ? '#fbbf24' : 'var(--error)');
             kwEl.innerHTML =
-                '<div class="ats-group"><span class="ats-label">Presenti nel CV</span>' +
-                (matched.length ? matched.map(function(w){ return '<span class="ats-chip ok">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip miss">nessuna</span>') +
-                '</div><div class="ats-group"><span class="ats-label">Da aggiungere</span>' +
-                (missing.length ? missing.map(function(w){ return '<span class="ats-chip miss">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip ok">tutte presenti ✓</span>') +
+                '<div class="ats-group"><span class="ats-label">' + T.atsPresent + '</span>' +
+                (matched.length ? matched.map(function(w){ return '<span class="ats-chip ok">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip miss">' + T.atsNone + '</span>') +
+                '</div><div class="ats-group"><span class="ats-label">' + T.atsToAdd + '</span>' +
+                (missing.length ? missing.map(function(w){ return '<span class="ats-chip miss">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip ok">' + T.atsAll + '</span>') +
                 '</div>';
             showToast(T.toast.atsAnalyzed);
         }
@@ -2724,36 +2964,102 @@ const ATS_STOP = new Set(('della delle degli dello alla alle allo agli dalla dal
             b.addEventListener('click', () => setPreviewMode(b.dataset.mode));
         });
 
+        // ============ KEYBOARD SHORTCUTS ============
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); printResume(); }
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'd') { e.preventDefault(); downloadPDF(); }
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); exportJSON(); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault(); printResume();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'd') {
+                e.preventDefault(); downloadPDF();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault(); exportJSON();
+            }
         });
 
-        const restored = restoreFromStorage();
-        renderCustomSwatches();
+        // ============ INIT ============
+        initProfiles();
+        wireProfileBar();
         initPhotoUpload();
-        if (!restored) updatePreview();
-        else showToast(T.toast.restored);
+        const restored = loadActiveProfile();
+        renderProfileBar();
+        if (restored) showToast(T.toast.restored);
     </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 
-</div><!-- /appContent -->
+<div id="el-lang" style="position:fixed;top:14px;right:62px;z-index:99999;display:flex;gap:4px;background:var(--el-card,#fff);border:1px solid var(--el-border,#e3e7ec);border-radius:20px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.12)">
+  <button type="button" data-lang="it" title="Italiano" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇮🇹</button>
+  <button type="button" data-lang="en" title="English" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇬🇧</button>
+</div>
 <script>
 (function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='2cs04t4tv4k',K='etherlabs_cv-builder_v2';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+  var EN2IT = {"ResumeBuilder Pro - Create Your Professional Resume": "CVBuilder Pro - Crea il tuo Curriculum Professionale", "Premium Tool": "Strumento Premium", "ResumeBuilder Pro": "CVBuilder Pro", "Autosave enabled": "Salvataggio automatico attivo", "Classic": "Classico", "Modern": "Moderno", "Creative": "Creativo", "Band (accent)": "Banda (accent)", "Compact": "Compatto", "Modern (sans + serif)": "Moderno (sans + serif)", "Clean sans": "Sans pulito", "Elegant serif": "Serif elegante", "Geometric": "Geometrico", "Editorial (serif)": "Editoriale (serif)", "Technical (mono)": "Tecnico (mono)", "Accent:": "Colore:", "Green": "Verde", "Blue": "Blu", "Purple": "Viola", "Rose": "Rosa", "Red": "Rosso", "Orange": "Arancione", "Black": "Nero", "Add custom color": "Aggiungi colore personalizzato", "Load Preset...": "Carica Esempio...", "Software Developer": "Sviluppatore Software", "UX/UI Designer": "Designer UX/UI", "Marketing Manager": "Responsabile Marketing", "Sales Executive": "Account Commerciale", "Recent Graduate": "Neolaureato", "Clear All": "Pulisci Tutto", "🎯 ATS check — paste the job post and find the missing keywords": "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti", "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.": "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.", "Paste the job description here...": "Incolla qui il testo dell'annuncio di lavoro...", "Analyze match": "Analizza corrispondenza", "Professional Information": "Informazioni Professionali", "Personal Details": "Dati Personali", "Full Name": "Nome e Cognome", "e.g. John Smith": "es. Mario Rossi", "Job Title/Role": "Ruolo/Posizione", "e.g. Senior Developer": "es. Sviluppatore Senior", "john@example.com": "mario@example.com", "Phone": "Telefono", "+1 (555) 123-4567": "+39 345 123 4567", "City/Country": "Città/Paese", "New York, USA": "Milano, Italia", "Website": "Sito Web", "https://johnsmith.com": "https://mariorossi.it", "https://linkedin.com/in/johnsmith": "https://linkedin.com/in/mariorossi", "Profile Photo": "Foto Profilo", "📷 Click or drag an image here": "📷 Clicca o trascina un'immagine qui", "Professional Summary": "Profilo Professionale", "Description": "Descrizione", "Describe your experience, skills and professional goals...": "Descrivi la tua esperienza, competenze e obiettivi professionali...", "Work Experience": "Esperienza Lavorativa", "+ Add": "+ Aggiungi", "Education": "Istruzione", "Skills": "Competenze", "Languages": "Lingue", "Certifications": "Certificazioni", "Custom Section": "Sezione Personalizzata", "Section Title": "Titolo Sezione", "e.g. Projects, Publications...": "es. Progetti, Pubblicazioni...", "Content": "Contenuto", "Add your custom section content...": "Aggiungi il contenuto della tua sezione personalizzata...", "⬇ Download PDF": "⬇ Scarica PDF", "🖨 Print": "🖨 Stampa", "📄 ATS Export (.txt)": "📄 Export ATS (.txt)", "📋 Copy Text": "📋 Copia Testo", "💾 Save (JSON)": "💾 Salva (JSON)", "📂 Load (JSON)": "📂 Carica (JSON)", "Preview:": "Anteprima:", "Light": "Chiara", "Dark": "Scura", "Your Name": "Nome e Cognome", "Professional Title": "Titolo Professionale", "Your professional summary will appear here...": "Il tuo profilo professionale apparirà qui...", "Message": "Messaggio", "Please select an image file": "Seleziona un file immagine", "Image too large (max 12 MB)": "Immagine troppo grande (max 12 MB)", "Photo": "Foto", "Photo loaded ✓": "Foto caricata ✓", "Click to replace": "Clicca per sostituire", "Remove": "Rimuovi", "Company": "Azienda", "Job Title": "Ruolo", "Start Date (e.g. Jan 2020)": "Data Inizio (es. Gen 2020)", "End Date (e.g. Dec 2023 or Present)": "Data Fine (es. Dic 2023 o Presente)", "Job description (you can add multiple lines)": "Descrizione del ruolo (puoi aggiungere più righe)", "Institution": "Istituto", "Degree/Title": "Titolo/Diploma", "Year": "Anno", "GPA (optional)": "Voto (opzionale)", "Skill": "Competenza", "Language": "Lingua", "Select Level": "Seleziona Livello", "Basic": "Base", "Intermediate": "Intermedio", "Fluent": "Fluente", "Native": "Madrelingua", "Certification Name": "Nome Certificazione", "Issuing Organization": "Ente Emittente", "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}": "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}", " | GPA: ": " | Voto: ", "'+hex+' — double-click to remove": "'+hex+' — doppio click per rimuovere", "Color saved to palette": "Colore salvato nella palette", "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around": "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa", "Summary present": "Riepilogo presente", "At least 1 experience": "Almeno 1 esperienza", "At least 3 skills": "Almeno 3 competenze", "Email and phone": "Email e telefono", "Present in resume": "Presenti nel CV", "none": "nessuna", "To add": "Da aggiungere", "all present ✓": "tutte presenti ✓", "Build your professional resume with style and ease": "Crea il tuo curriculum professionale con stile e facilità"};
+  var IT2EN = {"CVBuilder Pro - Crea il tuo Curriculum Professionale": "ResumeBuilder Pro - Create Your Professional Resume", "Strumento Premium": "Premium Tool", "CVBuilder Pro": "ResumeBuilder Pro", "Salvataggio automatico attivo": "Autosave enabled", "Classico": "Classic", "Moderno": "Modern", "Creativo": "Creative", "Banda (accent)": "Band (accent)", "Compatto": "Compact", "Moderno (sans + serif)": "Modern (sans + serif)", "Sans pulito": "Clean sans", "Serif elegante": "Elegant serif", "Geometrico": "Geometric", "Editoriale (serif)": "Editorial (serif)", "Tecnico (mono)": "Technical (mono)", "Colore:": "Accent:", "Verde": "Green", "Blu": "Blue", "Viola": "Purple", "Rosa": "Rose", "Rosso": "Red", "Arancione": "Orange", "Nero": "Black", "Aggiungi colore personalizzato": "Add custom color", "Carica Esempio...": "Load Preset...", "Sviluppatore Software": "Software Developer", "Designer UX/UI": "UX/UI Designer", "Responsabile Marketing": "Marketing Manager", "Account Commerciale": "Sales Executive", "Neolaureato": "Recent Graduate", "Pulisci Tutto": "Clear All", "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti": "🎯 ATS check — paste the job post and find the missing keywords", "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.": "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.", "Incolla qui il testo dell'annuncio di lavoro...": "Paste the job description here...", "Analizza corrispondenza": "Analyze match", "Informazioni Professionali": "Professional Information", "Dati Personali": "Personal Details", "Nome e Cognome": "Your Name", "es. Mario Rossi": "e.g. John Smith", "Ruolo/Posizione": "Job Title/Role", "es. Sviluppatore Senior": "e.g. Senior Developer", "mario@example.com": "john@example.com", "Telefono": "Phone", "+39 345 123 4567": "+1 (555) 123-4567", "Città/Paese": "City/Country", "Milano, Italia": "New York, USA", "Sito Web": "Website", "https://mariorossi.it": "https://johnsmith.com", "https://linkedin.com/in/mariorossi": "https://linkedin.com/in/johnsmith", "Foto Profilo": "Profile Photo", "📷 Clicca o trascina un'immagine qui": "📷 Click or drag an image here", "Profilo Professionale": "Professional Summary", "Descrizione": "Description", "Descrivi la tua esperienza, competenze e obiettivi professionali...": "Describe your experience, skills and professional goals...", "Esperienza Lavorativa": "Work Experience", "+ Aggiungi": "+ Add", "Istruzione": "Education", "Competenze": "Skills", "Lingue": "Languages", "Certificazioni": "Certifications", "Sezione Personalizzata": "Custom Section", "Titolo Sezione": "Section Title", "es. Progetti, Pubblicazioni...": "e.g. Projects, Publications...", "Contenuto": "Content", "Aggiungi il contenuto della tua sezione personalizzata...": "Add your custom section content...", "⬇ Scarica PDF": "⬇ Download PDF", "🖨 Stampa": "🖨 Print", "📄 Export ATS (.txt)": "📄 ATS Export (.txt)", "📋 Copia Testo": "📋 Copy Text", "💾 Salva (JSON)": "💾 Save (JSON)", "📂 Carica (JSON)": "📂 Load (JSON)", "Anteprima:": "Preview:", "Chiara": "Light", "Scura": "Dark", "Titolo Professionale": "Professional Title", "Il tuo profilo professionale apparirà qui...": "Your professional summary will appear here...", "Messaggio": "Message", "Seleziona un file immagine": "Please select an image file", "Immagine troppo grande (max 12 MB)": "Image too large (max 12 MB)", "Foto": "Photo", "Foto caricata ✓": "Photo loaded ✓", "Clicca per sostituire": "Click to replace", "Rimuovi": "Remove", "Azienda": "Company", "Ruolo": "Job Title", "Data Inizio (es. Gen 2020)": "Start Date (e.g. Jan 2020)", "Data Fine (es. Dic 2023 o Presente)": "End Date (e.g. Dec 2023 or Present)", "Descrizione del ruolo (puoi aggiungere più righe)": "Job description (you can add multiple lines)", "Istituto": "Institution", "Titolo/Diploma": "Degree/Title", "Anno": "Year", "Voto (opzionale)": "GPA (optional)", "Competenza": "Skill", "Lingua": "Language", "Seleziona Livello": "Select Level", "Base": "Basic", "Intermedio": "Intermediate", "Fluente": "Fluent", "Madrelingua": "Native", "Nome Certificazione": "Certification Name", "Ente Emittente": "Issuing Organization", "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}": "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}", " | Voto: ": " | GPA: ", "'+hex+' — doppio click per rimuovere": "'+hex+' — double-click to remove", "Colore salvato nella palette": "Color saved to palette", "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa": "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around", "Riepilogo presente": "Summary present", "Almeno 1 esperienza": "At least 1 experience", "Almeno 3 competenze": "At least 3 skills", "Email e telefono": "Email and phone", "Presenti nel CV": "Present in resume", "nessuna": "none", "Da aggiungere": "To add", "tutte presenti ✓": "all present ✓", "Crea il tuo curriculum professionale con stile e facilità": "Build your professional resume with style and ease"};
+  var TITLES = {en:"ResumeBuilder Pro - Create Your Professional Resume", it:"CVBuilder Pro - Crea il tuo Curriculum Professionale"};
+  var CUR = (typeof __CVLANG__!=='undefined') ? __CVLANG__ : 'en';
+  function tr(str, map){ var k=str.trim(); if(k && Object.prototype.hasOwnProperty.call(map,k)){ return str.replace(k, map[k]); } return null; }
+  function walk(root, map){
+    var tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes=[], n; while(n=tw.nextNode()) nodes.push(n);
+    nodes.forEach(function(t){ var r=tr(t.nodeValue, map); if(r!==null) t.nodeValue=r; });
+    var els = (root.querySelectorAll?root.querySelectorAll('[placeholder],[title],[alt],[aria-label]'):[]);
+    els.forEach(function(el){ ['placeholder','title','alt','aria-label'].forEach(function(a){
+      if(el.hasAttribute(a)){ var v=el.getAttribute(a); var k=v.trim(); if(k && map[k]!==undefined) el.setAttribute(a, v.replace(k,map[k])); }
+    });});
+    if(root.nodeType===1 && root.matches && root.matches('[placeholder],[title],[alt],[aria-label]')){
+      ['placeholder','title','alt','aria-label'].forEach(function(a){ if(root.hasAttribute(a)){ var v=root.getAttribute(a),k=v.trim(); if(k&&map[k]!==undefined) root.setAttribute(a,v.replace(k,map[k])); }});
+    }
+  }
+  var obs = new MutationObserver(function(muts){
+    if(CUR==='en') return;
+    muts.forEach(function(m){ m.addedNodes.forEach(function(node){
+      if(node.nodeType===1) walk(node, EN2IT);
+      else if(node.nodeType===3){ var r=tr(node.nodeValue, EN2IT); if(r!==null) node.nodeValue=r; }
+    });});
+  });
+  function setLang(l){
+    if(l!=='it' && l!=='en') l='en';
+    if(l===CUR){ mark(l); return; }
+    // reassign keyed data objects if present
+    try{ if(typeof T_ALL!=='undefined'){ T=T_ALL[l]; } }catch(e){}
+    try{ if(typeof LEVEL_LABELS_ALL!=='undefined'){ LEVEL_LABELS=LEVEL_LABELS_ALL[l]; } }catch(e){}
+    try{ if(typeof LANG_LEVELS_ALL!=='undefined'){ LANG_LEVELS=LANG_LEVELS_ALL[l]; } }catch(e){}
+    try{ if(typeof PRESETS_ALL!=='undefined'){ PRESETS=PRESETS_ALL[l]; } }catch(e){}
+    var map = (CUR==='en' ? EN2IT : IT2EN);   // from current -> we first normalize to EN then to target
+    // simplest: if target it -> apply EN2IT over whole doc (doc currently en or it); if en -> apply IT2EN
+    walk(document.body, l==='it'?EN2IT:IT2EN);
+    document.documentElement.lang = l;
+    document.title = TITLES[l]||document.title;
+    CUR=l;
+    try{ localStorage.setItem('cv-lang', l); }catch(e){}
+    // re-render dynamic parts in the new language via app fns if available
+    try{ if(typeof renderAll==='function') renderAll(); }catch(e){}
+    try{ if(typeof updatePreview==='function') updatePreview(); }catch(e){}
+    if(CUR!=='en') walk(document.body, EN2IT);
+    mark(l);
+  }
+  function mark(l){ var box=document.getElementById('el-lang'); if(!box)return;
+    Array.prototype.forEach.call(box.children,function(b){ b.style.background = b.getAttribute('data-lang')===l ? 'var(--el-emerald,#10b981)' : 'none'; });
+  }
+  function boot(){
+    obs.observe(document.body,{childList:true,subtree:true});
+    document.getElementById('el-lang').addEventListener('click',function(e){ var b=e.target.closest('[data-lang]'); if(b) setLang(b.getAttribute('data-lang')); });
+    // initial: DOM shipped in EN; if target is it, translate now
+    document.documentElement.lang = CUR;
+    document.title = TITLES[CUR]||document.title;
+    if(CUR==='it'){ walk(document.body, EN2IT); }
+    mark(CUR);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
-<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app!</div>
+<script>
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+</script>
 </body>
 </html>

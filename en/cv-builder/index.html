@@ -23,13 +23,13 @@
 </style>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Resume Builder">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#060a0a">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#0a0b0d">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <script>/* jsPDF UMD inline (vettoriale, offline) */
     /** @license
@@ -460,20 +460,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             --cv-line: #ddd;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: system-ui, sans-serif;
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
             color: var(--text1);
             min-height: 100vh;
-            min-height: 100dvh;
             padding: 20px;
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            overscroll-behavior-y: contain;
-            -webkit-text-size-adjust: 100%;
         }
 
         .container { max-width: 1600px; margin: 0 auto; }
@@ -565,8 +559,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         input[type="text"], input[type="email"], input[type="tel"],
-        input[type="number"], input[type="url"], input[type="date"],
-        input[type="month"], textarea, select {
+        input[type="number"], input[type="url"], textarea, select {
             width: 100%;
             padding: 12px 14px;
             background: var(--bg4);
@@ -574,11 +567,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 8px;
             color: var(--text1);
             font-family: system-ui, sans-serif;
-            font-size: 16px;
-            line-height: 1.4;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            font-size: 14px;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
@@ -639,24 +628,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
             color: #000;
         }
-        @media (hover: hover) and (pointer: fine) {
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-}
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
 
         .btn-secondary {
             background: var(--bg4);
             color: var(--emerald-light);
             border: 1px solid var(--emerald);
         }
-        @media (hover: hover) and (pointer: fine) {
-.btn-secondary:hover { background: var(--emerald-glow); transform: translateY(-2px); }
-}
+        .btn-secondary:hover { background: var(--emerald-glow); transform: translateY(-2px); }
 
         .btn-small { padding: 8px 12px; font-size: 12px; }
         .btn-danger { background: var(--error); color: white; }
-        @media (hover: hover) and (pointer: fine) {
-.btn-danger:hover { opacity: 0.9; }
-}
+        .btn-danger:hover { opacity: 0.9; }
 
         .entry-item {
             background: var(--bg2);
@@ -686,13 +669,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-size: 18px;
             line-height: 1;
             user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
         }
         .drag-handle::before { content: "⋮⋮"; letter-spacing: -2px; }
-        @media (hover: hover) and (pointer: fine) {
-.drag-handle:hover { color: var(--emerald-light); }
-}
+        .drag-handle:hover { color: var(--emerald-light); }
         .drag-handle:active { cursor: grabbing; }
 
         .sortable-ghost { opacity: 0.4; }
@@ -708,15 +687,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 4px;
             width: 24px;
             height: 24px;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        @media (hover: hover) and (pointer: fine) {
-.entry-remove:hover { opacity: 0.9; }
-}
+        .entry-remove:hover { opacity: 0.9; }
 
         .skill-item {
             display: flex;
@@ -735,13 +712,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .star {
             width: 16px; height: 16px; border-radius: 50%;
             background: var(--border);
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             transition: all 0.2s;
         }
         .star.filled { background: var(--emerald-light); box-shadow: 0 0 8px var(--emerald-glow); }
-        @media (hover: hover) and (pointer: fine) {
-.star:hover { background: var(--emerald); }
-}
+        .star:hover { background: var(--emerald); }
 
         .controls {
             display: flex;
@@ -787,7 +762,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             color: var(--text2);
             padding: 6px 12px;
             font-size: 11px;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1084,13 +1059,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .color-option {
             width: 30px; height: 30px;
             border-radius: 50%;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s;
         }
-        @media (hover: hover) and (pointer: fine) {
-.color-option:hover { transform: scale(1.1); }
-}
+        .color-option:hover { transform: scale(1.1); }
         .color-option.active {
             border-color: var(--text1);
             box-shadow: 0 0 10px currentColor;
@@ -1116,7 +1089,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 8px;
             padding: 20px;
             text-align: center;
-            cursor: pointer; touch-action: manipulation;
+            cursor: pointer;
             transition: all 0.3s;
             background: var(--bg4);
             min-height: 80px;
@@ -1125,12 +1098,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             justify-content: center;
             gap: 12px;
         }
-        @media (hover: hover) and (pointer: fine) {
-.photo-upload-area:hover, .photo-upload-area.dragover {
+        .photo-upload-area:hover, .photo-upload-area.dragover {
             border-color: var(--emerald);
             background: var(--emerald-glow2);
         }
-}
         .photo-upload-text {
             display: flex; flex-direction: column; gap: 4px;
             color: var(--text2); font-size: 13px;
@@ -1144,12 +1115,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             position: absolute; top: 5px; right: 5px;
             background: var(--error); color: white; border: none;
             border-radius: 50%; width: 22px; height: 22px;
-            cursor: pointer; touch-action: manipulation; font-size: 12px;
+            cursor: pointer; font-size: 12px;
             display: flex; align-items: center; justify-content: center; line-height: 1;
         }
-        @media (hover: hover) and (pointer: fine) {
-.photo-remove-btn:hover { opacity: 0.85; }
-}
+        .photo-remove-btn:hover { opacity: 0.85; }
 
         .toast {
             position: fixed;
@@ -1231,76 +1200,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
             a { color: inherit !important; text-decoration: none !important; }
         }
-
-        /* === MOBILE / iPhone touch enhancements === */
-        @media (max-width: 768px) {
-            body { padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); }
-            .header h1 { font-size: 30px; }
-            .panel { padding: 18px; border-radius: 14px; }
-            .btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
-            .btn-small { min-height: 40px; padding: 10px 14px; font-size: 13px; }
-            .entry-remove { width: 36px; height: 36px; font-size: 18px; top: 6px; right: 6px; }
-            .entry-item { padding: 14px 14px 14px 44px; }
-            .skill-item { padding: 12px 14px 12px 40px; }
-            .skill-stars { gap: 6px; }
-            .star { width: 24px; height: 24px; }
-            .toggle-switch button { padding: 10px 14px; font-size: 12px; min-height: 40px; }
-            .drag-handle { width: 32px; height: 48px; left: 4px; font-size: 22px; }
-            .controls { gap: 10px; }
-            .control-group select { min-width: 0; flex: 1; }
-            .form-row { grid-template-columns: 1fr; gap: 12px; }
-            .preview-panel { padding: 22px; }
-            .preview-name { font-size: 28px; }
-            .preview-photo { width: 90px; height: 90px; }
-            input[type="text"], input[type="email"], input[type="tel"],
-            input[type="number"], input[type="url"], input[type="date"],
-            input[type="month"], textarea, select { font-size: 16px; }
-        }
-
-        /* prevent iOS double-tap zoom on interactive elements */
-        button, a, label, [role="button"], .star, .toggle-switch button,
-        .tab, .template-btn, .color-option { touch-action: manipulation; }
-    
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
-@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
-.lock-btn:active{transform:translateY(0)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
-.install-hint strong{color:var(--el-emerald-light)}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
+    </style>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+.profile-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;background:var(--el-bg3,#f5f7f9);border:1px solid var(--el-border,#e3e7ec);border-radius:12px}
+.profile-bar label{font-weight:600;font-size:.85rem;color:var(--el-text2,#5a616a)}
+.profile-bar select{padding:7px 10px;border-radius:8px;border:1px solid var(--el-border,#e3e7ec);background:var(--el-bg2,#fff);color:var(--el-text1,#1b1e22);font-size:.9rem;min-width:150px;max-width:60%}
+.btn-sm{padding:6px 10px !important;font-size:.8rem !important}
+.section-order-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.section-order-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--el-bg2,#fff);border:1px solid var(--el-border,#e3e7ec);border-radius:9px;font-size:.9rem;color:var(--el-text1,#1b1e22);touch-action:none;-webkit-user-select:none;user-select:none}
+.section-order-item .drag-handle{position:static;height:auto;width:20px;cursor:grab;color:var(--el-text3,#9198a1);flex:0 0 auto}
+.section-order-item .drag-handle:active{cursor:grabbing}
+.section-order-item.sortable-chosen{box-shadow:0 6px 18px rgba(0,0,0,.16);border-color:var(--el-emerald,#10b981)}
+.section-order-item .so-num{color:var(--el-text3,#9198a1);font-variant-numeric:tabular-nums;font-size:.8rem;min-width:16px}
 </style>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Resume Builder</div>
-<div class="lock-sub">Enter the unlock code you received with your purchase</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
-<div id="appContent" style="display:none">
-
     <div class="container">
         <div class="header">
             <div class="brand-tag">Premium Tool</div>
@@ -1311,6 +1226,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <span id="autosaveText">Autosave enabled</span>
                 </span>
             </p>
+        </div>
+
+        <div class="profile-bar" id="profileBar">
+            <label for="profileSelect" id="profileBarLabel">Profile:</label>
+            <select id="profileSelect" aria-label="Active profile"></select>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileNew">+ New</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileRename">Rename</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileDup">Duplicate</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="profileDelete">Delete</button>
         </div>
 
         <div class="controls">
@@ -1381,6 +1305,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 </div>
                 <div id="atsReadiness" class="ats-readiness"></div>
                 <div id="atsKeywords" class="ats-keywords"></div>
+            </div>
+        </details>
+
+        <details class="ats-panel section-order-panel">
+            <summary id="sectionOrderSummary">↕ Section order</summary>
+            <div class="ats-body">
+                <p class="ats-hint" id="sectionOrderHint">Drag the handles to reorder the sections of your CV (applies to preview, PDF and exports).</p>
+                <div id="sectionOrderList" class="section-order-list"></div>
             </div>
         </details>
 
@@ -1513,7 +1445,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <div class="preview-title" id="previewTitle">Professional Title</div>
                             <div class="preview-contact" id="previewContact"></div>
                         </div>
-                        <div class="preview-section">
+                        <div class="preview-section" id="previewSummarySection">
                             <div class="preview-section-title">Professional Summary</div>
                             <div class="preview-entry-desc" id="previewSummary">Your professional summary will appear here...</div>
                         </div>
@@ -1554,7 +1486,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
     <script>
         // ============ I18N ============
-        const T = {
+        // ===== EtherLabs i18n bootstrap =====
+        const __CVLANG__ = (function(){try{var s=localStorage.getItem('cv-lang');if(s==='it'||s==='en')return s;}catch(e){}var n=(navigator.language||'en').slice(0,2).toLowerCase();return n==='it'?'it':'en';})();
+const T_ALL = { en: {
             yourName: 'Your Name',
             professionalTitle: 'Professional Title',
             summaryPlaceholder: 'Your professional summary will appear here...',
@@ -1583,13 +1517,64 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 atsAnalyzed: 'Analysis complete'
             },
             confirmClear: 'Clear all fields? This cannot be undone.',
-            atsHeader: 'ATS-OPTIMIZED RESUME'
-        };
+            atsHeader: 'ATS-OPTIMIZED RESUME', expName: "Name: ", expTitle: "Title: ", expPhone: "Phone: ", expLocation: "Location: ", expWebsite: "Website: ", fileSuffix: "_resume", atsPaste: "Paste a job post to see the keywords.", atsMatch: "match", atsPresent: "Present in resume", atsToAdd: "To add", atsNone: "none", atsAll: "all present ✓", rd1: "Summary present", rd2: "At least 1 experience", rd3: "At least 3 skills", rd4: "Email and phone", rd5: "Summary 200-700 chars", saving: "Saving...", savedAt: "Saved ", saveFailed: "Save failed" }, it: {
+            yourName: 'Nome e Cognome',
+            professionalTitle: 'Titolo Professionale',
+            summaryPlaceholder: 'Il tuo profilo professionale apparirà qui...',
+            sections: {
+                summary: 'Profilo Professionale',
+                work: 'Esperienza Lavorativa',
+                education: 'Istruzione',
+                skills: 'Competenze',
+                languages: 'Lingue',
+                certifications: 'Certificazioni'
+            },
+            toast: {
+                cleared: 'Tutto cancellato',
+                saved: 'Salvato',
+                loaded: 'Caricato',
+                invalidJson: 'File JSON non valido',
+                copied: 'CV copiato negli appunti',
+                copyFailed: 'Copia fallita',
+                atsDownloaded: 'Versione ATS scaricata',
+                pdfGenerating: 'Generazione PDF in corso...',
+                pdfDone: 'PDF scaricato',
+                pdfError: 'Errore PDF - apro finestra di stampa',
+                presetLoaded: 'Preset caricato',
+                restored: 'Bozza ripristinata dalla sessione precedente',
+                colorSaved: 'Colore salvato nella palette',
+                atsAnalyzed: 'Analisi completata'
+            },
+            confirmClear: 'Cancellare tutti i campi? L\'operazione è irreversibile.',
+            confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
+            saving: 'Salvataggio...',
+            savedAt: 'Salvato ',
+            saveFailed: 'Salvataggio fallito',
+            atsHeader: 'CURRICULUM OTTIMIZZATO ATS',
+            loadPresetPrompt: 'Carica Esempio...', expName: "Nome: ", expTitle: "Ruolo: ", expPhone: "Telefono: ", expLocation: "Località: ", expWebsite: "Sito Web: ", fileSuffix: "_cv", atsPaste: "Incolla un annuncio per vedere le parole chiave.", atsMatch: "corrispondenza", atsPresent: "Presenti nel CV", atsToAdd: "Da aggiungere", atsNone: "nessuna", atsAll: "tutte presenti ✓", rd1: "Riepilogo presente", rd2: "Almeno 1 esperienza", rd3: "Almeno 3 competenze", rd4: "Email e telefono", rd5: "Riepilogo 200-700 caratteri" } };
+        T_ALL.en.ui = { profile:'Profile', newP:'+ New', rename:'Rename', duplicate:'Duplicate', del:'Delete', confirmDel:'Delete this profile? This cannot be undone.', promptName:'Profile name:', secOrder:'↕ Section order', secHint:'Drag the handles to reorder the sections of your CV (applies to preview, PDF and exports).', pCreated:'Profile created', pDeleted:'Profile deleted', pRenamed:'Profile renamed', pDup:'Profile duplicated' };
+        T_ALL.it.ui = { profile:'Profilo', newP:'+ Nuovo', rename:'Rinomina', duplicate:'Duplica', del:'Elimina', confirmDel:'Eliminare questo profilo? L\'operazione è irreversibile.', promptName:'Nome profilo:', secOrder:'↕ Ordine sezioni', secHint:'Trascina le maniglie per riordinare le sezioni del CV (vale per anteprima, PDF ed export).', pCreated:'Profilo creato', pDeleted:'Profilo eliminato', pRenamed:'Profilo rinominato', pDup:'Profilo duplicato' };
+        let T = T_ALL[__CVLANG__];
 
         // ============ CONSTANTS ============
-        const LEVEL_LABELS = { 1: 'Beginner', 2: 'Elementary', 3: 'Intermediate', 4: 'Advanced', 5: 'Expert' };
-        const LANG_LEVELS = ['Select', 'Basic', 'Intermediate', 'Fluent', 'Native'];
+const LEVEL_LABELS_ALL = { en: { 1: 'Beginner', 2: 'Elementary', 3: 'Intermediate', 4: 'Advanced', 5: 'Expert' }, it: { 1: 'Base', 2: 'Elementare', 3: 'Intermedio', 4: 'Avanzato', 5: 'Esperto' } };
+        let LEVEL_LABELS = LEVEL_LABELS_ALL[__CVLANG__];
+const LANG_LEVELS_ALL = { en: ['Select', 'Basic', 'Intermediate', 'Fluent', 'Native'], it: ['Seleziona', 'Base', 'Intermedio', 'Fluente', 'Madrelingua'] };
+        let LANG_LEVELS = LANG_LEVELS_ALL[__CVLANG__];
         const STORAGE_KEY = 'resumeBuilderPro_v2';
+        const SECTION_KEYS = ['summary','work','education','skills','languages','certifications','custom'];
+        function orderedSections(){
+            var o = (state.sectionOrder || []).filter(function(k){ return SECTION_KEYS.indexOf(k) >= 0; });
+            SECTION_KEYS.forEach(function(k){ if (o.indexOf(k) < 0) o.push(k); });
+            return o;
+        }
+        // key -> preview wrapper id + column ('main'|'side')
+        const SECTION_DOM = {
+            summary:{el:'previewSummarySection',col:'main'}, work:{el:'previewWorkSection',col:'main'},
+            education:{el:'previewEducationSection',col:'main'}, custom:{el:'previewCustomSection',col:'main'},
+            skills:{el:'previewSkillsSection',col:'side'}, languages:{el:'previewLanguagesSection',col:'side'},
+            certifications:{el:'previewCertificationsSection',col:'side'}
+        };
 
         const COLOR_MAP = {
             green: '#10b981', blue: '#3b82f6', teal: '#14b8a6',
@@ -1607,7 +1592,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         };
 
         // ============ PRESETS ============
-        const PRESETS = {
+const PRESETS_ALL = { en: {
             developer: {
                 fullName: 'Alex Martinez',
                 title: 'Senior Full Stack Developer',
@@ -1749,7 +1734,150 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 customTitle: 'Projects',
                 customContent: 'Senior Capstone: Real-time transcription app for students (React + Whisper API)\nHackathon winner - HackMIT 2023 (Best AI Project)'
             }
-        };
+        }, it: {
+            developer: {
+                fullName: 'Alessandro Bianchi',
+                title: 'Sviluppatore Full Stack Senior',
+                email: 'alessandro.bianchi@example.com',
+                phone: '+39 345 789 1234',
+                location: 'Milano, Italia',
+                website: 'https://alessandrobianchi.dev',
+                linkedin: 'https://linkedin.com/in/alessandrobianchi',
+                summary: 'Ingegnere full-stack con oltre 9 anni di esperienza nella costruzione di applicazioni web scalabili. Esperto in React, Node.js e architetture cloud su AWS. Ho guidato team di 5-8 sviluppatori e rilasciato funzionalità utilizzate da oltre 2 milioni di utenti mensili. Appassionato di codice pulito, test-driven development e mentoring.',
+                work: [
+                    {company:'Satispay', role:'Senior Software Engineer', start:'Gen 2022', end:'Presente', description:'Progettato servizio di riconciliazione pagamenti che gestisce oltre 500M€ al mese. Ridotto la latenza API del 40% tramite caching e ottimizzazione query. Ho seguito 4 sviluppatori e guidato review di architettura trimestrali.'},
+                    {company:'Bending Spoons', role:'Software Engineer II', start:'Mar 2019', end:'Dic 2021', description:'Sviluppata infrastruttura di messaggistica real-time per 150M+ utenti. Migrati servizi legacy Ruby a microservizi Node.js. Ridotto il deployment time da 45min a 8min grazie a miglioramenti CI/CD.'}
+                ],
+                education: [{institution:'Politecnico di Milano', degree:'Laurea Magistrale in Ingegneria Informatica', year:'2015', gpa:'110/110 con lode'}],
+                skills: [
+                    {name:'JavaScript/TypeScript', level:5},
+                    {name:'React/Next.js', level:5},
+                    {name:'Node.js', level:5},
+                    {name:'AWS/Cloud', level:4},
+                    {name:'PostgreSQL', level:4},
+                    {name:'Docker/Kubernetes', level:4}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:2}],
+                certifications: [{name:'AWS Solutions Architect Professional', issuer:'Amazon Web Services', year:'2023'}],
+                customTitle: 'Open Source',
+                customContent: 'Contributor a React, Next.js e TanStack Query\nAutore di react-query-utils (5k stelle GitHub)'
+            },
+            designer: {
+                fullName: 'Sofia Greco',
+                title: 'Senior UX/UI Designer',
+                email: 'sofia@sofiagreco.design',
+                phone: '+39 347 555 0144',
+                location: 'Roma, Italia',
+                website: 'https://sofiagreco.design',
+                linkedin: 'https://linkedin.com/in/sofiagreco',
+                summary: 'Product designer con oltre 7 anni di esperienza nel plasmare esperienze digitali per SaaS, fintech ed e-commerce. Specializzata in design system, user research e nella trasformazione di flussi complessi in interfacce semplici. Ho lavorato con team cross-funzionali per rilasciare funzionalità che hanno spostato metriche chiave.',
+                work: [
+                    {company:'Nexi', role:'Senior Product Designer', start:'Apr 2022', end:'Presente', description:'Design lead per funzionalità AI utilizzate da oltre 30M utenti. Creato design system adottato su 4 aree di prodotto. Aumentato il completamento dell\'onboarding del 28% grazie a redesign data-driven.'},
+                    {company:'Subito.it', role:'Product Designer', start:'Giu 2019', end:'Mar 2022', description:'Progettati flussi di checkout che hanno convertito oltre 3 miliardi di GMV. Guidata l\'iniziativa di accessibilità per raggiungere la conformità WCAG 2.1 AA. Facilitati oltre 40 sessioni di user research.'}
+                ],
+                education: [{institution:'IUAV Venezia', degree:'Laurea Magistrale in Design della Comunicazione', year:'2017', gpa:'110/110'}],
+                skills: [
+                    {name:'Figma', level:5},
+                    {name:'Design System', level:5},
+                    {name:'User Research', level:4},
+                    {name:'Prototipazione', level:5},
+                    {name:'Motion Design', level:3},
+                    {name:'HTML/CSS', level:3}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
+                certifications: [{name:'Nielsen Norman UX Certification', issuer:'NN/g', year:'2021'}],
+                customTitle: 'Speaking',
+                customContent: 'Config 2023 - "Scalare i Design System Oltre i 100 Componenti"\nUX Week 2022 - Panel su accessibilità nel fintech'
+            },
+            marketing: {
+                fullName: 'Giulia Ferrari',
+                title: 'Senior Marketing Manager',
+                email: 'giulia.ferrari@example.com',
+                phone: '+39 348 123 5678',
+                location: 'Milano, Italia',
+                website: '',
+                linkedin: 'https://linkedin.com/in/giuliaferrari',
+                summary: 'Marketing leader con oltre 8 anni di esperienza nello scalare SaaS B2B da 1M a 50M€ di ARR. Competenze approfondite in demand generation, content strategy e marketing operations. Ho costruito e guidato team cross-funzionali fino a 12 persone, gestendo budget annuali fino a 4M€.',
+                work: [
+                    {company:'Monday.com', role:'Senior Marketing Manager - EMEA', start:'Set 2021', end:'Presente', description:'Gestione di budget demand gen da 4M€/anno tra paid, SEO ed eventi. Crescita pipeline del 180% anno su anno. Lanciato programma ABM che ha generato 12M€ di pipeline qualificata.'},
+                    {company:'HubSpot', role:'Marketing Manager', start:'Gen 2018', end:'Ago 2021', description:'Guidata strategia di contenuti che ha portato 2,5M visitatori organici mensili. Scalato il programma email da 50k a 400k iscritti con tasso di apertura medio del 28%. Gestito budget di acquisizione paid da 1,5M€.'}
+                ],
+                education: [{institution:'Bocconi', degree:'Laurea Magistrale in Marketing Management', year:'2016', gpa:'110/110 con lode'}],
+                skills: [
+                    {name:'Demand Generation', level:5},
+                    {name:'Content Strategy', level:5},
+                    {name:'SEO/SEM', level:4},
+                    {name:'HubSpot/Salesforce', level:5},
+                    {name:'Analytics (GA4, Amplitude)', level:4},
+                    {name:'Team Leadership', level:4}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
+                certifications: [
+                    {name:'Google Ads Professional', issuer:'Google', year:'2023'},
+                    {name:'HubSpot Inbound Marketing', issuer:'HubSpot', year:'2022'}
+                ],
+                customTitle: 'Riconoscimenti',
+                customContent: 'Blog aziendale cresciuto fino al #1 di categoria (SimilarWeb)\nSpeaker invitato a SaaStr Europe 2023'
+            },
+            sales: {
+                fullName: 'Marco Esposito',
+                title: 'Enterprise Account Executive',
+                email: 'marco.esposito@example.com',
+                phone: '+39 320 987 6543',
+                location: 'Roma, Italia',
+                website: '',
+                linkedin: 'https://linkedin.com/in/marcoespositosales',
+                summary: 'Sales leader enterprise con oltre 10 anni di esperienza nel chiudere deal complessi in ambito B2B SaaS. Top performer costante - superata la quota 8 degli ultimi 10 trimestri. Specializzato in account Fortune 500 con deal size 250k-2M€. Forte capacità di vendita consulenziale ed engagement con C-level.',
+                work: [
+                    {company:'Salesforce', role:'Senior Enterprise AE', start:'Feb 2020', end:'Presente', description:'115% di raggiungimento su quota da 3M€+ in 4 anni. Chiuso il deal più grande della regione (4,2M€ ARR, contratto triennale). Top 5% della sales org globale per 3 anni consecutivi.'},
+                    {company:'Oracle', role:'Account Executive', start:'Lug 2015', end:'Gen 2020', description:'Territorio cresciuto da 800k a 4,5M€ di ARR. Pipeline costruita tramite outbound e canali partner. Due promozioni in 5 anni.'}
+                ],
+                education: [{institution:'SDA Bocconi', degree:'MBA', year:'2015', gpa:''}],
+                skills: [
+                    {name:'Vendite Enterprise', level:5},
+                    {name:'Vendita Consulenziale', level:5},
+                    {name:'Salesforce CRM', level:5},
+                    {name:'Negoziazione', level:5},
+                    {name:'Engagement C-Suite', level:4},
+                    {name:'Pipeline Management', level:5}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:3}],
+                certifications: [{name:"President's Club", issuer:'Salesforce', year:'2023'}],
+                customTitle: 'Premi',
+                customContent: "Vincitore President's Club - 2021, 2022, 2023\nRookie of the Year 2016 - Oracle"
+            },
+            student: {
+                fullName: 'Elena Rossi',
+                title: 'Neolaureata in Informatica',
+                email: 'elena.rossi@example.com',
+                phone: '+39 340 234 5678',
+                location: 'Bologna, Italia',
+                website: 'https://elenarossi.io',
+                linkedin: 'https://linkedin.com/in/elenarossics',
+                summary: 'Neolaureata in Informatica con esperienza pratica in sviluppo web full-stack e machine learning. Ho completato 3 stage in startup e un assistentato di ricerca in NLP. Desidero entrare in un team dove posso contribuire a prodotti significativi continuando a crescere professionalmente.',
+                work: [
+                    {company:'Nextdoor', role:'Stage in Ingegneria del Software', start:'Giu 2024', end:'Ago 2024', description:'Sviluppato uno strumento interno per pianificare la capacità dei team. Scritto frontend React e API Python, rilasciato in produzione per oltre 200 dipendenti. Return offer ricevuta.'},
+                    {company:'Università di Bologna - CS Lab', role:'Assistente alla Ricerca', start:'Set 2023', end:'Mag 2024', description:'Ricerca NLP sotto la guida del Prof. Rossi. Co-autrice di paper accettato a EMNLP 2024. Implementato framework di valutazione su benchmark.'}
+                ],
+                education: [
+                    {institution:'Università di Bologna', degree:'Laurea Magistrale in Informatica', year:'2025', gpa:'110/110 con lode'},
+                    {institution:'Liceo Scientifico Copernico', degree:'Diploma di Maturità Scientifica', year:'2020', gpa:'100/100'}
+                ],
+                skills: [
+                    {name:'Python', level:5},
+                    {name:'JavaScript/React', level:4},
+                    {name:'Machine Learning', level:3},
+                    {name:'SQL', level:4},
+                    {name:'Git', level:4},
+                    {name:'Strutture Dati e Algoritmi', level:5}
+                ],
+                languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:1}],
+                certifications: [{name:'AWS Cloud Practitioner', issuer:'Amazon', year:'2024'}],
+                customTitle: 'Progetti',
+                customContent: 'Tesi di laurea: App di trascrizione in tempo reale per studenti (React + Whisper API)\nVincitrice hackathon - HackUnibo 2023 (Miglior Progetto AI)'
+            }
+        } };
+        let PRESETS = PRESETS_ALL[__CVLANG__];
 
         // ============ STATE ============
         const state = {
@@ -1758,7 +1886,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             work: [], education: [], skills: [], languages: [], certifications: [],
             customTitle: '', customContent: '',
             template: 'classic', font: 'default', accent: 'green', previewMode: 'light',
-            customColors: []
+            customColors: [],
+            sectionOrder: ['summary','work','education','skills','languages','certifications','custom']
         };
 
         // ============ UTILITIES ============
@@ -1776,7 +1905,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             showToast._timer = setTimeout(() => t.classList.remove('show'), 2500);
         }
         function safeFilename(s) {
-            return (s || 'resume').replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'resume';
+            return (s || (__CVLANG__==='it'?'cv':'resume')).replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'resume';
         }
         function hostnameOf(url) {
             try { return new URL(url).hostname.replace(/^www\./,''); }
@@ -2240,6 +2369,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             applyTemplate();
             applyFont();
             applyPreviewMode();
+            applySectionOrder();
         }
 
         function renderPreviewList(sectionId, containerId, list, fn) {
@@ -2290,6 +2420,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderSkillEntries();
             renderLanguageEntries();
             renderCertificationEntries();
+            if (typeof renderSectionOrderList === 'function') renderSectionOrderList();
+            if (typeof renderProfileBar === 'function') renderProfileBar();
         }
 
         function loadPreset(key) {
@@ -2396,18 +2528,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 }});
             }
             var S = (typeof T!=='undefined' && T.sections) ? T.sections : {summary:'Summary',work:'Experience',education:'Education',skills:'Skills',languages:'Languages',certifications:'Certifications'};
-            if (state.summary){ pushHeading(S.summary); pushText(state.summary); }
-            if (state.work && state.work.length){ pushHeading(S.work);
-                state.work.forEach(function(w){ pushEntry(w.role, w.company, [w.start,w.end].filter(Boolean).join(' - '), w.description); }); }
-            if (state.education && state.education.length){ pushHeading(S.education);
-                state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' | ')); }); }
-            if (state.skills && state.skills.length){ pushHeading(S.skills);
-                pushText(state.skills.map(function(sk){ return sk.name + (sk.level? ' ('+ (typeof LEVEL_LABELS!=='undefined'?(LEVEL_LABELS[sk.level]||sk.level):sk.level) +'/5)':''); }).join('   •   ')); }
-            if (state.languages && state.languages.length){ pushHeading(S.languages);
-                pushText(state.languages.map(function(l){ return l.name + (l.level!==undefined? ': '+ (typeof LANG_LEVELS!=='undefined'?(LANG_LEVELS[l.level]||''):'') :''); }).join('   •   ')); }
-            if (state.certifications && state.certifications.length){ pushHeading(S.certifications);
-                state.certifications.forEach(function(c){ pushEntry(c.name, c.issuer, c.year); }); }
-            if (state.customTitle && state.customContent){ pushHeading(state.customTitle); pushText(state.customContent); }
+            var SEC = {
+                summary:function(){ if (state.summary){ pushHeading(S.summary); pushText(state.summary); } },
+                work:function(){ if (state.work && state.work.length){ pushHeading(S.work);
+                    state.work.forEach(function(w){ pushEntry(w.role, w.company, [w.start,w.end].filter(Boolean).join(' - '), w.description); }); } },
+                education:function(){ if (state.education && state.education.length){ pushHeading(S.education);
+                    state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' | ')); }); } },
+                skills:function(){ if (state.skills && state.skills.length){ pushHeading(S.skills);
+                    pushText(state.skills.map(function(sk){ return sk.name + (sk.level? ' ('+ (typeof LEVEL_LABELS!=='undefined'?(LEVEL_LABELS[sk.level]||sk.level):sk.level) +'/5)':''); }).join('   •   ')); } },
+                languages:function(){ if (state.languages && state.languages.length){ pushHeading(S.languages);
+                    pushText(state.languages.map(function(l){ return l.name + (l.level!==undefined? ': '+ (typeof LANG_LEVELS!=='undefined'?(LANG_LEVELS[l.level]||''):'') :''); }).join('   •   ')); } },
+                certifications:function(){ if (state.certifications && state.certifications.length){ pushHeading(S.certifications);
+                    state.certifications.forEach(function(c){ pushEntry(c.name, c.issuer, c.year); }); } },
+                custom:function(){ if (state.customTitle && state.customContent){ pushHeading(state.customTitle); pushText(state.customContent); } }
+            };
+            orderedSections().forEach(function(k){ if (SEC[k]) SEC[k](); });
             return blocks;
         }
         async function downloadPDF() {
@@ -2459,38 +2594,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             let text = `${state.fullName}\n${state.title}\n`;
             const contact = [state.email, state.phone, state.location, state.website, state.linkedin].filter(Boolean);
             text += contact.join(' | ') + '\n\n';
-            text += `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n`;
-            if (state.work.length) {
-                text += `${T.sections.work.toUpperCase()}\n`;
-                state.work.forEach(w => {
-                    text += `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n\n`;
-                });
-            }
-            if (state.education.length) {
-                text += `${T.sections.education.toUpperCase()}\n`;
-                state.education.forEach(e => {
-                    text += `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | GPA: ' + e.gpa : ''}\n`;
-                });
-                text += '\n';
-            }
-            if (state.skills.length) {
-                text += `${T.sections.skills.toUpperCase()}\n`;
-                state.skills.forEach(s => { text += `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)\n`; });
-                text += '\n';
-            }
-            if (state.languages.length) {
-                text += `${T.sections.languages.toUpperCase()}\n`;
-                state.languages.forEach(l => { text += `${l.name}: ${LANG_LEVELS[l.level] || ''}\n`; });
-                text += '\n';
-            }
-            if (state.certifications.length) {
-                text += `${T.sections.certifications.toUpperCase()}\n`;
-                state.certifications.forEach(c => { text += `${c.name} - ${c.issuer} (${c.year})\n`; });
-                text += '\n';
-            }
-            if (state.customTitle && state.customContent) {
-                text += `${state.customTitle.toUpperCase()}\n${state.customContent}\n`;
-            }
+            const P = {
+                summary: () => state.summary ? `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n` : '',
+                work: () => state.work.length ? `${T.sections.work.toUpperCase()}\n` + state.work.map(w => `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n`).join('\n') + '\n' : '',
+                education: () => state.education.length ? `${T.sections.education.toUpperCase()}\n` + state.education.map(e => `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | GPA: ' + e.gpa : ''}`).join('\n') + '\n\n' : '',
+                skills: () => state.skills.length ? `${T.sections.skills.toUpperCase()}\n` + state.skills.map(s => `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)`).join('\n') + '\n\n' : '',
+                languages: () => state.languages.length ? `${T.sections.languages.toUpperCase()}\n` + state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n') + '\n\n' : '',
+                certifications: () => state.certifications.length ? `${T.sections.certifications.toUpperCase()}\n` + state.certifications.map(c => `${c.name} - ${c.issuer} (${c.year})`).join('\n') + '\n\n' : '',
+                custom: () => (state.customTitle && state.customContent) ? `${state.customTitle.toUpperCase()}\n${state.customContent}\n` : ''
+            };
+            orderedSections().forEach(k => { if (P[k]) text += P[k](); });
             return text.trim();
         }
 
@@ -2498,12 +2611,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function exportATS() {
             updateState();
             let txt = `${T.atsHeader}\n${'='.repeat(60)}\n\n`;
-            txt += `Name: ${state.fullName}\n`;
-            txt += `Title: ${state.title}\n`;
+            txt += `${T.expName}${state.fullName}\n`;
+            txt += `${T.expTitle}${state.title}\n`;
             if (state.email) txt += `Email: ${state.email}\n`;
-            if (state.phone) txt += `Phone: ${state.phone}\n`;
-            if (state.location) txt += `Location: ${state.location}\n`;
-            if (state.website) txt += `Website: ${state.website}\n`;
+            if (state.phone) txt += `${T.expPhone}${state.phone}\n`;
+            if (state.location) txt += `${T.expLocation}${state.location}\n`;
+            if (state.website) txt += `${T.expWebsite}${state.website}\n`;
             if (state.linkedin) txt += `LinkedIn: ${state.linkedin}\n`;
             txt += '\n';
 
@@ -2512,36 +2625,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return `${title.toUpperCase()}\n${'-'.repeat(60)}\n${body}\n\n`;
             };
 
-            txt += sect(T.sections.summary, state.summary);
-
-            if (state.work.length) {
-                let body = '';
-                state.work.forEach(w => {
-                    body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`;
-                });
-                txt += sect(T.sections.work, body.trim());
-            }
-            if (state.education.length) {
-                let body = '';
-                state.education.forEach(e => {
-                    body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | GPA: ' + e.gpa : ''}\n\n`;
-                });
-                txt += sect(T.sections.education, body.trim());
-            }
-            if (state.skills.length) {
-                txt += sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n'));
-            }
-            if (state.languages.length) {
-                txt += sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n'));
-            }
-            if (state.certifications.length) {
-                let body = '';
-                state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; });
-                txt += sect(T.sections.certifications, body.trim());
-            }
-            if (state.customTitle && state.customContent) {
-                txt += sect(state.customTitle, state.customContent);
-            }
+            const A = {
+                summary: () => sect(T.sections.summary, state.summary),
+                work: () => { if (!state.work.length) return ''; let body = ''; state.work.forEach(w => { body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`; }); return sect(T.sections.work, body.trim()); },
+                education: () => { if (!state.education.length) return ''; let body = ''; state.education.forEach(e => { body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | GPA: ' + e.gpa : ''}\n\n`; }); return sect(T.sections.education, body.trim()); },
+                skills: () => state.skills.length ? sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n')) : '',
+                languages: () => state.languages.length ? sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n')) : '',
+                certifications: () => { if (!state.certifications.length) return ''; let body = ''; state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; }); return sect(T.sections.certifications, body.trim()); },
+                custom: () => (state.customTitle && state.customContent) ? sect(state.customTitle, state.customContent) : ''
+            };
+            orderedSections().forEach(k => { if (A[k]) txt += A[k](); });
 
             const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
             const url = URL.createObjectURL(blob);
@@ -2559,7 +2652,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = safeFilename(state.fullName) + '_resume.json';
+            a.download = safeFilename(state.fullName) + T.fileSuffix + '.json';
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast(T.toast.saved);
@@ -2598,44 +2691,154 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const txt = document.getElementById('autosaveText');
             dot.classList.remove('saved');
             dot.classList.add('saving');
-            txt.textContent = 'Saving...';
+            txt.textContent = T.saving;
             clearTimeout(saveTimer);
             saveTimer = setTimeout(() => {
                 try {
                     updateState();
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                    localStorage.setItem(activeProfileKey(), JSON.stringify(state));
                     dot.classList.remove('saving');
                     dot.classList.add('saved');
-                    txt.textContent = 'Saved ' + new Date().toLocaleTimeString();
+                    txt.textContent = T.savedAt + new Date().toLocaleTimeString();
                 } catch (e) {
-                    txt.textContent = 'Save failed';
+                    txt.textContent = T.saveFailed;
                 }
             }, 500);
         }
 
-        function restoreFromStorage() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return false;
-                const data = JSON.parse(raw);
-                Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
-                // Handle legacy photoUrl from old saves
-                if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
-                ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
-                    .forEach(id => { document.getElementById(id).value = state[id] || ''; });
-                renderAll();
-                updatePhotoUI();
-                // apply template / font / accent
-                document.getElementById('template-select').value = state.template || 'classic';
-                document.getElementById('font-select').value = state.font || 'default';
-                renderCustomSwatches();
-                setAccent(state.accent || 'green', false);
-                if (state.previewMode) setPreviewMode(state.previewMode, false);
-                updatePreview();
-                return true;
-            } catch {
-                return false;
+        // ============ MULTI-PROFILE ============
+        const PIDX_KEY = 'cvProfilesIndex_v1';
+        function pkey(id){ return 'cvProfile_' + id; }
+        let profiles = { activeId: null, list: [] };
+        function loadProfilesIndex(){ try{ var r = localStorage.getItem(PIDX_KEY); if (r){ var o = JSON.parse(r); if (o && o.list) profiles = o; } }catch(e){} }
+        function saveProfilesIndex(){ try{ localStorage.setItem(PIDX_KEY, JSON.stringify(profiles)); }catch(e){} }
+        function genPid(){ return 'p' + Date.now().toString(36) + Math.floor(Math.random()*1e5).toString(36); }
+        function activeProfileKey(){ return pkey(profiles.activeId || 'default'); }
+        function defaultProfileName(){ return (T.ui.profile) + ' ' + (profiles.list.length + 1); }
+        function initProfiles(){
+            loadProfilesIndex();
+            if (!profiles.list || !profiles.list.length){
+                var id = genPid();
+                profiles = { activeId: id, list: [{ id: id, name: (T.ui.profile) + ' 1' }] };
+                try{ var legacy = localStorage.getItem(STORAGE_KEY); if (legacy) localStorage.setItem(pkey(id), legacy); }catch(e){}
+                saveProfilesIndex();
             }
+            if (!profiles.activeId || !profiles.list.some(function(p){ return p.id === profiles.activeId; })) profiles.activeId = profiles.list[0].id;
+        }
+        function saveActiveProfile(){ try{ updateState(); localStorage.setItem(activeProfileKey(), JSON.stringify(state)); }catch(e){} }
+
+        function defaultStateObj(){
+            return { fullName:'',title:'',email:'',phone:'',location:'',website:'',linkedin:'',photoData:'',summary:'',
+                work:[],education:[],skills:[],languages:[],certifications:[], customTitle:'',customContent:'',
+                template:'classic',font:'default',accent:'green',previewMode:'light',customColors:[],
+                sectionOrder: SECTION_KEYS.slice() };
+        }
+        function applyDataToState(data){
+            var d = defaultStateObj();
+            if (data){ Object.keys(d).forEach(function(k){ if (data[k] !== undefined) d[k] = data[k]; }); if (data.photoUrl && !d.photoData) d.photoData = data.photoUrl; }
+            Object.keys(d).forEach(function(k){ state[k] = d[k]; });
+        }
+        function syncUIFromState(){
+            ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
+                .forEach(function(id){ var el = document.getElementById(id); if (el) el.value = state[id] || ''; });
+            renderAll();
+            updatePhotoUI();
+            document.getElementById('template-select').value = state.template || 'classic';
+            document.getElementById('font-select').value = state.font || 'default';
+            renderCustomSwatches();
+            setAccent(state.accent || 'green', false);
+            if (state.previewMode) setPreviewMode(state.previewMode, false);
+            renderSectionOrderList();
+            updatePreview();
+        }
+        function loadActiveProfile(){
+            var raw = null; try{ raw = localStorage.getItem(activeProfileKey()); }catch(e){}
+            var data = null; try{ data = raw ? JSON.parse(raw) : null; }catch(e){}
+            applyDataToState(data);
+            syncUIFromState();
+            return !!data;
+        }
+        function switchProfile(id){
+            if (!id || id === profiles.activeId) return;
+            saveActiveProfile();
+            profiles.activeId = id; saveProfilesIndex();
+            loadActiveProfile(); renderProfileBar();
+        }
+        function newProfile(){
+            var name = prompt(T.ui.promptName, defaultProfileName());
+            if (name === null) return; name = (name || '').trim() || defaultProfileName();
+            saveActiveProfile();
+            var id = genPid(); profiles.list.push({ id: id, name: name }); profiles.activeId = id; saveProfilesIndex();
+            applyDataToState(null);
+            try{ localStorage.setItem(activeProfileKey(), JSON.stringify(state)); }catch(e){}
+            syncUIFromState(); renderProfileBar(); showToast(T.ui.pCreated);
+        }
+        function duplicateProfile(){
+            saveActiveProfile();
+            var src = profiles.list.find(function(p){ return p.id === profiles.activeId; });
+            var base = src ? src.name : 'CV';
+            var id = genPid(); profiles.list.push({ id: id, name: base + (__CVLANG__==='it'?' (copia)':' (copy)') });
+            try{ localStorage.setItem(pkey(id), localStorage.getItem(activeProfileKey()) || JSON.stringify(state)); }catch(e){}
+            profiles.activeId = id; saveProfilesIndex(); loadActiveProfile(); renderProfileBar(); showToast(T.ui.pDup);
+        }
+        function renameProfile(){
+            var p = profiles.list.find(function(x){ return x.id === profiles.activeId; }); if (!p) return;
+            var name = prompt(T.ui.promptName, p.name); if (name === null) return; name = (name || '').trim(); if (!name) return;
+            p.name = name; saveProfilesIndex(); renderProfileBar(); showToast(T.ui.pRenamed);
+        }
+        function deleteProfile(){
+            if (profiles.list.length <= 1) return;
+            if (!confirm(T.ui.confirmDel)) return;
+            var idx = profiles.list.findIndex(function(x){ return x.id === profiles.activeId; });
+            try{ localStorage.removeItem(activeProfileKey()); }catch(e){}
+            profiles.list.splice(idx, 1);
+            profiles.activeId = profiles.list[Math.max(0, idx - 1)].id;
+            saveProfilesIndex(); loadActiveProfile(); renderProfileBar(); showToast(T.ui.pDeleted);
+        }
+        function _setTxt(id, txt){ var b = document.getElementById(id); if (b) b.textContent = txt; }
+        function renderProfileBar(){
+            var sel = document.getElementById('profileSelect'); if (!sel) return;
+            sel.innerHTML = profiles.list.map(function(p){ return '<option value="' + p.id + '"' + (p.id === profiles.activeId ? ' selected' : '') + '>' + escapeHtml(p.name) + '</option>'; }).join('');
+            _setTxt('profileBarLabel', T.ui.profile + ':');
+            _setTxt('profileNew', T.ui.newP); _setTxt('profileRename', T.ui.rename); _setTxt('profileDup', T.ui.duplicate); _setTxt('profileDelete', T.ui.del);
+            var db = document.getElementById('profileDelete'); if (db) db.disabled = profiles.list.length <= 1;
+        }
+        function wireProfileBar(){
+            var sel = document.getElementById('profileSelect'); if (sel) sel.addEventListener('change', function(){ switchProfile(this.value); });
+            var m = { profileNew:newProfile, profileRename:renameProfile, profileDup:duplicateProfile, profileDelete:deleteProfile };
+            Object.keys(m).forEach(function(id){ var b = document.getElementById(id); if (b) b.addEventListener('click', m[id]); });
+        }
+
+        // ============ SECTION ORDER ============
+        function sectionLabel(k){
+            var s = T.sections || {};
+            if (k === 'custom') return state.customTitle || (__CVLANG__==='it' ? 'Sezione personalizzata' : 'Custom section');
+            return s[k] || k;
+        }
+        function renderSectionOrderList(){
+            var el = document.getElementById('sectionOrderList'); if (!el) return;
+            var oo = orderedSections();
+            el.innerHTML = oo.map(function(k, i){
+                return '<div class="section-order-item" data-id="' + k + '"><span class="drag-handle"></span><span class="so-num">' + (i+1) + '</span><span>' + escapeHtml(sectionLabel(k)) + '</span></div>';
+            }).join('');
+            makeSortable(el, function(){
+                var newOrder = Array.prototype.slice.call(el.children).map(function(c){ return c.dataset && c.dataset.id; }).filter(Boolean);
+                if (newOrder.length) state.sectionOrder = newOrder;
+                renderSectionOrderList(); updatePreview(); scheduleSave();
+            });
+            _setTxt('sectionOrderSummary', T.ui.secOrder);
+            _setTxt('sectionOrderHint', T.ui.secHint);
+        }
+        function applySectionOrder(){
+            ['main','side'].forEach(function(col){
+                var keys = orderedSections().filter(function(k){ return SECTION_DOM[k] && SECTION_DOM[k].col === col; });
+                var parent = null;
+                keys.forEach(function(k){
+                    var node = document.getElementById(SECTION_DOM[k].el); if (!node) return;
+                    parent = parent || node.parentElement;
+                    if (parent) parent.appendChild(node);
+                });
+            });
         }
 
         // ============ CONTROLS WIRING ============
@@ -2717,11 +2920,11 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
             updateState();
             var s = state;
             var checks = [
-                ['Summary present', !!s.summary && s.summary.length >= 80],
-                ['At least 1 experience', s.work.length >= 1],
-                ['At least 3 skills', s.skills.length >= 3],
-                ['Email and phone', !!s.email && !!s.phone],
-                ['Summary 200-700 chars', s.summary.length >= 200 && s.summary.length <= 700]
+                [T.rd1, !!s.summary && s.summary.length >= 80],
+                [T.rd2, s.work.length >= 1],
+                [T.rd3, s.skills.length >= 3],
+                [T.rd4, !!s.email && !!s.phone],
+                [T.rd5, s.summary.length >= 200 && s.summary.length <= 700]
             ];
             return checks.map(function(c){ return '<span class="ats-check '+(c[1]?'ok':'no')+'">'+(c[1]?'\u2713':'\u25cb')+' '+c[0]+'</span>'; }).join('');
         }
@@ -2730,7 +2933,7 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
             var kwEl = document.getElementById('atsKeywords');
             var scoreEl = document.getElementById('atsScore');
             document.getElementById('atsReadiness').innerHTML = buildReadiness();
-            if (!job) { kwEl.innerHTML = ''; scoreEl.textContent = 'Paste a job post to see the keywords.'; return; }
+            if (!job) { kwEl.innerHTML = ''; scoreEl.textContent = T.atsPaste; return; }
             var freq = {};
             atsTokens(job).forEach(function(w){ freq[w] = (freq[w]||0) + 1; });
             var top = Object.keys(freq).sort(function(a,b){ return freq[b]-freq[a]; }).slice(0, 24);
@@ -2738,13 +2941,13 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
             var matched = top.filter(function(w){ return cv[w]; });
             var missing = top.filter(function(w){ return !cv[w]; });
             var pct = top.length ? Math.round(matched.length / top.length * 100) : 0;
-            scoreEl.innerHTML = '<b>' + pct + '%</b> match (' + matched.length + '/' + top.length + ')';
+            scoreEl.innerHTML = '<b>' + pct + '%</b> ' + T.atsMatch + ' (' + matched.length + '/' + top.length + ')';
             scoreEl.style.color = pct >= 70 ? 'var(--emerald)' : (pct >= 40 ? '#fbbf24' : 'var(--error)');
             kwEl.innerHTML =
-                '<div class="ats-group"><span class="ats-label">Present in resume</span>' +
-                (matched.length ? matched.map(function(w){ return '<span class="ats-chip ok">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip miss">none</span>') +
-                '</div><div class="ats-group"><span class="ats-label">To add</span>' +
-                (missing.length ? missing.map(function(w){ return '<span class="ats-chip miss">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip ok">all present ✓</span>') +
+                '<div class="ats-group"><span class="ats-label">' + T.atsPresent + '</span>' +
+                (matched.length ? matched.map(function(w){ return '<span class="ats-chip ok">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip miss">' + T.atsNone + '</span>') +
+                '</div><div class="ats-group"><span class="ats-label">' + T.atsToAdd + '</span>' +
+                (missing.length ? missing.map(function(w){ return '<span class="ats-chip miss">'+escapeHtml(w)+'</span>'; }).join('') : '<span class="ats-chip ok">' + T.atsAll + '</span>') +
                 '</div>';
             showToast(T.toast.atsAnalyzed);
         }
@@ -2775,33 +2978,88 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
         });
 
         // ============ INIT ============
+        initProfiles();
+        wireProfileBar();
         initPhotoUpload();
-        const restored = restoreFromStorage();
-        if (!restored) {
-            // start with one empty entry in work/edu for easier UX? No, keep empty like original
-            updatePreview();
-        } else {
-            showToast(T.toast.restored);
-        }
+        const restored = loadActiveProfile();
+        renderProfileBar();
+        if (restored) showToast(T.toast.restored);
     </script>
+<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 
-</div><!-- /appContent -->
+<div id="el-lang" style="position:fixed;top:14px;right:62px;z-index:99999;display:flex;gap:4px;background:var(--el-card,#fff);border:1px solid var(--el-border,#e3e7ec);border-radius:20px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.12)">
+  <button type="button" data-lang="it" title="Italiano" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇮🇹</button>
+  <button type="button" data-lang="en" title="English" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇬🇧</button>
+</div>
 <script>
 (function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='2cs04t4tv4k',K='etherlabs_cv-builder_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+  var EN2IT = {"ResumeBuilder Pro - Create Your Professional Resume": "CVBuilder Pro - Crea il tuo Curriculum Professionale", "Premium Tool": "Strumento Premium", "ResumeBuilder Pro": "CVBuilder Pro", "Autosave enabled": "Salvataggio automatico attivo", "Classic": "Classico", "Modern": "Moderno", "Creative": "Creativo", "Band (accent)": "Banda (accent)", "Compact": "Compatto", "Modern (sans + serif)": "Moderno (sans + serif)", "Clean sans": "Sans pulito", "Elegant serif": "Serif elegante", "Geometric": "Geometrico", "Editorial (serif)": "Editoriale (serif)", "Technical (mono)": "Tecnico (mono)", "Accent:": "Colore:", "Green": "Verde", "Blue": "Blu", "Purple": "Viola", "Rose": "Rosa", "Red": "Rosso", "Orange": "Arancione", "Black": "Nero", "Add custom color": "Aggiungi colore personalizzato", "Load Preset...": "Carica Esempio...", "Software Developer": "Sviluppatore Software", "UX/UI Designer": "Designer UX/UI", "Marketing Manager": "Responsabile Marketing", "Sales Executive": "Account Commerciale", "Recent Graduate": "Neolaureato", "Clear All": "Pulisci Tutto", "🎯 ATS check — paste the job post and find the missing keywords": "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti", "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.": "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.", "Paste the job description here...": "Incolla qui il testo dell'annuncio di lavoro...", "Analyze match": "Analizza corrispondenza", "Professional Information": "Informazioni Professionali", "Personal Details": "Dati Personali", "Full Name": "Nome e Cognome", "e.g. John Smith": "es. Mario Rossi", "Job Title/Role": "Ruolo/Posizione", "e.g. Senior Developer": "es. Sviluppatore Senior", "john@example.com": "mario@example.com", "Phone": "Telefono", "+1 (555) 123-4567": "+39 345 123 4567", "City/Country": "Città/Paese", "New York, USA": "Milano, Italia", "Website": "Sito Web", "https://johnsmith.com": "https://mariorossi.it", "https://linkedin.com/in/johnsmith": "https://linkedin.com/in/mariorossi", "Profile Photo": "Foto Profilo", "📷 Click or drag an image here": "📷 Clicca o trascina un'immagine qui", "Professional Summary": "Profilo Professionale", "Description": "Descrizione", "Describe your experience, skills and professional goals...": "Descrivi la tua esperienza, competenze e obiettivi professionali...", "Work Experience": "Esperienza Lavorativa", "+ Add": "+ Aggiungi", "Education": "Istruzione", "Skills": "Competenze", "Languages": "Lingue", "Certifications": "Certificazioni", "Custom Section": "Sezione Personalizzata", "Section Title": "Titolo Sezione", "e.g. Projects, Publications...": "es. Progetti, Pubblicazioni...", "Content": "Contenuto", "Add your custom section content...": "Aggiungi il contenuto della tua sezione personalizzata...", "⬇ Download PDF": "⬇ Scarica PDF", "🖨 Print": "🖨 Stampa", "📄 ATS Export (.txt)": "📄 Export ATS (.txt)", "📋 Copy Text": "📋 Copia Testo", "💾 Save (JSON)": "💾 Salva (JSON)", "📂 Load (JSON)": "📂 Carica (JSON)", "Preview:": "Anteprima:", "Light": "Chiara", "Dark": "Scura", "Your Name": "Nome e Cognome", "Professional Title": "Titolo Professionale", "Your professional summary will appear here...": "Il tuo profilo professionale apparirà qui...", "Message": "Messaggio", "Please select an image file": "Seleziona un file immagine", "Image too large (max 12 MB)": "Immagine troppo grande (max 12 MB)", "Photo": "Foto", "Photo loaded ✓": "Foto caricata ✓", "Click to replace": "Clicca per sostituire", "Remove": "Rimuovi", "Company": "Azienda", "Job Title": "Ruolo", "Start Date (e.g. Jan 2020)": "Data Inizio (es. Gen 2020)", "End Date (e.g. Dec 2023 or Present)": "Data Fine (es. Dic 2023 o Presente)", "Job description (you can add multiple lines)": "Descrizione del ruolo (puoi aggiungere più righe)", "Institution": "Istituto", "Degree/Title": "Titolo/Diploma", "Year": "Anno", "GPA (optional)": "Voto (opzionale)", "Skill": "Competenza", "Language": "Lingua", "Select Level": "Seleziona Livello", "Basic": "Base", "Intermediate": "Intermedio", "Fluent": "Fluente", "Native": "Madrelingua", "Certification Name": "Nome Certificazione", "Issuing Organization": "Ente Emittente", "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}": "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}", " | GPA: ": " | Voto: ", "'+hex+' — double-click to remove": "'+hex+' — doppio click per rimuovere", "Color saved to palette": "Colore salvato nella palette", "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around": "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa", "Summary present": "Riepilogo presente", "At least 1 experience": "Almeno 1 esperienza", "At least 3 skills": "Almeno 3 competenze", "Email and phone": "Email e telefono", "Present in resume": "Presenti nel CV", "none": "nessuna", "To add": "Da aggiungere", "all present ✓": "tutte presenti ✓", "Build your professional resume with style and ease": "Crea il tuo curriculum professionale con stile e facilità"};
+  var IT2EN = {"CVBuilder Pro - Crea il tuo Curriculum Professionale": "ResumeBuilder Pro - Create Your Professional Resume", "Strumento Premium": "Premium Tool", "CVBuilder Pro": "ResumeBuilder Pro", "Salvataggio automatico attivo": "Autosave enabled", "Classico": "Classic", "Moderno": "Modern", "Creativo": "Creative", "Banda (accent)": "Band (accent)", "Compatto": "Compact", "Moderno (sans + serif)": "Modern (sans + serif)", "Sans pulito": "Clean sans", "Serif elegante": "Elegant serif", "Geometrico": "Geometric", "Editoriale (serif)": "Editorial (serif)", "Tecnico (mono)": "Technical (mono)", "Colore:": "Accent:", "Verde": "Green", "Blu": "Blue", "Viola": "Purple", "Rosa": "Rose", "Rosso": "Red", "Arancione": "Orange", "Nero": "Black", "Aggiungi colore personalizzato": "Add custom color", "Carica Esempio...": "Load Preset...", "Sviluppatore Software": "Software Developer", "Designer UX/UI": "UX/UI Designer", "Responsabile Marketing": "Marketing Manager", "Account Commerciale": "Sales Executive", "Neolaureato": "Recent Graduate", "Pulisci Tutto": "Clear All", "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti": "🎯 ATS check — paste the job post and find the missing keywords", "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.": "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.", "Incolla qui il testo dell'annuncio di lavoro...": "Paste the job description here...", "Analizza corrispondenza": "Analyze match", "Informazioni Professionali": "Professional Information", "Dati Personali": "Personal Details", "Nome e Cognome": "Your Name", "es. Mario Rossi": "e.g. John Smith", "Ruolo/Posizione": "Job Title/Role", "es. Sviluppatore Senior": "e.g. Senior Developer", "mario@example.com": "john@example.com", "Telefono": "Phone", "+39 345 123 4567": "+1 (555) 123-4567", "Città/Paese": "City/Country", "Milano, Italia": "New York, USA", "Sito Web": "Website", "https://mariorossi.it": "https://johnsmith.com", "https://linkedin.com/in/mariorossi": "https://linkedin.com/in/johnsmith", "Foto Profilo": "Profile Photo", "📷 Clicca o trascina un'immagine qui": "📷 Click or drag an image here", "Profilo Professionale": "Professional Summary", "Descrizione": "Description", "Descrivi la tua esperienza, competenze e obiettivi professionali...": "Describe your experience, skills and professional goals...", "Esperienza Lavorativa": "Work Experience", "+ Aggiungi": "+ Add", "Istruzione": "Education", "Competenze": "Skills", "Lingue": "Languages", "Certificazioni": "Certifications", "Sezione Personalizzata": "Custom Section", "Titolo Sezione": "Section Title", "es. Progetti, Pubblicazioni...": "e.g. Projects, Publications...", "Contenuto": "Content", "Aggiungi il contenuto della tua sezione personalizzata...": "Add your custom section content...", "⬇ Scarica PDF": "⬇ Download PDF", "🖨 Stampa": "🖨 Print", "📄 Export ATS (.txt)": "📄 ATS Export (.txt)", "📋 Copia Testo": "📋 Copy Text", "💾 Salva (JSON)": "💾 Save (JSON)", "📂 Carica (JSON)": "📂 Load (JSON)", "Anteprima:": "Preview:", "Chiara": "Light", "Scura": "Dark", "Titolo Professionale": "Professional Title", "Il tuo profilo professionale apparirà qui...": "Your professional summary will appear here...", "Messaggio": "Message", "Seleziona un file immagine": "Please select an image file", "Immagine troppo grande (max 12 MB)": "Image too large (max 12 MB)", "Foto": "Photo", "Foto caricata ✓": "Photo loaded ✓", "Clicca per sostituire": "Click to replace", "Rimuovi": "Remove", "Azienda": "Company", "Ruolo": "Job Title", "Data Inizio (es. Gen 2020)": "Start Date (e.g. Jan 2020)", "Data Fine (es. Dic 2023 o Presente)": "End Date (e.g. Dec 2023 or Present)", "Descrizione del ruolo (puoi aggiungere più righe)": "Job description (you can add multiple lines)", "Istituto": "Institution", "Titolo/Diploma": "Degree/Title", "Anno": "Year", "Voto (opzionale)": "GPA (optional)", "Competenza": "Skill", "Lingua": "Language", "Seleziona Livello": "Select Level", "Base": "Basic", "Intermedio": "Intermediate", "Fluente": "Fluent", "Madrelingua": "Native", "Nome Certificazione": "Certification Name", "Ente Emittente": "Issuing Organization", "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}": "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}", " | Voto: ": " | GPA: ", "'+hex+' — doppio click per rimuovere": "'+hex+' — double-click to remove", "Colore salvato nella palette": "Color saved to palette", "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa": "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around", "Riepilogo presente": "Summary present", "Almeno 1 esperienza": "At least 1 experience", "Almeno 3 competenze": "At least 3 skills", "Email e telefono": "Email and phone", "Presenti nel CV": "Present in resume", "nessuna": "none", "Da aggiungere": "To add", "tutte presenti ✓": "all present ✓", "Crea il tuo curriculum professionale con stile e facilità": "Build your professional resume with style and ease"};
+  var TITLES = {en:"ResumeBuilder Pro - Create Your Professional Resume", it:"CVBuilder Pro - Crea il tuo Curriculum Professionale"};
+  var CUR = (typeof __CVLANG__!=='undefined') ? __CVLANG__ : 'en';
+  function tr(str, map){ var k=str.trim(); if(k && Object.prototype.hasOwnProperty.call(map,k)){ return str.replace(k, map[k]); } return null; }
+  function walk(root, map){
+    var tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes=[], n; while(n=tw.nextNode()) nodes.push(n);
+    nodes.forEach(function(t){ var r=tr(t.nodeValue, map); if(r!==null) t.nodeValue=r; });
+    var els = (root.querySelectorAll?root.querySelectorAll('[placeholder],[title],[alt],[aria-label]'):[]);
+    els.forEach(function(el){ ['placeholder','title','alt','aria-label'].forEach(function(a){
+      if(el.hasAttribute(a)){ var v=el.getAttribute(a); var k=v.trim(); if(k && map[k]!==undefined) el.setAttribute(a, v.replace(k,map[k])); }
+    });});
+    if(root.nodeType===1 && root.matches && root.matches('[placeholder],[title],[alt],[aria-label]')){
+      ['placeholder','title','alt','aria-label'].forEach(function(a){ if(root.hasAttribute(a)){ var v=root.getAttribute(a),k=v.trim(); if(k&&map[k]!==undefined) root.setAttribute(a,v.replace(k,map[k])); }});
+    }
+  }
+  var obs = new MutationObserver(function(muts){
+    if(CUR==='en') return;
+    muts.forEach(function(m){ m.addedNodes.forEach(function(node){
+      if(node.nodeType===1) walk(node, EN2IT);
+      else if(node.nodeType===3){ var r=tr(node.nodeValue, EN2IT); if(r!==null) node.nodeValue=r; }
+    });});
+  });
+  function setLang(l){
+    if(l!=='it' && l!=='en') l='en';
+    if(l===CUR){ mark(l); return; }
+    // reassign keyed data objects if present
+    try{ if(typeof T_ALL!=='undefined'){ T=T_ALL[l]; } }catch(e){}
+    try{ if(typeof LEVEL_LABELS_ALL!=='undefined'){ LEVEL_LABELS=LEVEL_LABELS_ALL[l]; } }catch(e){}
+    try{ if(typeof LANG_LEVELS_ALL!=='undefined'){ LANG_LEVELS=LANG_LEVELS_ALL[l]; } }catch(e){}
+    try{ if(typeof PRESETS_ALL!=='undefined'){ PRESETS=PRESETS_ALL[l]; } }catch(e){}
+    var map = (CUR==='en' ? EN2IT : IT2EN);   // from current -> we first normalize to EN then to target
+    // simplest: if target it -> apply EN2IT over whole doc (doc currently en or it); if en -> apply IT2EN
+    walk(document.body, l==='it'?EN2IT:IT2EN);
+    document.documentElement.lang = l;
+    document.title = TITLES[l]||document.title;
+    CUR=l;
+    try{ localStorage.setItem('cv-lang', l); }catch(e){}
+    // re-render dynamic parts in the new language via app fns if available
+    try{ if(typeof renderAll==='function') renderAll(); }catch(e){}
+    try{ if(typeof updatePreview==='function') updatePreview(); }catch(e){}
+    if(CUR!=='en') walk(document.body, EN2IT);
+    mark(l);
+  }
+  function mark(l){ var box=document.getElementById('el-lang'); if(!box)return;
+    Array.prototype.forEach.call(box.children,function(b){ b.style.background = b.getAttribute('data-lang')===l ? 'var(--el-emerald,#10b981)' : 'none'; });
+  }
+  function boot(){
+    obs.observe(document.body,{childList:true,subtree:true});
+    document.getElementById('el-lang').addEventListener('click',function(e){ var b=e.target.closest('[data-lang]'); if(b) setLang(b.getAttribute('data-lang')); });
+    // initial: DOM shipped in EN; if target is it, translate now
+    document.documentElement.lang = CUR;
+    document.title = TITLES[CUR]||document.title;
+    if(CUR==='it'){ walk(document.body, EN2IT); }
+    mark(CUR);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
-<footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
+<script>
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+</script>
 </body>
 </html>

@@ -27,1615 +27,1600 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Contract Generator">
-    <meta name="theme-color" content="#060a0a">
+    <meta name="theme-color" content="#0a0b0d">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-    <title>Freelancer Contract Generator Pro</title>
+    <meta name="description" content="Generate professional freelance contracts (service agreement, collaboration, NDA, license) in minutes. Live preview, PDF print, 100% offline.">
+    <meta name="theme-color" content="#060a0a">
+    <title>Freelance Contract Generator — Pro</title>
     <style>
         :root {
             --bg: var(--el-bg);
             --bg2: var(--el-bg2);
             --bg3: var(--el-bg3);
+            --bg4: var(--el-bg4);
             --emerald: var(--el-emerald);
             --emerald-light: var(--el-emerald-light);
+            --emerald-lighter: var(--el-emerald-lighter);
             --emerald-dark: var(--el-emerald-dark);
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --emerald-glow2: rgba(16, 185, 129, 0.08);
             --text1: var(--el-text1);
             --text2: var(--el-text2);
             --text3: var(--el-text3);
             --border: var(--el-border);
+            --border2: var(--el-border2);
             --success: var(--el-emerald-light);
             --error: #f87171;
+            --card-hover: rgba(16, 185, 129, 0.04);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-gold: 0 0 40px rgba(16,185,129,0.18);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
-            margin: 0;
-            padofng: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text1);
-            line-height: 1.6;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        button, .card, .step-node, .checkbox-group, .template-btn, .add-btn, .remove-btn, .btn-export {
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* AMBIENT BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16,185,129,0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16,185,129,0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1520px;
             margin: 0 auto;
-            padofng: 20px;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
         }
 
+        /* HEADER */
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padofng: 30px 20px;
-            background: linear-graofent(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            margin-bottom: 48px;
+            padding: 52px 32px 44px;
+            background: linear-gradient(160deg, var(--bg2) 0%, var(--bg3) 50%, var(--bg2) 100%);
             border: 1px solid var(--border);
-            border-raofus: 12px;
+            border-radius: var(--radius);
             position: relative;
             overflow: hidden;
         }
-
         header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 500px;
-            height: 500px;
-            background: raofal-graofent(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--emerald) 50%, transparent 100%);
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .brand-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 100px;
+            font-size: 0.72em;
+            font-weight: 600;
+            color: var(--emerald);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-tag .dot {
+            width: 6px; height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
         }
 
         header h1 {
-            font-size: 2.5em;
-            color: var(--emerald-light);
-            margin-bottom: 10px;
+            font-family: 'Georgia', Georgia, serif;
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 12px;
             position: relative;
             z-index: 1;
-            text-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+            letter-spacing: -0.5px;
+        }
+        header h1 span {
+            color: var(--emerald-light);
         }
 
         header p {
             color: var(--text2);
-            font-size: 1em;
+            font-size: 1.05em;
+            font-weight: 300;
             position: relative;
             z-index: 1;
-        }
-
-        .main-wrapper {
-            ofsplay: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        @meofa (max-width: 1200px) {
-            .main-wrapper {
-                grid-template-columns: 1fr;
-            }
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         /* STEP INDICATOR */
-        .step-inofcator {
-            ofsplay: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .step-inofcator::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--border);
-            z-index: 1;
-        }
-
-        .step-inofcator::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            height: 2px;
-            background: linear-graofent(90deg, var(--emerald) 0%, var(--emerald-light) 100%);
-            width: var(--progress, 0%);
-            transition: width 0.3s ease;
-            z-index: 2;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .step {
-            width: 40px;
-            height: 40px;
-            border-raofus: 50%;
-            background: var(--bg3);
-            border: 2px solid var(--border);
-            ofsplay: flex;
+        .step-bar {
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            gap: 0;
+            margin-bottom: 44px;
+            padding: 0 40px;
+        }
+        .step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
-            z-index: 3;
+            z-index: 2;
         }
-
-        .step.active {
+        .step-circle {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--bg3);
+            border: 2px solid var(--border2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--text3);
+            transition: var(--transition);
+        }
+        .step-node.active .step-circle {
             background: var(--emerald);
-            color: var(--bg);
             border-color: var(--emerald-light);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            color: var(--bg);
+            box-shadow: 0 0 24px rgba(16,185,129,0.35), 0 0 60px rgba(16,185,129,0.1);
         }
-
-        .step.completed {
+        .step-node.completed .step-circle {
             background: var(--success);
             border-color: var(--success);
-            color: var(--bg);
+            color: white;
+        }
+        .step-node.completed .step-circle::after {
+            content: '✓';
+            font-size: 1em;
+        }
+        .step-label {
+            font-size: 0.7em;
+            color: var(--text3);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+        .step-node.active .step-label { color: var(--emerald-light); }
+        .step-node.completed .step-label { color: var(--text2); }
+        @media (hover: hover) and (pointer: fine) {
+            .step-node:hover .step-circle { border-color: var(--emerald); color: var(--text1); }
+        }
+        .step-node:focus-visible { outline: none; }
+        .step-node:focus-visible .step-circle { box-shadow: 0 0 0 3px rgba(16,185,129,0.35); }
+        .card:focus-visible { outline: none; border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,0.25); }
+        .form-group input:focus-visible, .form-group textarea:focus-visible, .form-group select:focus-visible {
+            outline: none;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin: 0 -2px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .step-line .fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px rgba(16,185,129,0.4);
+        }
+        .step-line.filled .fill { width: 100%; }
+
+        /* MAIN LAYOUT */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 48px;
         }
 
         /* FORM PANEL */
         .form-panel {
-            background: linear-graofent(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            background: linear-gradient(170deg, var(--bg2) 0%, var(--bg3) 100%);
             border: 1px solid var(--border);
-            border-raofus: 12px;
-            padofng: 30px;
-            min-height: 600px;
+            border-radius: var(--radius);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border2), transparent);
         }
 
-        .form-section {
-            ofsplay: none;
-        }
-
+        .form-section { display: none; }
         .form-section.active {
-            ofsplay: block;
-            animation: fadeIn 0.3s ease;
+            display: block;
+            animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
-            font-size: 1.8em;
-            color: var(--emerald-light);
-            margin-bottom: 30px;
-            padofng-bottom: 15px;
-            border-bottom: 2px solid var(--border);
+            font-family: 'Georgia', Georgia, serif;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .section-subtitle {
+            font-size: 0.88em;
+            color: var(--text3);
+            margin-bottom: 32px;
+            font-weight: 400;
         }
 
+        /* CARDS */
         .card-grid {
-            ofsplay: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
         }
-
         .card {
-            padofng: 20px;
-            background: var(--bg3);
-            border: 2px solid var(--border);
-            border-raofus: 8px;
+            padding: 24px 18px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-
-        .card:hover {
-            border-color: var(--emerald);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(180deg, var(--emerald-glow) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-
+        @media (hover: hover) and (pointer: fine) {
+            .card:hover { border-color: rgba(16,185,129,0.3); }
+            .card:hover::before { opacity: 1; }
+            .card:hover .icon { filter: grayscale(0); }
+        }
+        .card:active { transform: scale(0.98); border-color: rgba(16,185,129,0.4); }
+        .card .icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+            display: block;
+            filter: grayscale(0.3);
+            transition: var(--transition);
+        }
+        .card strong {
+            font-size: 0.88em;
+            font-weight: 600;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
         .card.selected {
+            border-color: var(--emerald);
+            background: linear-gradient(170deg, rgba(16,185,129,0.12) 0%, var(--bg4) 100%);
+            box-shadow: var(--shadow-gold);
+        }
+        .card.selected::before { opacity: 1; }
+        .card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px; right: 12px;
+            width: 22px; height: 22px;
             background: var(--emerald);
             color: var(--bg);
-            border-color: var(--emerald-light);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .card.error {
+            border-color: var(--error);
+            animation: shake 0.45s cubic-bezier(.36,.07,.19,.97);
+        }
+        @keyframes shake {
+            10%, 90% { transform: translateX(-2px); }
+            20%, 80% { transform: translateX(3px); }
+            30%, 50%, 70% { transform: translateX(-5px); }
+            40%, 60% { transform: translateX(5px); }
+        }
+        .milestone-total {
+            padding: 10px 16px;
+            background: var(--bg4);
+            border-radius: var(--radius-xs);
+            margin-top: 8px;
+            text-align: center;
+            color: var(--emerald);
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        /* FORM ELEMENTS */
+        .form-group { margin-bottom: 22px; }
         .form-group label {
-            ofsplay: block;
+            display: block;
             margin-bottom: 8px;
-            color: var(--text1);
+            color: var(--text2);
+            font-size: 0.82em;
             font-weight: 500;
-            font-size: 0.95em;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
-
         .form-group label.required::after {
             content: ' *';
-            color: var(--error);
+            color: var(--emerald);
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padofng: 12px;
+            padding: 14px 16px;
             background: var(--bg);
             border: 1px solid var(--border);
-            border-raofus: 6px;
+            border-radius: var(--radius-xs);
             color: var(--text1);
-            font-family: inherit;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
+            font-family: system-ui, sans-serif;
+            font-size: 0.92em;
+            transition: var(--transition);
         }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: var(--text3);
+            font-weight: 300;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
             border-color: var(--emerald);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
         }
-
-        .form-group input.error,
-        .form-group textarea.error,
-        .form-group select.error {
+        .form-group input.error, .form-group textarea.error, .form-group select.error {
             border-color: var(--error);
-            box-shadow: 0 0 10px rgba(248, 113, 113, 0.2);
+            box-shadow: 0 0 0 3px rgba(248,113,113,0.1);
         }
+        .form-group textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+        .form-group select { cursor: pointer; }
+        .form-group select option { background: var(--bg2); color: var(--text1); }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
+        .inline-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .row-add { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+        .milestone-row { display: grid; grid-template-columns: 1fr 140px 80px auto; gap: 10px; }
+        @media (max-width: 768px) {
+            .row-add { grid-template-columns: 1fr; }
+            .milestone-row { grid-template-columns: 1fr 1fr; }
+            .milestone-row > button { grid-column: span 2; }
         }
-
+        .clause-detail {
+            display: none;
+            margin-bottom: 14px;
+            margin-left: 30px;
+        }
+        .clause-detail input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            color: var(--text1);
+            font-family: system-ui, sans-serif;
+            font-size: 0.9em;
+        }
+        .clause-detail input:focus { outline: none; border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,0.08); }
         .checkbox-group {
-            ofsplay: flex;
+            display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            transition: var(--transition);
+            cursor: pointer;
         }
-
+        @media (hover: hover) and (pointer: fine) {
+            .checkbox-group:hover { border-color: var(--border2); background: var(--bg2); }
+        }
+        .checkbox-group:active { background: var(--bg2); }
         .checkbox-group input[type="checkbox"] {
-            width: auto;
+            width: 18px; height: 18px;
             cursor: pointer;
             accent-color: var(--emerald);
+            flex-shrink: 0;
         }
-
         .checkbox-group label {
             margin: 0;
             cursor: pointer;
             flex: 1;
+            font-size: 0.9em;
+            color: var(--text1);
         }
 
-        .inline-group {
-            ofsplay: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        /* BUTTONS */
         .add-btn {
-            padofng: 10px 20px;
-            background: var(--emerald);
-            color: var(--bg);
-            border: none;
-            border-raofus: 6px;
+            padding: 14px 24px;
+            background: transparent;
+            color: var(--emerald);
+            border: 1px solid var(--emerald);
+            border-radius: var(--radius-xs);
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
         }
-
-        .add-btn:hover {
-            background: var(--emerald-light);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        @media (hover: hover) and (pointer: fine) {
+            .add-btn:hover {
+                background: var(--emerald);
+                color: var(--bg);
+                box-shadow: 0 0 20px rgba(16,185,129,0.2);
+            }
         }
+        .add-btn:active { background: var(--emerald); color: var(--bg); transform: scale(0.97); }
 
         .dynamic-list {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-raofus: 6px;
-            padofng: 15px;
-            margin-top: 10px;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-
         .dynamic-item {
-            ofsplay: flex;
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            padofng: 12px;
-            background: var(--bg3);
-            border-raofus: 4px;
-            margin-bottom: 8px;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
             border-left: 3px solid var(--emerald);
+            font-size: 0.9em;
         }
-
-        .dynamic-item:last-child {
-            margin-bottom: 0;
-        }
-
         .remove-btn {
-            padofng: 6px 12px;
-            background: var(--error);
-            color: white;
-            border: none;
-            border-raofus: 4px;
+            padding: 6px 14px;
+            background: transparent;
+            color: var(--error);
+            border: 1px solid rgba(248,113,113,0.3);
+            border-radius: var(--radius-xs);
             cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.3s ease;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .remove-btn:hover { background: var(--error); color: white; }
+        }
+        .remove-btn:active { background: var(--error); color: white; transform: scale(0.95); }
+
+        /* TEMPLATE BUTTONS */
+        .template-section { margin-bottom: 28px; }
+        .template-section > label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--emerald);
+            font-size: 0.82em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .template-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .template-btn {
+            padding: 10px 18px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text2);
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: system-ui, sans-serif;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .template-btn:hover {
+                border-color: var(--emerald);
+                color: var(--emerald);
+                background: rgba(16,185,129,0.06);
+            }
+        }
+        .template-btn:active {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            background: rgba(16,185,129,0.1);
+            transform: scale(0.97);
+        }
+        .template-btn.used {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            background: rgba(16,185,129,0.08);
         }
 
-        .remove-btn:hover {
-            background: #dc2626;
+        /* NAVIGATION BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+            justify-content: space-between;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: var(--radius-xs);
+            cursor: pointer; touch-action: manipulation;
+            font-weight: 600;
+            font-size: 0.92em;
+            font-family: system-ui, sans-serif;
+            letter-spacing: 0.3px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            color: var(--bg);
+            box-shadow: 0 4px 16px rgba(16,185,129,0.25);
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-primary:hover {
+                box-shadow: 0 6px 28px rgba(16,185,129,0.4);
+                transform: translateY(-1px);
+            }
+        }
+        .btn-primary:active {
+            box-shadow: 0 2px 10px rgba(16,185,129,0.3);
+            transform: translateY(1px);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text2);
+            border: 1px solid var(--border);
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-secondary:hover {
+                border-color: var(--border2);
+                color: var(--text1);
+            }
+        }
+        .btn-secondary:active {
+            border-color: var(--border2);
+            color: var(--text1);
+            transform: scale(0.98);
         }
 
         /* PREVIEW PANEL */
         .preview-panel {
-            background: white;
-            border-raofus: 12px;
-            padofng: 40px;
+            background: #f6faf8;
+            border-radius: var(--radius);
+            padding: 48px;
             min-height: 600px;
-            color: #000;
+            color: #1a1a1a;
             overflow-y: auto;
             max-height: 90vh;
-            border: 1px solid #ddd;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        .preview-panel::before {
+            content: 'PREVIEW';
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 0.62em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #a0c5b6;
+            text-transform: uppercase;
         }
 
         .preview-panel h2 {
             text-align: center;
+            font-family: 'Georgia', Georgia, serif;
             font-size: 1.5em;
-            margin-bottom: 30px;
-            color: #333;
+            margin-bottom: 8px;
+            color: #1a1a1a;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .contract-date {
+            text-align: center;
+            font-size: 0.82em;
+            color: #888;
+            margin-bottom: 32px;
+            font-style: italic;
         }
 
-        .preview-section {
-            margin-bottom: 25px;
-        }
-
+        .preview-section { margin-bottom: 24px; }
         .preview-section h3 {
-            font-size: 0.95em;
-            margin-bottom: 12px;
-            color: #000;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            color: #999;
             font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
-
         .preview-section p {
             font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 8px;
+            line-height: 1.7;
+            margin-bottom: 6px;
             color: #333;
         }
 
         .article {
             margin-bottom: 20px;
-            padofng-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #d8ebe3;
         }
-
-        .article:last-child {
-            border-bottom: none;
-        }
-
+        .article:last-child { border-bottom: none; }
         .article-title {
-            font-weight: 600;
-            color: #000;
+            font-weight: 700;
+            color: #1a1a1a;
             margin-bottom: 8px;
+            font-size: 0.95em;
         }
-
         .article-content {
-            font-size: 0.9em;
-            color: #333;
-            line-height: 1.6;
+            font-size: 0.88em;
+            color: #444;
+            line-height: 1.7;
         }
+        .article-content ul { padding-left: 20px; margin-top: 8px; }
+        .article-content li { margin-bottom: 4px; }
 
         .signature-section {
-            ofsplay: grid;
+            display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-top: 40px;
-            padofng-top: 40px;
-            border-top: 2px solid #333;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 2px solid #1a1a1a;
         }
-
-        .signature-block {
-            text-align: center;
-        }
-
-        .signature-block .line {
-            border-top: 1px solid #000;
-            margin-top: 50px;
-            margin-bottom: 5px;
-            height: 1px;
-        }
-
-        .signature-block p {
-            font-size: 0.85em;
-            color: #333;
-        }
-
-        /* BUTTONS */
-        .button-group {
-            ofsplay: flex;
-            gap: 15px;
-            margin-top: 40px;
-            justify-content: space-between;
-        }
-
-        .btn {
-            padofng: 12px 30px;
-            border: none;
-            border-raofus: 6px;
-            cursor: pointer; touch-action: manipulation;
+        .signature-block { text-align: center; }
+        .signature-block .sig-label {
+            font-size: 0.75em;
             font-weight: 600;
-            font-size: 1em;
-            transition: all 0.3s ease;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 4px;
         }
-
-        .btn-primary {
-            background: var(--emerald);
-            color: var(--bg);
+        .signature-block .sig-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 40px;
         }
-
-        .btn-primary:hover {
-            background: var(--emerald-light);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        .signature-block .line {
+            border-top: 1px solid #1a1a1a;
+            margin-bottom: 6px;
         }
-
-        .btn-secondary {
-            background: var(--bg3);
-            color: var(--text1);
-            border: 1px solid var(--border);
+        .signature-block .sig-sub {
+            font-size: 0.78em;
+            color: #888;
         }
+        .sig-meta { font-size: 0.78em; color: #888; margin-top: 16px; }
 
-        .btn-secondary:hover {
-            background: var(--border);
-            border-color: var(--emerald);
-        }
-
-        .btn:ofsabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* TEMPLATE LIBRARY */
-        .template-section {
-            margin-bottom: 30px;
-        }
-
-        .template-grid {
-            ofsplay: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .template-btn {
-            padofng: 12px;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-raofus: 6px;
-            color: var(--text1);
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .template-btn:hover {
-            background: var(--emerald);
-            color: var(--bg);
-            border-color: var(--emerald);
-        }
-
-        /* EXPORT SECTION */
-        .export-section {
-            ofsplay: flex;
-            gap: 10px;
-            margin-top: 30px;
+        /* EXPORT & STATS */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e6e0;
             flex-wrap: wrap;
         }
-
+        .export-group { display: flex; gap: 8px; }
         .btn-export {
-            padofng: 10px 20px;
-            background: var(--bg3);
-            border: 1px solid var(--emerald);
-            color: var(--emerald);
-            border-raofus: 6px;
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #ddd;
+            color: #555;
+            border-radius: var(--radius-xs);
             cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
-        .btn-export:hover {
-            background: var(--emerald);
-            color: var(--bg);
+        @media (hover: hover) and (pointer: fine) {
+            .btn-export:hover { border-color: #999; color: #1a1a1a; background: #f0f4f1; }
         }
+        .btn-export:active { border-color: #777; color: #1a1a1a; background: #e8efe9; transform: scale(0.97); }
 
-        /* STATS */
-        .stats {
-            ofsplay: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-            padofng: 15px;
-            background: var(--bg);
-            border-raofus: 6px;
-            border: 1px solid var(--border);
+        .stats-row {
+            display: flex;
+            gap: 24px;
         }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.1em; color: #1a1a1a; font-weight: 700; }
+        .stat-label { font-size: 0.7em; color: #999; letter-spacing: 0.5px; text-transform: uppercase; }
 
-        .stat {
+        .placeholder-msg {
             text-align: center;
+            padding: 80px 40px;
+            color: #bbb;
         }
-
-        .stat-value {
-            font-size: 1.3em;
-            color: var(--emerald);
-            font-weight: 600;
-        }
-
-        .stat-label {
-            font-size: 0.8em;
-            color: var(--text2);
-        }
+        .placeholder-msg .ph-icon { font-size: 3em; margin-bottom: 16px; display: block; opacity: 0.4; }
+        .placeholder-msg p { font-size: 0.95em; line-height: 1.6; }
 
         /* NOTIFICATION */
         .notification {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padofng: 15px 20px;
-            background: var(--success);
-            color: white;
-            border-raofus: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease;
+            bottom: 28px;
+            right: 28px;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            animation: notifIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
+            font-size: 0.9em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification.success { background: var(--bg3); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+        .notification.error { background: var(--bg3); color: var(--error); border: 1px solid rgba(248,113,113,0.2); }
+        @keyframes notifIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text3);
+            font-size: 0.75em;
+            letter-spacing: 0.5px;
         }
+        .footer a { color: var(--emerald); text-decoration: none; }
 
-        .notification.error {
-            background: var(--error);
-        }
-
-        @meofa print {
-            body {
-                background: white;
-                color: #000;
-            }
-            .form-panel,
-            header,
-            .button-group,
-            .export-section,
-            .template-section,
-            .step-inofcator {
-                ofsplay: none;
-            }
+        /* PRINT */
+        @page { margin: 0; size: A4; }
+        @media print {
+            html, body { margin: 0; padding: 0; background: white; color: #000; }
+            body::before, body::after { display: none; }
+            header, .step-bar, .form-panel, .bottom-bar, .footer, .notification { display: none !important; }
+            .container { max-width: 100%; padding: 0; margin: 0; }
+            .main-wrapper { grid-template-columns: 1fr !important; gap: 0; }
             .preview-panel {
-                background: white;
-                border: none;
-                padofng: 0;
-                color: #000;
+                background: white; border: none; box-shadow: none; border-radius: 0;
+                max-height: none; overflow: visible;
+                padding: 18mm 16mm !important; margin: 0;
             }
+            .preview-panel::before { display: none; }
         }
 
-        @meofa (max-width: 768px) {
-            header h1 {
-                font-size: 1.8em;
-            }
-            .form-panel {
-                padofng: 20px;
-            }
-            .preview-panel {
-                padofng: 20px;
-            }
-            .signature-section {
-                grid-template-columns: 1fr;
-            }
-            .inline-group {
-                grid-template-columns: 1fr;
-            }
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+            .preview-panel { max-height: none; }
         }
-    
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-</style>
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .form-panel, .preview-panel { padding: 24px; }
+            .inline-group { grid-template-columns: 1fr; }
+            .signature-section { grid-template-columns: 1fr; gap: 32px; }
+            .step-label { display: none; }
+            .step-bar { gap: 0; padding: 0; }
+            .container { padding: 16px; }
+        }
+    </style>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Contract Generator</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usare come app!</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
-<div id="appContent" style="display:none">
-
-    <ofv class="container">
+    <div class="container">
+        <!-- HEADER -->
         <header>
-            <h1>📋 Freelancer Contract Generator Pro</h1>
-            <p>Create professional and legally sound contracts in minutes</p>
+            <div class="brand-tag"><span class="dot"></span> PREMIUM TOOL</div>
+            <h1>Contract <span>Generator</span></h1>
+            <p>Create professional, legally structured contracts in minutes</p>
         </header>
 
-        <ofv class="step-inofcator" style="--progress: 0%;">
-            <ofv class="step active" data-step="1">1</ofv>
-            <ofv class="step" data-step="2">2</ofv>
-            <ofv class="step" data-step="3">3</ofv>
-            <ofv class="step" data-step="4">4</ofv>
-            <ofv class="step" data-step="5">5</ofv>
-            <ofv class="step" data-step="6">6</ofv>
-        </ofv>
+        <!-- STEP BAR -->
+        <nav class="step-bar" id="stepBar" aria-label="Contract completion progress">
+            <div class="step-node active" data-step="1" role="button" tabindex="0" aria-label="Step 1: Type" aria-current="step">
+                <div class="step-circle">1</div>
+                <span class="step-label">Type</span>
+            </div>
+            <div class="step-line" id="line1" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-node" data-step="2" role="button" tabindex="0" aria-label="Step 2: Freelancer">
+                <div class="step-circle">2</div>
+                <span class="step-label">Freelancer</span>
+            </div>
+            <div class="step-line" id="line2" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-node" data-step="3" role="button" tabindex="0" aria-label="Step 3: Client">
+                <div class="step-circle">3</div>
+                <span class="step-label">Client</span>
+            </div>
+            <div class="step-line" id="line3" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-node" data-step="4" role="button" tabindex="0" aria-label="Step 4: Project">
+                <div class="step-circle">4</div>
+                <span class="step-label">Project</span>
+            </div>
+            <div class="step-line" id="line4" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-node" data-step="5" role="button" tabindex="0" aria-label="Step 5: Compensation">
+                <div class="step-circle">5</div>
+                <span class="step-label">Compensation</span>
+            </div>
+            <div class="step-line" id="line5" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-node" data-step="6" role="button" tabindex="0" aria-label="Step 6: Clauses">
+                <div class="step-circle">6</div>
+                <span class="step-label">Clauses</span>
+            </div>
+        </nav>
 
-        <ofv class="main-wrapper">
-            <!-- FORM PANEL -->
-            <ofv class="form-panel">
-                <!-- STEP 1: Contract Type -->
+        <!-- MAIN -->
+        <div class="main-wrapper">
+            <!-- FORM -->
+            <div class="form-panel">
                 <form id="contractForm">
-                    <ofv class="form-section active" data-step="1">
+                    <!-- STEP 1 -->
+                    <div class="form-section active" data-step="1">
                         <h2 class="section-title">Contract Type</h2>
-                        <ofv class="card-grid" id="contractTypeGrid">
-                            <ofv class="card" data-value="prestazione">
-                                <ofv style="font-size: 1.8em; margin-bottom: 10px;">📝</ofv>
+                        <p class="section-subtitle">Select the type of document you want to generate</p>
+                        <div class="card-grid" id="contractTypeGrid" role="radiogroup" aria-label="Contract type">
+                            <div class="card" data-value="nda" role="radio" tabindex="0" aria-checked="false">
+                                <span class="icon" aria-hidden="true">🔒</span>
+                                <strong>Non-Disclosure (NDA)</strong>
+                            </div>
+                            <div class="card" data-value="prestazione" role="radio" tabindex="0" aria-checked="false">
+                                <span class="icon" aria-hidden="true">📝</span>
                                 <strong>Service Agreement</strong>
-                            </ofv>
-                            <ofv class="card" data-value="collaborazione">
-                                <ofv style="font-size: 1.8em; margin-bottom: 10px;">🤝</ofv>
-                                <strong>Collaboration Agreement</strong>
-                            </ofv>
-                            <ofv class="card" data-value="preventivo">
-                                <ofv style="font-size: 1.8em; margin-bottom: 10px;">💼</ofv>
-                                <strong>Quotation/Estimate</strong>
-                            </ofv>
-                            <ofv class="card" data-value="nda">
-                                <ofv style="font-size: 1.8em; margin-bottom: 10px;">🔒</ofv>
-                                <strong>Non-Disclosure Agreement</strong>
-                            </ofv>
-                            <ofv class="card" data-value="licenza">
-                                <ofv style="font-size: 1.8em; margin-bottom: 10px;">⚖️</ofv>
-                                <strong>License Agreement</strong>
-                            </ofv>
-                        </ofv>
-                    </ofv>
+                            </div>
+                            <div class="card" data-value="collaborazione" role="radio" tabindex="0" aria-checked="false">
+                                <span class="icon" aria-hidden="true">🤝</span>
+                                <strong>Freelance Collaboration</strong>
+                            </div>
+                            <div class="card" data-value="locazione" role="radio" tabindex="0" aria-checked="false">
+                                <span class="icon" aria-hidden="true">🏠</span>
+                                <strong>Lease Agreement</strong>
+                            </div>
+                            <div class="card" data-value="compravendita" role="radio" tabindex="0" aria-checked="false">
+                                <span class="icon" aria-hidden="true">📦</span>
+                                <strong>Sale of Goods</strong>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- STEP 2: Freelancer Details -->
-                    <ofv class="form-section" data-step="2">
-                        <h2 class="section-title">Freelancer Information</h2>
-                        <ofv class="form-group">
-                            <label class="required">Full Name</label>
-                            <input type="text" id="freelancerName" placeholder="e.g., John Smith" required>
-                        </ofv>
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label class="required">Tax ID / VAT Number</label>
-                                <input type="text" id="freelancerTaxId" placeholder="e.g. 12-3456789, EIN, or VAT number" required>
-                            </ofv>
-                            <ofv class="form-group">
-                                <label>Specialization</label>
-                                <input type="text" id="freelancerSpecialty" placeholder="e.g. Web Developer">
-                            </ofv>
-                        </ofv>
-                        <ofv class="form-group">
-                            <label class="required">Address</label>
-                            <input type="text" id="freelancerAddress" placeholder="e.g. 123 Main Street, New York, NY 10001" required>
-                        </ofv>
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label class="required">Email</label>
-                                <input type="email" id="freelancerEmail" placeholder="john@example.com" required>
-                            </ofv>
-                            <ofv class="form-group">
-                                <label class="required">Phone</label>
-                                <input type="tel" id="freelancerPhone" placeholder="+1 (555) 123-4567" required>
-                            </ofv>
-                        </ofv>
-                    </ofv>
+                    <!-- STEP 2 -->
+                    <div class="form-section" data-step="2">
+                        <h2 class="section-title">Freelancer Details</h2>
+                        <p class="section-subtitle">Your professional and contact information</p>
+                        <div class="form-group">
+                            <label for="freelancerName" class="required">Full Name</label>
+                            <input type="text" id="freelancerName" placeholder="E.g. John Smith" autocomplete="name" autocapitalize="words" required>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="freelancerTaxId" class="required">Tax ID / EIN</label>
+                                <input type="text" id="freelancerTaxId" placeholder="E.g. 12-3456789 (EIN) or 123-45-6789 (SSN)" autocapitalize="characters" spellcheck="false" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="freelancerSpecialty">Specialty</label>
+                                <input type="text" id="freelancerSpecialty" placeholder="E.g. Web Developer" autocomplete="organization-title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="freelancerAddress" class="required">Address</label>
+                            <input type="text" id="freelancerAddress" placeholder="E.g. 123 Main St, New York, NY 10001" autocomplete="street-address" required>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="freelancerEmail" class="required">Email</label>
+                                <input type="email" id="freelancerEmail" placeholder="john@example.com" autocomplete="email" inputmode="email" spellcheck="false" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="freelancerPhone" class="required">Phone</label>
+                                <input type="tel" id="freelancerPhone" placeholder="+1 555 123 4567" autocomplete="tel" inputmode="tel" required>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- STEP 3: Client Details -->
-                    <ofv class="form-section" data-step="3">
-                        <h2 class="section-title">Client Information</h2>
-                        <ofv class="form-group">
-                            <label class="required">Company Name / Individual Name</label>
-                            <input type="text" id="clientName" placeholder="e.g. ABC Company Inc." required>
-                        </ofv>
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label class="required">Tax ID / VAT Number</label>
-                                <input type="text" id="clientTaxId" placeholder="e.g. 12-3456789, EIN, or VAT number" required>
-                            </ofv>
-                            <ofv class="form-group">
-                                <label>Contact Person</label>
-                                <input type="text" id="clientContact" placeholder="e.g. John Smith">
-                            </ofv>
-                        </ofv>
-                        <ofv class="form-group">
-                            <label class="required">Address</label>
-                            <input type="text" id="clientAddress" placeholder="e.g., 456 Business Ave, New York, NY 10001" required>
-                        </ofv>
-                        <ofv class="form-group">
-                            <label class="required">Email</label>
-                            <input type="email" id="clientEmail" placeholder="info@company.com" required>
-                        </ofv>
-                    </ofv>
+                    <!-- STEP 3 -->
+                    <div class="form-section" data-step="3">
+                        <h2 class="section-title">Client Details</h2>
+                        <p class="section-subtitle">Information about the client or commissioning company</p>
+                        <div class="form-group">
+                            <label for="clientName" class="required">Name / Company Name</label>
+                            <input type="text" id="clientName" placeholder="E.g. Acme Corp LLC" autocomplete="organization" autocapitalize="words" required>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="clientTaxId" class="required">Tax ID / EIN</label>
+                                <input type="text" id="clientTaxId" placeholder="E.g. 98-7654321" autocapitalize="characters" spellcheck="false" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clientContact">Contact Person</label>
+                                <input type="text" id="clientContact" placeholder="E.g. Jane Doe" autocapitalize="words">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clientAddress" class="required">Address</label>
+                            <input type="text" id="clientAddress" placeholder="E.g. 456 Park Ave, Los Angeles, CA 90001" autocomplete="street-address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="clientEmail" class="required">Email</label>
+                            <input type="email" id="clientEmail" placeholder="info@company.com" autocomplete="email" inputmode="email" spellcheck="false" required>
+                        </div>
+                    </div>
 
-                    <!-- STEP 4: Project Details -->
-                    <ofv class="form-section" data-step="4">
+                    <!-- STEP 4 -->
+                    <div class="form-section" data-step="4">
                         <h2 class="section-title">Project Details</h2>
-                        <ofv class="form-group">
-                            <label class="required">Project Title</label>
-                            <input type="text" id="projectTitle" placeholder="e.g. E-commerce Website Development" required>
-                        </ofv>
-                        <ofv class="form-group">
-                            <label class="required">Detailed Description</label>
-                            <textarea id="projectDescription" placeholder="Describe in detail the work to be performed..." required></textarea>
-                        </ofv>
+                        <p class="section-subtitle">Describe the work, deliverables and timeline</p>
 
-                        <ofv class="template-section">
-                            <label style="margin-bottom: 10px; ofsplay: block; color: var(--emerald);">Quick Template Load</label>
-                            <ofv class="template-grid">
+                        <div class="template-section">
+                            <label>Quick Template</label>
+                            <div class="template-grid">
                                 <button type="button" class="template-btn" data-template="developer">Web Developer</button>
                                 <button type="button" class="template-btn" data-template="designer">Graphic Designer</button>
                                 <button type="button" class="template-btn" data-template="social">Social Media Manager</button>
                                 <button type="button" class="template-btn" data-template="copywriter">Copywriter</button>
                                 <button type="button" class="template-btn" data-template="photographer">Photographer</button>
-                                <button type="button" class="template-btn" data-template="marketing">Marketing Consultant</button>
-                            </ofv>
-                        </ofv>
+                                <button type="button" class="template-btn" data-template="marketing">Marketing</button>
+                            </div>
+                        </div>
 
-                        <ofv class="form-group">
-                            <label>Deliverables</label>
-                            <ofv style="ofsplay: grid; grid-template-columns: 1fr auto; gap: 10px;">
-                                <input type="text" id="deliverableInput" placeholder="e.g. 5 responsive web pages">
-                                <button type="button" class="add-btn" onclick="addDeliverable()">+ Add</button>
-                            </ofv>
-                            <ofv class="dynamic-list" id="deliverableList"></ofv>
-                        </ofv>
-
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label class="required">Start Date</label>
+                        <div class="form-group">
+                            <label for="projectTitle" class="required">Project Title</label>
+                            <input type="text" id="projectTitle" placeholder="E.g. E-commerce website development" autocapitalize="sentences" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDescription" class="required">Detailed Description</label>
+                            <textarea id="projectDescription" placeholder="Describe in detail the work to be done, the objectives and expectations..." autocapitalize="sentences" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="deliverableInput">Deliverables</label>
+                            <div class="row-add">
+                                <input type="text" id="deliverableInput" placeholder="E.g. 5 responsive web pages" autocapitalize="sentences">
+                                <button type="button" class="add-btn" onclick="addDeliverable()" aria-label="Add deliverable">+ Add</button>
+                            </div>
+                            <div class="dynamic-list" id="deliverableList" aria-live="polite"></div>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="startDate" class="required">Start Date</label>
                                 <input type="date" id="startDate" required>
-                            </ofv>
-                            <ofv class="form-group">
-                                <label class="required">Delivery Date</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate" class="required">Delivery Date</label>
                                 <input type="date" id="endDate" required>
-                            </ofv>
-                        </ofv>
+                            </div>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="revisions">Included Revisions</label>
+                                <input type="number" id="revisions" value="2" min="0" inputmode="numeric">
+                            </div>
+                            <div class="form-group">
+                                <label for="revisionPrice">Extra Revision Price (€)</label>
+                                <input type="number" id="revisionPrice" placeholder="100" min="0" step="0.01" inputmode="decimal">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Milestones</label>
+                            <div class="milestone-row">
+                                <input type="text" id="milestoneDesc" placeholder="E.g. Design approved" aria-label="Milestone description" autocapitalize="sentences">
+                                <input type="date" id="milestoneDate" aria-label="Milestone date">
+                                <input type="number" id="milestonePercent" placeholder="%" min="0" max="100" inputmode="numeric" aria-label="Milestone percentage">
+                                <button type="button" class="add-btn" onclick="addMilestone()" aria-label="Add milestone">+</button>
+                            </div>
+                            <div class="dynamic-list" id="milestoneList" aria-live="polite"></div>
+                        </div>
+                    </div>
 
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label>Included Revisions</label>
-                                <input type="number" id="revisions" value="2" min="0">
-                            </ofv>
-                            <ofv class="form-group">
-                                <label>Price per Extra Revision ($)</label>
-                                <input type="number" id="revisionPrice" placeholder="100" min="0" step="0.01">
-                            </ofv>
-                        </ofv>
-
-                        <ofv class="form-group">
-                            <label>Project Milestones</label>
-                            <ofv style="ofsplay: grid; grid-template-columns: 1fr 120px 80px auto; gap: 10px;">
-                                <input type="text" id="milestoneDesc" placeholder="e.g. Design Approved">
-                                <input type="date" id="milestoneDate">
-                                <input type="number" id="milestonePercent" placeholder="%" min="0" max="100" step="1">
-                                <button type="button" class="add-btn" onclick="addMilestone()" style="margin: 0;">+ Add</button>
-                            </ofv>
-                            <ofv class="dynamic-list" id="milestoneList"></ofv>
-                        </ofv>
-                    </ofv>
-
-                    <!-- STEP 5: Payment Terms -->
-                    <ofv class="form-section" data-step="5">
-                        <h2 class="section-title">Payment Terms</h2>
-                        <ofv class="form-group">
-                            <label class="required">Payment Type</label>
+                    <!-- STEP 5 -->
+                    <div class="form-section" data-step="5">
+                        <h2 class="section-title">Financial Terms</h2>
+                        <p class="section-subtitle">Define compensation, payment method and timing</p>
+                        <div class="form-group">
+                            <label for="compensationType" class="required">Compensation Type</label>
                             <select id="compensationType" required>
-                                <option value="">-- Select --</option>
+                                <option value="">Select compensation type</option>
                                 <option value="fisso">Fixed Amount</option>
                                 <option value="orario">Hourly Rate</option>
-                                <option value="milestone">Milestone-Based</option>
+                                <option value="milestone">Per Milestone</option>
                             </select>
-                        </ofv>
-
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label class="required">Total Amount ($)</label>
-                                <input type="number" id="totalAmount" placeholder="5000" min="0" step="0.01" required>
-                            </ofv>
-                            <ofv class="form-group">
-                                <label>Hourly Rate ($) - if Hourly</label>
-                                <input type="number" id="hourlyRate" placeholder="50" min="0" step="0.01">
-                            </ofv>
-                        </ofv>
-
-                        <ofv class="form-group">
-                            <label class="required">Payment Method</label>
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="totalAmount" class="required">Total Amount (€)</label>
+                                <input type="number" id="totalAmount" placeholder="5000" min="0" step="0.01" inputmode="decimal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hourlyRate">Hourly Rate (€)</label>
+                                <input type="number" id="hourlyRate" placeholder="50" min="0" step="0.01" inputmode="decimal">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod" class="required">Payment Method</label>
                             <select id="paymentMethod" required>
-                                <option value="">-- Select --</option>
+                                <option value="">Select method</option>
                                 <option value="bonifico">Bank Transfer</option>
                                 <option value="paypal">PayPal</option>
                                 <option value="assegno">Check</option>
                                 <option value="altro">Other</option>
                             </select>
-                        </ofv>
-
-                        <ofv class="form-group">
-                            <label class="required">Payment Schedule</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentTiming" class="required">Payment Schedule</label>
                             <select id="paymentTiming" required>
-                                <option value="">-- Select --</option>
+                                <option value="">Select schedule</option>
                                 <option value="100-0">100% Upfront</option>
-                                <option value="50-50">50% Deposit + 50% Upon Delivery</option>
-                                <option value="30-40-30">30% Deposit + 40% Milestone + 30% Delivery</option>
-                                <option value="consegna">Upon Delivery</option>
+                                <option value="50-50">50% Deposit + 50% on Delivery</option>
+                                <option value="30-40-30">30% + 40% + 30%</option>
+                                <option value="consegna">On Delivery</option>
                                 <option value="personalizzato">Custom</option>
                             </select>
-                        </ofv>
-
-                        <ofv class="inline-group">
-                            <ofv class="form-group">
-                                <label>Late Payment Penalty (%)</label>
-                                <input type="number" id="latePenalty" placeholder="5" min="0" step="0.1">
-                            </ofv>
-                            <ofv class="form-group">
-                                <label>Grace Period (Days)</label>
-                                <input type="number" id="graceDays" placeholder="0" min="0">
-                            </ofv>
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                        </div>
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="latePenalty">Late Payment Penalty (%)</label>
+                                <input type="number" id="latePenalty" placeholder="5" min="0" step="0.1" inputmode="decimal">
+                            </div>
+                            <div class="form-group">
+                                <label for="graceDays">Grace Period (Days)</label>
+                                <input type="number" id="graceDays" placeholder="0" min="0" inputmode="numeric">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="expensesReimbursable">
-                            <label>Reimbursable Extra Expenses</label>
-                        </ofv>
-                        <ofv id="expensesDetail" style="ofsplay: none; margin-bottom: 20px;">
-                            <input type="text" id="expensesDescription" placeholder="e.g., Hosting, software licenses, etc." style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-                    </ofv>
+                            <label for="expensesReimbursable">Reimbursable Extra Expenses</label>
+                        </div>
+                        <div class="clause-detail" id="expensesDetail">
+                            <input type="text" id="expensesDescription" placeholder="E.g. Hosting, software licenses, travel..." autocapitalize="sentences">
+                        </div>
+                    </div>
 
-                    <!-- STEP 6: Contract Clauses -->
-                    <ofv class="form-section" data-step="6">
+                    <!-- STEP 6 -->
+                    <div class="form-section" data-step="6">
                         <h2 class="section-title">Contract Clauses</h2>
-                        <p style="color: var(--text2); margin-bottom: 20px; font-size: 0.9em;">Select the clauses to include in the contract:</p>
+                        <p class="section-subtitle">Customize the clauses to include in the contract</p>
 
-                        <ofv class="checkbox-group">
+                        <div class="checkbox-group">
                             <input type="checkbox" id="ipClause" checked>
-                            <label>Intellectual Property - Transfer to client after payment</label>
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="ipClause">Intellectual Property — Transfer to client upon payment</label>
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="confidenceClause" checked>
-                            <label>Confidentiality Clause</label>
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="confidenceClause">Confidentiality and Non-Disclosure</label>
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="nonCompeteClause" checked>
-                            <label>Non-Compete</label>
-                        </ofv>
-                        <ofv id="nonCompeteDetail" style="ofsplay: none; margin-bottom: 15px;">
-                            <input type="number" id="nonCompeteMonths" placeholder="Duration in months" min="1" style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="nonCompeteClause">Non-Compete</label>
+                        </div>
+                        <div class="clause-detail" id="nonCompeteDetail">
+                            <input type="number" id="nonCompeteMonths" placeholder="Duration in months" min="1" value="12" inputmode="numeric" aria-label="Non-compete duration in months">
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="resolutionClause" checked>
-                            <label>Early Termination with Notice</label>
-                        </ofv>
-                        <ofv id="resolutionDetail" style="ofsplay: none; margin-bottom: 15px;">
-                            <input type="number" id="resolutionDays" placeholder="Days of notice" min="1" value="30" style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="resolutionClause">Early Termination with Notice</label>
+                        </div>
+                        <div class="clause-detail" id="resolutionDetail">
+                            <input type="number" id="resolutionDays" placeholder="Notice period in days" min="1" value="30" inputmode="numeric" aria-label="Notice period in days">
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="forceClause" checked>
-                            <label>Force Majeure Clause</label>
-                        </ofv>
-
-                        <ofv class="checkbox-group">
-                            <input type="checkbox" id="jurisofctionClause" checked>
-                            <label>Jurisdiction</label>
-                        </ofv>
-                        <ofv id="jurisofctionDetail" style="ofsplay: none; margin-bottom: 15px;">
-                            <input type="text" id="jurisofctionCity" placeholder="e.g., New York" style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="forceClause">Force Majeure</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="jurisdictionClause" checked>
+                            <label for="jurisdictionClause">Governing Law and Jurisdiction</label>
+                        </div>
+                        <div class="clause-detail" id="jurisdictionDetail">
+                            <input type="text" id="jurisdictionCity" placeholder="E.g. New York" autocapitalize="words" aria-label="Jurisdiction city">
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="cancellationPenalty">
-                            <label>Project Cancellation Penalty</label>
-                        </ofv>
-                        <ofv id="cancellationDetail" style="ofsplay: none; margin-bottom: 15px;">
-                            <input type="number" id="cancellationPercent" placeholder="%" min="0" max="100" value="30" style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="cancellationPenalty">Project Cancellation Fee</label>
+                        </div>
+                        <div class="clause-detail" id="cancellationDetail">
+                            <input type="number" id="cancellationPercent" placeholder="%" min="0" max="100" value="30" inputmode="numeric" aria-label="Cancellation fee percentage">
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="exclusivityClause">
-                            <label>Exclusivity Clause</label>
-                        </ofv>
-
-                        <ofv class="checkbox-group">
+                            <label for="exclusivityClause">Exclusivity Clause</label>
+                        </div>
+                        <div class="checkbox-group">
                             <input type="checkbox" id="warrantyClause">
-                            <label>Post-Delivery Warranty</label>
-                        </ofv>
-                        <ofv id="warrantyDetail" style="ofsplay: none; margin-bottom: 15px;">
-                            <input type="number" id="warrantyMonths" placeholder="Warranty months" min="1" value="1" style="width: 100%; padofng: 10px; background: var(--bg); border: 1px solid var(--border); border-raofus: 6px;">
-                        </ofv>
-                    </ofv>
+                            <label for="warrantyClause">Post-Delivery Warranty</label>
+                        </div>
+                        <div class="clause-detail" id="warrantyDetail">
+                            <input type="number" id="warrantyMonths" placeholder="Warranty months" min="1" value="1" inputmode="numeric" aria-label="Warranty months">
+                        </div>
+                    </div>
 
-                    <!-- BUTTONS -->
-                    <ofv class="button-group" id="buttonGroup">
-                        <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="ofsplay: none;">← Previous</button>
-                        <ofv style="flex: 1;"></ofv>
+                    <!-- NAV BUTTONS -->
+                    <div class="button-group" id="buttonGroup">
+                        <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display:none;">← Back</button>
+                        <div style="flex:1;"></div>
                         <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
-                    </ofv>
+                    </div>
                 </form>
-            </ofv>
+            </div>
 
-            <!-- PREVIEW PANEL -->
-            <ofv class="preview-panel" id="previewPanel">
-                <h2 id="previewTitle">Contract Preview</h2>
-                <ofv id="previewContent">
-                    <p style="text-align: center; color: #999; padofng: 40px;">
-                        Start filling out the form to see the contract preview...
-                    </p>
-                </ofv>
+            <!-- PREVIEW -->
+            <div class="preview-panel" id="previewPanel">
+                <div id="previewContent">
+                    <div class="placeholder-msg">
+                        <span class="ph-icon">📋</span>
+                        <p>Select the contract type and fill in the fields<br>to see the live preview</p>
+                    </div>
+                </div>
+                <div class="bottom-bar" id="bottomBar" style="display:none;">
+                    <div class="export-group">
+                        <button class="btn-export" onclick="printContract()">🖨 Print</button>
+                        <button class="btn-export" onclick="copyToClipboard()">📋 Copy</button>
+                        <button class="btn-export" onclick="downloadAsText()">↓ Download TXT</button>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat">
+                            <div class="stat-value" id="wordCount">0</div>
+                            <div class="stat-label">Words</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="readingTime">0 min</div>
+                            <div class="stat-label">Reading</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <ofv class="export-section">
-                    <button class="btn-export" onclick="printContract()">🖨️ Print</button>
-                    <button class="btn-export" onclick="copyToClipboard()">📋 Copy Text</button>
-                    <button class="btn-export" onclick="downloadAsText()">💾 Download (TXT)</button>
-                </ofv>
-
-                <ofv class="stats">
-                    <ofv class="stat">
-                        <ofv class="stat-value" id="wordCount">0</ofv>
-                        <ofv class="stat-label">Words</ofv>
-                    </ofv>
-                    <ofv class="stat">
-                        <ofv class="stat-value" id="reaofngTime">0 min</ofv>
-                        <ofv class="stat-label">Reading Time</ofv>
-                    </ofv>
-                </ofv>
-            </ofv>
-        </ofv>
-    </ofv>
+        <div class="footer">
+            This tool generates contract drafts for informational purposes. We recommend consulting a lawyer for final validation.
+        </div>
+    </div>
 
     <script>
-        // STATE MANAGEMENT
         let currentStep = 1;
-        let formDate = {
-            contractType: '',
-            freelancer: {},
-            client: {},
-            project: {
-                deliverables: [],
-                milestones: []
-            },
-            conoftions: {},
-            clauses: {}
-        };
-
+        let formData = { contractType:'', freelancer:{}, client:{}, project:{deliverables:[],milestones:[]}, conditions:{}, clauses:{} };
         let deliverables = [];
         let milestones = [];
 
-        // TEMPLATES
+        const $ = id => document.getElementById(id);
+        const escapeHtml = s => String(s == null ? '' : s)
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         const templates = {
-            developer: {
-                specialty: 'Web Developer',
-                description: 'Full web application development with responsive frontend and robust backend. Includes hosting, maintenance, and technical support for the first 3 months.'
-            },
-            designer: {
-                specialty: 'Graphic Designer',
-                description: 'Complete visual identity creation: logo, brand guidelines, marketing materials. Includes 2 rounds of revisions for each design element.'
-            },
-            social: {
-                specialty: 'Social Media Manager',
-                description: 'Complete social media profile management with content creation, scheduling, engagement, and monthly reporting.'
-            },
-            copywriter: {
-                specialty: 'Copywriter',
-                description: 'Creation of persuasive, SEO-optimized copy for websites, landing pages, email marketing, and promotional materials.'
-            },
-            photographer: {
-                specialty: 'Professional Photographer',
-                description: 'Professional photo session with advanced editing service. Includes unlimited usage for commercial purposes.'
-            },
-            marketing: {
-                specialty: 'Marketing Consultant',
-                description: 'Strategic marketing consultancy with competitive analysis, detailed action plan, and implementation support.'
-            }
+            developer: { specialty:'Web Developer', description:'Development of a complete web application with responsive frontend and robust backend. Includes hosting, maintenance and technical support for the first 3 months.' },
+            designer: { specialty:'Graphic Designer', description:'Creation of a complete visual identity: logo, brand guidelines, marketing materials. Includes 2 rounds of revisions for each design element.' },
+            social: { specialty:'Social Media Manager', description:'Full management of social media profiles with original content creation, editorial planning, community management and detailed monthly reporting.' },
+            copywriter: { specialty:'Copywriter', description:'Creation of persuasive, SEO-optimized copy for websites, landing pages, email marketing and digital and print promotional materials.' },
+            photographer: { specialty:'Professional Photographer', description:'Professional photo session with advanced editing and post-production. Includes unlimited use of images for commercial purposes.' },
+            marketing: { specialty:'Marketing Consultant', description:'Strategic marketing consulting with competitive analysis, strategy definition, detailed action plan and implementation support.' }
         };
 
-        // STEP NAVIGATION
         function nextStep() {
-            if (!validateStep(currentStep)) {
-                showNotification('Please fill in all required fields', 'error');
-                return;
+            if (!validateStep(currentStep)) { showNotification('Please fill in all required fields','error'); return; }
+            saveStepData();
+            if (currentStep < 6) { currentStep++; updateUI(); }
+            else {
+                showNotification('Contract ready — opening print…','success');
+                const p = document.getElementById('previewPanel');
+                if (p) p.scrollIntoView({behavior:'smooth', block:'start'});
+                setTimeout(() => printContract(), 700);
             }
-            saveStepDate();
-            if (currentStep < 6) {
-                currentStep++;
+        }
+        function previousStep() { saveStepData(); if (currentStep > 1) { currentStep--; updateUI(); } }
+        function goToStep(step) {
+            if (step === currentStep) return;
+            if (step > currentStep) {
+                for (let s = currentStep; s < step; s++) {
+                    if (!validateStep(s)) { showNotification('Please fill in all required fields','error'); return; }
+                    saveStepData();
+                    currentStep = s + 1;
+                }
                 updateUI();
             } else {
-                showNotification('Contract completed! Download or print it.', 'success');
+                saveStepData(); currentStep = step; updateUI();
             }
-        }
-
-        function previousStep() {
-            saveStepDate();
-            if (currentStep > 1) {
-                currentStep--;
-                updateUI();
-            }
-        }
-
-        function goToStep(step) {
-            if (!validateStep(currentStep)) return;
-            saveStepDate();
-            currentStep = step;
-            updateUI();
         }
 
         function updateUI() {
-            // Update form sections
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-                if (parseInt(section.dataset.step) === currentStep) {
-                    section.classList.add('active');
-                }
+            document.querySelectorAll('.form-section').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.step) === currentStep);
             });
-
-            // Update step inofcator
-            const progress = (currentStep / 6) * 100;
-            document.querySelector('.step-inofcator').style.setProperty('--progress', progress + '%');
-
-            document.querySelectorAll('.step').forEach(step => {
-                const stepNum = parseInt(step.dataset.step);
-                step.classList.remove('active', 'completed');
-                if (stepNum === currentStep) {
-                    step.classList.add('active');
-                } else if (stepNum < currentStep) {
-                    step.classList.add('completed');
-                }
-                step.addEventListener('click', () => goToStep(stepNum));
+            document.querySelectorAll('.step-node').forEach(n => {
+                const sn = parseInt(n.dataset.step);
+                n.classList.remove('active','completed');
+                if (sn === currentStep) { n.classList.add('active'); n.setAttribute('aria-current','step'); }
+                else { n.removeAttribute('aria-current'); if (sn < currentStep) n.classList.add('completed'); }
+                const circle = n.querySelector('.step-circle');
+                if (circle) circle.textContent = n.classList.contains('completed') ? '' : sn;
             });
-
-            // Update buttons
-            document.getElementById('prevBtn').style.ofsplay = currentStep === 1 ? 'none' : 'block';
-            document.getElementById('nextBtn').textContent = currentStep === 6 ? 'Complete ✓' : 'Next →';
-
-            // Update preview
+            for (let i = 1; i <= 5; i++) {
+                const line = $('line' + i);
+                if (line) line.classList.toggle('filled', i < currentStep);
+            }
+            $('prevBtn').style.display = currentStep === 1 ? 'none' : 'inline-flex';
+            $('nextBtn').textContent = currentStep === 6 ? 'Complete ✓' : 'Next →';
             updatePreview();
-
-            // Scroll to top
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            window.scrollTo({top: 0, behavior:'smooth'});
         }
 
-        // VALIDATION
         function validateStep(step) {
-            const requiredFields = document.querySelectorAll(`[data-step="${step}"] input[required], [data-step="${step}"] select[required], [data-step="${step}"] textarea[required]`);
-            let isValid = true;
-
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('error');
-                    isValid = false;
-                } else {
-                    field.classList.remove('error');
+            if (step === 1) {
+                if (!formData.contractType) {
+                    document.querySelectorAll('#contractTypeGrid .card').forEach(c => c.classList.add('error'));
+                    return false;
                 }
+                return true;
+            }
+            const section = document.querySelector(`.form-section[data-step="${step}"]`);
+            if (!section) return true;
+            const fields = section.querySelectorAll('[required]');
+            let valid = true, firstInvalid = null;
+            fields.forEach(f => {
+                const val = f.value.trim();
+                let bad = !val;
+                if (!bad && f.type === 'email' && !EMAIL_RE.test(val)) bad = true;
+                if (bad) { f.classList.add('error'); valid = false; if (!firstInvalid) firstInvalid = f; }
+                else f.classList.remove('error');
             });
-
-            if (step === 1 && !formDate.contractType) {
-                isValid = false;
+            if (step === 4 && valid) {
+                const s = $('startDate').value, e = $('endDate').value;
+                if (s && e && new Date(e) < new Date(s)) {
+                    $('endDate').classList.add('error');
+                    showNotification('Delivery date must be after the start date','error');
+                    return false;
+                }
             }
-
-            return isValid;
+            if (firstInvalid) firstInvalid.focus({preventScroll:true});
+            return valid;
         }
 
-        // FORM DATA MANAGEMENT
-        function saveStepDate() {
-            const step = currentStep;
-
-            if (step === 2) {
-                formDate.freelancer = {
-                    name: document.getElementById('freelancerName').value,
-                    taxId: document.getElementById('freelancerTaxId').value,
-                    address: document.getElementById('freelancerAddress').value,
-                    email: document.getElementById('freelancerEmail').value,
-                    phone: document.getElementById('freelancerPhone').value,
-                    specialty: document.getElementById('freelancerSpecialty').value
-                };
-            } else if (step === 3) {
-                formDate.client = {
-                    name: document.getElementById('clientName').value,
-                    taxId: document.getElementById('clientTaxId').value,
-                    address: document.getElementById('clientAddress').value,
-                    email: document.getElementById('clientEmail').value,
-                    contact: document.getElementById('clientContact').value
-                };
-            } else if (step === 4) {
-                formDate.project = {
-                    title: document.getElementById('projectTitle').value,
-                    description: document.getElementById('projectDescription').value,
-                    deliverables: deliverables,
-                    startDate: document.getElementById('startDate').value,
-                    endDate: document.getElementById('endDate').value,
-                    revisions: document.getElementById('revisions').value,
-                    revisionPrice: document.getElementById('revisionPrice').value,
-                    milestones: milestones
-                };
-            } else if (step === 5) {
-                formDate.conoftions = {
-                    compensationType: document.getElementById('compensationType').value,
-                    totalAmount: document.getElementById('totalAmount').value,
-                    hourlyRate: document.getElementById('hourlyRate').value,
-                    paymentMethod: document.getElementById('paymentMethod').value,
-                    paymentTiming: document.getElementById('paymentTiming').value,
-                    latePenalty: document.getElementById('latePenalty').value,
-                    graceDays: document.getElementById('graceDays').value,
-                    expensesReimbursable: document.getElementById('expensesReimbursable').checked,
-                    expensesDescription: document.getElementById('expensesDescription').value
-                };
-            } else if (step === 6) {
-                formDate.clauses = {
-                    ipClause: document.getElementById('ipClause').checked,
-                    confidenceClause: document.getElementById('confidenceClause').checked,
-                    nonCompeteClause: document.getElementById('nonCompeteClause').checked,
-                    nonCompeteMonths: document.getElementById('nonCompeteMonths').value,
-                    resolutionClause: document.getElementById('resolutionClause').checked,
-                    resolutionDays: document.getElementById('resolutionDays').value,
-                    forceClause: document.getElementById('forceClause').checked,
-                    jurisofctionClause: document.getElementById('jurisofctionClause').checked,
-                    jurisofctionCity: document.getElementById('jurisofctionCity').value,
-                    cancellationPenalty: document.getElementById('cancellationPenalty').checked,
-                    cancellationPercent: document.getElementById('cancellationPercent').value,
-                    exclusivityClause: document.getElementById('exclusivityClause').checked,
-                    warrantyClause: document.getElementById('warrantyClause').checked,
-                    warrantyMonths: document.getElementById('warrantyMonths').value
-                };
-            }
+        function saveStepData() {
+            if (currentStep === 2) formData.freelancer = { name:$('freelancerName').value, taxId:$('freelancerTaxId').value, address:$('freelancerAddress').value, email:$('freelancerEmail').value, phone:$('freelancerPhone').value, specialty:$('freelancerSpecialty').value };
+            else if (currentStep === 3) formData.client = { name:$('clientName').value, taxId:$('clientTaxId').value, address:$('clientAddress').value, email:$('clientEmail').value, contact:$('clientContact').value };
+            else if (currentStep === 4) formData.project = { title:$('projectTitle').value, description:$('projectDescription').value, deliverables, startDate:$('startDate').value, endDate:$('endDate').value, revisions:$('revisions').value, revisionPrice:$('revisionPrice').value, milestones };
+            else if (currentStep === 5) formData.conditions = { compensationType:$('compensationType').value, totalAmount:$('totalAmount').value, hourlyRate:$('hourlyRate').value, paymentMethod:$('paymentMethod').value, paymentTiming:$('paymentTiming').value, latePenalty:$('latePenalty').value, graceDays:$('graceDays').value, expensesReimbursable:$('expensesReimbursable').checked, expensesDescription:$('expensesDescription').value };
+            else if (currentStep === 6) formData.clauses = { ipClause:$('ipClause').checked, confidenceClause:$('confidenceClause').checked, nonCompeteClause:$('nonCompeteClause').checked, nonCompeteMonths:$('nonCompeteMonths').value, resolutionClause:$('resolutionClause').checked, resolutionDays:$('resolutionDays').value, forceClause:$('forceClause').checked, jurisdictionClause:$('jurisdictionClause').checked, jurisdictionCity:$('jurisdictionCity').value, cancellationPenalty:$('cancellationPenalty').checked, cancellationPercent:$('cancellationPercent').value, exclusivityClause:$('exclusivityClause').checked, warrantyClause:$('warrantyClause').checked, warrantyMonths:$('warrantyMonths').value };
         }
 
-        // DELIVERABLES MANAGEMENT
         function addDeliverable() {
-            const input = document.getElementById('deliverableInput');
-            if (!input.value.trim()) {
-                showNotification('Please enter a deliverable', 'error');
-                return;
-            }
-            deliverables.push(input.value.trim());
-            input.value = '';
-            renderDeliverables();
+            const inp = $('deliverableInput');
+            const v = inp.value.trim();
+            if (!v) { showNotification('Enter a deliverable','error'); return; }
+            deliverables.push(v); inp.value = ''; inp.focus(); renderDeliverables();
         }
-
-        function removeDeliverable(index) {
-            deliverables.splice(index, 1);
-            renderDeliverables();
-        }
-
+        function removeDeliverable(i) { deliverables.splice(i,1); renderDeliverables(); updatePreview(); }
         function renderDeliverables() {
-            const list = document.getElementById('deliverableList');
-            list.innerHTML = deliverables.map((d, i) => `
-                <ofv class="dynamic-item">
-                    <span>${d}</span>
-                    <button type="button" class="remove-btn" onclick="removeDeliverable(${i})">Remove</button>
-                </ofv>
-            `).join('');
+            $('deliverableList').innerHTML = deliverables.map((d,i) => `<div class="dynamic-item"><span>${escapeHtml(d)}</span><button type="button" class="remove-btn" onclick="removeDeliverable(${i})" aria-label="Remove deliverable">Remove</button></div>`).join('');
+            updatePreview();
         }
 
-        // MILESTONES MANAGEMENT
         function addMilestone() {
-            const desc = document.getElementById('milestoneDesc').value.trim();
-            const date = document.getElementById('milestoneDate').value;
-            const percent = parseInt(document.getElementById('milestonePercent').value);
-
-            if (!desc || !date || !percent) {
-                showNotification('Please complete all milestone fields', 'error');
-                return;
-            }
-
-            const total = milestones.reduce((sum, m) => sum + m.percent, 0) + percent;
-            if (total > 100) {
-                showNotification('The sum of percentages cannot exceed 100%', 'error');
-                return;
-            }
-
-            milestones.push({ desc, date, percent });
-            document.getElementById('milestoneDesc').value = '';
-            document.getElementById('milestoneDate').value = '';
-            document.getElementById('milestonePercent').value = '';
+            const desc=$('milestoneDesc').value.trim(), date=$('milestoneDate').value, pct=parseInt($('milestonePercent').value, 10);
+            if (!desc||!date||!pct) { showNotification('Please fill in all milestone fields','error'); return; }
+            if (milestones.reduce((s,m)=>s+m.percent,0)+pct>100) { showNotification('Percentages cannot exceed 100%','error'); return; }
+            milestones.push({desc,date,percent:pct});
+            $('milestoneDesc').value=''; $('milestoneDate').value=''; $('milestonePercent').value='';
+            $('milestoneDesc').focus();
             renderMilestones();
         }
-
-        function removeMilestone(index) {
-            milestones.splice(index, 1);
-            renderMilestones();
-        }
-
+        function removeMilestone(i) { milestones.splice(i,1); renderMilestones(); updatePreview(); }
         function renderMilestones() {
-            const list = document.getElementById('milestoneList');
-            const total = milestones.reduce((sum, m) => sum + m.percent, 0);
-            list.innerHTML = milestones.map((m, i) => `
-                <ofv class="dynamic-item">
-                    <span>${m.desc} (${new Date(m.date).toLocaleDateString('en-US')} - ${m.percent}%)</span>
-                    <button type="button" class="remove-btn" onclick="removeMilestone(${i})">Remove</button>
-                </ofv>
-            `).join('');
-            if (milestones.length > 0) {
-                list.innerHTML += `<ofv style="padofng: 10px; background: var(--bg3); border-raofus: 4px; margin-top: 10px; text-align: center; color: var(--emerald);">Total: ${total}%</ofv>`;
-            }
+            const list=$('milestoneList'), total=milestones.reduce((s,m)=>s+m.percent,0);
+            list.innerHTML = milestones.map((m,i) => `<div class="dynamic-item"><span>${escapeHtml(m.desc)} — ${new Date(m.date).toLocaleDateString('en-US')} — ${m.percent}%</span><button type="button" class="remove-btn" onclick="removeMilestone(${i})" aria-label="Remove milestone">Remove</button></div>`).join('');
+            if (milestones.length) list.innerHTML += `<div class="milestone-total">Total: ${total}%</div>`;
+            updatePreview();
         }
 
-        // CONTRACT TYPE SELECTION
+        // INIT
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('#contractTypeGrid .card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('#contractTypeGrid .card').forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-                    formDate.contractType = this.dataset.value;
+            // Card selection (Contract type)
+            document.querySelectorAll('#contractTypeGrid .card').forEach(c => {
+                const select = function() {
+                    document.querySelectorAll('#contractTypeGrid .card').forEach(x => { x.classList.remove('selected','error'); x.setAttribute('aria-checked','false'); });
+                    this.classList.add('selected'); this.setAttribute('aria-checked','true');
+                    formData.contractType = this.dataset.value;
+                    updatePreview();
+                };
+                c.addEventListener('click', select);
+                c.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select.call(this); }
                 });
             });
 
-            // Template buttons
-            document.querySelectorAll('.template-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const template = templates[this.dataset.template];
-                    document.getElementById('freelancerSpecialty').value = template.specialty;
-                    document.getElementById('projectDescription').value = template.description;
-                    showNotification('Template loaded successfully!', 'success');
+            // Step navigation (mouse + keyboard)
+            document.querySelectorAll('.step-node').forEach(n => {
+                const go = () => goToStep(parseInt(n.dataset.step, 10));
+                n.addEventListener('click', go);
+                n.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
                 });
             });
 
-            // Checkbox conoftional fields
-            document.getElementById('expensesReimbursable').addEventListener('change', function() {
-                document.getElementById('expensesDetail').style.ofsplay = this.checked ? 'block' : 'none';
+            // Templates
+            document.querySelectorAll('.template-btn').forEach(b => b.addEventListener('click', function() {
+                const t = templates[this.dataset.template];
+                $('freelancerSpecialty').value = t.specialty;
+                $('projectDescription').value = t.description;
+                $('projectDescription').classList.remove('error');
+                document.querySelectorAll('.template-btn').forEach(x => x.classList.remove('used'));
+                this.classList.add('used');
+                showNotification('Template loaded','success');
+                updatePreview();
+            }));
+
+            // Clause toggles → show detail
+            const toggles = {expensesReimbursable:'expensesDetail',nonCompeteClause:'nonCompeteDetail',resolutionClause:'resolutionDetail',jurisdictionClause:'jurisdictionDetail',cancellationPenalty:'cancellationDetail',warrantyClause:'warrantyDetail'};
+            Object.entries(toggles).forEach(([cbId, detailId]) => {
+                const cb = $(cbId), detail = $(detailId);
+                const sync = () => { detail.style.display = cb.checked ? 'block' : 'none'; };
+                cb.addEventListener('change', sync);
+                sync();
             });
 
-            document.getElementById('nonCompeteClause').addEventListener('change', function() {
-                document.getElementById('nonCompeteDetail').style.ofsplay = this.checked ? 'block' : 'none';
-            });
-
-            document.getElementById('resolutionClause').addEventListener('change', function() {
-                document.getElementById('resolutionDetail').style.ofsplay = this.checked ? 'block' : 'none';
-            });
-
-            document.getElementById('jurisofctionClause').addEventListener('change', function() {
-                document.getElementById('jurisofctionDetail').style.ofsplay = this.checked ? 'block' : 'none';
-            });
-
-            document.getElementById('cancellationPenalty').addEventListener('change', function() {
-                document.getElementById('cancellationDetail').style.ofsplay = this.checked ? 'block' : 'none';
-            });
-
-            document.getElementById('warrantyClause').addEventListener('change', function() {
-                document.getElementById('warrantyDetail').style.ofsplay = this.checked ? 'block' : 'none';
-            });
-
-            // Input validation
-            document.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-                field.addEventListener('change', function() {
-                    if (this.value.trim()) {
-                        this.classList.remove('error');
-                    }
-                });
+            // Live preview on input
+            const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+            const debouncedSync = debounce(() => { saveStepData(); updatePreview(); }, 250);
+            document.querySelectorAll('input, textarea, select').forEach(f => {
+                f.addEventListener('input', () => { f.classList.remove('error'); debouncedSync(); });
+                f.addEventListener('change', debouncedSync);
             });
 
             updateUI();
         });
 
-        // PREVIEW GENERATION
-        function updatePreview() {
-            const contractType = formDate.contractType;
-            const freelancer = formDate.freelancer;
-            const client = formDate.client;
-            const project = formDate.project;
-            const conoftions = formDate.conoftions;
-            const clauses = formDate.clauses;
+        // ===== Contract engine: 5 real types with their own clauses =====
+        const CT = {
+          prestazione: {
+            title:"SERVICE AGREEMENT",
+            roleA:"the Provider", roleB:"the Client", sigA:"The Provider", sigB:"The Client",
+            whereas:x=>`The Provider carries out independent professional activity${x.f.specialty?' in '+x.e(x.f.specialty):''} and the Client wishes to engage the Provider for the project <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            core:x=>{const a=[];
+              a.push({t:`Scope of Services`,c:`The Provider agrees to perform the following services: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Deliverables:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
+              a.push({t:`Manner of Performance and Independence`,c:`The Provider performs the services in full organizational and technical autonomy, without any relationship of subordination, using its own means and without fixed hours, coordinating with the Client only as to the required results.`});
+              if(x.p.startDate||x.p.endDate) a.push({t:`Timeline`,c:`Start: ${x.fmtDate(x.p.startDate)}<br>Delivery: ${x.fmtDate(x.p.endDate)}${x.p.revisions?'<br>Included revisions: '+x.e(x.p.revisions):''}${x.p.revisionPrice?'<br>Extra revision cost: '+x.fmtEur(x.p.revisionPrice):''}`});
+              if(x.milestones.length) a.push({t:`Milestones`,c:`<ul>${x.milestones.map(m=>`<li>${x.e(m.desc)} — ${x.fmtDate(m.date)} — ${m.percent}%</li>`).join('')}</ul>`});
+              if(x.co.totalAmount) a.push({t:`Compensation & Payment`,c:x.payStr});
+              a.push({t:`Ownership of Deliverables`,c:`Unless otherwise agreed in writing, the deliverables shall become the property of the Client upon full payment of the fee; until then they remain the property of the Provider.`});
+              return a;}
+          },
+          collaborazione: {
+            title:"FREELANCE COLLABORATION AGREEMENT",
+            roleA:"the Freelancer", roleB:"the Client", sigA:"The Freelancer", sigB:"The Client",
+            whereas:x=>`The Freelancer is an independent professional operating under its own business registration${x.f.specialty?' in '+x.e(x.f.specialty):''} and the Client wishes to engage the Freelancer on an ongoing, coordinated basis for <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            core:x=>{const a=[];
+              a.push({t:`Purpose of the Collaboration`,c:`The Freelancer will provide the following activities: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Planned activities:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
+              a.push({t:`Independent Nature of the Relationship`,c:`This agreement does not create any employment relationship. The Freelancer acts independently, under its own business registration, freely managing time, place and manner of performance, and remains solely responsible for its own taxes and social contributions.`});
+              if(x.p.startDate||x.p.endDate) a.push({t:`Term and Renewal`,c:`Start: ${x.fmtDate(x.p.startDate)}<br>End: ${x.fmtDate(x.p.endDate)}<br>Upon expiry the agreement may be renewed by written agreement of the parties.`});
+              if(x.co.totalAmount) a.push({t:`Fee`,c:x.payStr});
+              a.push({t:`Tools and Organization`,c:`The Freelancer uses its own tools, equipment and organization. Any resources provided by the Client remain the Client's property and shall be returned at the end of the relationship.`});
+              return a;}
+          },
+          nda: {
+            title:"NON-DISCLOSURE AGREEMENT (NDA)",
+            roleA:"the Disclosing Party", roleB:"the Receiving Party", sigA:"The Disclosing Party", sigB:"The Receiving Party",
+            whereas:x=>`The parties wish to start or continue a relationship in connection with <strong>${x.e(x.p.title)||'—'}</strong> and, for that purpose, the Disclosing Party may share confidential information with the Receiving Party that requires protection.`,
+            core:x=>{const a=[];
+              a.push({t:`Definition of Confidential Information`,c:`"Confidential Information" means any information, in any form, disclosed by the Disclosing Party — including technical, commercial, financial data, know-how, plans and personal data${x.p.description?' relating to: '+x.e(x.p.description):''}.`});
+              a.push({t:`Confidentiality Obligations`,c:`The Receiving Party agrees to keep the Confidential Information secret, to use it solely for the purposes stated above, and not to disclose it to third parties without the prior written consent of the Disclosing Party, applying protective measures no less than those used for its own confidential information.`});
+              a.push({t:`Exclusions`,c:`Information is not confidential if it: (a) is in the public domain through no fault of the Receiving Party; (b) was already lawfully known; (c) is independently developed; or (d) must be disclosed by law or order of an authority, with notice to the Disclosing Party where possible.`});
+              a.push({t:`Duration of the Obligations`,c:`The confidentiality obligations remain in force ${x.p.endDate?'until '+x.fmtDate(x.p.endDate):'for 5 (five) years'} from disclosure of the Confidential Information, and survive termination of the relationship between the parties.`});
+              a.push({t:`Return and Destruction`,c:`At the Disclosing Party's request, the Receiving Party will return or destroy all media containing Confidential Information, including copies.`});
+              a.push({t:`No License`,c:`This agreement transfers no intellectual property right and grants no license over the Confidential Information, which remains owned by the Disclosing Party.`});
+              return a;}
+          },
+          locazione: {
+            title:"LEASE AGREEMENT",
+            roleA:"the Landlord", roleB:"the Tenant", sigA:"The Landlord", sigB:"The Tenant",
+            whereas:x=>`The Landlord has the availability of the property located at <strong>${x.e(x.p.title)||'—'}</strong> and wishes to lease it to the Tenant, who accepts.`,
+            core:x=>{const a=[];
+              a.push({t:`Premises`,c:`The Landlord leases to the Tenant the property located at ${x.e(x.p.title)||'—'}${x.p.description?`, described as: ${x.e(x.p.description)}`:''}. The property is delivered in its current condition of fact and law.`});
+              a.push({t:`Term`,c:`The lease runs from ${x.fmtDate(x.p.startDate)} to ${x.fmtDate(x.p.endDate)}, renewable in accordance with applicable law unless terminated within the required notice period.`});
+              a.push({t:`Rent and Payment`,c:`The rent is <strong>${x.co.totalAmount?x.fmtEur(x.co.totalAmount):'—'}</strong> per month${x.co.paymentMethod?', payable by '+({bonifico:'bank transfer',paypal:'PayPal',assegno:'check',altro:'traceable means'}[x.co.paymentMethod]||'traceable means'):''}, in advance by the agreed day of each month.`});
+              a.push({t:`Security Deposit`,c:`As security for the contractual obligations the Tenant pays a security deposit, not applied to rent, refunded at the end of the lease after inspection of the property.`});
+              a.push({t:`Charges and Utilities`,c:`Ordinary charges and utilities are borne by the Tenant; extraordinary expenses remain with the Landlord, unless otherwise agreed in writing.`});
+              a.push({t:`Use of the Property`,c:`The Tenant shall use the property with due care, without changing its intended use. Subletting or assignment of the lease without the Landlord's written consent is prohibited.`});
+              a.push({t:`Maintenance and Return`,c:`Ordinary maintenance is borne by the Tenant, extraordinary maintenance by the Landlord. At the end the Tenant shall return the property in the condition received, except for normal wear and tear.`});
+              return a;}
+          },
+          compravendita: {
+            title:"SALE OF GOODS AGREEMENT",
+            roleA:"the Seller", roleB:"the Buyer", sigA:"The Seller", sigB:"The Buyer",
+            whereas:x=>`The Seller declares to be the lawful owner of the goods covered by this agreement and wishes to sell them to the Buyer, who wishes to purchase them: <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            core:x=>{const a=[];
+              a.push({t:`Goods`,c:`The Seller sells and transfers to the Buyer the following goods: ${x.e(x.p.title)||'—'}${x.p.description?` — ${x.e(x.p.description)}`:''}.`});
+              a.push({t:`Price and Payment`,c:`The sale price is <strong>${x.co.totalAmount?x.fmtEur(x.co.totalAmount):'—'}</strong>${x.co.paymentMethod?', paid by '+({bonifico:'bank transfer',paypal:'PayPal',assegno:'check',altro:'agreed means'}[x.co.paymentMethod]||'agreed means'):''}${x.co.paymentTiming?' ('+({'100-0':'100% upfront','50-50':'50% deposit + 50% on delivery','30-40-30':'30% + 40% + 30%',consegna:'on delivery',personalizzato:'per agreement'}[x.co.paymentTiming]||'')+')':''}.`});
+              if(x.p.startDate||x.p.endDate) a.push({t:`Delivery`,c:`The goods shall be delivered by ${x.fmtDate(x.p.endDate||x.p.startDate)} at the place agreed by the parties.`});
+              a.push({t:`Transfer of Title and Risk`,c:`Title passes to the Buyer upon full payment of the price. Risk of loss or damage passes to the Buyer upon delivery of the goods.`});
+              a.push({t:`Warranty Against Defects`,c:`The Seller warrants that the goods are free from defects that make them unfit for use or appreciably reduce their value. The Buyer must report any defects within the terms provided by applicable law.`});
+              a.push({t:`Condition of the Goods`,c:`The Buyer declares to have examined the goods and to accept them in their current condition, deeming them fit for the intended use.`});
+              return a;}
+          }
+        };
 
-            if (!contractType || !freelancer.name || !client.name) {
-                document.getElementById('previewContent').innerHTML = '<p style="text-align: center; color: #999; padofng: 40px;">Fill in the basic information to see the preview...</p>';
+        // PREVIEW
+        function updatePreview() {
+            const {contractType, freelancer:f, client:c, project:p, conditions:co, clauses:cl} = formData;
+            const previewContent = $('previewContent');
+            const bottomBar = $('bottomBar');
+            if (!contractType || !f.name || !c.name) {
+                previewContent.innerHTML = '<div class="placeholder-msg"><span class="ph-icon" aria-hidden="true">📋</span><p>Select the contract type and fill in the fields<br>to see the live preview</p></div>';
+                bottomBar.style.display = 'none';
                 return;
             }
+            bottomBar.style.display = 'flex';
+            const tpl = CT[contractType] || CT.prestazione;
+            const today = new Date().toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+            const fmtDate = d => d ? new Date(d).toLocaleDateString('en-US') : 'TBD';
+            const fmtEur = v => '€ ' + parseFloat(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+            const compLabel = {fisso:'Fixed Amount', orario:'Hourly Rate', milestone:'Per Milestone'};
+            const payLabel = {bonifico:'Bank Transfer', paypal:'PayPal', assegno:'Check', altro:'Other'};
+            const timingLabel = {'100-0':'100% upfront','50-50':'50% deposit + 50% on delivery','30-40-30':'30% + 40% + 30%',consegna:'On delivery',personalizzato:'Custom'};
+            const e = escapeHtml;
 
-            const contractTypeLabel = {
-                prestazione: 'SERVICE AGREEMENT',
-                collaborazione: 'PROFESSIONAL COLLABORATION AGREEMENT',
-                preventivo: 'QUOTATION / COMMERCIAL PROPOSAL',
-                nda: 'NON-DISCLOSURE AGREEMENT (NDA)',
-                licenza: 'LICENSE AGREEMENT'
-            }[contractType];
-
-            let html = `<h2 style="text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px;">${contractTypeLabel}</h2>`;
-
-            html += `
-                <ofv class="preview-section">
-                    <h3>BETWEEN</h3>
-                    <p><strong>${freelancer.name}</strong>, residing at ${freelancer.address}, Tax ID/VAT ${freelancer.taxId}, hereinafter referred to as the "Freelancer"</p>
-                </ofv>
-
-                <ofv class="preview-section">
-                    <h3>AND</h3>
-                    <p><strong>${client.name}</strong>${client.contact ? `, represented by ${client.contact}` : ''}, Tax ID/VAT ${client.taxId}, residing at ${client.address}, hereinafter referred to as the "Client"</p>
-                </ofv>
-
-                <ofv class="preview-section">
-                    <h3>WHEREAS</h3>
-                    <p>The Freelancer possesses professional expertise in ${freelancer.specialty || 'various fields'} and the Client wishes to engage such expertise for the following project:</p>
-                    <p><strong>Project:</strong> ${project.title || 'Not specified'}</p>
-                    <p><strong>Description:</strong> ${project.description || 'Not specified'}</p>
-                </ofv>
-            `;
-
-            // Articles
-            let articleNum = 1;
-
-            html += `
-                <ofv class="article">
-                    <ofv class="article-title">Art. ${articleNum++} - Subject of the Contract</ofv>
-                    <ofv class="article-content">
-                        The Freelancer agrees to perform the following activities:
-                        ${project.description || 'Not specified'}
-                        <br><br>
-                        ${deliverables.length > 0 ? '<strong>Deliverables:</strong><ul>' + deliverables.map(d => `<li>${d}</li>`).join('') + '</ul>' : ''}
-                    </ofv>
-                </ofv>
-            `;
-
-            if (project.startDate || project.endDate) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Timeline</ofv>
-                        <ofv class="article-content">
-                            Start date: ${project.startDate ? new Date(project.startDate).toLocaleDateString('en-US') : 'To be defined'}<br>
-                            Delivery date: ${project.endDate ? new Date(project.endDate).toLocaleDateString('en-US') : 'To be defined'}
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (conoftions.totalAmount) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Compensation and Payment Terms</ofv>
-                        <ofv class="article-content">
-                            Total amount: $ ${parseFloat(conoftions.totalAmount).toFixed(2)}<br>
-                            Compensation type: ${conoftions.compensationType || 'Not specified'}<br>
-                            Payment method: ${conoftions.paymentMethod || 'Not specified'}<br>
-                            Payment schedule: ${conoftions.paymentTiming === '100-0' ? '100% upfront' : conoftions.paymentTiming === '50-50' ? '50% deposit + 50% upon delivery' : conoftions.paymentTiming === '30-40-30' ? '30% + 40% + 30%' : 'Upon delivery'}
-                            ${conoftions.graceDays ? `<br>Grace period: ${conoftions.graceDays} days` : ''}
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (milestones.length > 0) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Milestones</ofv>
-                        <ofv class="article-content">
-                            <ul>
-                                ${milestones.map(m => `<li>${m.desc} (${new Date(m.date).toLocaleDateString('en-US')} - ${m.percent}%)</li>`).join('')}
-                            </ul>
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.ipClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Intellectual Property</ofv>
-                        <ofv class="article-content">
-                            All works, creations, and materials developed during the course of this contract shall become the property of the Client upon full payment of the agreed amount. The Freelancer hereby assigns all copyrights, patents, and intellectual property rights related to the work performed.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.confidenceClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Confidentiality</ofv>
-                        <ofv class="article-content">
-                            Both parties agree to maintain the utmost confidentiality regarding confidential information exchanged during the execution of this contract. Such information shall not be disclosed to third parties without the prior written consent of the other party, except as required by law.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.nonCompeteClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Non-Compete</ofv>
-                        <ofv class="article-content">
-                            During the term of this contract and for the subsequent ${clauses.nonCompeteMonths || '12'} months, the Freelancer agrees not to provide similar services to competing clients directly or indirectly related to the project subject of this contract.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.resolutionClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Early Termination</ofv>
-                        <ofv class="article-content">
-                            Either party may terminate this contract early by providing ${clauses.resolutionDays || '30'} days' written notice. In the event of termination by the Client before delivery, the Freelancer shall be entitled to compensation for all work performed to date.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.forceClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Force Majeure</ofv>
-                        <ofv class="article-content">
-                            Neither the Freelancer nor the Client shall be held liable for failure to fulfill obligations arising from this contract due to force majeure events (natural disasters, pandemics, wars, legislative acts, strikes, etc.) that render the execution of this contract impossible.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.jurisofctionClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Jurisdiction</ofv>
-                        <ofv class="article-content">
-                            Any dispute arising from or related to this contract shall be resolved by the competent courts of ${clauses.jurisofctionCity || 'New York'}, in accordance with applicable law.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.cancellationPenalty) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Cancellation Penalty</ofv>
-                        <ofv class="article-content">
-                            In the event of project cancellation by the Client before actual work begins, the Client shall pay the Freelancer a penalty equal to ${clauses.cancellationPercent || '30'}% of the total agreed amount.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.exclusivityClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Exclusivity</ofv>
-                        <ofv class="article-content">
-                            During the term of this contract, the Freelancer agrees to dedicate exclusively to the Client the time and resources necessary for the completion of the project, and shall not accept competing assignments without the prior written consent of the Client.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            if (clauses.warrantyClause) {
-                html += `
-                    <ofv class="article">
-                        <ofv class="article-title">Art. ${articleNum++} - Warranty</ofv>
-                        <ofv class="article-content">
-                            The Freelancer warrants their work for ${clauses.warrantyMonths || '1'} month(s) from the delivery date. During this period, the Freelancer agrees to correct any defects or malfunctions found in the delivered work.
-                        </ofv>
-                    </ofv>
-                `;
-            }
-
-            html += `
-                <ofv class="signature-section">
-                    <ofv class="signature-block">
-                        <p><strong>Freelancer</strong></p>
-                        <p>${freelancer.name}</p>
-                        <ofv class="line"></ofv>
-                        <p>Signature</p>
-                        <p style="font-size: 0.8em; margin-top: 20px;">Date: _______________</p>
-                        <p style="font-size: 0.8em;">Place: _______________</p>
-                    </ofv>
-                    <ofv class="signature-block">
-                        <p><strong>Client</strong></p>
-                        <p>${client.name}</p>
-                        <ofv class="line"></ofv>
-                        <p>Signature</p>
-                        <p style="font-size: 0.8em; margin-top: 20px;">Date: _______________</p>
-                        <p style="font-size: 0.8em;">Place: _______________</p>
-                    </ofv>
-                </ofv>
-            `;
-
-            document.getElementById('previewContent').innerHTML = html;
-            updateStats();
+            const payStr = co.totalAmount ? (`Total amount: <strong>${fmtEur(co.totalAmount)}</strong>`
+                + (co.compensationType?`<br>Type: ${compLabel[co.compensationType]||'—'}`:'')
+                + (co.paymentMethod?`<br>Method: ${payLabel[co.paymentMethod]||'—'}`:'')
+                + (co.paymentTiming?`<br>Schedule: ${timingLabel[co.paymentTiming]||'—'}`:'')
+                + (co.latePenalty?`<br>Late payment penalty: ${e(co.latePenalty)}% after ${e(co.graceDays||'0')} days`:'')
+                + (co.expensesReimbursable?`<br>Reimbursable expenses: ${e(co.expensesDescription)||'Yes'}`:'')) : '';
+            const x = { e, fmtDate, fmtEur, f, c, p, co, cl, deliverables, milestones, payStr };
+            let h = `<h2>${e(tpl.title)}</h2><p class="contract-date">${e(today)}</p>`;
+            h += `<div class="preview-section"><h3>Between</h3><p><strong>${e(f.name)}</strong>, with address at ${e(f.address)}, Tax ID/EIN ${e(f.taxId)}, hereinafter referred to as "${tpl.roleA}"</p></div>`;
+            h += `<div class="preview-section"><h3>And</h3><p><strong>${e(c.name)}</strong>${c.contact?', represented by '+e(c.contact):''}, with address at ${e(c.address)}, Tax ID/EIN ${e(c.taxId)}, hereinafter referred to as "${tpl.roleB}"</p></div>`;
+            h += `<div class="preview-section"><h3>Whereas</h3><p>${tpl.whereas(x)}</p></div>`;
+            let n = 1;
+            tpl.core(x).forEach(art => { h += `<div class="article"><div class="article-title">Art. ${n++} — ${art.t}</div><div class="article-content">${art.c}</div></div>`; });
+            if (cl.ipClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Intellectual Property</div><div class="article-content">All work and materials developed under this agreement shall become the exclusive property of the Client upon full payment of the agreed amount. The Contractor assigns all copyright and intellectual property rights related to the work performed.</div></div>`;
+            if (cl.confidenceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Confidentiality</div><div class="article-content">The parties agree to maintain strict confidentiality regarding any confidential information exchanged during the performance of this agreement. Such information shall not be disclosed to third parties without prior written consent, except as required by law.</div></div>`;
+            if (cl.nonCompeteClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Non-Compete</div><div class="article-content">During the term of this agreement and for the following ${e(cl.nonCompeteMonths)||'12'} months, the Contractor agrees not to provide similar services to direct competitors of the Client in relation to the subject matter of this agreement.</div></div>`;
+            if (cl.resolutionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Early Termination</div><div class="article-content">Either party may terminate this agreement by providing ${e(cl.resolutionDays)||'30'} days' written notice. In the event of termination by the Client, the Contractor shall be entitled to compensation for work already performed as of the effective date of termination.</div></div>`;
+            if (cl.forceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Force Majeure</div><div class="article-content">Neither party shall be liable for any failure to perform caused by force majeure events, defined as unforeseeable and unavoidable circumstances that render the performance of contractual obligations impossible.</div></div>`;
+            if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Governing Law and Jurisdiction</div><div class="article-content">Any dispute arising out of this agreement shall be subject to the exclusive jurisdiction of the courts of ${e(cl.jurisdictionCity)||'New York'}.</div></div>`;
+            if (cl.cancellationPenalty) h += `<div class="article"><div class="article-title">Art. ${n++} — Cancellation Fee</div><div class="article-content">In the event of project cancellation by the Client, the Client shall pay the Contractor a fee equal to ${e(cl.cancellationPercent)||'30'}% of the total agreed amount.</div></div>`;
+            if (cl.exclusivityClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Exclusivity</div><div class="article-content">For the duration of this agreement, the Contractor shall dedicate the time and resources necessary for the project to the Client, agreeing not to accept competing engagements without prior written consent.</div></div>`;
+            if (cl.warrantyClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Warranty</div><div class="article-content">The Contractor warrants the delivered work for ${e(cl.warrantyMonths)||'1'} month(s) from delivery. During this period the Contractor agrees to correct any defects or malfunctions found in the delivered work at no additional cost.</div></div>`;
+            h += `<div class="article" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Disclaimer</div><div class="article-content">This document is an automatically generated template and does not constitute legal advice. Have it reviewed by a qualified professional before signing.</div></div>`;
+            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${e(f.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${e(c.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div></div>`;
+            previewContent.innerHTML = h;
+            const txt = previewContent.innerText, words = txt.trim().split(/\s+/).filter(Boolean).length;
+            $('wordCount').textContent = words;
+            $('readingTime').textContent = Math.ceil(words/250) + ' min';
         }
 
-        function updateStats() {
-            const text = document.getElementById('previewContent').innerText;
-            const words = text.trim().split(/\s+/).length;
-            const reaofngTime = Math.ceil(words / 250); // 250 words per minute
-
-            document.getElementById('wordCount').textContent = words;
-            document.getElementById('reaofngTime').textContent = reaofngTime + ' min';
-        }
-
-        // EXPORT FUNCTIONS
         function printContract() {
+            const fd = formData || {};
+            const fn = (fd.freelancer && fd.freelancer.name) || '';
+            const cn = (fd.client && fd.client.name) || '';
+            const fname = ['Contract', fd.contractType, fn, cn].filter(Boolean).join(' - ').replace(/[\\/:*?"<>|]/g, '_');
+            const oldTitle = document.title;
+            document.title = fname || 'Contract';
             window.print();
+            setTimeout(() => { document.title = oldTitle; }, 1200);
         }
 
-        function copyToClipboard() {
-            const text = document.getElementById('previewContent').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                showNotification('Contract copied to clipboard!', 'success');
-            });
+        async function copyToClipboard() {
+            const text = $('previewContent').innerText;
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed'; ta.style.left = '-9999px';
+                    document.body.appendChild(ta); ta.select();
+                    document.execCommand('copy'); document.body.removeChild(ta);
+                }
+                showNotification('Contract copied to clipboard','success');
+            } catch (err) {
+                showNotification('Unable to copy. Use Download TXT.','error');
+            }
         }
 
         function downloadAsText() {
-            const text = document.getElementById('previewContent').innerText;
-            const filename = `Contract_${formDate.contractType}_${new Date().getTime()}.txt`;
-            const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-            element.setAttribute('download', filename);
-            element.style.ofsplay = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-            showNotification('Contract downloaded successfully!', 'success');
+            const blob = new Blob([$('previewContent').innerText], {type:'text/plain;charset=utf-8'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `Contract_${formData.contractType||'draft'}_${Date.now()}.txt`;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            showNotification('Contract downloaded','success');
         }
 
-        // NOTIFICATIONS
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('ofv');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
+        function showNotification(msg, type='success') {
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            const el = document.createElement('div');
+            el.className = 'notification ' + type;
+            el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+            el.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+            el.textContent = (type==='success'?'✓  ':'⚠  ') + msg;
+            document.body.appendChild(el);
+            setTimeout(()=>el.remove(), 3000);
         }
     </script>
-</div><!-- /appContent -->
-
-<script>
-(function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='1uykdlc6dmi',K='etherlabs_generatore-contratti_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
+<script>
+if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+</script>
 </body>
 </html>
