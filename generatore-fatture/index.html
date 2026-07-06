@@ -999,6 +999,23 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                     </div>
                 </div>
 
+                <div class="form-section" id="fatturapaSection" style="display:none">
+                    <h3 class="section-header">📄 Fattura Elettronica (FatturaPA)</h3>
+                    <p style="font-size:12px;opacity:.7;margin:-4px 0 10px">Campi extra per generare l'XML conforme al Sistema di Interscambio (SdI). Il file XML si carica poi sul tuo gestionale o sul portale Fatture e Corrispettivi.</p>
+                    <div class="form-row">
+                        <div class="control-group"><label>CAP mittente</label><input type="text" id="fromCap" placeholder="20100" maxlength="5"></div>
+                        <div class="control-group"><label>Provincia mittente</label><input type="text" id="fromProv" placeholder="MI" maxlength="2"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="control-group"><label>CAP cliente</label><input type="text" id="toCap" placeholder="00100" maxlength="5"></div>
+                        <div class="control-group"><label>Provincia cliente</label><input type="text" id="toProv" placeholder="RM" maxlength="2"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="control-group"><label>Codice Destinatario (SdI)</label><input type="text" id="codiceDestinatario" placeholder="0000000 se assente" maxlength="7"></div>
+                        <div class="control-group"><label>PEC cliente (se no Cod. Dest.)</label><input type="email" id="pecDestinatario" placeholder="cliente@pec.it"></div>
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <h3 class="section-header" data-i18n="lineItems">Line Items</h3>
                     <div class="li-header">
@@ -1055,6 +1072,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                     <button class="export-btn secondary" onclick="downloadAsText()" data-i18n="dlTxt">📥 Download TXT</button>
                     <button class="export-btn secondary" onclick="saveJSON()" data-i18n="saveData">💾 Save Data</button>
                     <button class="export-btn secondary" onclick="triggerLoadJSON()" data-i18n="loadData">📂 Load Data</button>
+                    <button class="export-btn" id="btnFatturaPA" onclick="exportFatturaPA()" style="display:none">📄 XML FatturaPA</button>
                 </div>
             </div>
         </div>
@@ -1908,6 +1926,103 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-too
 })();
 </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+<script>
+/* ===== FatturaPA 1.2.2 XML export (EtherLabs) ===== */
+(function(){
+  function xe(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function n2(n){return (Math.round((+n||0)*100)/100).toFixed(2);}
+  function gv(id){var el=document.getElementById(id);return el?el.value:'';}
+  function classifyTaxId(raw){
+    var s=(raw||'').replace(/[^0-9A-Za-z]/g,'').toUpperCase();
+    if(/^[0-9]{11}$/.test(s))return{piva:s,cf:null};
+    if(/^IT[0-9]{11}$/.test(s))return{piva:s.slice(2),cf:null};
+    if(/^[A-Z0-9]{16}$/.test(s))return{piva:null,cf:s};
+    return{piva:null,cf:s||null};
+  }
+  function genXml(d,calc){
+    var W=[],forf=!!calc.forf,regime=forf?'RF19':'RF01';
+    var sid=classifyTaxId(d.fromTax),bid=classifyTaxId(d.toTax);
+    if(!sid.piva&&!sid.cf)W.push('P.IVA/CF mittente mancante (obbligatorio)');
+    var codDest=((d.codiceDestinatario||'').toUpperCase().replace(/[^A-Z0-9]/g,''))||'0000000';
+    var pec=(d.pec||'').trim();
+    if(codDest==='0000000'&&!pec)W.push('Serve Codice Destinatario (7 caratteri) OPPURE la PEC del cliente');
+    if(!d.fromCap)W.push('CAP mittente mancante');
+    if(!d.toCap)W.push('CAP cliente mancante');
+    var prog=(d.invoiceNumber||'1').replace(/[^A-Za-z0-9]/g,'').slice(0,10)||'1';
+    var nazDest=(d.toCountry||'IT').toUpperCase().slice(0,2);
+    var L=[];
+    L.push('<?xml version="1.0" encoding="UTF-8"?>');
+    L.push('<p:FatturaElettronica versione="FPR12" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">');
+    L.push('<FatturaElettronicaHeader><DatiTrasmissione>');
+    L.push('<IdTrasmittente><IdPaese>IT</IdPaese><IdCodice>'+xe(sid.piva||sid.cf||'0000000')+'</IdCodice></IdTrasmittente>');
+    L.push('<ProgressivoInvio>'+xe(prog)+'</ProgressivoInvio><FormatoTrasmissione>FPR12</FormatoTrasmissione>');
+    L.push('<CodiceDestinatario>'+xe(codDest)+'</CodiceDestinatario>');
+    if(codDest==='0000000'&&pec)L.push('<PECDestinatario>'+xe(pec)+'</PECDestinatario>');
+    L.push('</DatiTrasmissione>');
+    L.push('<CedentePrestatore><DatiAnagrafici>');
+    if(sid.piva)L.push('<IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>'+xe(sid.piva)+'</IdCodice></IdFiscaleIVA>');
+    if(sid.cf)L.push('<CodiceFiscale>'+xe(sid.cf)+'</CodiceFiscale>');
+    L.push('<Anagrafica><Denominazione>'+xe(d.fromName)+'</Denominazione></Anagrafica><RegimeFiscale>'+regime+'</RegimeFiscale></DatiAnagrafici>');
+    L.push('<Sede><Indirizzo>'+xe(d.fromAddress)+'</Indirizzo><CAP>'+xe((d.fromCap||'00000').replace(/\D/g,'').padStart(5,'0').slice(0,5))+'</CAP><Comune>'+xe(d.fromCity)+'</Comune>'+(d.fromProv?'<Provincia>'+xe(d.fromProv.toUpperCase().slice(0,2))+'</Provincia>':'')+'<Nazione>IT</Nazione></Sede></CedentePrestatore>');
+    L.push('<CessionarioCommittente><DatiAnagrafici>');
+    if(bid.piva)L.push('<IdFiscaleIVA><IdPaese>'+nazDest+'</IdPaese><IdCodice>'+xe(bid.piva)+'</IdCodice></IdFiscaleIVA>');
+    else if(bid.cf)L.push('<CodiceFiscale>'+xe(bid.cf)+'</CodiceFiscale>');
+    L.push('<Anagrafica><Denominazione>'+xe(d.toName)+'</Denominazione></Anagrafica></DatiAnagrafici>');
+    L.push('<Sede><Indirizzo>'+xe(d.toAddress)+'</Indirizzo><CAP>'+xe((d.toCap||'00000').replace(/\D/g,'').padStart(5,'0').slice(0,5))+'</CAP><Comune>'+xe(d.toCity)+'</Comune>'+(d.toProv?'<Provincia>'+xe(d.toProv.toUpperCase().slice(0,2))+'</Provincia>':'')+'<Nazione>'+nazDest+'</Nazione></Sede></CessionarioCommittente>');
+    L.push('</FatturaElettronicaHeader>');
+    L.push('<FatturaElettronicaBody><DatiGenerali><DatiGeneraliDocumento>');
+    L.push('<TipoDocumento>TD01</TipoDocumento><Divisa>EUR</Divisa><Data>'+xe((d.invoiceDate||'').slice(0,10))+'</Data><Numero>'+xe(d.invoiceNumber||'1')+'</Numero>');
+    if((+calc.ritenutaAmount||0)>0&&!forf){
+      L.push('<DatiRitenuta><TipoRitenuta>RT01</TipoRitenuta><ImportoRitenuta>'+n2(calc.ritenutaAmount)+'</ImportoRitenuta><AliquotaRitenuta>'+n2(calc.ritenutaRate)+'</AliquotaRitenuta><CausalePagamento>'+xe(d.causaleRitenuta||'A')+'</CausalePagamento></DatiRitenuta>');
+    }
+    var imponibile=+calc.imponibile||0, bollo=(forf&&imponibile>77.47)?2:0;
+    if(bollo>0)L.push('<DatiBollo><BolloVirtuale>SI</BolloVirtuale><ImportoBollo>'+n2(bollo)+'</ImportoBollo></DatiBollo>');
+    if((+calc.cassaRate||0)>0&&(+calc.cassaTotal||0)>0){
+      L.push('<DatiCassaPrevidenziale><TipoCassa>TC22</TipoCassa><AlCassa>'+n2(calc.cassaRate)+'</AlCassa><ImportoContributoCassa>'+n2(calc.cassaTotal)+'</ImportoContributoCassa><AliquotaIVA>'+n2(forf?0:(calc.items[0]?calc.items[0].rate:0))+'</AliquotaIVA>'+(forf?'<Natura>N2.2</Natura>':'')+'</DatiCassaPrevidenziale>');
+    }
+    L.push('<ImportoTotaleDocumento>'+n2(calc.grandTotal)+'</ImportoTotaleDocumento>');
+    if(d.notes)L.push('<Causale>'+xe(String(d.notes).slice(0,200))+'</Causale>');
+    L.push('</DatiGeneraliDocumento></DatiGenerali>');
+    L.push('<DatiBeniServizi>');
+    (calc.items||[]).forEach(function(it,i){
+      L.push('<DettaglioLinee><NumeroLinea>'+(i+1)+'</NumeroLinea><Descrizione>'+xe(it.desc||'-')+'</Descrizione><Quantita>'+n2(it.qty)+'</Quantita><PrezzoUnitario>'+n2(it.price)+'</PrezzoUnitario><PrezzoTotale>'+n2(it.net)+'</PrezzoTotale><AliquotaIVA>'+n2(forf?0:it.rate)+'</AliquotaIVA>'+((forf||it.rate===0)?'<Natura>N2.2</Natura>':'')+'</DettaglioLinee>');
+    });
+    var groups={};
+    (calc.items||[]).forEach(function(it){var al=forf?0:it.rate;if(!groups[al])groups[al]={al:al,imp:0,imposta:0};groups[al].imp+=(it.net||0);groups[al].imposta+=(it.taxDue||0);});
+    Object.keys(groups).forEach(function(k){var g=groups[k];
+      L.push('<DatiRiepilogo><AliquotaIVA>'+n2(g.al)+'</AliquotaIVA>'+((forf||g.al===0)?'<Natura>N2.2</Natura>':'')+'<ImponibileImporto>'+n2(g.imp)+'</ImponibileImporto><Imposta>'+n2(g.imposta)+'</Imposta>'+((forf||g.al===0)?'<RiferimentoNormativo>Operazione in regime forfettario ex art.1 c.54-89 L.190/2014</RiferimentoNormativo>':'')+'</DatiRiepilogo>');
+    });
+    L.push('</DatiBeniServizi>');
+    if(d.bankIBAN){
+      L.push('<DatiPagamento><CondizioniPagamento>TP02</CondizioniPagamento><DettaglioPagamento><ModalitaPagamento>MP05</ModalitaPagamento>'+(d.dueDate?'<DataScadenzaPagamento>'+xe(d.dueDate.slice(0,10))+'</DataScadenzaPagamento>':'')+'<ImportoPagamento>'+n2(calc.nettoAPagare)+'</ImportoPagamento><IBAN>'+xe(d.bankIBAN.replace(/\s/g,''))+'</IBAN></DettaglioPagamento></DatiPagamento>');
+    }
+    L.push('</FatturaElettronicaBody></p:FatturaElettronica>');
+    return{xml:L.join('\n'),warnings:W,sid:sid,codDest:codDest,prog:prog};
+  }
+  window.exportFatturaPA=function(){
+    if(typeof computeInvoice!=='function'){alert('Errore interno: calcolo non disponibile');return;}
+    var calc=computeInvoice();
+    var d={fromName:gv('fromName'),fromTax:gv('fromTax'),fromAddress:gv('fromAddress'),fromCap:gv('fromCap'),fromCity:gv('fromCity'),fromProv:gv('fromProv'),
+      toName:gv('toName'),toTax:gv('toTax'),toAddress:gv('toAddress'),toCap:gv('toCap'),toCity:gv('toCity'),toProv:gv('toProv'),toCountry:'IT',
+      codiceDestinatario:gv('codiceDestinatario'),pec:gv('pecDestinatario'),
+      invoiceNumber:gv('invoiceNumber'),invoiceDate:gv('invoiceDate'),dueDate:gv('dueDate'),bankIBAN:gv('bankIBAN'),notes:gv('notes')};
+    var r=genXml(d,calc);
+    if(r.warnings.length){ if(!confirm('Attenzione, la FatturaPA potrebbe non essere accettata dallo SdI:\n\n• '+r.warnings.join('\n• ')+'\n\nScarico comunque l\'XML?')) return; }
+    var fn='IT'+((r.sid.piva||r.sid.cf||'00000000000'))+'_'+r.prog+'.xml';
+    var blob=new Blob([r.xml],{type:'application/xml'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},100);
+  };
+  function toggle(){
+    var isIT=(document.getElementById('country')||{}).value==='IT';
+    var sec=document.getElementById('fatturapaSection'),btn=document.getElementById('btnFatturaPA');
+    if(sec)sec.style.display=isIT?'':'none';
+    if(btn)btn.style.display=isIT?'':'none';
+  }
+  function boot(){ toggle(); var c=document.getElementById('country'); if(c)c.addEventListener('change',toggle); }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
