@@ -1138,7 +1138,7 @@
                     <button class="template-btn" onclick="useTemplate('retirement')">Pensione</button>
                 </div>
 
-                <h2 class="subsection-header">Crea Obiettivo Personalizzato</h2>
+                <h2 class="subsection-header" id="goalFormHeader">Crea Obiettivo Personalizzato</h2>
 
                 <div class="form-grid">
                     <div class="form-group">
@@ -1184,7 +1184,7 @@
                     <input type="hidden" id="selectedEmoji" value="💰">
                 </div>
 
-                <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1rem;" onclick="addGoal()">Crea Obiettivo</button>
+                <button class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1rem;" id="createGoalBtn" onclick="addGoal()">Crea Obiettivo</button>
             </div>
         </div>
 
@@ -1261,6 +1261,7 @@
         let goals = [];
         let selectedEmoji = '💰';
         let activeDepositGoalId = null;
+        let editingGoalId = null;
 
         function esc(s) {
             return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1320,17 +1321,32 @@
                 return;
             }
 
-            goals.push({
-                id: Date.now(),
-                name,
-                targetAmount,
-                currentSaved,
-                monthlyContribution,
-                targetDate: targetDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                priority,
-                emoji,
-                deposits: []
-            });
+            const resolvedDate = targetDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            if (editingGoalId !== null) {
+                const goal = goals.find(g => g.id === editingGoalId);
+                if (goal) {
+                    goal.name = name;
+                    goal.targetAmount = targetAmount;
+                    goal.currentSaved = currentSaved;
+                    goal.monthlyContribution = monthlyContribution;
+                    goal.targetDate = resolvedDate;
+                    goal.priority = priority;
+                    goal.emoji = emoji;
+                }
+            } else {
+                goals.push({
+                    id: Date.now(),
+                    name,
+                    targetAmount,
+                    currentSaved,
+                    monthlyContribution,
+                    targetDate: resolvedDate,
+                    priority,
+                    emoji,
+                    deposits: []
+                });
+            }
 
             clearForm();
             switchTab('dashboard');
@@ -1349,6 +1365,30 @@
             document.querySelectorAll('.emoji-option').forEach(e => {
                 e.classList.toggle('selected', e.dataset.emoji === '💰');
             });
+            editingGoalId = null;
+            document.getElementById('createGoalBtn').textContent = 'Crea Obiettivo';
+            document.getElementById('goalFormHeader').textContent = 'Crea Obiettivo Personalizzato';
+        }
+
+        function editGoal(id) {
+            const goal = goals.find(g => g.id === id);
+            if (!goal) return;
+            editingGoalId = id;
+            document.getElementById('goalName').value = goal.name;
+            document.getElementById('targetAmount').value = goal.targetAmount;
+            document.getElementById('currentSaved').value = goal.currentSaved;
+            document.getElementById('monthlyContribution').value = goal.monthlyContribution;
+            document.getElementById('targetDate').value = goal.targetDate || '';
+            document.getElementById('priority').value = goal.priority;
+            selectedEmoji = goal.emoji;
+            document.getElementById('selectedEmoji').value = goal.emoji;
+            document.querySelectorAll('.emoji-option').forEach(e => {
+                e.classList.toggle('selected', e.dataset.emoji === goal.emoji);
+            });
+            document.getElementById('createGoalBtn').textContent = 'Salva Modifiche';
+            document.getElementById('goalFormHeader').textContent = 'Modifica Obiettivo';
+            switchTab('goals');
+            document.getElementById('goalName').focus();
         }
 
         function deleteGoal(id) {
@@ -1592,6 +1632,7 @@
 
                         <div class="goal-actions">
                             <button class="btn btn-primary btn-sm" onclick="openDepositModal(${goal.id})">+ Deposito</button>
+                            <button class="btn btn-secondary btn-sm" onclick="editGoal(${goal.id})">Modifica</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteGoal(${goal.id})">Elimina</button>
                         </div>
                     </div>
