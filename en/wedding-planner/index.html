@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
-    <title>Wedding Planner Pro - Il Tuo Matrimonio Perfetto</title>
+    <title>Wedding Planner Pro - Your Perfect Wedding</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
@@ -662,9 +662,9 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Wedding Planner Pro</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
+<div class="lock-title">Wedding Planner Pro</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
@@ -684,26 +684,26 @@
                 <span class="nav-icon">💰</span> Budget
             </div>
             <div class="nav-item" onclick="switchPage('guests', event)">
-                <span class="nav-icon">👥</span> Invitati
+                <span class="nav-icon">👥</span> Guests
             </div>
             <div class="nav-item" onclick="switchPage('vendors', event)">
-                <span class="nav-icon">🏢</span> Fornitori
+                <span class="nav-icon">🏢</span> Vendors
             </div>
             <div class="nav-item" onclick="switchPage('tasks', event)">
                 <span class="nav-icon">✓</span> Timeline
             </div>
             <div class="nav-item" onclick="switchPage('tables', event)">
-                <span class="nav-icon">🍽️</span> Tavoli & Menu
+                <span class="nav-icon">🍽️</span> Tables & Menu
             </div>
             <div class="nav-item" onclick="switchPage('settings', event)">
-                <span class="nav-icon">⚙️</span> Impostazioni
+                <span class="nav-icon">⚙️</span> Settings
             </div>
         </div>
 
         <div class="content">
             <div class="header" id="header">
                 <h1>Dashboard</h1>
-                <p>Benvenuto nel tuo Wedding Planner</p>
+                <p>Welcome to your Wedding Planner</p>
             </div>
 
             <!-- DASHBOARD PAGE -->
@@ -713,23 +713,23 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value" id="guestCount">0</div>
-                        <div class="stat-label">Invitati Confermati</div>
+                        <div class="stat-label">Confirmed Guests</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="budgetSpent">€ 0</div>
-                        <div class="stat-label">Speso</div>
+                        <div class="stat-label">Spent</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="budgetRemaining">€ 0</div>
-                        <div class="stat-label">Rimanente</div>
+                        <div class="stat-label">Remaining</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="tasksDone">0%</div>
-                        <div class="stat-label">Task Completati</div>
+                        <div class="stat-label">Tasks Completed</div>
                     </div>
                 </div>
 
-                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px;">Prossime Scadenze</h2>
+                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px;">Upcoming Deadlines</h2>
                 <div id="upcomingTasks" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;"></div>
             </div>
 
@@ -737,20 +737,20 @@
             <div class="page" id="budget">
                 <div id="budgetCategories"></div>
                 <div class="total-section">
-                    <h3>Budget Totale</h3>
+                    <h3>Total Budget</h3>
                     <div class="total-amount" id="totalBudget">€ 0</div>
                 </div>
             </div>
 
             <!-- GUESTS PAGE -->
             <div class="page" id="guests">
-                <div class="add-button" onclick="addGuest()">+ Aggiungi Invitato</div>
+                <div class="add-button" onclick="addGuest()">+ Add Guest</div>
                 <div class="guest-list" id="guestList"></div>
             </div>
 
             <!-- VENDORS PAGE -->
             <div class="page" id="vendors">
-                <div class="add-button" onclick="addVendor()">+ Aggiungi Fornitore</div>
+                <div class="add-button" onclick="addVendor()">+ Add Vendor</div>
                 <div id="vendorList"></div>
             </div>
 
@@ -761,11 +761,11 @@
 
             <!-- TABLES & MENU PAGE -->
             <div class="page" id="tables">
-                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px;">Riepilogo Menu</h2>
+                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px;">Menu Summary</h2>
                 <div class="menu-summary" id="menuSummary"></div>
 
-                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px; margin-top: 32px;">Assegnazione Tavoli</h2>
-                <div class="add-button" onclick="addTable()">+ Nuovo Tavolo</div>
+                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px; margin-top: 32px;">Table Assignment</h2>
+                <div class="add-button" onclick="addTable()">+ New Table</div>
                 <div id="tablesList"></div>
             </div>
 
@@ -773,32 +773,32 @@
             <div class="page" id="settings">
                 <div class="settings-form">
                     <div class="form-group">
-                        <label>Nome Sposa</label>
+                        <label>Bride's Name</label>
                         <input type="text" id="brideName" onchange="saveSettings()">
                     </div>
                     <div class="form-group">
-                        <label>Nome Sposo</label>
+                        <label>Groom's Name</label>
                         <input type="text" id="groomName" onchange="saveSettings()">
                     </div>
                     <div class="form-group">
-                        <label>Data Matrimonio</label>
+                        <label>Wedding Date</label>
                         <input type="date" id="weddingDate" onchange="saveSettings()">
                     </div>
                     <div class="form-group">
-                        <label>Location</label>
+                        <label>Venue</label>
                         <input type="text" id="location" onchange="saveSettings()">
                     </div>
                     <div class="form-group">
-                        <label>Tema Colori</label>
+                        <label>Color Theme</label>
                         <select id="theme" onchange="saveSettings()">
-                            <option value="gold">Oro & Nero</option>
-                            <option value="silver">Argento & Nero</option>
-                            <option value="rose">Rosa & Nero</option>
+                            <option value="gold">Gold & Black</option>
+                            <option value="silver">Silver & Black</option>
+                            <option value="rose">Rose & Black</option>
                         </select>
                     </div>
                     <div class="button-group">
-                        <button class="button" onclick="exportBackup()">Esporta Backup</button>
-                        <button class="button secondary" onclick="resetData()">Ripristina Dati</button>
+                        <button class="button" onclick="exportBackup()">Export Backup</button>
+                        <button class="button secondary" onclick="resetData()">Reset Data</button>
                     </div>
                 </div>
             </div>
@@ -822,19 +822,19 @@
         };
 
         const budgetCategories = [
-            'Location', 'Catering', 'Abito Sposa', 'Abito Sposo',
-            'Fiori', 'Fotografo', 'Musica', 'Bomboniere', 'Viaggio Nozze', 'Altro'
+            'Venue', 'Catering', "Bride's Dress", "Groom's Suit",
+            'Flowers', 'Photographer', 'Music', 'Favors', 'Honeymoon', 'Other'
         ];
 
         const defaultTasks = [
-            { title: 'Scegliere la Location', timeline: '12 mesi', done: false },
-            { title: 'Contattare Fornitori', timeline: '12 mesi', done: false },
-            { title: 'Inviti Stampati', timeline: '6 mesi', done: false },
-            { title: 'Confermare Catering', timeline: '6 mesi', done: false },
-            { title: 'Ordine Abiti', timeline: '6 mesi', done: false },
-            { title: 'Assegnare Tavoli', timeline: '1 mese', done: false },
-            { title: 'Confermare Dettagli Fornitori', timeline: '1 settimana', done: false },
-            { title: 'Ultima Prova Abiti', timeline: '1 settimana', done: false }
+            { title: 'Choose the Venue', timeline: '12 months', done: false },
+            { title: 'Contact Vendors', timeline: '12 months', done: false },
+            { title: 'Print Invitations', timeline: '6 months', done: false },
+            { title: 'Confirm Catering', timeline: '6 months', done: false },
+            { title: 'Order Outfits', timeline: '6 months', done: false },
+            { title: 'Assign Tables', timeline: '1 month', done: false },
+            { title: 'Confirm Vendor Details', timeline: '1 week', done: false },
+            { title: 'Final Dress Fitting', timeline: '1 week', done: false }
         ];
 
         function init() {
@@ -887,13 +887,13 @@
             closeMobileNav();
 
             const titles = {
-                dashboard: ['Dashboard', 'Panoramica del tuo matrimonio'],
-                budget: ['Budget', 'Traccia le tue spese'],
-                guests: ['Lista Invitati', 'Gestisci le conferme'],
-                vendors: ['Fornitori', 'Monitora i tuoi fornitori'],
-                tasks: ['Timeline & Task', 'Pianifica i dettagli'],
-                tables: ['Tavoli & Menu', 'Assegna posti e menu'],
-                settings: ['Impostazioni', 'Configura il tuo planner']
+                dashboard: ['Dashboard', 'Your wedding at a glance'],
+                budget: ['Budget', 'Track your spending'],
+                guests: ['Guest List', 'Manage RSVPs'],
+                vendors: ['Vendors', 'Track your vendors'],
+                tasks: ['Timeline & Tasks', 'Plan the details'],
+                tables: ['Tables & Menu', 'Assign seats and menu'],
+                settings: ['Settings', 'Configure your planner']
             };
 
             const [h, p] = titles[page];
@@ -916,8 +916,8 @@
             const html = `
                 <div class="countdown-box">
                     <h2>${esc(data.bride)} & ${esc(data.groom)}</h2>
-                    <div class="countdown-display">${days} giorni</div>
-                    <p style="margin-top: 16px; font-size: 14px;">${weddingDate.toLocaleDateString('it-IT')}</p>
+                    <div class="countdown-display">${days} days</div>
+                    <p style="margin-top: 16px; font-size: 14px;">${weddingDate.toLocaleDateString('en-US')}</p>
                 </div>
             `;
 
@@ -950,7 +950,7 @@
                 </div>
             `).join('');
 
-            document.getElementById('upcomingTasks').innerHTML = upcomingHtml || '<p style="color: var(--text-secondary);">Nessun task in sospeso</p>';
+            document.getElementById('upcomingTasks').innerHTML = upcomingHtml || '<p style="color: var(--text-secondary);">No pending tasks</p>';
         }
 
         function renderBudget() {
@@ -968,17 +968,17 @@
                         </div>
                         <div class="budget-amounts">
                             <div class="amount-field">
-                                <label style="${lbl}">Preventivo</label>
+                                <label style="${lbl}">Estimate</label>
                                 <input type="number" min="0" placeholder="0" value="${b.preventivo || 0}"
                                     onchange="updateBudget('${cat}', 'preventivo', this.value)">
                             </div>
                             <div class="amount-field">
-                                <label style="${lbl}">Speso</label>
+                                <label style="${lbl}">Spent</label>
                                 <input type="number" min="0" placeholder="0" value="${b.speso || 0}"
                                     onchange="updateBudget('${cat}', 'speso', this.value)">
                             </div>
                             <div class="amount-field">
-                                <label style="${lbl}">Pagato</label>
+                                <label style="${lbl}">Paid</label>
                                 <input type="number" min="0" placeholder="0" value="${b.pagato || 0}"
                                     onchange="updateBudget('${cat}', 'pagato', this.value)">
                             </div>
@@ -987,7 +987,7 @@
                             <div class="progress-fill" style="width: ${percent}%"></div>
                         </div>
                         <div style="font-size: 12px; color: var(--text-secondary); text-align: right;">
-                            Rimanente: € ${Math.max(budget - spent, 0).toLocaleString()}
+                            Remaining: € ${Math.max(budget - spent, 0).toLocaleString()}
                         </div>
                     </div>
                 `;
@@ -1009,7 +1009,7 @@
         function renderGuests() {
             const html = `
                 <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; padding: 0 12px;">
-                    <strong>Nome</strong> | <strong>Lato</strong> | <strong>Conferma</strong> | <strong>Persone</strong>
+                    <strong>Name</strong> | <strong>Side</strong> | <strong>RSVP</strong> | <strong>People</strong>
                 </div>
                 ${data.guests.map((g, i) => `
                     <div class="guest-item">
@@ -1018,12 +1018,12 @@
                                 onchange="updateGuest(${i}, 'nome', this.value)" style="width: 100%;">
                         </div>
                         <select class="guest-input" onchange="updateGuest(${i}, 'lato', this.value)">
-                            <option value="Sposa" ${g.lato === 'Sposa' ? 'selected' : ''}>Sposa</option>
-                            <option value="Sposo" ${g.lato === 'Sposo' ? 'selected' : ''}>Sposo</option>
+                            <option value="Sposa" ${g.lato === 'Sposa' ? 'selected' : ''}>Bride</option>
+                            <option value="Sposo" ${g.lato === 'Sposo' ? 'selected' : ''}>Groom</option>
                         </select>
                         <select class="guest-input" onchange="updateGuest(${i}, 'confermato', this.value)">
-                            <option value="attesa" ${g.confermato === 'attesa' ? 'selected' : ''}>Attesa</option>
-                            <option value="si" ${g.confermato === 'si' ? 'selected' : ''}>Si</option>
+                            <option value="attesa" ${g.confermato === 'attesa' ? 'selected' : ''}>Pending</option>
+                            <option value="si" ${g.confermato === 'si' ? 'selected' : ''}>Yes</option>
                             <option value="no" ${g.confermato === 'no' ? 'selected' : ''}>No</option>
                         </select>
                         <input class="guest-input" type="number" value="${g.persone || 1}"
@@ -1036,7 +1036,7 @@
         }
 
         function addGuest() {
-            data.guests.push({ nome: 'Nuovo Invitato', lato: 'Sposa', confermato: 'attesa', persone: 1 });
+            data.guests.push({ nome: 'New Guest', lato: 'Sposa', confermato: 'attesa', persone: 1 });
             save();
             renderGuests();
             renderDashboard();
@@ -1060,21 +1060,21 @@
                                     value="${esc(v.nome)}" onchange="updateVendor(${i}, 'nome', this.value)">
                             </div>
                             <div style="font-size: 13px; color: var(--text-secondary);">
-                                <input class="guest-input" type="text" placeholder="Servizio"
+                                <input class="guest-input" type="text" placeholder="Service"
                                     value="${esc(v.servizio)}" onchange="updateVendor(${i}, 'servizio', this.value)">
                             </div>
                         </div>
                         <select class="vendor-status" onchange="updateVendor(${i}, 'stato', this.value)">
-                            <option value="contattato" ${v.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
-                            <option value="confermato" ${v.stato === 'confermato' ? 'selected' : ''}>Confermato</option>
-                            <option value="pagato" ${v.stato === 'pagato' ? 'selected' : ''}>Pagato</option>
+                            <option value="contattato" ${v.stato === 'contattato' ? 'selected' : ''}>Contacted</option>
+                            <option value="confermato" ${v.stato === 'confermato' ? 'selected' : ''}>Confirmed</option>
+                            <option value="pagato" ${v.stato === 'pagato' ? 'selected' : ''}>Paid</option>
                         </select>
                     </div>
                     <div class="vendor-details">
                         <div class="vendor-detail">
-                            <strong>Telefono</strong>
+                            <strong>Phone</strong>
                             <input class="guest-input" type="tel" value="${esc(v.telefono)}"
-                                onchange="updateVendor(${i}, 'telefono', this.value)" placeholder="Telefono">
+                                onchange="updateVendor(${i}, 'telefono', this.value)" placeholder="Phone">
                         </div>
                         <div class="vendor-detail">
                             <strong>Email</strong>
@@ -1089,7 +1089,7 @@
         }
 
         function addVendor() {
-            data.vendors.push({ nome: 'Nuovo Fornitore', servizio: '', telefono: '', email: '', stato: 'contattato' });
+            data.vendors.push({ nome: 'New Vendor', servizio: '', telefono: '', email: '', stato: 'contattato' });
             save();
             renderVendors();
         }
@@ -1132,7 +1132,7 @@
         }
 
         function renderTables() {
-            const menus = ['Carne', 'Pesce', 'Vegetariano', 'Vegano', 'Bambini'];
+            const menus = ['Meat', 'Fish', 'Vegetarian', 'Vegan', 'Kids'];
             const menuCounts = [0, 0, 0, 0, 0];
 
             const html = menus.map((menu, i) => `
@@ -1147,7 +1147,7 @@
             const tables = data.tables.length === 0 ? [] : data.tables;
             const tablesHtml = tables.map((t, i) => `
                 <div class="vendor-card" style="margin-bottom: 16px;">
-                    <input class="guest-input" type="text" placeholder="Tavolo 1"
+                    <input class="guest-input" type="text" placeholder="Table 1"
                         value="${esc(t.nome)}" onchange="updateTable(${i}, 'nome', this.value)">
                 </div>
             `).join('');
@@ -1156,7 +1156,7 @@
         }
 
         function addTable() {
-            data.tables.push({ nome: 'Tavolo ' + (data.tables.length + 1) });
+            data.tables.push({ nome: 'Table ' + (data.tables.length + 1) });
             save();
             renderTables();
         }
@@ -1203,7 +1203,7 @@
         }
 
         function resetData() {
-            if (confirm('Sei sicuro? Questo cancellerà tutti i tuoi dati.')) {
+            if (confirm('Are you sure? This will delete all your data.')) {
                 try {
                 localStorage.removeItem(STORAGE_KEY);
                 } catch(e) {}
@@ -1216,10 +1216,10 @@
 </div><!-- /appContent -->
 <script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='89mcym19q7',K='etherlabs_wedding-planner_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='2dp9n612ey9',K='etherlabs_wedding-planner_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
 lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
 })();</script>
