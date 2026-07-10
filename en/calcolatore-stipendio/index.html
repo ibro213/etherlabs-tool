@@ -1008,11 +1008,24 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
 
 /* ---------- copy / PDF ---------- */
 function copyText() {
-    navigator.clipboard.writeText(el.exportText.textContent).then(() => {
-        const btn = event.currentTarget;
+    const btn = event.currentTarget;
+    const txt = el.exportText.textContent;
+    const ok = () => {
         btn.textContent = '✅ Copied!';
         setTimeout(() => btn.textContent = '📋 Copy Text', 1500);
-    });
+    };
+    const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); ok(); } catch (e) {}
+        document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(ok).catch(fallback);
+    } else { fallback(); }
 }
 
 function exportPDF() {

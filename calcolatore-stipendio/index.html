@@ -1415,9 +1415,20 @@ Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
 
         function copyToClipboard() {
             const text = document.getElementById('exportText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Testo copiato negli appunti!');
-            });
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); alert('Testo copiato negli appunti!'); } catch (e) {}
+                document.body.removeChild(ta);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Testo copiato negli appunti!');
+                }).catch(fallback);
+            } else { fallback(); }
         }
 
         function downloadAsText() {
