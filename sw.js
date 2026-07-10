@@ -1,5 +1,5 @@
 // EtherLabs Tools — Service Worker
-var CACHE_NAME = 'etherlabs-v27';
+var CACHE_NAME = 'etherlabs-v28';
 var BASE = '/etherlabs-tool/';
 var SHELLS = [
   "", "divisore-spese/", "en/divisore-spese/",

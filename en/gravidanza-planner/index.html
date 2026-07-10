@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f1a17">
+    <meta name="format-detection" content="telephone=no">
+    <title>Pregnancy Planner Pro</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060a0a;
+            --bg2: #0a1210;
+            --bg3: #0f1a17;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --gold-dark: #059669;
+            --text1: #e8f0ec;
+            --text2: #7a9a8e;
+            --text3: #4a6b5e;
+            --border: #162e26;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text1);
+            display: flex;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg2);
+            border-right: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gold-dark);
+        }
+
+        .sidebar-header h1 {
+            font-size: 24px;
+            color: var(--gold-light);
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text2);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-link {
+            padding: 12px 15px;
+            background-color: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .nav-link:hover {
+            background-color: #1f1c35;
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+        }
+
+        .nav-link.active {
+            background-color: var(--gold-dark);
+            border-color: var(--gold);
+            color: var(--bg);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: var(--bg2);
+            border-bottom: 2px solid var(--gold-dark);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            color: var(--gold-light);
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background-color: var(--bg);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h3 {
+            color: var(--gold-light);
+            font-size: 18px;
+        }
+
+        .card-header-btn {
+            background-color: var(--gold);
+            color: var(--bg);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .card-header-btn:hover {
+            background-color: var(--gold-light);
+        }
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text2);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text1);
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: var(--bg);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .btn-primary:hover {
+            background-color: var(--gold-light);
+        }
+        }
+
+        .btn-secondary {
+            background-color: var(--bg3);
+            color: var(--text1);
+            border: 1px solid var(--gold-dark);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .btn-secondary:hover {
+            background-color: var(--border);
+            border-color: var(--gold);
+        }
+        }
+
+        .btn-danger {
+            background-color: #8b3a3a;
+            color: var(--text1);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .btn-danger:hover {
+            background-color: #a54545;
+        }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Stats */
+        .stat-box {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            color: var(--gold-light);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text2);
+            font-size: 14px;
+        }
+
+        /* List items */
+        .list-item {
+            background-color: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            color: var(--text1);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .list-item-meta {
+            color: var(--text2);
+            font-size: 13px;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .list-item-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg2);
+            border: 2px solid var(--gold-dark);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gold-dark);
+        }
+
+        .modal-header h3 {
+            color: var(--gold-light);
+            font-size: 22px;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text2);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .modal-close:hover {
+            color: var(--gold);
+        }
+        }
+
+        /* Dashboard specific */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+            border: 2px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+        }
+
+        .dashboard-card h3 {
+            color: var(--gold-light);
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .countdown {
+            font-size: 48px;
+            color: var(--gold);
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .countdown-label {
+            text-align: center;
+            color: var(--text2);
+            font-size: 13px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .header h2 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                padding: 15px;
+                border-right: none;
+                border-bottom: 2px solid var(--border);
+                overflow-x: auto;
+            }
+
+            .sidebar-header {
+                margin-bottom: 0;
+                padding: 0 20px 0 0;
+                border-bottom: none;
+                border-right: 2px solid var(--gold-dark);
+                margin-right: 20px;
+            }
+
+            .nav-links {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .nav-link {
+                white-space: nowrap;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .content-area {
+                padding: 15px;
+            }
+        }
+    
+  /* ========== MOBILE NAV (added fix) ========== */
+  .mob-menu-btn {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 500;
+    background: #0f1a17;
+    border: 1px solid #162e26;
+    color: #10b981;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .mob-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 200;
+  }
+  @media (max-width: 768px) {
+    body { overflow: auto !important; height: auto !important; }
+    .mob-menu-btn { display: flex !important; }
+    .mob-overlay.show { display: block; }
+    .sidebar, nav.sidebar, aside.sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      z-index: 300 !important;
+      transform: translateX(-100%) !important;
+      pointer-events: none !important;
+      transition: transform 0.3s ease !important;
+      width: 270px !important;
+      max-width: 85vw !important;
+      overflow-y: auto !important;
+    }
+    .sidebar.mob-open {
+      transform: translateX(0) !important;
+      pointer-events: auto !important;
+    }
+    .content, .main-content, .main, .app-content {
+      margin-left: 0 !important;
+      width: 100% !important;
+      padding-top: 60px !important;
+    }
+    .header, .top-header, .topbar {
+      padding-left: 64px !important;
+    }
+  }
+  /* ========================================= */
+
+        /* ===== Mobile / iPhone patch ===== */
+        * { -webkit-tap-highlight-color: transparent; }
+        input, select, textarea { font-size: 16px; }
+        button, .btn, .nav-link, .mob-menu-btn { touch-action: manipulation; }
+        .btn:active, .nav-link:active, .mob-menu-btn:active { transform: scale(0.97); }
+        @media (max-width: 768px) { button, .btn, .nav-link { min-height: 44px; } }
+
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+</style>
+</head>
+<body>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Pregnancy Planner Pro</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
+<div id="appContent" style="display:none">
+
+<button class="mob-menu-btn" onclick="toggleMobileNav()">&#9776;</button>
+<div class="mob-overlay" id="mobOverlay" onclick="toggleMobileNav()"></div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Overview</h1>
+            <p>Planner Pro</p>
+        </div>
+        <div class="nav-links">
+            <div class="nav-link active" data-page="0">📊 Overview</div>
+            <div class="nav-link" data-page="1">📅 Weekly Diary</div>
+            <div class="nav-link" data-page="2">🏥 Medical Visits</div>
+            <div class="nav-link" data-page="3">🛏️ Baby Checklist</div>
+            <div class="nav-link" data-page="4">🍎 Nutrition</div>
+            <div class="nav-link" data-page="5">👶 Birth Prep</div>
+            <div class="nav-link" data-page="6">💝 Names & Memories</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2 id="pageTitle">Overview</h2>
+        </div>
+
+        <div class="content-area">
+            <!-- PAGE 0: Dashboard - Panoramica -->
+            <div class="page active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Current Week</h3>
+                        <div class="stat-value" id="currentWeek">0</div>
+                        <div class="stat-label">settimane di gravidanza</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Due Date</h3>
+                        <div class="stat-label" id="dueDate" style="margin-top: 25px;">Not set</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Countdown</h3>
+                        <div class="countdown" id="countdown">--</div>
+                        <div class="countdown-label">giorni rimanenti</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Next Visit</h3>
+                        <div class="stat-label" id="nextVisit" style="margin-top: 25px;">Not scheduled</div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Current Weight</h3>
+                        <div class="stat-value" id="currentWeight">0</div>
+                        <div class="stat-label">kg</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Basic Info</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Menstrual Period (LMP)</label>
+                        <input type="date" id="lmpDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Pre-Pregnancy Weight (kg)</label>
+                        <input type="number" id="prePregnancyWeight" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="app.saveDashboardInfo()">Save Info</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Notes</h3>
+                        <button class="card-header-btn" onclick="app.showQuickNoteModal()">+ Add</button>
+                    </div>
+                    <div id="quickNotesList"></div>
+                </div>
+            </div>
+
+            <!-- PAGE 1: Diario Settimanale -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Select Week</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Week (1-40)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="weekSelector" min="1" max="40" value="1" style="flex: 1;">
+                            <button class="btn btn-primary" onclick="app.loadWeeklyDiary()">Load</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="weekTitle">Week 1</h3>
+                        <button class="card-header-btn" onclick="app.saveWeeklyEntry()">Save</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Symptoms</label>
+                        <textarea aria-label="Sintomi" id="diarySymptoms" placeholder="e.g. nausea, tiredness, aches..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mood</label>
+                        <select id="diaryMood">
+                            <option value="">-- Select --</option>
+                            <option value="felice">Happy 😊</option>
+                            <option value="calmo">Calm 😌</option>
+                            <option value="neutro">Neutral 😐</option>
+                            <option value="ansioso">Anxious 😰</option>
+                            <option value="triste">Sad 😢</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="diaryWeight" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Belly Measurement (cm)</label>
+                        <input type="number" id="diaryBellySize" placeholder="Circumference">
+                    </div>
+                    <div class="form-group">
+                        <label>Baby Movements</label>
+                        <select id="diaryMovements">
+                            <option value="">-- Select --</option>
+                            <option value="nessuno">None</option>
+                            <option value="pochi">Few</option>
+                            <option value="normali">Normal</option>
+                            <option value="molto">Very active</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Personal Notes</label>
+                        <textarea aria-label="Note Personali" id="diaryNotes" placeholder="Thoughts, feelings, memories of the week..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: Visite Mediche -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Medical Visits</h3>
+                        <button class="card-header-btn" onclick="app.showMedicalVisitModal()">+ Add Visit</button>
+                    </div>
+                    <div id="visitsList"></div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: Lista Nascita -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Nursery</h3>
+                    </div>
+                    <div id="categoryNursery"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('nursery')">+ Add Item</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Clothing</h3>
+                    </div>
+                    <div id="categoryClothing"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('clothing')">+ Add Item</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hygiene & Care</h3>
+                    </div>
+                    <div id="categoryHygiene"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('hygiene')">+ Add Item</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Feeding</h3>
+                    </div>
+                    <div id="categoryFeeding"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('feeding')">+ Add Item</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Stroller & Car Seat</h3>
+                    </div>
+                    <div id="categoryTransport"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('transport')">+ Add Item</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hospital</h3>
+                    </div>
+                    <div id="categoryHospital"></div>
+                    <button class="btn btn-secondary" onclick="app.addItemToCategory('hospital')">+ Add Item</button>
+                </div>
+            </div>
+
+            <!-- PAGE 4: Alimentazione -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Daily Meal Tracker</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="mealDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Breakfast</label>
+                        <input type="text" id="mealBreakfast" placeholder="e.g. toast, coffee, juice...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Morning Snack</label>
+                        <input type="text" id="mealSnack1" placeholder="e.g. fruit, yogurt...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lunch</label>
+                        <input type="text" id="mealLunch" placeholder="e.g. pasta, veggies, meat...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Afternoon Snack</label>
+                        <input type="text" id="mealSnack2" placeholder="e.g. nuts, cookies...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dinner</label>
+                        <input type="text" id="mealDinner" placeholder="e.g. fish, veggies, rice...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Glasses of Water</label>
+                        <input type="number" id="waterGlasses" min="0" value="0">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="app.saveMealEntry()">Save Meals</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recommended Foods</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Verdure a foglia verde</li>
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Frutta fresca e secca</li>
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Latticini (latte, yogurt)</li>
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Proteine magre (pesce, pollo, uova)</li>
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Cereali integrali</li>
+                        <li style="color: var(--text2); margin-bottom: 10px;">✓ Legumi</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Foods to Avoid</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Alcool</li>
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Caffè in eccesso</li>
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Carne cruda/poco cotta</li>
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Pesce crudo (es: sushi)</li>
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Formaggi molli non pastorizzati</li>
+                        <li style="color: #8b3a3a; margin-bottom: 10px;">✗ Uova crude</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Meal History</h3>
+                    </div>
+                    <div id="mealHistory"></div>
+                </div>
+            </div>
+
+            <!-- PAGE 5: Preparazione Parto -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hospital Bag - For Mom</h3>
+                    </div>
+                    <div id="babyBagMom"></div>
+                    <button class="btn btn-secondary" onclick="app.addToBirthChecklist('mom')">+ Add</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hospital Bag - For Baby</h3>
+                    </div>
+                    <div id="babyBagBaby"></div>
+                    <button class="btn btn-secondary" onclick="app.addToBirthChecklist('baby')">+ Add</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Required Documents</h3>
+                    </div>
+                    <div id="babyBagDocuments"></div>
+                    <button class="btn btn-secondary" onclick="app.addToBirthChecklist('documents')">+ Add</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Birth Plan</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Wishes &amp; Preferences</label>
+                        <textarea aria-label="Desideri e Preferenze" id="birthPlanPreferences" placeholder="e.g. preferred position, companions, music..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Allergies/Intolerances</label>
+                        <textarea aria-label="Allergie/Intolleranze" id="birthPlanAllergies" placeholder="Important medical allergies..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.saveBirthPlan()">Save Birth Plan</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Important Contacts</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Hospital/Clinic</label>
+                        <input type="text" id="contactHospitalName" placeholder="Name">
+                        <input type="text" id="contactHospitalPhone" placeholder="Phone" style="margin-top: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>OB-GYN/Midwife</label>
+                        <input type="text" id="contactGynecologist" placeholder="Name">
+                        <input type="text" id="contactGynecologistPhone" placeholder="Phone" style="margin-top: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Pediatrician</label>
+                        <input type="text" id="contactPediatrician" placeholder="Name">
+                        <input type="text" id="contactPediatricianPhone" placeholder="Phone" style="margin-top: 8px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="app.saveContacts()">Save Contacts</button>
+                </div>
+            </div>
+
+            <!-- PAGE 6: Nomi & Ricordi -->
+            <div class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Favorite Names List</h3>
+                        <button class="card-header-btn" onclick="app.showNameModal()">+ Add Name</button>
+                    </div>
+                    <div id="namesList"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Emotion Diary</h3>
+                        <button class="card-header-btn" onclick="app.showEmotionModal()">+ Nuova Nota</button>
+                    </div>
+                    <div id="emotionsList"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Letters to Baby</h3>
+                        <button class="card-header-btn" onclick="app.showLetterModal()">+ Write Letter</button>
+                    </div>
+                    <div id="lettersList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="quickNoteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('quickNoteModal')">&times;</span>
+                <h3>Add Quick Note</h3>
+            </div>
+            <div class="form-group">
+                <label>Note</label>
+                <textarea aria-label="Nota" id="quickNoteText" placeholder="Write a quick note..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveQuickNote()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('quickNoteModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="medicalVisitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('medicalVisitModal')">&times;</span>
+                <h3>Add Medical Visit</h3>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="visitDate">
+            </div>
+            <div class="form-group">
+                <label>Visit Type</label>
+                <select id="visitType">
+                    <option value="">-- Select --</option>
+                    <option value="ecografia">Ultrasound</option>
+                    <option value="analisi">Blood Test</option>
+                    <option value="visita">Checkup</option>
+                    <option value="altro">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Doctor</label>
+                <input type="text" id="visitDoctor" placeholder="Doctor name">
+            </div>
+            <div class="form-group">
+                <label>Results/Notes</label>
+                <textarea aria-label="Risultati/Note" id="visitResults" placeholder="Visit results and notes..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveMedicalVisit()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('medicalVisitModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="nameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('nameModal')">&times;</span>
+                <h3>Add Name</h3>
+            </div>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="nameInput" placeholder="e.g. Emma, Liam...">
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="nameGender">
+                    <option value="">-- Select --</option>
+                    <option value="maschio">Boy</option>
+                    <option value="femmina">Girl</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Rating (1-5)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="range" id="nameRating" min="1" max="5" value="3" style="flex: 1;">
+                    <span id="ratingDisplay" style="color: var(--gold); font-weight: bold; min-width: 30px;">3</span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveName()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('nameModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="emotionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('emotionModal')">&times;</span>
+                <h3>Emotion Diary</h3>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="emotionDate">
+            </div>
+            <div class="form-group">
+                <label>Text</label>
+                <textarea aria-label="Testo" id="emotionText" placeholder="Write your feelings and emotions..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveEmotion()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('emotionModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="letterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('letterModal')">&times;</span>
+                <h3>Letter to Baby</h3>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="letterDate">
+            </div>
+            <div class="form-group">
+                <label>Letter</label>
+                <textarea aria-label="Lettera" id="letterText" placeholder="Write a letter to your baby..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveLetter()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('letterModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="listItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="app.closeModal('listItemModal')">&times;</span>
+                <h3>Add Item</h3>
+            </div>
+            <div class="form-group">
+                <label>Item</label>
+                <input type="text" id="itemName" placeholder="Item name">
+            </div>
+            <div class="form-group">
+                <label>Estimated Price (€)</label>
+                <input type="number" id="itemPrice" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <input type="text" id="itemNotes" placeholder="e.g. brand, color...">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="app.saveListItem()">Save</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('listItemModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+        function toggleMobileNav(){document.querySelector('.sidebar').classList.toggle('mob-open');var o=document.getElementById('mobOverlay');if(o)o.classList.toggle('show');}
+        function closeMobileNav(){document.querySelector('.sidebar').classList.remove('mob-open');var o=document.getElementById('mobOverlay');if(o)o.classList.remove('show');}
+        const app = {
+            data: {
+                lmpDate: '',
+                prePregnancyWeight: 0,
+                currentWeight: 0,
+                quickNotes: [],
+                weeklyDiary: {},
+                medicalVisits: [],
+                babyList: {
+                    nursery: [],
+                    clothing: [],
+                    hygiene: [],
+                    feeding: [],
+                    transport: [],
+                    hospital: []
+                },
+                mealEntries: [],
+                birthPlan: {},
+                contacts: {},
+                names: [],
+                emotions: [],
+                letters: []
+            },
+
+            currentPage: 0,
+            currentEditingId: null,
+            currentCategory: null,
+
+            init() {
+                this.loadData();
+                this.setupEventListeners();
+                this.updateDashboard();
+                this.setMealDateToday();
+                this.setEmotionDateToday();
+                this.setLetterDateToday();
+            },
+
+            setupEventListeners() {
+                document.querySelectorAll('.nav-link').forEach((link, index) => {
+                    link.addEventListener('click', () => this.switchPage(index));
+                });
+
+                document.getElementById('nameRating').addEventListener('input', (e) => {
+                    document.getElementById('ratingDisplay').textContent = e.target.value;
+                });
+
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.remove('active');
+                        }
+                    });
+                });
+            },
+
+            switchPage(pageIndex) {
+                closeMobileNav();
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+                document.querySelectorAll('.page')[pageIndex].classList.add('active');
+                document.querySelectorAll('.nav-link')[pageIndex].classList.add('active');
+
+                const titles = [
+                    'Overview',
+                    'Weekly Diary',
+                    'Medical Visits',
+                    'Baby Checklist',
+                    'Nutrition',
+                    'Birth Prep',
+                    'Names & Memories'
+                ];
+                document.getElementById('pageTitle').textContent = titles[pageIndex];
+                this.currentPage = pageIndex;
+
+                if (pageIndex === 1) {
+                    this.loadWeeklyDiary();
+                } else if (pageIndex === 4) {
+                    this.setMealDateToday();
+                    this.renderMealHistory();
+                }
+            },
+
+            updateDashboard() {
+                if (this.data.lmpDate) {
+                    const lmp = new Date(this.data.lmpDate);
+                    const currentDate = new Date();
+                    const weeksElapsed = Math.floor((currentDate - lmp) / (7 * 24 * 60 * 60 * 1000));
+                    document.getElementById('currentWeek').textContent = Math.max(0, weeksElapsed);
+
+                    const dueDate = new Date(lmp);
+                    dueDate.setDate(dueDate.getDate() + 280);
+                    const dueDateStr = dueDate.toLocaleDateString('it-IT');
+                    document.getElementById('dueDate').textContent = dueDateStr;
+
+                    const daysLeft = Math.ceil((dueDate - currentDate) / (24 * 60 * 60 * 1000));
+                    document.getElementById('countdown').textContent = Math.max(0, daysLeft);
+                }
+
+                if (this.data.medicalVisits.length > 0) {
+                    const nextVisit = this.data.medicalVisits
+                        .filter(v => new Date(v.date) >= new Date())
+                        .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+                    if (nextVisit) {
+                        document.getElementById('nextVisit').textContent = new Date(nextVisit.date).toLocaleDateString('it-IT');
+                    }
+                }
+
+                if (this.data.currentWeight > 0) {
+                    document.getElementById('currentWeight').textContent = this.data.currentWeight.toFixed(1);
+                }
+
+                this.renderQuickNotes();
+            },
+
+            saveDashboardInfo() {
+                this.data.lmpDate = document.getElementById('lmpDate').value;
+                this.data.prePregnancyWeight = parseFloat(document.getElementById('prePregnancyWeight').value) || 0;
+                this.saveData();
+                this.updateDashboard();
+                alert('Info saved!');
+            },
+
+            // Quick Notes
+            showQuickNoteModal() {
+                document.getElementById('quickNoteText').value = '';
+                this.currentEditingId = null;
+                document.getElementById('quickNoteModal').classList.add('active');
+            },
+
+            saveQuickNote() {
+                const text = document.getElementById('quickNoteText').value.trim();
+                if (!text) {
+                    alert('Enter text for the note');
+                    return;
+                }
+
+                if (this.currentEditingId !== null) {
+                    this.data.quickNotes[this.currentEditingId].text = text;
+                } else {
+                    this.data.quickNotes.push({
+                        id: Date.now(),
+                        text: text,
+                        date: new Date().toLocaleDateString('it-IT')
+                    });
+                }
+
+                this.saveData();
+                this.closeModal('quickNoteModal');
+                this.updateDashboard();
+            },
+
+            deleteQuickNote(id) {
+                this.data.quickNotes = this.data.quickNotes.filter(n => n.id !== id);
+                this.saveData();
+                this.updateDashboard();
+            },
+
+            renderQuickNotes() {
+                const container = document.getElementById('quickNotesList');
+                container.innerHTML = '';
+                this.data.quickNotes.forEach((note, index) => {
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${esc(note.text)}</div>
+                                <div class="list-item-meta">${esc(note.date)}</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteQuickNote(${note.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            },
+
+            // Weekly Diary
+            loadWeeklyDiary() {
+                const week = parseInt(document.getElementById('weekSelector').value) || 1;
+                if (week < 1 || week > 40) {
+                    alert('Select a week between 1 and 40');
+                    return;
+                }
+
+                document.getElementById('weekTitle').textContent = `Week ${week}`;
+
+                if (!this.data.weeklyDiary[week]) {
+                    this.data.weeklyDiary[week] = {
+                        symptoms: '',
+                        mood: '',
+                        weight: '',
+                        bellySize: '',
+                        movements: '',
+                        notes: ''
+                    };
+                }
+
+                const entry = this.data.weeklyDiary[week];
+                document.getElementById('diarySymptoms').value = entry.symptoms || '';
+                document.getElementById('diaryMood').value = entry.mood || '';
+                document.getElementById('diaryWeight').value = entry.weight || '';
+                document.getElementById('diaryBellySize').value = entry.bellySize || '';
+                document.getElementById('diaryMovements').value = entry.movements || '';
+                document.getElementById('diaryNotes').value = entry.notes || '';
+            },
+
+            saveWeeklyEntry() {
+                const week = parseInt(document.getElementById('weekSelector').value) || 1;
+                if (week < 1 || week > 40) {
+                    alert('Invalid week');
+                    return;
+                }
+
+                this.data.weeklyDiary[week] = {
+                    symptoms: document.getElementById('diarySymptoms').value,
+                    mood: document.getElementById('diaryMood').value,
+                    weight: document.getElementById('diaryWeight').value,
+                    bellySize: document.getElementById('diaryBellySize').value,
+                    movements: document.getElementById('diaryMovements').value,
+                    notes: document.getElementById('diaryNotes').value
+                };
+
+                this.data.currentWeight = parseFloat(document.getElementById('diaryWeight').value) || this.data.currentWeight;
+                this.saveData();
+                this.updateDashboard();
+                alert(`Week ${week} saved!`);
+            },
+
+            // Medical Visits
+            showMedicalVisitModal() {
+                document.getElementById('visitDate').value = '';
+                document.getElementById('visitType').value = '';
+                document.getElementById('visitDoctor').value = '';
+                document.getElementById('visitResults').value = '';
+                this.currentEditingId = null;
+                document.getElementById('medicalVisitModal').classList.add('active');
+            },
+
+            saveMedicalVisit() {
+                const date = document.getElementById('visitDate').value;
+                const type = document.getElementById('visitType').value;
+                const doctor = document.getElementById('visitDoctor').value;
+                const results = document.getElementById('visitResults').value;
+
+                if (!date || !type || !doctor) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+
+                if (this.currentEditingId !== null) {
+                    this.data.medicalVisits[this.currentEditingId] = { id: Date.now(), date, type, doctor, results };
+                } else {
+                    this.data.medicalVisits.push({ id: Date.now(), date, type, doctor, results });
+                }
+
+                this.data.medicalVisits.sort((a, b) => new Date(a.date) - new Date(b.date));
+                this.saveData();
+                this.closeModal('medicalVisitModal');
+                this.renderMedicalVisits();
+                this.updateDashboard();
+            },
+
+            deleteMedicalVisit(id) {
+                this.data.medicalVisits = this.data.medicalVisits.filter(v => v.id !== id);
+                this.saveData();
+                this.renderMedicalVisits();
+                this.updateDashboard();
+            },
+
+            renderMedicalVisits() {
+                const container = document.getElementById('visitsList');
+                container.innerHTML = '';
+                this.data.medicalVisits.forEach((visit, index) => {
+                    const typeLabel = {
+                        'ecografia': 'Ecografia',
+                        'analisi': 'Analisi',
+                        'visita': 'Visita Medica',
+                        'altro': 'Altro'
+                    }[visit.type] || visit.type;
+
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${typeLabel} - ${esc(visit.doctor)}</div>
+                                <div class="list-item-meta">${new Date(visit.date).toLocaleDateString('it-IT')}</div>
+                                <div class="list-item-meta">${esc(visit.results)}</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteMedicalVisit(${visit.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (this.data.medicalVisits.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No visits scheduled</p>';
+                }
+            },
+
+            // Baby List
+            addItemToCategory(category) {
+                this.currentCategory = category;
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemPrice').value = '';
+                document.getElementById('itemNotes').value = '';
+                this.currentEditingId = null;
+                document.getElementById('listItemModal').classList.add('active');
+            },
+
+            saveListItem() {
+                const name = document.getElementById('itemName').value.trim();
+                const price = parseFloat(document.getElementById('itemPrice').value) || 0;
+                const notes = document.getElementById('itemNotes').value.trim();
+
+                if (!name) {
+                    alert('Enter the item name');
+                    return;
+                }
+
+                const item = {
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    notes: notes,
+                    purchased: false
+                };
+
+                if (this.currentCategory) {
+                    this.data.babyList[this.currentCategory].push(item);
+                    this.saveData();
+                    this.closeModal('listItemModal');
+                    this.renderListCategory(this.currentCategory);
+                }
+            },
+
+            deleteListItem(category, id) {
+                this.data.babyList[category] = this.data.babyList[category].filter(i => i.id !== id);
+                this.saveData();
+                this.renderListCategory(category);
+            },
+
+            toggleListItem(category, id) {
+                const item = this.data.babyList[category].find(i => i.id === id);
+                if (item) {
+                    item.purchased = !item.purchased;
+                    this.saveData();
+                    this.renderListCategory(category);
+                }
+            },
+
+            renderListCategory(category) {
+                const categoryLabels = {
+                    'nursery': 'categoryNursery',
+                    'clothing': 'categoryClothing',
+                    'hygiene': 'categoryHygiene',
+                    'feeding': 'categoryFeeding',
+                    'transport': 'categoryTransport',
+                    'hospital': 'categoryHospital'
+                };
+
+                const container = document.getElementById(categoryLabels[category]);
+                container.innerHTML = '';
+                const items = this.data.babyList[category];
+
+                items.forEach(item => {
+                    container.innerHTML += `
+                        <div class="list-item" style="opacity: ${item.purchased ? 0.6 : 1};">
+                            <div class="list-item-content">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" ${item.purchased ? 'checked' : ''}
+                                           onchange="app.toggleListItem('${category}', ${item.id})">
+                                    <span style="text-decoration: ${item.purchased ? 'line-through' : 'none'}; flex: 1;">
+                                        ${esc(item.name)}
+                                    </span>
+                                </div>
+                                <div class="list-item-meta">${item.price > 0 ? '€' + item.price.toFixed(2) : 'N/A'}</div>
+                                <div class="list-item-meta">${esc(item.notes)}</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteListItem('${category}', ${item.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if (items.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No items added</p>';
+                }
+            },
+
+            // Meals
+            setMealDateToday() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('mealDate').value = today;
+            },
+
+            saveMealEntry() {
+                const date = document.getElementById('mealDate').value;
+                if (!date) {
+                    alert('Select a date');
+                    return;
+                }
+
+                const entry = {
+                    id: Date.now(),
+                    date: date,
+                    breakfast: document.getElementById('mealBreakfast').value,
+                    snack1: document.getElementById('mealSnack1').value,
+                    lunch: document.getElementById('mealLunch').value,
+                    snack2: document.getElementById('mealSnack2').value,
+                    dinner: document.getElementById('mealDinner').value,
+                    water: parseInt(document.getElementById('mealWaterGlasses').value) || 0
+                };
+
+                const existingIndex = this.data.mealEntries.findIndex(e => e.date === date);
+                if (existingIndex !== -1) {
+                    this.data.mealEntries[existingIndex] = entry;
+                } else {
+                    this.data.mealEntries.push(entry);
+                }
+
+                this.saveData();
+                alert('Meals saved!');
+                this.renderMealHistory();
+            },
+
+            renderMealHistory() {
+                const container = document.getElementById('mealHistory');
+                container.innerHTML = '';
+                this.data.mealEntries.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10).forEach(entry => {
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${new Date(entry.date).toLocaleDateString('it-IT')}</div>
+                                <div class="list-item-meta">💧 ${entry.water} bicchieri d'acqua</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (this.data.mealEntries.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No meals logged</p>';
+                }
+            },
+
+            // Birth Plan
+            saveBirthPlan() {
+                this.data.birthPlan = {
+                    preferences: document.getElementById('birthPlanPreferences').value,
+                    allergies: document.getElementById('birthPlanAllergies').value
+                };
+                this.saveData();
+                alert('Birth plan saved!');
+            },
+
+            saveContacts() {
+                this.data.contacts = {
+                    hospitalName: document.getElementById('contactHospitalName').value,
+                    hospitalPhone: document.getElementById('contactHospitalPhone').value,
+                    gynecologist: document.getElementById('contactGynecologist').value,
+                    gynecologistPhone: document.getElementById('contactGynecologistPhone').value,
+                    pediatrician: document.getElementById('contactPediatrician').value,
+                    pediatricianPhone: document.getElementById('contactPediatricianPhone').value
+                };
+                this.saveData();
+                alert('Contacts saved!');
+            },
+
+            addToBirthChecklist(type) {
+                this.currentCategory = type;
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemPrice').value = '';
+                document.getElementById('itemNotes').value = '';
+                this.currentEditingId = null;
+                document.getElementById('listItemModal').classList.add('active');
+            },
+
+            // Names
+            showNameModal() {
+                document.getElementById('nameInput').value = '';
+                document.getElementById('nameGender').value = '';
+                document.getElementById('nameRating').value = '3';
+                document.getElementById('ratingDisplay').textContent = '3';
+                this.currentEditingId = null;
+                document.getElementById('nameModal').classList.add('active');
+            },
+
+            saveName() {
+                const name = document.getElementById('nameInput').value.trim();
+                const gender = document.getElementById('nameGender').value;
+                const rating = parseInt(document.getElementById('nameRating').value);
+
+                if (!name || !gender) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                this.data.names.push({
+                    id: Date.now(),
+                    name: name,
+                    gender: gender,
+                    rating: rating
+                });
+
+                this.saveData();
+                this.closeModal('nameModal');
+                this.renderNames();
+            },
+
+            deleteName(id) {
+                this.data.names = this.data.names.filter(n => n.id !== id);
+                this.saveData();
+                this.renderNames();
+            },
+
+            renderNames() {
+                const container = document.getElementById('namesList');
+                container.innerHTML = '';
+                this.data.names.sort((a, b) => b.rating - a.rating).forEach(name => {
+                    const genderLabel = name.gender === 'maschio' ? '👦' : '👧';
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${genderLabel} ${esc(name.name)}</div>
+                                <div class="list-item-meta">⭐ ${name.rating}/5</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteName(${name.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (this.data.names.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No names added</p>';
+                }
+            },
+
+            // Emotions
+            setEmotionDateToday() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('emotionDate').value = today;
+            },
+
+            showEmotionModal() {
+                this.setEmotionDateToday();
+                document.getElementById('emotionText').value = '';
+                this.currentEditingId = null;
+                document.getElementById('emotionModal').classList.add('active');
+            },
+
+            saveEmotion() {
+                const date = document.getElementById('emotionDate').value;
+                const text = document.getElementById('emotionText').value.trim();
+
+                if (!date || !text) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                this.data.emotions.push({
+                    id: Date.now(),
+                    date: date,
+                    text: text
+                });
+
+                this.saveData();
+                this.closeModal('emotionModal');
+                this.renderEmotions();
+            },
+
+            deleteEmotion(id) {
+                this.data.emotions = this.data.emotions.filter(e => e.id !== id);
+                this.saveData();
+                this.renderEmotions();
+            },
+
+            renderEmotions() {
+                const container = document.getElementById('emotionsList');
+                container.innerHTML = '';
+                this.data.emotions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(emotion => {
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${new Date(emotion.date).toLocaleDateString('it-IT')}</div>
+                                <div class="list-item-meta">${esc(emotion.text)}</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteEmotion(${emotion.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (this.data.emotions.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No emotional notes</p>';
+                }
+            },
+
+            // Letters
+            setLetterDateToday() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('letterDate').value = today;
+            },
+
+            showLetterModal() {
+                this.setLetterDateToday();
+                document.getElementById('letterText').value = '';
+                this.currentEditingId = null;
+                document.getElementById('letterModal').classList.add('active');
+            },
+
+            saveLetter() {
+                const date = document.getElementById('letterDate').value;
+                const text = document.getElementById('letterText').value.trim();
+
+                if (!date || !text) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                this.data.letters.push({
+                    id: Date.now(),
+                    date: date,
+                    text: text
+                });
+
+                this.saveData();
+                this.closeModal('letterModal');
+                this.renderLetters();
+            },
+
+            deleteLetter(id) {
+                this.data.letters = this.data.letters.filter(l => l.id !== id);
+                this.saveData();
+                this.renderLetters();
+            },
+
+            renderLetters() {
+                const container = document.getElementById('lettersList');
+                container.innerHTML = '';
+                this.data.letters.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(letter => {
+                    container.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-content">
+                                <div class="list-item-title">${new Date(letter.date).toLocaleDateString('it-IT')}</div>
+                                <div class="list-item-meta">${esc(letter.text.substring(0, 50))}...</div>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-danger" onclick="app.deleteLetter(${letter.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (this.data.letters.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text2);">No letters written</p>';
+                }
+            },
+
+            // Modal Management
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            },
+
+            // LocalStorage
+            saveData() {
+                try {
+                localStorage.setItem('gravpro', JSON.stringify(this.data));
+                } catch(e) {}
+            },
+
+            loadData() {
+                let saved = null;
+                try {
+                saved = localStorage.getItem('gravpro');
+                } catch(e) {}
+                if (saved) {
+                    this.data = JSON.parse(saved);
+                }
+                this.renderMedicalVisits();
+                document.querySelectorAll('[id^="category"]').forEach(el => {
+                    const category = el.id.replace('category', '').toLowerCase();
+                    if (this.data.babyList[category]) {
+                        this.renderListCategory(category);
+                    }
+                });
+                this.renderNames();
+                this.renderEmotions();
+                this.renderLetters();
+            }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</div><!-- /appContent -->
+<script>(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='d1apn8cw1a',K='etherlabs_gravidanza-planner_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+})();</script>
+</body>
+</html>
