@@ -2024,6 +2024,6 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-too
 })();
 </script>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
-<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='dark'?'dark':'light');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </body>
 </html>
