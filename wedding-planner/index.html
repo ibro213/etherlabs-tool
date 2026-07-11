@@ -1428,7 +1428,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function renderGuests() {
+            const persone = g => parseInt(g.persone) || 1;
+            const conf = data.guests.filter(g => g.confermato === 'si').length;
+            const att = data.guests.filter(g => g.confermato === 'attesa').length;
+            const coperti = data.guests.filter(g => g.confermato !== 'no').reduce((s, g) => s + persone(g), 0);
             const html = `
+                <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:16px;">
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--text-primary);">${data.guests.length}</strong> inviti</span>
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--success);">${conf}</strong> confermati</span>
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--warning);">${att}</strong> in attesa</span>
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--gold);">${coperti}</strong> coperti</span>
+                </div>
                 <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; padding: 0 12px;">
                     <strong>Nome</strong> | <strong>Lato</strong> | <strong>Conferma</strong> | <strong>Persone</strong>
                 </div>
@@ -1447,8 +1457,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <option value="si" ${g.confermato === 'si' ? 'selected' : ''}>Si</option>
                             <option value="no" ${g.confermato === 'no' ? 'selected' : ''}>No</option>
                         </select>
-                        <input class="guest-input" type="number" value="${g.persone || 1}"
-                            onchange="updateGuest(${i}, 'persone', this.value)" min="1">
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <input class="guest-input" type="number" value="${g.persone || 1}"
+                                onchange="updateGuest(${i}, 'persone', this.value)" min="1" style="flex:1;min-width:0;">
+                            <button type="button" onclick="deleteGuest(${i})" title="Rimuovi invitato" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;line-height:1;padding:0 2px;">&times;</button>
+                        </div>
                     </div>
                 `).join('')}
             `;
@@ -1470,6 +1483,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderDashboard();
         }
 
+        function deleteGuest(i) {
+            data.guests.splice(i, 1);
+            save();
+            renderGuests();
+            renderDashboard();
+        }
+
         function renderVendors() {
             const vendors = data.vendors.length === 0 ? [] : data.vendors;
             const html = vendors.map((v, i) => `
@@ -1485,11 +1505,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                                     value="${esc(v.servizio)}" onchange="updateVendor(${i}, 'servizio', this.value)">
                             </div>
                         </div>
-                        <select class="vendor-status" onchange="updateVendor(${i}, 'stato', this.value)">
-                            <option value="contattato" ${v.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
-                            <option value="confermato" ${v.stato === 'confermato' ? 'selected' : ''}>Confermato</option>
-                            <option value="pagato" ${v.stato === 'pagato' ? 'selected' : ''}>Pagato</option>
-                        </select>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <select class="vendor-status" onchange="updateVendor(${i}, 'stato', this.value)">
+                                <option value="contattato" ${v.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
+                                <option value="confermato" ${v.stato === 'confermato' ? 'selected' : ''}>Confermato</option>
+                                <option value="pagato" ${v.stato === 'pagato' ? 'selected' : ''}>Pagato</option>
+                            </select>
+                            <button type="button" onclick="deleteVendor(${i})" title="Rimuovi fornitore" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:20px;line-height:1;padding:0 4px;">&times;</button>
+                        </div>
                     </div>
                     <div class="vendor-details">
                         <div class="vendor-detail">
@@ -1517,6 +1540,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function updateVendor(i, field, value) {
             data.vendors[i][field] = value;
+            save();
+            renderVendors();
+        }
+
+        function deleteVendor(i) {
+            data.vendors.splice(i, 1);
             save();
             renderVendors();
         }
