@@ -1466,8 +1466,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function renderComparison(snowball, avalanche) {
             const saved = snowball.totalInterest - avalanche.totalInterest;
             const monthsSaved = snowball.months - avalanche.months;
-            const snFirst = (snowball.payoffOrder[0] || {}).name || '—';
-            const avFirst = (avalanche.payoffOrder[0] || {}).name || '—';
+            const snFirst = (debts.slice().sort((a, b) => a.balance - b.balance)[0] || {}).name || '—';
+            const avFirst = (debts.slice().sort((a, b) => b.rate - a.rate)[0] || {}).name || '—';
             const bothConv = snowball.converged && avalanche.converged;
             const intDiff = Math.abs(saved);
             const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 <strong>Same ${snowball.months} months either way</strong> — but <strong>Avalanche</strong> pays <strong style="color:var(--el-emerald,#10b981);">${fmtC(intDiff)} less interest</strong> (it attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first). <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. Choose Avalanche to save money, Snowball to stay motivated.</div>`;
@@ -1822,6 +1822,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         // Persist extra payment on change
         document.getElementById('extraPayment').addEventListener('input', function () {
             try { localStorage.setItem(EXTRA_KEY, this.value); } catch (e) {}
+            if (debts.length > 0) { calculatePayoff(); calculateWhatIf(); }
         });
 
         // Redraw theme-aware chart when the theme toggles
