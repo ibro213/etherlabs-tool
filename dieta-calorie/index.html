@@ -19,6 +19,18 @@
         }
 
         :root {
+            --bg: #eef1f4;
+            --bg2: #ffffff;
+            --bg3: #f5f7f9;
+            --gold: #10b981;
+            --gold-light: #0a8f63;
+            --gold-dark: #059669;
+            --text1: #1b1e22;
+            --text2: #5a616a;
+            --text3: #9198a1;
+            --border: #e3e7ec;
+        }
+        :root[data-theme="dark"] {
             --bg: #060a0a;
             --bg2: #0a1210;
             --bg3: #0f1a17;
@@ -652,6 +664,8 @@
             .nav-items { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             button, .btn, .nav-item { min-height: 44px; }
         }
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);color:var(--text1);font-size:18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
 
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
@@ -2107,6 +2121,8 @@
         // ===== INIT =====
         init();
     </script>
+<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'☀️':'🌙';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
