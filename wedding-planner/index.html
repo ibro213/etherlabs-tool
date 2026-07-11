@@ -781,9 +781,12 @@
                 <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px;">Riepilogo Menu</h2>
                 <div class="menu-summary" id="menuSummary"></div>
 
-                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px; margin-top: 32px;">Assegnazione Tavoli</h2>
+                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px; margin-top: 32px;">Tavoli</h2>
                 <div class="add-button" onclick="addTable()">+ Nuovo Tavolo</div>
                 <div id="tablesList"></div>
+
+                <h2 style="color: var(--text-primary); font-size: 18px; margin-bottom: 16px; margin-top: 32px;">Assegnazione Ospiti</h2>
+                <div id="seatingList"></div>
             </div>
 
             <!-- SETTINGS PAGE -->
@@ -1316,7 +1319,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const [h, p] = titles[page];
             document.querySelector('.header h1').textContent = h;
             document.querySelector('.header p').textContent = p;
-        
+            if (page === 'tables') renderTables();
+
     // chiudi sidebar mobile
     var _sb = document.querySelector('.sidebar');
     var _ov = document.getElementById('mobOverlay');
@@ -1550,36 +1554,88 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function renderTables() {
             const menus = ['Carne', 'Pesce', 'Vegetariano', 'Vegano', 'Bambini'];
-            const menuCounts = [0, 0, 0, 0, 0];
+            const persone = g => parseInt(g.persone) || 1;
+            const attending = data.guests.filter(g => g.confermato !== 'no');
 
-            const html = menus.map((menu, i) => `
-                <div class="menu-card">
-                    <div class="menu-count">${menuCounts[i]}</div>
-                    <div class="menu-type">${menu}</div>
-                </div>
-            `).join('');
+            // 1) Riepilogo menu — conteggi reali dagli invitati
+            const counts = menus.map(m => attending.filter(g => g.menu === m).reduce((s, g) => s + persone(g), 0));
+            const totale = attending.reduce((s, g) => s + persone(g), 0);
+            const senzaMenu = attending.filter(g => !g.menu).reduce((s, g) => s + persone(g), 0);
+            document.getElementById('menuSummary').innerHTML =
+                menus.map((m, i) => `<div class="menu-card"><div class="menu-count">${counts[i]}</div><div class="menu-type">${m}</div></div>`).join('')
+                + `<div class="menu-card" style="border-color:var(--gold);"><div class="menu-count" style="color:var(--gold);">${totale}</div><div class="menu-type">Totale coperti</div></div>`
+                + (senzaMenu > 0 ? `<div class="menu-card" style="border-color:var(--warning);"><div class="menu-count" style="color:var(--warning);">${senzaMenu}</div><div class="menu-type">Senza menu</div></div>` : '');
 
-            document.getElementById('menuSummary').innerHTML = html;
+            // 2) Tavoli — capacità + ospiti assegnati + occupazione
+            if (data.tables.length === 0) {
+                document.getElementById('tablesList').innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:6px 0 12px;">Nessun tavolo ancora. Aggiungine uno per iniziare ad assegnare gli invitati.</div>';
+            } else {
+                document.getElementById('tablesList').innerHTML = data.tables.map((t, i) => {
+                    const posti = parseInt(t.posti) || 8;
+                    const seduti = data.guests.filter(g => g.tavolo === t.nome && g.confermato !== 'no');
+                    const usati = seduti.reduce((s, g) => s + persone(g), 0);
+                    const over = usati > posti;
+                    const chips = seduti.length
+                        ? seduti.map(g => `<span style="display:inline-block;background:var(--bg-dark);border:1px solid var(--border);border-radius:14px;padding:3px 11px;margin:4px 5px 0 0;font-size:12px;color:var(--text-primary);">${esc(g.nome)}${persone(g) > 1 ? ' &times;' + persone(g) : ''}${g.menu ? ' &middot; ' + g.menu : ''}</span>`).join('')
+                        : '<span style="color:var(--text-secondary);font-size:12px;">Nessun ospite assegnato</span>';
+                    return `<div class="vendor-card" style="margin-bottom:16px;">
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input class="guest-input" type="text" placeholder="Tavolo ${i + 1}" value="${esc(t.nome)}" onchange="updateTable(${i}, 'nome', this.value)" style="flex:1;">
+                            <input class="guest-input" type="number" min="1" value="${posti}" title="Posti" onchange="updateTable(${i}, 'posti', this.value)" style="width:72px;">
+                            <span style="font-size:13px;font-weight:700;white-space:nowrap;color:${over ? 'var(--danger)' : 'var(--success)'};">${usati}/${posti}</span>
+                            <button type="button" onclick="deleteTable(${i})" title="Elimina tavolo" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:20px;line-height:1;padding:0 4px;">&times;</button>
+                        </div>
+                        <div style="margin-top:8px;">${chips}</div>
+                    </div>`;
+                }).join('');
+            }
 
-            const tables = data.tables.length === 0 ? [] : data.tables;
-            const tablesHtml = tables.map((t, i) => `
-                <div class="vendor-card" style="margin-bottom: 16px;">
-                    <input class="guest-input" type="text" placeholder="Tavolo 1"
-                        value="${esc(t.nome)}" onchange="updateTable(${i}, 'nome', this.value)">
-                </div>
-            `).join('');
-
-            document.getElementById('tablesList').innerHTML = tablesHtml;
+            // 3) Assegnazione ospiti — tavolo + menu per ogni invitato
+            const seatable = attending;
+            if (seatable.length === 0) {
+                document.getElementById('seatingList').innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:6px 0;">Aggiungi invitati nella sezione "Invitati" per poterli assegnare ai tavoli.</div>';
+            } else {
+                const tblOpts = cur => '<option value="">&mdash; Tavolo &mdash;</option>' + data.tables.map(tb => `<option value="${esc(tb.nome)}" ${cur === tb.nome ? 'selected' : ''}>${esc(tb.nome)}</option>`).join('');
+                const menuOpts = cur => '<option value="">&mdash; Menu &mdash;</option>' + menus.map(m => `<option value="${m}" ${cur === m ? 'selected' : ''}>${m}</option>`).join('');
+                const nonAssegnati = seatable.filter(g => !g.tavolo).reduce((s, g) => s + persone(g), 0);
+                const header = nonAssegnati > 0
+                    ? `<div style="font-size:12.5px;color:var(--warning);margin-bottom:12px;">&#9888;&#65039; ${nonAssegnati} coperti ancora senza tavolo</div>`
+                    : '<div style="font-size:12.5px;color:var(--success);margin-bottom:12px;">&#10003; Tutti gli invitati sono assegnati a un tavolo</div>';
+                document.getElementById('seatingList').innerHTML = header + data.guests.map((g, i) => g.confermato === 'no' ? '' : `
+                    <div class="vendor-card" style="margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                        <div style="flex:1 1 140px;min-width:110px;font-size:14px;color:var(--text-primary);">${esc(g.nome)}${persone(g) > 1 ? ` <span style="color:var(--text-secondary);font-size:12px;">&times;${persone(g)}</span>` : ''}</div>
+                        <select class="guest-input" style="flex:1 1 120px;" onchange="seatGuest(${i}, 'tavolo', this.value)">${tblOpts(g.tavolo)}</select>
+                        <select class="guest-input" style="flex:1 1 120px;" onchange="seatGuest(${i}, 'menu', this.value)">${menuOpts(g.menu)}</select>
+                    </div>`).join('');
+            }
         }
 
         function addTable() {
-            data.tables.push({ nome: 'Tavolo ' + (data.tables.length + 1) });
+            data.tables.push({ nome: 'Tavolo ' + (data.tables.length + 1), posti: 8 });
             save();
             renderTables();
         }
 
         function updateTable(i, field, value) {
-            data.tables[i][field] = value;
+            if (field === 'nome') {
+                const old = data.tables[i].nome;
+                data.guests.forEach(g => { if (g.tavolo === old) g.tavolo = value; });
+            }
+            data.tables[i][field] = field === 'posti' ? (parseInt(value) || 1) : value;
+            save();
+            renderTables();
+        }
+
+        function deleteTable(i) {
+            const nm = data.tables[i].nome;
+            data.guests.forEach(g => { if (g.tavolo === nm) g.tavolo = ''; });
+            data.tables.splice(i, 1);
+            save();
+            renderTables();
+        }
+
+        function seatGuest(i, field, value) {
+            data.guests[i][field] = value;
             save();
             renderTables();
         }
