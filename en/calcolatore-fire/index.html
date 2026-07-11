@@ -322,7 +322,7 @@
             width: 100%;
             height: 6px;
             border-radius: 5px;
-            background: linear-gradient(to right, var(--emerald-dark) 0%, var(--emerald-light) 100%);
+            background: var(--el-border);
             outline: none;
             -webkit-appearance: none;
         }
@@ -333,9 +333,10 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: var(--emerald-light);
+            background: var(--emerald);
+            border: 3px solid var(--el-bg2);
             cursor: pointer; touch-action: manipulation;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.30);
             transition: all 0.3s ease;
         }
 
@@ -351,10 +352,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: var(--emerald-light);
+            background: var(--emerald);
             cursor: pointer; touch-action: manipulation;
-            border: none;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            border: 3px solid var(--el-bg2);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.30);
             transition: all 0.3s ease;
         }
 
@@ -566,6 +567,10 @@ button:hover {
             /* the growth chart canvas is dark-on-dark: hide it in print with a note */
             #growthChart { display: none; }
             footer { border-top: 1px solid #ccc; color: #666 !important; }
+            html, body, .container, .section, .full-width { min-height: 0 !important; height: auto !important; }
+            input, select, textarea { background: #ffffff !important; color: #111111 !important; border: 1px solid #cccccc !important; box-shadow: none !important; -webkit-appearance: none; }
+            .section, .full-width, .chart-container { break-inside: auto !important; page-break-inside: auto !important; margin-bottom: 12px !important; }
+            .card, .stat-card, .timeline-item, .scenarios-table tr { break-inside: avoid !important; page-break-inside: avoid !important; }
         }
     
         /* === MOBILE iOS FIX (auto-applied) === */
@@ -1566,10 +1571,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 // X-axis labels
                 const yearStep = Math.ceil(years / 6);
+                ctx.textAlign = 'center';
                 for (let year = 0; year <= years; year += yearStep) {
                     const x = padding + (year / years) * chartWidth;
-                    ctx.fillText(year + ' yrs', x - 15, canvas.height - padding + 20);
+                    ctx.fillText(year + ' yrs', x, canvas.height - padding + 20);
                 }
+                ctx.textAlign = 'left';
 
                 // Draw FIRE number line
                 const fireY = padding + chartHeight * (1 - fireNumber / maxValue);
@@ -1778,7 +1785,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc, DK);
             doc.text(String(RES.milestone25), M, y); doc.text(String(RES.milestone50), col2, y); doc.text(String(RES.milestone75), col3, y);
             doc.setTextColor.apply(doc, EM); doc.text(String(RES.milestone100), W-M, y, {align:'right'});
-            y += 30;
+            y += 34;
+
+            // Return scenarios (pulled from the on-screen table)
+            doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc, DK); doc.text('Return scenarios', M, y); y += 8;
+            doc.setDrawColor(225,230,234); doc.line(M,y,W-M,y); y += 20;
+            const gv = id => ((document.getElementById(id)||{}).textContent || '-').trim();
+            const cY = M + 250, cW = M + 335;
+            doc.setFontSize(9.5); doc.setTextColor.apply(doc, GR); doc.setFont('helvetica','normal');
+            doc.text('Scenario', M, y); doc.text('Years', cY, y); doc.text('Final assets', cW, y); doc.text('Monthly', W-M, y, {align:'right'}); y += 6;
+            doc.setDrawColor(235,238,241); doc.line(M,y,W-M,y); y += 18;
+            [['Pessimistic (5%)','yearsPessimistic','wealthPessimistic','incomePessimistic'],
+             ['Base (7%)','yearsBase','wealthBase','incomeBase'],
+             ['Optimistic (9%)','yearsOptimistic','wealthOptimistic','incomeOptimistic']
+            ].forEach(r => { doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK); doc.setFont('helvetica','bold'); doc.text(r[0], M, y); doc.setFont('helvetica','normal'); doc.text(gv(r[1]), cY, y); doc.text(gv(r[2]), cW, y); doc.text(gv(r[3]), W-M, y, {align:'right'}); y += 20; });
+            y += 10;
+            doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor.apply(doc, GR);
+            doc.text('Estimates for educational purposes only — not financial advice. Consult a certified advisor.', M, y);
 
             const H = doc.internal.pageSize.getHeight();
             doc.setDrawColor(230,234,237); doc.line(M,H-46,W-M,H-46);

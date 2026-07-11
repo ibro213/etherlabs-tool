@@ -241,10 +241,10 @@ button.secondary:hover {
         /* Settings Panel */
         .settings-panel {
             background-color: var(--bg);
-            border: 1px solid var(--brd);
+            border: 0 solid var(--emerald);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 0 20px;
+            margin-bottom: 0;
             max-height: 0;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -252,7 +252,9 @@ button.secondary:hover {
 
         .settings-panel.open {
             max-height: 600px;
-            border-color: var(--emerald);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-width: 1px;
         }
 
         .settings-toggle {
@@ -662,8 +664,8 @@ button.secondary:hover {
             <button class="secondary small" id="resetBtn" onclick="app.reset()">RESET</button>
         </div>
 
+        <button class="settings-toggle" id="settingsToggle" onclick="app.toggleSettings()">⚙️ SETTINGS</button>
         <div class="settings-panel">
-            <button class="settings-toggle" id="settingsToggle" onclick="app.toggleSettings()">⚙️ SETTINGS</button>
             <div class="settings-content">
                 <div class="setting-item">
                     <label class="setting-label">Focus Duration (min)</label>
