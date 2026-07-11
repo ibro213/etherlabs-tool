@@ -21,30 +21,21 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Email Signature">
-    <meta name="theme-color" content="#0a0b0d">
+<title>Email Signature Pro — EtherLabs</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-<title>Email Signature Pro — EtherLabs</title>
 <style>
 
     /* firme calligrafiche incorporate (OFL) */
@@ -98,7 +89,7 @@
     .template-selector { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
     @media (max-width: 768px) { .template-selector { grid-template-columns: 1fr; } }
     .template-btn { padding: 12px; background: var(--bg3); border: 2px solid var(--brd); color: var(--t2); border-radius: 8px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-weight: 500; font-size: 0.88rem; }
-    .template-btn.active { background: rgba(16,185,129,0.2); border-color: var(--emerald); color: var(--emeraldL); }
+    .template-btn.active { background: var(--emerald); border-color: var(--emerald); color: #08130e; }
     .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg3); border-radius: 8px; }
     .toggle-group label { margin: 0; font-weight: 500; }
     .toggle-switch { position: relative; width: 50px; height: 28px; background: var(--brd); border-radius: 14px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background .2s; flex-shrink: 0; }
@@ -110,12 +101,15 @@
         .preview-panel { order: -1; position: sticky; top: 0; z-index: 5; max-height: 52vh; overflow: auto; background: var(--bg2); box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
     }
     .preview-container { background: #fff; border-radius: 12px; padding: 28px; min-height: 260px; border: 1px solid #e5e5e5; overflow-x: auto; }
+    .preview-container.prev-dark { border-color: #333; }
+    .preview-container.prev-dark img[width="15"], .preview-container.prev-dark img[width="22"] { filter: brightness(0) invert(0.82); }
+    .preview-container.prev-dark img.el-hwsig { filter: brightness(0) invert(1); }
     .preview-header { color: #999; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
     .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
     .btn { padding: 12px 18px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; justify-content: center; min-height: 46px; flex: 1 1 auto; }
-    .btn-primary { background: linear-gradient(135deg, var(--emerald), var(--emeraldL)); color: var(--bg); }
-    .btn-secondary { background: rgba(16,185,129,0.15); color: var(--emeraldL); border: 1px solid var(--emerald); }
-    .btn-reset { padding: 12px 14px; height: 44px; border-radius: 8px; border: 1px solid var(--err); background: rgba(248,113,113,0.12); color: var(--err); font-weight: 600; font-size: 0.9rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .btn-primary { background-color: var(--emerald); background-image: linear-gradient(135deg, var(--emerald), var(--emeraldL)); color: #08130e; }
+    .btn-secondary { background: var(--bg3); color: var(--emeraldL); border: 1px solid var(--emerald); }
+    .btn-reset { padding: 12px 14px; height: 44px; border-radius: 8px; border: 1px solid var(--err); background: var(--bg3); color: #dc2626; font-weight: 600; font-size: 0.9rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-family: inherit; }
     @media (hover: hover) { .btn-reset:hover { background: rgba(248,113,113,0.22); } }
     .hint { font-size: 0.82rem; color: var(--t2); margin-top: 12px; line-height: 1.5; }
     .footer { text-align: center; padding: 20px; color: var(--t3); font-size: 0.82rem; border-top: 1px solid var(--brd); margin-top: 30px; }
@@ -142,17 +136,11 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Email Signature Generator</div>
-<div class="lock-sub">Enter the code you received with your purchase</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Email Signature Generator</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
 <div class="container">
@@ -539,7 +527,7 @@ function sigTag(d, center, inkOverride) {
   const ink = inkOverride || '#1a1a1a';
   const sg = renderSignaturePng(d.fullName, d.handwritingStyle, ink);
   const dispH = Math.round(sg.h * 0.8), dispW = Math.round(sg.w * 0.8);
-  return `<img src="${sg.url}" alt="${esc(d.fullName)}" width="${dispW}" height="${dispH}" style="display:block;border:0;width:${dispW}px;height:${dispH}px;${center ? 'margin:0 auto;' : ''}">`;
+  return `<img src="${sg.url}" alt="${esc(d.fullName)}" class="el-hwsig" width="${dispW}" height="${dispH}" style="display:block;border:0;width:${dispW}px;height:${dispH}px;${center ? 'margin:0 auto;' : ''}">`;
 }
 
 const $ = id => document.getElementById(id);
@@ -678,7 +666,7 @@ function applyI18n(){ const L=I18N[state.lang]||I18N.en;
   document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(L[k]!=null||I18N.en[k]!=null) el.textContent = t(k); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ const k=el.getAttribute('data-i18n-ph'); if(L[k]!=null||I18N.en[k]!=null) el.setAttribute('placeholder', t(k)); });
   document.documentElement.lang = state.lang; }
-function updatePreview(){ $('signaturePreview').innerHTML = buildSignature('preview'); saveState(); }
+function updatePreview(){ var pc=document.querySelector('.preview-container'); if(pc){ pc.style.background=state.previewDark?'#1b1b1b':''; pc.classList.toggle('prev-dark', !!state.previewDark); } var h=buildSignature('preview'); if(state.previewDark){ h=h.replace(/color:#111111/g,'color:#f1f3f5').replace(/color:#555555/g,'color:#c4ccd4').replace(/color:#666666/g,'color:#c4ccd4'); } $('signaturePreview').innerHTML=h; saveState(); }
 
 /* ---------- reset / new signature ---------- */
 function resetAll(){
@@ -797,9 +785,9 @@ $('downloadBtn').addEventListener('click', downloadHtml);
 $('vcardBtn').addEventListener('click', downloadVCard);
 $('toggleQr').addEventListener('click', function(){ this.classList.toggle('active'); state.includeQr=this.classList.contains('active'); updatePreview(); });
 $('previewDarkBtn').addEventListener('click', function(){ state.previewDark=!state.previewDark;
-  var pc=document.querySelector('.preview-container'); if(pc){ pc.style.background = state.previewDark ? '#1b1b1b' : ''; }
   this.classList.toggle('active', state.previewDark);
   var lbl=this.querySelector('[data-i18n]'); if(lbl){ var key=state.previewDark?'previewLight':'previewDark'; lbl.setAttribute('data-i18n', key); lbl.textContent=t(key); }
+  updatePreview();
 });
 
 /* ---------- free image cropper (square, movable + resizable) ---------- */
@@ -886,24 +874,15 @@ $('exampleBtn').addEventListener('click', loadExample);
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
-<script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-</script>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='2fw1cjqplez',K='etherlabs_generatore-firma_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='2fw1cjqplez',K='etherlabs_generatore-firma_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

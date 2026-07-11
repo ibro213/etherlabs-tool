@@ -101,6 +101,9 @@
         .preview-panel { order: -1; position: sticky; top: 0; z-index: 5; max-height: 52vh; overflow: auto; background: var(--bg2); box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
     }
     .preview-container { background: #fff; border-radius: 12px; padding: 28px; min-height: 260px; border: 1px solid #e5e5e5; overflow-x: auto; }
+    .preview-container.prev-dark { border-color: #333; }
+    .preview-container.prev-dark img[width="15"], .preview-container.prev-dark img[width="22"] { filter: brightness(0) invert(0.82); }
+    .preview-container.prev-dark img.el-hwsig { filter: brightness(0) invert(1); }
     .preview-header { color: #999; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
     .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
     .btn { padding: 12px 18px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; justify-content: center; min-height: 46px; flex: 1 1 auto; }
@@ -524,7 +527,7 @@ function sigTag(d, center, inkOverride) {
   const ink = inkOverride || '#1a1a1a';
   const sg = renderSignaturePng(d.fullName, d.handwritingStyle, ink);
   const dispH = Math.round(sg.h * 0.8), dispW = Math.round(sg.w * 0.8);
-  return `<img src="${sg.url}" alt="${esc(d.fullName)}" width="${dispW}" height="${dispH}" style="display:block;border:0;width:${dispW}px;height:${dispH}px;${center ? 'margin:0 auto;' : ''}">`;
+  return `<img src="${sg.url}" alt="${esc(d.fullName)}" class="el-hwsig" width="${dispW}" height="${dispH}" style="display:block;border:0;width:${dispW}px;height:${dispH}px;${center ? 'margin:0 auto;' : ''}">`;
 }
 
 const $ = id => document.getElementById(id);
@@ -663,7 +666,7 @@ function applyI18n(){ const L=I18N[state.lang]||I18N.en;
   document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(L[k]!=null||I18N.en[k]!=null) el.textContent = t(k); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ const k=el.getAttribute('data-i18n-ph'); if(L[k]!=null||I18N.en[k]!=null) el.setAttribute('placeholder', t(k)); });
   document.documentElement.lang = state.lang; }
-function updatePreview(){ $('signaturePreview').innerHTML = buildSignature('preview'); saveState(); }
+function updatePreview(){ var pc=document.querySelector('.preview-container'); if(pc){ pc.style.background=state.previewDark?'#1b1b1b':''; pc.classList.toggle('prev-dark', !!state.previewDark); } var h=buildSignature('preview'); if(state.previewDark){ h=h.replace(/color:#111111/g,'color:#f1f3f5').replace(/color:#555555/g,'color:#c4ccd4').replace(/color:#666666/g,'color:#c4ccd4'); } $('signaturePreview').innerHTML=h; saveState(); }
 
 /* ---------- reset / new signature ---------- */
 function resetAll(){
@@ -782,9 +785,9 @@ $('downloadBtn').addEventListener('click', downloadHtml);
 $('vcardBtn').addEventListener('click', downloadVCard);
 $('toggleQr').addEventListener('click', function(){ this.classList.toggle('active'); state.includeQr=this.classList.contains('active'); updatePreview(); });
 $('previewDarkBtn').addEventListener('click', function(){ state.previewDark=!state.previewDark;
-  var pc=document.querySelector('.preview-container'); if(pc){ pc.style.background = state.previewDark ? '#1b1b1b' : ''; }
   this.classList.toggle('active', state.previewDark);
   var lbl=this.querySelector('[data-i18n]'); if(lbl){ var key=state.previewDark?'previewLight':'previewDark'; lbl.setAttribute('data-i18n', key); lbl.textContent=t(key); }
+  updatePreview();
 });
 
 /* ---------- free image cropper (square, movable + resizable) ---------- */
