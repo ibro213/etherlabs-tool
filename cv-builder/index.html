@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
 <style id="el-theme">
 :root{
@@ -1501,7 +1501,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     <script>
         // ============ I18N ============
         // ===== EtherLabs i18n bootstrap =====
-        const __CVLANG__ = (function(){try{var s=localStorage.getItem('cv-lang');if(s==='it'||s==='en')return s;}catch(e){}return 'it';})();
+        const __CVLANG__ = (function(){try{var s=localStorage.getItem('cv-lang');if(s==='it'||s==='en')return s;}catch(e){}var n=(navigator.language||'en').slice(0,2).toLowerCase();return n==='it'?'it':'en';})();
 const T_ALL = { en: {
             yourName: 'Your Name',
             professionalTitle: 'Professional Title',

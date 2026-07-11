@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
 <style id="el-theme">
 :root{
@@ -860,7 +860,7 @@ $('exampleBtn').addEventListener('click', loadExample);
 
 /* ---------- boot ---------- */
 (function init(){ const saved=loadState();
-  if(saved){ applyData(saved); } else { state.lang='it'; $('language').value=state.lang; }
+  if(saved){ applyData(saved); } else { state.lang=detectLang(); $('language').value=state.lang; }
   applyI18n(); updatePreview();
   if (document.fonts && document.fonts.load) {
     Promise.all(SIG_FAMILIES.map(function(f){ return document.fonts.load('40px "' + f + '"'); }))
