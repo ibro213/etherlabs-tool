@@ -1881,11 +1881,11 @@ function detectCountry() {
 /* ---------- logo crop (free aspect) + fit toggle ---------- */
 var _lastLogoSrc=null, _lcImg=new Image(), _lcR={x:0,y:0,w:0,h:0}, _lcDrag=null;
 function _lcq(id){return document.getElementById(id);}
-function _lcDim(){var im=_lcq('logoCropImg');return {w:im.clientWidth||1,h:im.clientHeight||1};}
+function _lcRect(){var stage=_lcq('logoCropStage'),im=_lcq('logoCropImg');var sr=stage.getBoundingClientRect(),ir=im.getBoundingClientRect();return {ox:ir.left-sr.left,oy:ir.top-sr.top,w:im.clientWidth||1,h:im.clientHeight||1};}
 function _lcDraw(){var b=_lcq('logoCropBox');b.style.left=_lcR.x+'px';b.style.top=_lcR.y+'px';b.style.width=_lcR.w+'px';b.style.height=_lcR.h+'px';}
-function _lcClamp(){var d=_lcDim();_lcR.w=Math.max(24,Math.min(_lcR.w,d.w));_lcR.h=Math.max(24,Math.min(_lcR.h,d.h));_lcR.x=Math.max(0,Math.min(_lcR.x,d.w-_lcR.w));_lcR.y=Math.max(0,Math.min(_lcR.y,d.h-_lcR.h));}
-function openLogoCropper(src){_lcImg=new Image();_lcImg.onload=function(){_lcq('logoCropImg').src=src;_lcq('logoCropOverlay').style.display='flex';requestAnimationFrame(function(){var d=_lcDim();_lcR={x:0,y:0,w:d.w,h:d.h};_lcClamp();_lcDraw();});};_lcImg.src=src;}
-function logoCropApply(){try{var d=_lcDim();var sc=(_lcImg.naturalWidth||d.w)/d.w;var sx=_lcR.x*sc,sy=_lcR.y*sc,sw=_lcR.w*sc,sh=_lcR.h*sc;var cap=520,k=Math.min(1,cap/Math.max(sw,sh));var ow=Math.max(1,Math.round(sw*k)),oh=Math.max(1,Math.round(sh*k));var cv=document.createElement('canvas');cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(_lcImg,sx,sy,sw,sh,0,0,ow,oh);state.logoDataUrl=cv.toDataURL('image/png');}catch(e){}_lcq('logoCropOverlay').style.display='none';syncLogoTools();updatePreview();}
+function _lcClamp(){var r=_lcRect();_lcR.w=Math.max(24,Math.min(_lcR.w,r.w));_lcR.h=Math.max(24,Math.min(_lcR.h,r.h));_lcR.x=Math.max(r.ox,Math.min(_lcR.x,r.ox+r.w-_lcR.w));_lcR.y=Math.max(r.oy,Math.min(_lcR.y,r.oy+r.h-_lcR.h));}
+function openLogoCropper(src){_lcImg=new Image();_lcImg.onload=function(){_lcq('logoCropImg').src=src;_lcq('logoCropOverlay').style.display='flex';requestAnimationFrame(function(){var r=_lcRect();_lcR={x:r.ox,y:r.oy,w:r.w,h:r.h};_lcClamp();_lcDraw();});};_lcImg.src=src;}
+function logoCropApply(){try{var r=_lcRect();var sc=(_lcImg.naturalWidth||r.w)/r.w;var sx=(_lcR.x-r.ox)*sc,sy=(_lcR.y-r.oy)*sc,sw=_lcR.w*sc,sh=_lcR.h*sc;var cap=520,k=Math.min(1,cap/Math.max(sw,sh));var ow=Math.max(1,Math.round(sw*k)),oh=Math.max(1,Math.round(sh*k));var cv=document.createElement('canvas');cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(_lcImg,sx,sy,sw,sh,0,0,ow,oh);state.logoDataUrl=cv.toDataURL('image/png');}catch(e){}_lcq('logoCropOverlay').style.display='none';syncLogoTools();updatePreview();}
 function _lcMove(e){if(!_lcDrag)return;var dx=e.clientX-_lcDrag.sx,dy=e.clientY-_lcDrag.sy;if(_lcDrag.mode==='move'){_lcR.x=_lcDrag.x0+dx;_lcR.y=_lcDrag.y0+dy;}else{_lcR.w=_lcDrag.w0+dx;_lcR.h=_lcDrag.h0+dy;}_lcClamp();_lcDraw();}
 function _lcUp(){_lcDrag=null;document.removeEventListener('pointermove',_lcMove);document.removeEventListener('pointerup',_lcUp);}
 function _wireLogoCrop(){var st=_lcq('logoCropStage');if(!st)return;
@@ -2027,8 +2027,8 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
   <div style="background:#ffffff;color:#1b1e22;border-radius:14px;padding:18px;max-width:min(520px,94vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
     <div style="font-weight:700;margin-bottom:4px">Crop logo</div>
     <div style="font-size:.82rem;color:#5a616a;margin-bottom:10px">Drag to move, drag the green corner to resize.</div>
-    <div id="logoCropStage" style="position:relative;width:100%;background:#f1f3f5;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
-      <img id="logoCropImg" alt="" style="display:block;width:100%;pointer-events:none">
+    <div id="logoCropStage" style="position:relative;width:100%;max-height:58vh;display:flex;align-items:center;justify-content:center;background:#f1f3f5;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
+      <img id="logoCropImg" alt="" style="display:block;max-width:100%;max-height:58vh;width:auto;height:auto;pointer-events:none">
       <div id="logoCropBox" style="position:absolute;border:2px solid #10b981;box-shadow:0 0 0 9999px rgba(0,0,0,.35);box-sizing:border-box;cursor:move">
         <div id="logoCropHandle" style="position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:#10b981;border:2px solid #fff;border-radius:50%;cursor:nwse-resize"></div>
       </div>

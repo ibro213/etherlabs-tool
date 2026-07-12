@@ -281,8 +281,8 @@
   <div style="background:var(--el-card,#fff);color:var(--el-text1,#1b1e22);border-radius:14px;padding:18px;max-width:min(420px,92vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
     <div style="font-weight:700;margin-bottom:4px" data-i18n="cropTitle">Crop photo</div>
     <div style="font-size:.82rem;color:var(--el-text2,#5a616a);margin-bottom:10px" data-i18n="cropHint">Drag to move, drag the green corner to resize. The square becomes your photo.</div>
-    <div id="cropStage" style="position:relative;width:100%;background:#111;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
-      <img id="cropImg" alt="" style="display:block;width:100%;pointer-events:none">
+    <div id="cropStage" style="position:relative;width:100%;max-height:58vh;display:flex;align-items:center;justify-content:center;background:#111;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
+      <img id="cropImg" alt="" style="display:block;max-width:100%;max-height:58vh;width:auto;height:auto;pointer-events:none">
       <div id="cropBox" style="position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.45);box-sizing:border-box;cursor:move">
         <div id="cropHandle" style="position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:var(--el-emerald,#10b981);border:2px solid #fff;border-radius:50%;cursor:nwse-resize"></div>
       </div>
@@ -792,25 +792,30 @@ $('previewDarkBtn').addEventListener('click', function(){ state.previewDark=!sta
 
 /* ---------- free image cropper (square, movable + resizable) ---------- */
 var _cropImg=new Image(), _cropRect={x:0,y:0,s:0}, _cropDrag=null;
-function _stageDim(){ var im=$('cropImg'); return { w: im.clientWidth||1, h: im.clientHeight||1 }; }
+function _imgRect(){
+  var stage=$('cropStage'), im=$('cropImg');
+  var sr=stage.getBoundingClientRect(), ir=im.getBoundingClientRect();
+  return { ox: ir.left-sr.left, oy: ir.top-sr.top, w: im.clientWidth||1, h: im.clientHeight||1 };
+}
 function _drawCropBox(){ var b=$('cropBox'); b.style.left=_cropRect.x+'px'; b.style.top=_cropRect.y+'px'; b.style.width=_cropRect.s+'px'; b.style.height=_cropRect.s+'px'; }
-function _clampCrop(){ var d=_stageDim(); _cropRect.s=Math.max(32,Math.min(_cropRect.s,d.w,d.h)); _cropRect.x=Math.max(0,Math.min(_cropRect.x,d.w-_cropRect.s)); _cropRect.y=Math.max(0,Math.min(_cropRect.y,d.h-_cropRect.s)); }
+function _clampCrop(){ var r=_imgRect(); _cropRect.s=Math.max(32,Math.min(_cropRect.s,r.w,r.h)); _cropRect.x=Math.max(r.ox,Math.min(_cropRect.x,r.ox+r.w-_cropRect.s)); _cropRect.y=Math.max(r.oy,Math.min(_cropRect.y,r.oy+r.h-_cropRect.s)); }
 function openCropper(src){
   _cropImg=new Image();
   _cropImg.onload=function(){
     $('cropImg').src=src; $('cropOverlay').style.display='flex';
-    requestAnimationFrame(function(){ var d=_stageDim(); var s=Math.min(d.w,d.h)*0.82; _cropRect={x:(d.w-s)/2,y:(d.h-s)/2,s:s}; _clampCrop(); _drawCropBox(); });
+    requestAnimationFrame(function(){ var r=_imgRect(); var s=Math.min(r.w,r.h)*0.82; _cropRect={x:r.ox+(r.w-s)/2,y:r.oy+(r.h-s)/2,s:s}; _clampCrop(); _drawCropBox(); });
   };
   _cropImg.onerror=function(){ notify(t('msgErr'),true); };
   _cropImg.src=src;
 }
 function cropApply(){
   try {
-    var d=_stageDim(); var scale=(_cropImg.naturalWidth||d.w)/d.w;
-    var sx=_cropRect.x*scale, sy=_cropRect.y*scale, ss=_cropRect.s*scale;
-    var out=240; var cv=document.createElement('canvas'); cv.width=out; cv.height=out;
-    cv.getContext('2d').drawImage(_cropImg, sx, sy, ss, ss, 0, 0, out, out);
-    state.photoData=cv.toDataURL('image/jpeg',0.9);
+    var r=_imgRect(); var scale=(_cropImg.naturalWidth||r.w)/r.w;
+    var sx=(_cropRect.x-r.ox)*scale, sy=(_cropRect.y-r.oy)*scale, ss=_cropRect.s*scale;
+    var out=512; var cv=document.createElement('canvas'); cv.width=out; cv.height=out;
+    var ctx=cv.getContext('2d'); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+    ctx.drawImage(_cropImg, sx, sy, ss, ss, 0, 0, out, out);
+    state.photoData=cv.toDataURL('image/jpeg',0.92);
   } catch(e){ state.photoData=_lastPhotoSrc; }
   if(!state.includePhoto){ state.includePhoto=true; $('togglePhoto').classList.add('active'); }
   $('cropOverlay').style.display='none'; $('cropBtn').style.display='';

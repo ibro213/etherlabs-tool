@@ -1394,15 +1394,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function renderBudget() {
-            const html = budgetCategories.map(cat => {
+            const lbl = 'font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;';
+            const html = budgetCategories.map((cat, i) => {
                 const b = data.budget[cat];
                 const spent = b.speso || 0;
                 const budget = b.preventivo || 0;
                 const percent = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
-                const lbl = 'font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;';
-
                 return `
-                    <div class="budget-category">
+                    <div class="budget-category" data-bcat="${i}">
                         <div class="budget-header">
                             <div class="budget-title">${esc(cat)}</div>
                         </div>
@@ -1410,23 +1409,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <div class="amount-field">
                                 <label style="${lbl}">Estimate</label>
                                 <input type="number" min="0" step="0.01" placeholder="0" value="${b.preventivo || 0}"
-                                    onchange="updateBudget('${jsAttr(cat)}', 'preventivo', this.value)">
+                                    onchange="updateBudget(${i}, 'preventivo', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Spent</label>
                                 <input type="number" min="0" step="0.01" placeholder="0" value="${b.speso || 0}"
-                                    onchange="updateBudget('${jsAttr(cat)}', 'speso', this.value)">
+                                    onchange="updateBudget(${i}, 'speso', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Paid</label>
                                 <input type="number" min="0" step="0.01" placeholder="0" value="${b.pagato || 0}"
-                                    onchange="updateBudget('${jsAttr(cat)}', 'pagato', this.value)">
+                                    onchange="updateBudget(${i}, 'pagato', this.value)">
                             </div>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${percent}%"></div>
+                            <div class="progress-fill" data-bfill style="width: ${percent}%"></div>
                         </div>
-                        <div style="font-size: 12px; color: var(--text-secondary); text-align: right;">
+                        <div data-brem style="font-size: 12px; color: var(--text-secondary); text-align: right;">
                             Remaining: € ${Math.max(budget - spent, 0).toLocaleString()}
                         </div>
                     </div>
@@ -1434,30 +1433,52 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }).join('');
 
             document.getElementById('budgetCategories').innerHTML = html;
+            updateBudgetTotal();
+        }
 
+        function updateBudgetTotal() {
             const total = Object.values(data.budget).reduce((sum, b) => sum + (b.preventivo || 0), 0);
             document.getElementById('totalBudget').textContent = '€ ' + total.toLocaleString();
         }
 
-        function updateBudget(cat, field, value) {
+        // Update only this category's derived numbers + total, without rebuilding the inputs
+        // (rebuilding them destroyed the fields while the user was typing — unusable on mobile).
+        function updateBudget(i, field, value) {
+            const cat = budgetCategories[i];
+            if (!cat || !data.budget[cat]) return;
             data.budget[cat][field] = parseFloat(value) || 0;
             save();
-            renderBudget();
+            const b = data.budget[cat];
+            const spent = b.speso || 0, budget = b.preventivo || 0;
+            const percent = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
+            const cell = document.querySelector('[data-bcat="' + i + '"]');
+            if (cell) {
+                const fill = cell.querySelector('[data-bfill]');
+                if (fill) fill.style.width = percent + '%';
+                const rem = cell.querySelector('[data-brem]');
+                if (rem) rem.textContent = 'Remaining: € ' + Math.max(budget - spent, 0).toLocaleString();
+            }
+            updateBudgetTotal();
             renderDashboard();
         }
 
-        function renderGuests() {
+        function guestSummaryHtml() {
             const persone = g => parseInt(g.persone) || 1;
             const conf = data.guests.filter(g => g.confermato === 'si').length;
             const att = data.guests.filter(g => g.confermato === 'attesa').length;
             const coperti = data.guests.filter(g => g.confermato !== 'no').reduce((s, g) => s + persone(g), 0);
-            const html = `
+            return `
                 <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:16px;">
                     <span style="color:var(--text-secondary);"><strong style="color:var(--text-primary);">${data.guests.length}</strong> invites</span>
                     <span style="color:var(--text-secondary);"><strong style="color:var(--success);">${conf}</strong> confirmed</span>
                     <span style="color:var(--text-secondary);"><strong style="color:var(--warning);">${att}</strong> pending</span>
                     <span style="color:var(--text-secondary);"><strong style="color:var(--gold);">${coperti}</strong> covers</span>
-                </div>
+                </div>`;
+        }
+
+        function renderGuests() {
+            const html = `
+                <div id="guestSummary">${guestSummaryHtml()}</div>
                 <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; padding: 0 12px;">
                     <strong>Name</strong> | <strong>Side</strong> | <strong>RSVP</strong> | <strong>People</strong>
                 </div>
@@ -1496,9 +1517,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function updateGuest(i, field, value) {
-            data.guests[i][field] = field === 'persone' ? parseInt(value) : value;
+            data.guests[i][field] = field === 'persone' ? (parseInt(value) || 1) : value;
             save();
-            renderGuests();
+            // Update only the summary (when RSVP/people changes) — do NOT rebuild the rows (text inputs).
+            if (field === 'confermato' || field === 'persone') {
+                const s = document.getElementById('guestSummary');
+                if (s) s.innerHTML = guestSummaryHtml();
+            }
             renderDashboard();
         }
 
@@ -1560,7 +1585,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function updateVendor(i, field, value) {
             data.vendors[i][field] = value;
             save();
-            renderVendors();
+            // No re-render: rebuilding the cards destroyed the inputs while typing.
         }
 
         function deleteVendor(i) {
@@ -1570,7 +1595,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function renderTasks() {
-            const timelines = ['12 mesi', '6 mesi', '3 mesi', '1 mese', '1 settimana', 'giorno'];
+            const timelines = ['12 months', '6 months', '3 months', '1 month', '1 week', 'day'];
             const html = timelines.map(timeline => {
                 const tasks = data.tasks.filter(t => t.timeline === timeline);
                 return `
@@ -1579,7 +1604,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         ${tasks.map((t, i) => `
                             <div class="task-item ${t.done ? 'completed' : ''}">
                                 <input type="checkbox" class="task-checkbox" ${t.done ? 'checked' : ''}
-                                    onchange="updateTask('${timeline}', '${t.title}', this.checked)">
+                                    onchange="updateTask('${jsAttr(timeline)}', '${jsAttr(t.title)}', this.checked, this)">
                                 <div class="task-text">
                                     <div class="task-title">${t.title}</div>
                                 </div>
@@ -1592,11 +1617,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             document.getElementById('tasksList').innerHTML = html;
         }
 
-        function updateTask(timeline, title, done) {
+        function updateTask(timeline, title, done, el) {
             const task = data.tasks.find(t => t.timeline === timeline && t.title === title);
             if (task) task.done = done;
             save();
-            renderTasks();
+            // Update the row in place, without rebuilding the list.
+            if (el) { const item = el.closest('.task-item'); if (item) item.classList.toggle('completed', done); }
             renderDashboard();
         }
 
@@ -1630,7 +1656,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div style="display:flex;gap:10px;align-items:center;">
                             <input class="guest-input" type="text" placeholder="Table ${i + 1}" value="${esc(t.nome)}" onchange="updateTable(${i}, 'nome', this.value)" style="flex:1;">
                             <input class="guest-input" type="number" min="1" value="${posti}" title="Seats" onchange="updateTable(${i}, 'posti', this.value)" style="width:72px;">
-                            <span style="font-size:13px;font-weight:700;white-space:nowrap;color:${over ? 'var(--danger)' : 'var(--success)'};">${usati}/${posti}</span>
+                            <span data-tocc="${i}" style="font-size:13px;font-weight:700;white-space:nowrap;color:${over ? 'var(--danger)' : 'var(--success)'};">${usati}/${posti}</span>
                             <button type="button" onclick="deleteTable(${i})" title="Delete table" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:20px;line-height:1;padding:0 4px;">&times;</button>
                         </div>
                         <div style="margin-top:8px;">${chips}</div>
@@ -1674,7 +1700,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
             data.tables[i][field] = field === 'posti' ? (parseInt(value) || 1) : value;
             save();
-            renderTables();
+            // Update only this table's occupancy, without rebuilding the inputs (else you lose what you type).
+            const t = data.tables[i];
+            const posti = parseInt(t.posti) || 8;
+            const usati = data.guests.filter(g => g.tavolo === t.nome && g.confermato !== 'no').reduce((s, g) => s + (parseInt(g.persone) || 1), 0);
+            const occ = document.querySelector('[data-tocc="' + i + '"]');
+            if (occ) { occ.textContent = usati + '/' + posti; occ.style.color = usati > posti ? 'var(--danger)' : 'var(--success)'; }
         }
 
         function deleteTable(i) {
