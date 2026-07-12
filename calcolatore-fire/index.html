@@ -1304,16 +1304,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
 
             getInputs() {
+                const num = id => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
+                const int = id => { const v = parseInt(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
                 return {
-                    currentAge: parseInt(document.getElementById('currentAge').value),
-                    targetAge: parseInt(document.getElementById('targetAge').value),
-                    annualIncome: parseFloat(document.getElementById('annualIncome').value),
-                    annualExpenses: parseFloat(document.getElementById('annualExpenses').value),
-                    currentAssets: parseFloat(document.getElementById('currentAssets').value),
-                    savingsRate: parseFloat(document.getElementById('savingsRate').value) / 100,
-                    investmentReturn: parseFloat(document.getElementById('investmentReturn').value) / 100,
-                    inflationRate: parseFloat(document.getElementById('inflationRate').value) / 100,
-                    withdrawalRate: parseFloat(document.getElementById('withdrawalRate').value) / 100,
+                    currentAge: int('currentAge'),
+                    targetAge: int('targetAge'),
+                    annualIncome: num('annualIncome'),
+                    annualExpenses: num('annualExpenses'),
+                    currentAssets: num('currentAssets'),
+                    savingsRate: num('savingsRate') / 100,
+                    investmentReturn: num('investmentReturn') / 100,
+                    inflationRate: num('inflationRate') / 100,
+                    withdrawalRate: num('withdrawalRate') / 100,
                     fireType: document.getElementById('fireType').value
                 };
             }
@@ -1329,7 +1331,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
 
             calculateFIRENumber(expenses, withdrawalRate) {
-                return expenses / withdrawalRate;
+                return withdrawalRate > 0 ? expenses / withdrawalRate : 0;
             }
 
             calculateCompoundGrowth(principal, annualReturn, years, annualContribution = 0) {
@@ -1396,7 +1398,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const currentGap = Math.max(0, fireNumber - inputs.currentAssets);
 
                 // Calculate progress percentage
-                const progressPercentage = Math.min(100, (inputs.currentAssets / fireNumber) * 100);
+                const progressPercentage = fireNumber > 0 ? Math.min(100, (inputs.currentAssets / fireNumber) * 100) : 0;
 
                 // Calculate monthly values (income based on full FIRE number / today's expenses)
                 const monthlySavings = annualSavings / 12;

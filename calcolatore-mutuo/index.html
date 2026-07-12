@@ -1144,7 +1144,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             ctx.fillStyle = elc('bg');
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            const maxVal = Math.max(...capitali, ...interessi);
+            const maxVal = Math.max(...capitali.map(v => Number.isFinite(v) ? v : 0), ...interessi.map(v => Number.isFinite(v) ? v : 0), 1);
             const barWidth = chartWidth / (anni.length * 2.5);
             const spacing = chartWidth / anni.length;
 

@@ -1214,6 +1214,7 @@ select:hover {
 
         function editParticipant(participantId) {
             const group = getCurrentGroup();
+            if (!group) return;
             const participant = group.participants.find(p => p.id === participantId);
             if (!participant) return;
 
@@ -1252,6 +1253,7 @@ select:hover {
             }
 
             const group = getCurrentGroup();
+            if (!group) return;
             const participant = group.participants.find(p => p.id === participantId);
             if (!participant) return;
 
@@ -1283,6 +1285,7 @@ select:hover {
         function deleteParticipant(participantId) {
             if (!confirm('Eliminare questo partecipante?')) return;
             const group = getCurrentGroup();
+            if (!group) return;
             group.participants = group.participants.filter(p => p.id !== participantId);
             group.expenses = group.expenses.filter(e => e.paidBy !== participantId);
             group.expenses.forEach(e => { if (e.splits) delete e.splits[participantId]; });
@@ -1350,6 +1353,7 @@ select:hover {
             const splitType = document.getElementById('expenseSplitTypeInput').value;
             const group = getCurrentGroup();
             const splitUI = document.getElementById('splitUI');
+            if (!group) { splitUI.innerHTML = ''; return; }
 
             if (splitType === 'equal') {
                 splitUI.innerHTML = '<p style="color: var(--t2); font-size: 0.9rem;">Divideremo equamente tra tutti i partecipanti</p>';

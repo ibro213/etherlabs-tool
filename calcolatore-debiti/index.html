@@ -1455,7 +1455,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     x.balance -= Math.min(x.minPayment, x.balance);
                 });
             }
-            return { months: month, interest: interest };
+            const converged = d.every(x => x.balance <= 0.01) && isFinite(interest);
+            return { months: month, interest: interest, converged: converged };
         }
 
         function renderComparison(snowball, avalanche) {
@@ -1655,9 +1656,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             document.getElementById('motivationSection').style.display = 'block';
             const minOnly = simulateMinOnly(debts);
             const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            if (!minOnly.converged) {
+                document.getElementById('interestSaved').textContent = '—';
+                document.getElementById('monthsSaved').textContent = '—';
+                return;
+            }
             const monthsSaved = Math.max(0, minOnly.months - best.months);
             const saved = Math.max(0, minOnly.interest - best.totalInterest);
-
             document.getElementById('interestSaved').textContent = `€${saved.toFixed(2)}`;
             document.getElementById('monthsSaved').textContent = Math.floor(monthsSaved);
         }
@@ -1737,7 +1742,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 card('Interessi totali', fmtC(best.totalInterest), M+(gw+12)*2, gw);
                 y += 78;
                 doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc,DK); doc.text('Strategia consigliata:  ' + bestLabel, M, y); y += 18;
-                doc.setTextColor.apply(doc,EM); doc.setFont('helvetica','bold'); doc.text('Risparmi ' + fmtC(interestSaved) + ' di interessi e ' + monthsSaved + ' mesi rispetto ai soli minimi.', M, y); y += 30;
+                doc.setTextColor.apply(doc,EM); doc.setFont('helvetica','bold');
+                if (minOnly.converged) { doc.text('Risparmi ' + fmtC(interestSaved) + ' di interessi e ' + monthsSaved + ' mesi rispetto ai soli minimi.', M, y); }
+                else { doc.text('Pagando solo i minimi il debito non si estinguerebbe mai — il tuo piano sì, in ' + best.months + ' mesi.', M, y); }
+                y += 30;
             }
             doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc,DK); doc.text('Ordine di estinzione', M, y); y += 8;
             doc.setDrawColor(225,230,234); doc.line(M,y,W-M,y); y += 20;

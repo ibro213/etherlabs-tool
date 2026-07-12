@@ -1282,6 +1282,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
 
+        function jsAttr(v) {
+            return String(v == null ? '' : v)
+                .replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+                .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
         function save() {
             try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -1385,23 +1391,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return `
                     <div class="budget-category">
                         <div class="budget-header">
-                            <div class="budget-title">${cat}</div>
+                            <div class="budget-title">${esc(cat)}</div>
                         </div>
                         <div class="budget-amounts">
                             <div class="amount-field">
                                 <label style="${lbl}">Preventivo</label>
                                 <input type="number" min="0" placeholder="0" value="${b.preventivo || 0}"
-                                    onchange="updateBudget('${cat}', 'preventivo', this.value)">
+                                    onchange="updateBudget('${jsAttr(cat)}', 'preventivo', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Speso</label>
                                 <input type="number" min="0" placeholder="0" value="${b.speso || 0}"
-                                    onchange="updateBudget('${cat}', 'speso', this.value)">
+                                    onchange="updateBudget('${jsAttr(cat)}', 'speso', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Pagato</label>
                                 <input type="number" min="0" placeholder="0" value="${b.pagato || 0}"
-                                    onchange="updateBudget('${cat}', 'pagato', this.value)">
+                                    onchange="updateBudget('${jsAttr(cat)}', 'pagato', this.value)">
                             </div>
                         </div>
                         <div class="progress-bar">
