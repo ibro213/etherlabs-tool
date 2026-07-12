@@ -21,32 +21,23 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Generatore Contratti">
-    <meta name="theme-color" content="#0a0b0d">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <meta name="description" content="Genera contratti freelance professionali (prestazione d'opera, collaborazione, NDA, licenza) in pochi minuti. Anteprima live, stampa PDF, 100% offline.">
     <meta name="theme-color" content="#060a0a">
     <title>Generatore Contratti Freelancer — Pro</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -647,7 +638,8 @@
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
-            color: var(--bg);
+            background-color: var(--emerald);
+            color: #08130e;
             box-shadow: 0 4px 16px rgba(16,185,129,0.25);
         }
         @media (hover: hover) and (pointer: fine) {
@@ -870,10 +862,20 @@
 
         /* PRINT */
         @page { margin: 0; size: A4; }
+        /* Nota "solo a schermo" sotto l'avvertenza: promemoria che non finisce nel PDF */
+        .disclaimer-note {
+            margin-top: 10px; font-size: 12px; line-height: 1.5;
+            color: var(--el-text2, #6b7280); font-style: italic;
+        }
         @media print {
             html, body { margin: 0; padding: 0; background: white; color: #000; }
             body::before, body::after { display: none; }
             header, .step-bar, .form-panel, .bottom-bar, .footer, .notification { display: none !important; }
+            /* L'avvertenza (e il suo promemoria) e il footer del brand restano SOLO in anteprima, non nel PDF/contratto */
+            .disclaimer, .el-brand { display: none !important; }
+            /* Niente articoli o firme spezzati a metà tra due pagine */
+            .article, .signature-section, .signature-block { page-break-inside: avoid; break-inside: avoid; }
+            .article-content { orphans: 2; widows: 2; }
             .container { max-width: 100%; padding: 0; margin: 0; }
             .main-wrapper { grid-template-columns: 1fr !important; gap: 0; }
             .preview-panel {
@@ -902,17 +904,11 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Generatore Contratti</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Generatore Contratti</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -1160,6 +1156,27 @@
                                 <option value="personalizzato">Personalizzato</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="ivaRegime">Regime IVA</label>
+                            <select id="ivaRegime" onchange="syncRitenuta()">
+                                <option value="">Non specificare</option>
+                                <option value="ordinario">Regime ordinario (importi + IVA 22%)</option>
+                                <option value="forfettario">Regime forfettario (nessuna IVA)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="ritenutaGroup">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ritenutaAcconto">
+                                <label for="ritenutaAcconto">Applica ritenuta d'acconto</label>
+                            </div>
+                            <div class="inline-group" style="margin-top:10px">
+                                <div class="form-group">
+                                    <label for="ritenutaRate">Aliquota ritenuta (%)</label>
+                                    <input type="number" id="ritenutaRate" placeholder="20" value="20" min="0" max="100" step="0.5" inputmode="decimal">
+                                </div>
+                            </div>
+                            <p class="section-subtitle" id="ritenutaHint" style="display:none;margin-top:6px">Nel regime forfettario non si applica la ritenuta d'acconto: verrà ignorata.</p>
+                        </div>
                         <div class="inline-group">
                             <div class="form-group">
                                 <label for="latePenalty">Penale Ritardo (%)</label>
@@ -1305,6 +1322,10 @@
             saveStepData();
             if (currentStep < 6) { currentStep++; updateUI(); }
             else {
+                // saveStepData() sopra ha appena salvato le clausole dello step 6: rigenera la preview
+                // PRIMA di stampare, altrimenti il contratto stampato omette tutte le clausole (che sono
+                // selezionate di default) perché la preview era stata costruita quando erano ancora vuote.
+                updatePreview();
                 showNotification('Contratto pronto — apertura stampa…','success');
                 const p = document.getElementById('previewPanel');
                 if (p) p.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1383,7 +1404,7 @@
             if (currentStep === 2) formData.freelancer = { name:$('freelancerName').value, taxId:$('freelancerTaxId').value, address:$('freelancerAddress').value, email:$('freelancerEmail').value, phone:$('freelancerPhone').value, specialty:$('freelancerSpecialty').value };
             else if (currentStep === 3) formData.client = { name:$('clientName').value, taxId:$('clientTaxId').value, address:$('clientAddress').value, email:$('clientEmail').value, contact:$('clientContact').value };
             else if (currentStep === 4) formData.project = { title:$('projectTitle').value, description:$('projectDescription').value, deliverables, startDate:$('startDate').value, endDate:$('endDate').value, revisions:$('revisions').value, revisionPrice:$('revisionPrice').value, milestones };
-            else if (currentStep === 5) formData.conditions = { compensationType:$('compensationType').value, totalAmount:$('totalAmount').value, hourlyRate:$('hourlyRate').value, paymentMethod:$('paymentMethod').value, paymentTiming:$('paymentTiming').value, latePenalty:$('latePenalty').value, graceDays:$('graceDays').value, expensesReimbursable:$('expensesReimbursable').checked, expensesDescription:$('expensesDescription').value };
+            else if (currentStep === 5) formData.conditions = { compensationType:$('compensationType').value, totalAmount:$('totalAmount').value, hourlyRate:$('hourlyRate').value, paymentMethod:$('paymentMethod').value, paymentTiming:$('paymentTiming').value, ivaRegime:$('ivaRegime').value, ritenutaAcconto:$('ritenutaAcconto').checked, ritenutaRate:$('ritenutaRate').value, latePenalty:$('latePenalty').value, graceDays:$('graceDays').value, expensesReimbursable:$('expensesReimbursable').checked, expensesDescription:$('expensesDescription').value };
             else if (currentStep === 6) formData.clauses = { ipClause:$('ipClause').checked, confidenceClause:$('confidenceClause').checked, nonCompeteClause:$('nonCompeteClause').checked, nonCompeteMonths:$('nonCompeteMonths').value, resolutionClause:$('resolutionClause').checked, resolutionDays:$('resolutionDays').value, forceClause:$('forceClause').checked, jurisdictionClause:$('jurisdictionClause').checked, jurisdictionCity:$('jurisdictionCity').value, cancellationPenalty:$('cancellationPenalty').checked, cancellationPercent:$('cancellationPercent').value, exclusivityClause:$('exclusivityClause').checked, warrantyClause:$('warrantyClause').checked, warrantyMonths:$('warrantyMonths').value };
         }
 
@@ -1478,7 +1499,7 @@
           prestazione: {
             title:"CONTRATTO DI PRESTAZIONE DI SERVIZI",
             roleA:"il Prestatore", roleB:"il Committente", sigA:"Il Prestatore", sigB:"Il Committente",
-            whereas:x=>`Il Prestatore svolge attività professionale autonoma${x.f.specialty?' in '+x.e(x.f.specialty):''} e il Committente intende affidargli la realizzazione del progetto <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            whereas:x=>`Il Prestatore svolge attività professionale autonoma${x.f.specialty?' come '+x.e(x.f.specialty):''} e il Committente intende affidargli la realizzazione del progetto <strong>${x.e(x.p.title)||'—'}</strong>.`,
             core:x=>{const a=[];
               a.push({t:`Oggetto`,c:`Il Prestatore si impegna a eseguire i seguenti servizi: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Deliverable:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
               a.push({t:`Modalità di esecuzione e autonomia`,c:`Il Prestatore esegue i servizi in piena autonomia organizzativa e tecnica, senza vincolo di subordinazione, con mezzi propri e senza obbligo di orario, coordinandosi con il Committente per le sole esigenze di risultato.`});
@@ -1562,35 +1583,62 @@
             const payLabel = {bonifico:'Bonifico Bancario', paypal:'PayPal', assegno:'Assegno', altro:'Altro'};
             const timingLabel = {'100-0':'100% anticipato','50-50':'50% deposito + 50% alla consegna','30-40-30':'30% + 40% + 30%',consegna:'Alla consegna',personalizzato:'Personalizzato'};
             const e = escapeHtml;
+            // Maiuscole automatiche sui nomi/indirizzi: capitalizza SOLO le parole tutte minuscole
+            // (così "john smith" -> "John Smith" ma non tocca sigle o casi voluti tipo LLC, McDonald, IBM).
+            const tc = s => String(s == null ? '' : s).replace(/\S+/g, w => w === w.toLowerCase() ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+            const nm = s => e(tc(s));
 
+            // Ritenuta d'acconto: si applica solo se richiesta E NON in regime forfettario (i forfettari non la subiscono).
+            const ritApplies = co.ritenutaAcconto && co.ivaRegime !== 'forfettario' && co.totalAmount;
+            const ritRate = parseFloat(co.ritenutaRate) || 20;
+            const ritAmount = (parseFloat(co.totalAmount) || 0) * ritRate / 100;
+            const ritNet = (parseFloat(co.totalAmount) || 0) - ritAmount;
             const payStr = co.totalAmount ? (`Importo complessivo: <strong>${fmtEur(co.totalAmount)}</strong>`
                 + (co.compensationType?`<br>Tipologia: ${compLabel[co.compensationType]||'—'}`:'')
+                + (co.compensationType==='orario' && co.hourlyRate?`<br>Tariffa oraria: ${fmtEur(co.hourlyRate)}/h`:'')
                 + (co.paymentMethod?`<br>Modalità: ${payLabel[co.paymentMethod]||'—'}`:'')
                 + (co.paymentTiming?`<br>Tempistiche: ${timingLabel[co.paymentTiming]||'—'}`:'')
+                + (co.ivaRegime==='ordinario'?`<br>IVA: gli importi si intendono al netto dell'IVA, applicata nella misura di legge (22%).`:'')
+                + (co.ivaRegime==='forfettario'?`<br>IVA: operazione non soggetta a IVA ai sensi dell'art. 1, commi 54-89, L. 190/2014 (regime forfettario).`:'')
+                + (ritApplies?`<br>Ritenuta d'acconto: il Committente, quale sostituto d'imposta, applica sul compenso la ritenuta d'acconto del ${e(String(ritRate))}% (pari a ${fmtEur(ritAmount)}); il Prestatore percepirà il compenso al netto della ritenuta, pari a ${fmtEur(ritNet)}.`:'')
                 + (co.latePenalty?`<br>Penale ritardo: ${e(co.latePenalty)}% dopo ${e(co.graceDays||'0')} giorni`:'')
                 + (co.expensesReimbursable?`<br>Spese rimborsabili: ${e(co.expensesDescription)||'Sì'}`:'')) : '';
             const x = { e, fmtDate, fmtEur, f, c, p, co, cl, deliverables, milestones, payStr };
             let h = `<h2>${e(tpl.title)}</h2><p class="contract-date">${e(today)}</p>`;
-            h += `<div class="preview-section"><h3>Tra</h3><p><strong>${e(f.name)}</strong>, con sede in ${e(f.address)}, C.F./P.IVA ${e(f.taxId)}, di seguito denominato "${tpl.roleA}"</p></div>`;
-            h += `<div class="preview-section"><h3>E</h3><p><strong>${e(c.name)}</strong>${c.contact?', nella persona di '+e(c.contact):''}, con sede in ${e(c.address)}, C.F./P.IVA ${e(c.taxId)}, di seguito denominato "${tpl.roleB}"</p></div>`;
+            h += `<div class="preview-section"><h3>Tra</h3><p><strong>${nm(f.name)}</strong>, con sede in ${nm(f.address)}, C.F./P.IVA ${e(f.taxId)}, di seguito denominato "${tpl.roleA}"</p></div>`;
+            h += `<div class="preview-section"><h3>E</h3><p><strong>${nm(c.name)}</strong>${c.contact?', nella persona di '+nm(c.contact):''}, con sede in ${nm(c.address)}, C.F./P.IVA ${e(c.taxId)}, di seguito denominato "${tpl.roleB}"</p></div>`;
             h += `<div class="preview-section"><h3>Premesso che</h3><p>${tpl.whereas(x)}</p></div>`;
             let n = 1;
             tpl.core(x).forEach(art => { h += `<div class="article"><div class="article-title">Art. ${n++} — ${art.t}</div><div class="article-content">${art.c}</div></div>`; });
-            if (cl.ipClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Proprietà Intellettuale</div><div class="article-content">Tutti i lavori e materiali sviluppati nell'ambito del presente contratto saranno di proprietà esclusiva del Committente a partire dal completo pagamento dell'importo concordato. Il Prestatore cede tutti i diritti d'autore e di proprietà intellettuale relativi ai lavori eseguiti.</div></div>`;
+            // Le clausole opzionali qui sotto usano i ruoli freelance (Committente/Prestatore) e
+            // formulazioni specifiche della prestazione: vanno rese solo per i tipi freelance,
+            // altrimenti finiscono per errore in Locazione/Compravendita/NDA.
+            const isFreelance = contractType==='prestazione'||contractType==='collaborazione';
+            if (cl.ipClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Proprietà Intellettuale</div><div class="article-content">Tutti i lavori e materiali sviluppati nell'ambito del presente contratto saranno di proprietà esclusiva del Committente a partire dal completo pagamento dell'importo concordato. Il Prestatore cede tutti i diritti d'autore e di proprietà intellettuale relativi ai lavori eseguiti.</div></div>`;
             if (cl.confidenceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Riservatezza</div><div class="article-content">Le parti si impegnano a mantenere la massima riservatezza sulle informazioni confidenziali scambiate durante l'esecuzione del contratto. Tali informazioni non potranno essere divulgate a terzi senza previo consenso scritto, fatto salvo quanto richiesto dalla legge.</div></div>`;
-            if (cl.nonCompeteClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Non Concorrenza</div><div class="article-content">Durante la vigenza del contratto e per i successivi ${e(cl.nonCompeteMonths)||'12'} mesi, il Prestatore si impegna a non fornire servizi analoghi a soggetti direttamente concorrenti del Committente in relazione all'oggetto del presente contratto.</div></div>`;
-            if (cl.resolutionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Risoluzione Anticipata</div><div class="article-content">Ciascuna parte può recedere dal contratto con preavviso scritto di ${e(cl.resolutionDays)||'30'} giorni. In caso di recesso del Committente, il Prestatore avrà diritto al compenso per il lavoro già eseguito alla data di efficacia del recesso.</div></div>`;
+            if (cl.nonCompeteClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Non Concorrenza</div><div class="article-content">Durante la vigenza del contratto e per i successivi ${e(cl.nonCompeteMonths)||'12'} mesi, il Prestatore si impegna a non fornire servizi analoghi a soggetti direttamente concorrenti del Committente in relazione all'oggetto del presente contratto.</div></div>`;
+            if (cl.resolutionClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Risoluzione Anticipata</div><div class="article-content">Ciascuna parte può recedere dal contratto con preavviso scritto di ${e(cl.resolutionDays)||'30'} giorni. In caso di recesso del Committente, il Prestatore avrà diritto al compenso per il lavoro già eseguito alla data di efficacia del recesso.</div></div>`;
             if (cl.forceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Forza Maggiore</div><div class="article-content">Nessuna delle parti sarà responsabile per inadempimenti causati da eventi di forza maggiore, intesi come circostanze imprevedibili e inevitabili che rendano impossibile l'esecuzione delle obbligazioni contrattuali.</div></div>`;
             if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Foro Competente</div><div class="article-content">Per qualsiasi controversia derivante dal presente contratto sarà competente in via esclusiva il Foro di ${e(cl.jurisdictionCity)||'Roma'}.</div></div>`;
-            if (cl.cancellationPenalty) h += `<div class="article"><div class="article-title">Art. ${n++} — Penale di Cancellazione</div><div class="article-content">In caso di cancellazione del progetto da parte del Committente, questi corrisponderà al Prestatore una penale pari al ${e(cl.cancellationPercent)||'30'}% dell'importo complessivo concordato.</div></div>`;
-            if (cl.exclusivityClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Esclusività</div><div class="article-content">Per la durata del contratto, il Prestatore dedicherà al Committente il tempo e le risorse necessarie alla realizzazione del progetto, impegnandosi a non accettare incarichi concorrenti senza preventivo consenso scritto.</div></div>`;
-            if (cl.warrantyClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Garanzia</div><div class="article-content">Il Prestatore garantisce il proprio operato per ${e(cl.warrantyMonths)||'1'} mese/i dalla consegna. Durante tale periodo si impegna a correggere eventuali difetti o malfunzionamenti riscontrati nel lavoro consegnato, senza costi aggiuntivi.</div></div>`;
-            h += `<div class="article" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Avvertenza</div><div class="article-content">Questo documento è un modello generato automaticamente e non costituisce consulenza legale. Verificane l'adeguatezza con un professionista abilitato prima della sottoscrizione.</div></div>`;
-            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${e(f.name)}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${e(c.name)}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div></div>`;
+            if (cl.cancellationPenalty && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Penale di Cancellazione</div><div class="article-content">In caso di cancellazione del progetto da parte del Committente, questi corrisponderà al Prestatore una penale pari al ${e(cl.cancellationPercent)||'30'}% dell'importo complessivo concordato.</div></div>`;
+            if (cl.exclusivityClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Esclusività</div><div class="article-content">Per la durata del contratto, il Prestatore dedicherà al Committente il tempo e le risorse necessarie alla realizzazione del progetto, impegnandosi a non accettare incarichi concorrenti senza preventivo consenso scritto.</div></div>`;
+            if (cl.warrantyClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Garanzia</div><div class="article-content">Il Prestatore garantisce il proprio operato per ${e(cl.warrantyMonths)||'1'} mese/i dalla consegna. Durante tale periodo si impegna a correggere eventuali difetti o malfunzionamenti riscontrati nel lavoro consegnato, senza costi aggiuntivi.</div></div>`;
+            h += `<div class="article disclaimer" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Avvertenza</div><div class="article-content">Questo documento è un modello generato automaticamente e non costituisce consulenza legale. Verificane l'adeguatezza con un professionista abilitato prima della sottoscrizione.</div><div class="disclaimer-note">ⓘ Questa avvertenza è solo un promemoria a schermo: <strong>non comparirà nel PDF/contratto scaricato</strong>.</div></div>`;
+            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${nm(f.name)}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${nm(c.name)}</div><div class="line"></div><div class="sig-sub">Firma</div><div class="sig-meta">Data ________________ Luogo ________________</div></div></div>`;
             previewContent.innerHTML = h;
             const txt = previewContent.innerText, words = txt.trim().split(/\s+/).filter(Boolean).length;
             $('wordCount').textContent = words;
             $('readingTime').textContent = Math.ceil(words/250) + ' min';
+        }
+
+        // Collega la ritenuta d'acconto al regime IVA: nel forfettario non si applica,
+        // quindi il campo viene disabilitato e deselezionato.
+        function syncRitenuta() {
+            const forf = $('ivaRegime') && $('ivaRegime').value === 'forfettario';
+            const chk = $('ritenutaAcconto'), rate = $('ritenutaRate'), hint = $('ritenutaHint');
+            if (!chk) return;
+            if (forf) { chk.checked = false; chk.disabled = true; if (rate) rate.disabled = true; if (hint) hint.style.display = 'block'; }
+            else { chk.disabled = false; if (rate) rate.disabled = false; if (hint) hint.style.display = 'none'; }
         }
 
         function printContract() {
@@ -1645,24 +1693,15 @@
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app!</div>
-<script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-</script>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='1uykdlc6dmi',K='etherlabs_generatore-contratti_v2';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='1uykdlc6dmi',K='etherlabs_generatore-contratti_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

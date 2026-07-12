@@ -767,8 +767,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                         <td id="incomePessimistic">€3.167</td>
                     </tr>
                     <tr>
-                        <td class="scenario-label">📊 Base (7%)</td>
-                        <td>7%</td>
+                        <td class="scenario-label" id="labelBase">📊 Base (7%)</td>
+                        <td id="rateBase">7%</td>
                         <td id="yearsBase">15.2</td>
                         <td id="wealthBase">€750.000</td>
                         <td id="incomeBase">€2.500</td>
@@ -1304,6 +1304,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
 
             getInputs() {
+                // I campi vuoti/non validi diventano 0: i risultati non mostrano mai NaN.
                 const num = id => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
                 const int = id => { const v = parseInt(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
                 return {
@@ -1331,6 +1332,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
 
             calculateFIRENumber(expenses, withdrawalRate) {
+                // Guardia contro un tasso di prelievo 0% (darebbe Infinity/NaN).
                 return withdrawalRate > 0 ? expenses / withdrawalRate : 0;
             }
 
@@ -1461,6 +1463,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     milestone75: document.getElementById('milestone75').textContent,
                     milestone100: document.getElementById('milestone100').textContent
                 };
+
+                // Mantiene le box di sensitività allineate agli input correnti
+                this.updateSensitivityAnalysis();
             }
 
             calculateScenarios(inputs, targetExpenses, withdrawalRate) {
@@ -1479,18 +1484,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         this.calculateFIRENumber(targetExpenses, withdrawalRate)
                     );
 
-                    const finalWealth = this.calculateCompoundGrowth(
-                        inputs.currentAssets,
-                        realRate,
-                        yearsToFire,
-                        inputs.annualIncome * inputs.savingsRate
-                    );
+                    // yearsToFire è FRAZIONARIO: compone gli anni interi + la frazione finale in modo
+                    // lineare (coerente con l'interpolazione di calculateYearsToFIRE). Senza questo, il
+                    // loop intero componeva un anno intero in più e il patrimonio superava il Numero FIRE,
+                    // contraddicendo le card in alto.
+                    const savings = inputs.annualIncome * inputs.savingsRate;
+                    const wy = Math.floor(yearsToFire);
+                    const frac = yearsToFire - wy;
+                    let finalWealth = this.calculateCompoundGrowth(inputs.currentAssets, realRate, wy, savings);
+                    if (frac > 0) finalWealth = finalWealth * (1 + realRate * frac) + savings * frac;
 
                     const monthlyIncome = (finalWealth * withdrawalRate) / 12;
 
                     document.getElementById('years' + scenario.id).textContent = yearsToFire.toFixed(1);
                     document.getElementById('wealth' + scenario.id).textContent = '€' + finalWealth.toLocaleString('it-IT', {maximumFractionDigits: 0});
                     document.getElementById('income' + scenario.id).textContent = '€' + monthlyIncome.toLocaleString('it-IT', {maximumFractionDigits: 0});
+
+                    // Allinea etichetta e colonna tasso dello scenario Base al rendimento inserito
+                    if (scenario.id === 'Base') {
+                        const pct = scenario.rate * 100;
+                        const pctStr = (Number.isInteger(pct) ? String(pct) : pct.toFixed(1)) + '%';
+                        document.getElementById('rateBase').textContent = pctStr;
+                        document.getElementById('labelBase').textContent = '📊 Base (' + pctStr + ')';
+                    }
                 });
             }
 
@@ -1794,7 +1810,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.text('Scenario', M, y); doc.text('Anni', cY, y); doc.text('Patrimonio', cW, y); doc.text('Mensile', W-M, y, {align:'right'}); y += 6;
             doc.setDrawColor(235,238,241); doc.line(M,y,W-M,y); y += 18;
             [['Pessimistico (5%)','yearsPessimistic','wealthPessimistic','incomePessimistic'],
-             ['Base (7%)','yearsBase','wealthBase','incomeBase'],
+             ['Base (' + gv('rateBase') + ')','yearsBase','wealthBase','incomeBase'],
              ['Ottimistico (9%)','yearsOptimistic','wealthOptimistic','incomeOptimistic']
             ].forEach(r => { doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK); doc.setFont('helvetica','bold'); doc.text(r[0], M, y); doc.setFont('helvetica','normal'); doc.text(gv(r[1]), cY, y); doc.text(gv(r[2]), cW, y); doc.text(gv(r[3]), W-M, y, {align:'right'}); y += 20; });
             y += 10;

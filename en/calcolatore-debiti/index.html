@@ -667,7 +667,7 @@ input[type="range"]::-moz-range-thumb:hover {
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Debt Payoff Calculator</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<div class="lock-title">Debt Payoff</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1460,7 +1460,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     x.balance -= Math.min(x.minPayment, x.balance);
                 });
             }
-            return { months: month, interest: interest };
+            // converged=false means at least one debt never pays off (minimum ≤ interest):
+            // "interest saved" is then undefined, so callers must not display a number.
+            const converged = d.every(x => x.balance <= 0.01) && isFinite(interest);
+            return { months: month, interest: interest, converged: converged };
         }
 
         function renderComparison(snowball, avalanche) {
@@ -1470,7 +1473,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const avFirst = (debts.slice().sort((a, b) => b.rate - a.rate)[0] || {}).name || '—';
             const bothConv = snowball.converged && avalanche.converged;
             const intDiff = Math.abs(saved);
-            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 <strong>Same ${snowball.months} months either way</strong> — but <strong>Avalanche</strong> pays <strong style="color:var(--el-emerald,#10b981);">${fmtC(intDiff)} less interest</strong> (it attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first). <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. Choose Avalanche to save money, Snowball to stay motivated.</div>`;
+            // Headline must match the numbers: Avalanche can also finish SOONER (months saved), not only pay less interest.
+            const lessInt = `<strong style="color:var(--el-emerald,#10b981);">${fmtC(intDiff)} less interest</strong>`;
+            let headline;
+            if (monthsSaved > 0) {
+                headline = `<strong>Avalanche</strong> gets you debt-free <strong>${monthsSaved} month${monthsSaved === 1 ? '' : 's'} sooner</strong>` + (intDiff >= 1 ? ` and pays ${lessInt}` : '');
+            } else if (intDiff >= 1) {
+                headline = `<strong>Same ${snowball.months} months either way</strong> — but <strong>Avalanche</strong> pays ${lessInt}`;
+            } else {
+                headline = `<strong>Same ${snowball.months} months and same interest</strong> with either strategy`;
+            }
+            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline} (it attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first). <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. Choose Avalanche to save money, Snowball to stay motivated.</div>`;
 
             const html = takeaway + `
                 <div class="comparison-box">
@@ -1520,7 +1533,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const warnHtml = stuck.length ? `<div style="grid-column:1/-1;background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.35);border-radius:12px;padding:14px 16px;margin-bottom:16px;color:var(--el-text1,#2a2f33);font-size:14px;">⚠️ <strong>Heads up:</strong> the minimum payment on ${stuck.map(d=>escapeHtml(d.name)).join(', ')} is too low to cover the monthly interest — this debt won't shrink on minimums alone. Increase its minimum or add extra payments.</div>` : '';
             document.getElementById('comparisonContainer').innerHTML = warnHtml + html;
 
-            if (Math.abs(saved) > 0.01) {
+            if (avalanche.converged) {
                 const date = new Date();
                 date.setMonth(date.getMonth() + avalanche.months);
                 const months = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -1528,6 +1541,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 document.getElementById('debtFreeDate').textContent =
                     `${months[date.getMonth()]} ${date.getFullYear()}`;
                 document.getElementById('debtFreeSection').style.display = 'block';
+            } else {
+                document.getElementById('debtFreeSection').style.display = 'none';
             }
         }
 
@@ -1665,9 +1680,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             // Real minimum-only baseline (no extra, no rollover) vs the chosen best strategy
             const minOnly = simulateMinOnly(debts);
             const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            // If paying only the minimums never clears the debt, the savings are undefined — show a dash.
+            if (!minOnly.converged) {
+                document.getElementById('interestSaved').textContent = '—';
+                document.getElementById('monthsSaved').textContent = '—';
+                return;
+            }
             const monthsSaved = Math.max(0, minOnly.months - best.months);
             const saved = Math.max(0, minOnly.interest - best.totalInterest);
-
             document.getElementById('interestSaved').textContent = `$${saved.toFixed(2)}`;
             document.getElementById('monthsSaved').textContent = Math.floor(monthsSaved);
         }
@@ -1773,7 +1793,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK);
                 doc.text('Recommended strategy:  ' + bestLabel, M, y); y += 18;
                 doc.setTextColor.apply(doc, EM); doc.setFont('helvetica','bold');
-                doc.text('You save ' + fmtC(interestSaved) + ' in interest and ' + monthsSaved + ' months vs paying only the minimums.', M, y);
+                if (minOnly.converged) {
+                    doc.text('You save ' + fmtC(interestSaved) + ' in interest and ' + monthsSaved + ' months vs paying only the minimums.', M, y);
+                } else {
+                    doc.text('Paying only the minimums would never clear this debt — your plan does, in ' + best.months + ' months.', M, y);
+                }
                 y += 30;
             }
 

@@ -21,32 +21,23 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Contract Generator">
-    <meta name="theme-color" content="#0a0b0d">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <meta name="description" content="Generate professional freelance contracts (service agreement, collaboration, NDA, license) in minutes. Live preview, PDF print, 100% offline.">
     <meta name="theme-color" content="#060a0a">
     <title>Freelance Contract Generator — Pro</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -647,7 +638,8 @@
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
-            color: var(--bg);
+            background-color: var(--emerald);
+            color: #08130e;
             box-shadow: 0 4px 16px rgba(16,185,129,0.25);
         }
         @media (hover: hover) and (pointer: fine) {
@@ -870,10 +862,20 @@
 
         /* PRINT */
         @page { margin: 0; size: A4; }
+        /* Screen-only note under the disclaimer: reminder that it is NOT in the PDF */
+        .disclaimer-note {
+            margin-top: 10px; font-size: 12px; line-height: 1.5;
+            color: var(--el-text2, #6b7280); font-style: italic;
+        }
         @media print {
             html, body { margin: 0; padding: 0; background: white; color: #000; }
             body::before, body::after { display: none; }
             header, .step-bar, .form-panel, .bottom-bar, .footer, .notification { display: none !important; }
+            /* The disclaimer (and its reminder) and the brand footer stay ON SCREEN only, never in the PDF/contract */
+            .disclaimer, .el-brand { display: none !important; }
+            /* Never split an article or a signature block across two pages */
+            .article, .signature-section, .signature-block { page-break-inside: avoid; break-inside: avoid; }
+            .article-content { orphans: 2; widows: 2; }
             .container { max-width: 100%; padding: 0; margin: 0; }
             .main-wrapper { grid-template-columns: 1fr !important; gap: 0; }
             .preview-panel {
@@ -902,17 +904,11 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Contract Generator</div>
-<div class="lock-sub">Enter the code you received with your purchase</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Contract Generator</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -1305,6 +1301,10 @@
             saveStepData();
             if (currentStep < 6) { currentStep++; updateUI(); }
             else {
+                // saveStepData() above just saved the step-6 clauses: re-render the preview BEFORE
+                // printing, otherwise the printed contract omits every clause (they are checked by
+                // default) because the preview was built while formData.clauses was still empty.
+                updatePreview();
                 showNotification('Contract ready — opening print…','success');
                 const p = document.getElementById('previewPanel');
                 if (p) p.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1478,7 +1478,7 @@
           prestazione: {
             title:"SERVICE AGREEMENT",
             roleA:"the Provider", roleB:"the Client", sigA:"The Provider", sigB:"The Client",
-            whereas:x=>`The Provider carries out independent professional activity${x.f.specialty?' in '+x.e(x.f.specialty):''} and the Client wishes to engage the Provider for the project <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            whereas:x=>`The Provider carries out independent professional activity${x.f.specialty?' as a '+x.e(x.f.specialty):''} and the Client wishes to engage the Provider for the project <strong>${x.e(x.p.title)||'—'}</strong>.`,
             core:x=>{const a=[];
               a.push({t:`Scope of Services`,c:`The Provider agrees to perform the following services: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Deliverables:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
               a.push({t:`Manner of Performance and Independence`,c:`The Provider performs the services in full organizational and technical autonomy, without any relationship of subordination, using its own means and without fixed hours, coordinating with the Client only as to the required results.`});
@@ -1561,31 +1561,40 @@
             const payLabel = {bonifico:'Bank Transfer', paypal:'PayPal', assegno:'Check', altro:'Other'};
             const timingLabel = {'100-0':'100% upfront','50-50':'50% deposit + 50% on delivery','30-40-30':'30% + 40% + 30%',consegna:'On delivery',personalizzato:'Custom'};
             const e = escapeHtml;
+            // Automatic capitalization of names/addresses: capitalizes ONLY all-lowercase words
+            // ("john smith" -> "John Smith") and never touches acronyms / intentional casing (LLC, McDonald, IBM).
+            const tc = s => String(s == null ? '' : s).replace(/\S+/g, w => w === w.toLowerCase() ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+            const nm = s => e(tc(s));
 
             const payStr = co.totalAmount ? (`Total amount: <strong>${fmtEur(co.totalAmount)}</strong>`
                 + (co.compensationType?`<br>Type: ${compLabel[co.compensationType]||'—'}`:'')
+                + (co.compensationType==='orario' && co.hourlyRate?`<br>Hourly rate: ${fmtEur(co.hourlyRate)}/h`:'')
                 + (co.paymentMethod?`<br>Method: ${payLabel[co.paymentMethod]||'—'}`:'')
                 + (co.paymentTiming?`<br>Schedule: ${timingLabel[co.paymentTiming]||'—'}`:'')
                 + (co.latePenalty?`<br>Late payment penalty: ${e(co.latePenalty)}% after ${e(co.graceDays||'0')} days`:'')
                 + (co.expensesReimbursable?`<br>Reimbursable expenses: ${e(co.expensesDescription)||'Yes'}`:'')) : '';
             const x = { e, fmtDate, fmtEur, f, c, p, co, cl, deliverables, milestones, payStr };
             let h = `<h2>${e(tpl.title)}</h2><p class="contract-date">${e(today)}</p>`;
-            h += `<div class="preview-section"><h3>Between</h3><p><strong>${e(f.name)}</strong>, with address at ${e(f.address)}, Tax ID/EIN ${e(f.taxId)}, hereinafter referred to as "${tpl.roleA}"</p></div>`;
-            h += `<div class="preview-section"><h3>And</h3><p><strong>${e(c.name)}</strong>${c.contact?', represented by '+e(c.contact):''}, with address at ${e(c.address)}, Tax ID/EIN ${e(c.taxId)}, hereinafter referred to as "${tpl.roleB}"</p></div>`;
+            h += `<div class="preview-section"><h3>Between</h3><p><strong>${nm(f.name)}</strong>, with address at ${nm(f.address)}, Tax ID/EIN ${e(f.taxId)}, hereinafter referred to as "${tpl.roleA}"</p></div>`;
+            h += `<div class="preview-section"><h3>And</h3><p><strong>${nm(c.name)}</strong>${c.contact?', represented by '+nm(c.contact):''}, with address at ${nm(c.address)}, Tax ID/EIN ${e(c.taxId)}, hereinafter referred to as "${tpl.roleB}"</p></div>`;
             h += `<div class="preview-section"><h3>Whereas</h3><p>${tpl.whereas(x)}</p></div>`;
             let n = 1;
             tpl.core(x).forEach(art => { h += `<div class="article"><div class="article-title">Art. ${n++} — ${art.t}</div><div class="article-content">${art.c}</div></div>`; });
-            if (cl.ipClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Intellectual Property</div><div class="article-content">All work and materials developed under this agreement shall become the exclusive property of the Client upon full payment of the agreed amount. The Contractor assigns all copyright and intellectual property rights related to the work performed.</div></div>`;
+            // The optional clauses below use the freelance party roles (Client/Contractor) and
+            // service-specific wording: render them only for the freelance types, otherwise they
+            // wrongly appear in Lease/Sale/NDA contracts.
+            const isFreelance = contractType==='prestazione'||contractType==='collaborazione';
+            if (cl.ipClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Intellectual Property</div><div class="article-content">All work and materials developed under this agreement shall become the exclusive property of the Client upon full payment of the agreed amount. The Contractor assigns all copyright and intellectual property rights related to the work performed.</div></div>`;
             if (cl.confidenceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Confidentiality</div><div class="article-content">The parties agree to maintain strict confidentiality regarding any confidential information exchanged during the performance of this agreement. Such information shall not be disclosed to third parties without prior written consent, except as required by law.</div></div>`;
-            if (cl.nonCompeteClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Non-Compete</div><div class="article-content">During the term of this agreement and for the following ${e(cl.nonCompeteMonths)||'12'} months, the Contractor agrees not to provide similar services to direct competitors of the Client in relation to the subject matter of this agreement.</div></div>`;
-            if (cl.resolutionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Early Termination</div><div class="article-content">Either party may terminate this agreement by providing ${e(cl.resolutionDays)||'30'} days' written notice. In the event of termination by the Client, the Contractor shall be entitled to compensation for work already performed as of the effective date of termination.</div></div>`;
+            if (cl.nonCompeteClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Non-Compete</div><div class="article-content">During the term of this agreement and for the following ${e(cl.nonCompeteMonths)||'12'} months, the Contractor agrees not to provide similar services to direct competitors of the Client in relation to the subject matter of this agreement.</div></div>`;
+            if (cl.resolutionClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Early Termination</div><div class="article-content">Either party may terminate this agreement by providing ${e(cl.resolutionDays)||'30'} days' written notice. In the event of termination by the Client, the Contractor shall be entitled to compensation for work already performed as of the effective date of termination.</div></div>`;
             if (cl.forceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Force Majeure</div><div class="article-content">Neither party shall be liable for any failure to perform caused by force majeure events, defined as unforeseeable and unavoidable circumstances that render the performance of contractual obligations impossible.</div></div>`;
             if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Governing Law and Jurisdiction</div><div class="article-content">Any dispute arising out of this agreement shall be subject to the exclusive jurisdiction of the courts of ${e(cl.jurisdictionCity)||'New York'}.</div></div>`;
-            if (cl.cancellationPenalty) h += `<div class="article"><div class="article-title">Art. ${n++} — Cancellation Fee</div><div class="article-content">In the event of project cancellation by the Client, the Client shall pay the Contractor a fee equal to ${e(cl.cancellationPercent)||'30'}% of the total agreed amount.</div></div>`;
-            if (cl.exclusivityClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Exclusivity</div><div class="article-content">For the duration of this agreement, the Contractor shall dedicate the time and resources necessary for the project to the Client, agreeing not to accept competing engagements without prior written consent.</div></div>`;
-            if (cl.warrantyClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Warranty</div><div class="article-content">The Contractor warrants the delivered work for ${e(cl.warrantyMonths)||'1'} month(s) from delivery. During this period the Contractor agrees to correct any defects or malfunctions found in the delivered work at no additional cost.</div></div>`;
-            h += `<div class="article" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Disclaimer</div><div class="article-content">This document is an automatically generated template and does not constitute legal advice. Have it reviewed by a qualified professional before signing.</div></div>`;
-            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${e(f.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${e(c.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div></div>`;
+            if (cl.cancellationPenalty && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Cancellation Fee</div><div class="article-content">In the event of project cancellation by the Client, the Client shall pay the Contractor a fee equal to ${e(cl.cancellationPercent)||'30'}% of the total agreed amount.</div></div>`;
+            if (cl.exclusivityClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Exclusivity</div><div class="article-content">For the duration of this agreement, the Contractor shall dedicate the time and resources necessary for the project to the Client, agreeing not to accept competing engagements without prior written consent.</div></div>`;
+            if (cl.warrantyClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Warranty</div><div class="article-content">The Contractor warrants the delivered work for ${e(cl.warrantyMonths)||'1'} month(s) from delivery. During this period the Contractor agrees to correct any defects or malfunctions found in the delivered work at no additional cost.</div></div>`;
+            h += `<div class="article disclaimer" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Disclaimer</div><div class="article-content">This document is an automatically generated template and does not constitute legal advice. Have it reviewed by a qualified professional before signing.</div><div class="disclaimer-note">ⓘ This notice is an on-screen reminder only: <strong>it will NOT appear in the downloaded PDF/contract</strong>.</div></div>`;
+            h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${nm(f.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${nm(c.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div></div>`;
             previewContent.innerHTML = h;
             const txt = previewContent.innerText, words = txt.trim().split(/\s+/).filter(Boolean).length;
             $('wordCount').textContent = words;
@@ -1644,24 +1653,15 @@
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
-<script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-</script>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='1uykdlc6dmi',K='etherlabs_generatore-contratti_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='1uykdlc6dmi',K='etherlabs_generatore-contratti_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

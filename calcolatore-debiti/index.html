@@ -667,7 +667,7 @@ input[type="range"]::-moz-range-thumb:hover {
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Calcolatore Estinzione Debiti</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div class="lock-title">Estinzione Debiti</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1455,6 +1455,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     x.balance -= Math.min(x.minPayment, x.balance);
                 });
             }
+            // converged=false: almeno un debito non si estingue (minimo ≤ interessi):
+            // "interesse risparmiato" è indefinito, i chiamanti non devono mostrare un numero.
             const converged = d.every(x => x.balance <= 0.01) && isFinite(interest);
             return { months: month, interest: interest, converged: converged };
         }
@@ -1465,18 +1467,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const snFirst = (debts.slice().sort((a, b) => a.balance - b.balance)[0] || {}).name || '—';
             const avFirst = (debts.slice().sort((a, b) => b.rate - a.rate)[0] || {}).name || '—';
             const bothConv = snowball.converged && avalanche.converged;
-            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 <strong>Stessi ${snowball.months} mesi in entrambi i casi</strong> — ma la <strong>Valanga</strong> paga <strong style="color:var(--el-emerald,#10b981);">${fmtC(Math.abs(saved))} di interessi in meno</strong> (attacca prima il debito col tasso più alto, <em>${escapeHtml(avFirst)}</em>). La <strong>Palla di Neve</strong> estingue prima il debito più piccolo, <em>${escapeHtml(snFirst)}</em>, per una vittoria motivante. Valanga per risparmiare, Palla di Neve per restare motivato.</div>`;
+            // Headline coerente coi numeri: la Valanga può estinguere PRIMA (mesi risparmiati), non solo pagare meno interessi.
+            const emStyle = 'color:var(--el-emerald,#10b981);';
+            const intLess = `<strong style="${emStyle}">${fmtC(Math.abs(saved))} di interessi in meno</strong>`;
+            let headline;
+            if (monthsSaved > 0) {
+                headline = `La <strong>Valanga</strong> ti libera dal debito <strong>${monthsSaved} ${monthsSaved === 1 ? 'mese' : 'mesi'} prima</strong>` + (Math.abs(saved) >= 1 ? ` e paga ${intLess}` : '');
+            } else if (Math.abs(saved) >= 1) {
+                headline = `<strong>Stessi ${snowball.months} mesi in entrambi i casi</strong> — ma la <strong>Valanga</strong> paga ${intLess}`;
+            } else {
+                headline = `<strong>Stessi ${snowball.months} mesi e stessi interessi</strong> con entrambe le strategie`;
+            }
+            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline} (attacca prima il debito col tasso più alto, <em>${escapeHtml(avFirst)}</em>). La <strong>Palla di Neve</strong> estingue prima il debito più piccolo, <em>${escapeHtml(snFirst)}</em>, per una vittoria motivante. Valanga per risparmiare, Palla di Neve per restare motivato.</div>`;
 
             const html = takeaway + `
                 <div class="comparison-box">
                     <div class="comparison-title">❄️ Metodo Palla di Neve</div>
                     <div class="comparison-metric">
                         <div class="metric-label">Mesi fino a Libertà</div>
-                        <div class="metric-value">${snowball.months} mesi</div>
+                        <div class="metric-value">${snowball.converged ? snowball.months + ' mesi' : '600+ mesi'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Interesse Totale</div>
-                        <div class="metric-value">${fmtC(snowball.totalInterest)}</div>
+                        <div class="metric-value">${snowball.converged ? fmtC(snowball.totalInterest) : '—'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Importo Totale Pagato</div>
@@ -1493,11 +1506,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="comparison-title">⛰️ Metodo Valanga</div>
                     <div class="comparison-metric">
                         <div class="metric-label">Mesi fino a Libertà</div>
-                        <div class="metric-value">${avalanche.months} mesi</div>
+                        <div class="metric-value">${avalanche.converged ? avalanche.months + ' mesi' : '600+ mesi'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Interesse Totale</div>
-                        <div class="metric-value">${fmtC(avalanche.totalInterest)}</div>
+                        <div class="metric-value">${avalanche.converged ? fmtC(avalanche.totalInterest) : '—'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Importo Totale Pagato</div>
@@ -1511,9 +1524,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 </div>
             `;
 
-            document.getElementById('comparisonContainer').innerHTML = html;
+            const stuck = debts.filter(d => d.minPayment <= d.balance * d.rate / 100 / 12 + 0.001);
+            const warnHtml = stuck.length ? `<div style="grid-column:1/-1;background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.35);border-radius:12px;padding:14px 16px;margin-bottom:16px;color:var(--el-text1,#2a2f33);font-size:14px;">⚠️ <strong>Attenzione:</strong> il pagamento minimo su ${stuck.map(d=>escapeHtml(d.name)).join(', ')} è troppo basso per coprire gli interessi mensili — questo debito non si riduce pagando solo il minimo. Aumenta il minimo o aggiungi pagamenti extra.</div>` : '';
+            document.getElementById('comparisonContainer').innerHTML = warnHtml + html;
 
-            if (Math.abs(saved) > 0.01) {
+            if (avalanche.converged) {
                 const date = new Date();
                 date.setMonth(date.getMonth() + avalanche.months);
                 const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
@@ -1521,6 +1536,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 document.getElementById('debtFreeDate').textContent =
                     `${months[date.getMonth()]} ${date.getFullYear()}`;
                 document.getElementById('debtFreeSection').style.display = 'block';
+            } else {
+                document.getElementById('debtFreeSection').style.display = 'none';
             }
         }
 
@@ -1656,6 +1673,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             document.getElementById('motivationSection').style.display = 'block';
             const minOnly = simulateMinOnly(debts);
             const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            // Se pagando solo i minimi il debito non si estingue mai, il risparmio è indefinito — mostra un trattino.
             if (!minOnly.converged) {
                 document.getElementById('interestSaved').textContent = '—';
                 document.getElementById('monthsSaved').textContent = '—';
@@ -1743,8 +1761,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 y += 78;
                 doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc,DK); doc.text('Strategia consigliata:  ' + bestLabel, M, y); y += 18;
                 doc.setTextColor.apply(doc,EM); doc.setFont('helvetica','bold');
-                if (minOnly.converged) { doc.text('Risparmi ' + fmtC(interestSaved) + ' di interessi e ' + monthsSaved + ' mesi rispetto ai soli minimi.', M, y); }
-                else { doc.text('Pagando solo i minimi il debito non si estinguerebbe mai — il tuo piano sì, in ' + best.months + ' mesi.', M, y); }
+                if (minOnly.converged) {
+                    doc.text('Risparmi ' + fmtC(interestSaved) + ' di interessi e ' + monthsSaved + ' mesi rispetto ai soli minimi.', M, y);
+                } else {
+                    doc.text('Pagando solo i minimi il debito non si estinguerebbe mai — il tuo piano sì, in ' + best.months + ' mesi.', M, y);
+                }
                 y += 30;
             }
             doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc,DK); doc.text('Ordine di estinzione', M, y); y += 8;

@@ -1330,6 +1330,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 this.updateDisplay();
                 this.updateStats();
+                this.updateHistory();
                 this.saveData();
             },
 
@@ -1355,7 +1356,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 };
                 this.elements.timerMode.textContent = modeLabels[this.state.currentMode];
 
-                this.elements.timerSession.textContent = `Session ${this.state.sessionCount} of ${this.settings.sessionsBeforeLongBreak}`;
+                const displaySession = ((this.state.sessionCount - 1) % this.settings.sessionsBeforeLongBreak) + 1;
+                this.elements.timerSession.textContent = `Session ${displaySession} of ${this.settings.sessionsBeforeLongBreak}`;
 
                 // Update button text
                 this.elements.playPauseBtn.textContent = this.state.isRunning ? 'PAUSE' : 'START';
@@ -1372,7 +1374,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             },
 
             updateSetting(setting, value) {
-                this.settings[setting] = parseInt(value);
+                const bounds = {
+                    focusDuration:           { min: 15, max: 60, def: 25 },
+                    shortBreakDuration:      { min: 3,  max: 15, def: 5  },
+                    longBreakDuration:       { min: 10, max: 30, def: 15 },
+                    sessionsBeforeLongBreak: { min: 2,  max: 6,  def: 4  }
+                }[setting];
+                let n = parseInt(value, 10);
+                if (isNaN(n)) n = bounds.def;
+                n = Math.min(bounds.max, Math.max(bounds.min, n));
+                this.settings[setting] = n;
+                if (this.elements[setting]) {
+                    this.elements[setting].value = n;
+                }
                 if (this.state.currentMode === 'focus') {
                     this.state.timeRemaining = this.settings.focusDuration * 60;
                 } else if (this.state.currentMode === 'shortBreak') {

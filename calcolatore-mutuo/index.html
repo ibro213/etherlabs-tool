@@ -21,30 +21,21 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mutuo">
-    <meta name="theme-color" content="#0a0b0d">
+    <title>Calcolatore Mutuo Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-    <title>Calcolatore Mutuo Pro</title>
     <style>
         * {
             margin: 0;
@@ -89,7 +80,7 @@
             font-size: 2.5em;
             color: var(--emerald-light);
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(232, 201, 106, 0.3);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
 
         .subtitle {
@@ -303,7 +294,7 @@
         @media (hover: hover) and (pointer: fine) {
 .result-card:hover {
             border-color: var(--emerald-light);
-            box-shadow: 0 0 20px rgba(232, 201, 106, 0.2);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
         }
 }
 
@@ -396,7 +387,7 @@ tbody tr:hover {
         button {
             padding: 12px 24px;
             background: var(--emerald);
-            color: var(--bg);
+            color: #08130e;
             border: none;
             border-radius: 8px;
             cursor: pointer; touch-action: manipulation;
@@ -406,10 +397,10 @@ tbody tr:hover {
         }
 
         @media (hover: hover) and (pointer: fine) {
-button:hover {
+button:not(.tab-btn):not(.toggle-btn):not(.secondary):hover {
             background: var(--emerald-light);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(232, 201, 106, 0.3);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 }
 
@@ -478,7 +469,11 @@ button.secondary:hover {
         .scenario-inputs input {
             font-size: 0.9em;
             padding: 10px;
+            width: 100%;
         }
+
+        .sc-field { display: flex; flex-direction: column; gap: 5px; }
+        .sc-field > span { font-size: 0.78em; color: var(--text2); font-weight: 600; }
 
         .remove-btn {
             padding: 10px 15px;
@@ -519,9 +514,13 @@ button.secondary:hover {
             transition: all 0.3s;
         }
 
+        @media (hover: hover) and (pointer: fine) {
+        .toggle-btn:not(.active):hover { color: var(--text1); border-color: var(--emerald); }
+        }
+
         .toggle-btn.active {
             background: var(--emerald);
-            color: var(--bg);
+            color: #08130e;
             border-color: var(--emerald);
         }
 
@@ -596,8 +595,15 @@ button.secondary:hover {
             h1, h2, h3, label, span, div, p, td, th, .result-value, .result-label, .comparison-value, .comparison-label {
                 color: #111111 !important;
             }
-            button, .tab, input[type="range"], canvas { display: none !important; }
-            .card, .section, .comparison-card, .result-card { break-inside: avoid; page-break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc !important; }
+            button, .tabs, input[type="range"], canvas, #el-theme-toggle { display: none !important; }
+            .tab-content:not(.active) { display: none !important; }
+            header { margin-bottom: 12px !important; padding-bottom: 8px !important; }
+            .card, .comparison-card, .result-card { break-inside: avoid; page-break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc !important; }
+            .section { break-inside: auto; page-break-inside: auto; box-shadow: none !important; }
+            .table-wrapper { overflow: visible !important; border: none !important; }
+            table { break-inside: auto; }
+            thead { display: table-header-group; }
+            tr, td, th { break-inside: avoid; page-break-inside: avoid; }
         }
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -612,17 +618,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 </script>
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Calcolatore Mutuo</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Calcolatore Mutuo</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -776,7 +776,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 </div>
 
                 <div class="info-box">
-                    Righe evidenziate in oro indicano il mese in cui la quota capitale supera la quota interessi.
+                    Righe evidenziate in verde indicano il mese in cui la quota capitale supera la quota interessi.
                 </div>
 
                 <div class="table-wrapper">
@@ -879,14 +879,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('tassoRange').addEventListener('input', (e) => {
                 document.getElementById('tassoNum').value = e.target.value;
                 dataCalcolo.tasso = parseFloat(e.target.value);
-                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1) + '%');
+                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1).replace('.', ',') + '%');
                 calcolaMutuo();
             });
 
             document.getElementById('tassoNum').addEventListener('input', (e) => {
                 document.getElementById('tassoRange').value = e.target.value;
                 dataCalcolo.tasso = parseFloat(e.target.value);
-                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1) + '%');
+                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1).replace('.', ',') + '%');
                 calcolaMutuo();
             });
 
@@ -953,9 +953,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         function setDataOggi() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dataInizio').value = today;
-            dataCalcolo.dataInizio = today;
+            if (!dataCalcolo.dataInizio) {
+                dataCalcolo.dataInizio = new Date().toISOString().split('T')[0];
+            }
+            document.getElementById('dataInizio').value = dataCalcolo.dataInizio;
         }
 
         // ========== CORE CALCULATIONS ==========
@@ -1116,16 +1117,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         function disegnaBarreAnnuali() {
             const ammort = dataCalcolo.ammortamento;
             const datiAnnuali = {};
-
             ammort.forEach(m => {
                 const anno = Math.ceil(m.mese / 12);
-                if (!datiAnnuali[anno]) {
-                    datiAnnuali[anno] = { capitale: 0, interessi: 0 };
-                }
+                if (!datiAnnuali[anno]) datiAnnuali[anno] = { capitale: 0, interessi: 0 };
                 datiAnnuali[anno].capitale += m.capitale;
                 datiAnnuali[anno].interessi += m.interessi;
             });
-
             const anni = Object.keys(datiAnnuali).map(Number).sort((a, b) => a - b);
             const capitali = anni.map(a => datiAnnuali[a].capitale);
             const interessi = anni.map(a => datiAnnuali[a].interessi);
@@ -1133,84 +1130,76 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const canvas = document.getElementById('barChart');
             const ctx = canvas.getContext('2d');
             const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width || 800;
-            canvas.height = rect.height || 400;
+            const dpr = window.devicePixelRatio || 1;
+            const W = rect.width || 800, H = rect.height || 400;
+            canvas.width = W * dpr; canvas.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            const margin = { top: 40, right: 20, bottom: 40, left: 60 };
-            const chartWidth = canvas.width - margin.left - margin.right;
-            const chartHeight = canvas.height - margin.top - margin.bottom;
+            const margin = { top: 46, right: 24, bottom: 44, left: 82 };
+            const cW = W - margin.left - margin.right;
+            const cH = H - margin.top - margin.bottom;
+            const base = margin.top + cH;
 
-            // Sfondo
             ctx.fillStyle = elc('bg');
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, W, H);
 
-            const maxVal = Math.max(...capitali.map(v => Number.isFinite(v) ? v : 0), ...interessi.map(v => Number.isFinite(v) ? v : 0), 1);
-            const barWidth = chartWidth / (anni.length * 2.5);
-            const spacing = chartWidth / anni.length;
+            // Solo valori finiti alimentano la scala: un piano degenere (tasso/durata estremi che
+            // vanno a Infinity, o un input a 0) non deve mai arrivare a createLinearGradient.
+            const fin = v => Number.isFinite(v) ? v : 0;
+            const rawMax = Math.max(...capitali.map(fin), ...interessi.map(fin), 1);
+            function niceNum(x) { const e = Math.pow(10, Math.floor(Math.log10(x))); const f = x / e; const nf = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10; return nf * e; }
+            const step = niceNum(rawMax / 5);
+            const maxVal = Math.ceil(rawMax / step) * step;
+            const ticks = Math.round(maxVal / step);
+            function fmtK(v) { return v >= 1000 ? '€' + (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'K' : '€' + Math.round(v); }
+            function topRect(x, y, w, h, rr) { rr = Math.max(0, Math.min(rr, w / 2, h)); ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x, y + rr); ctx.arcTo(x, y, x + rr, y, rr); ctx.lineTo(x + w - rr, y); ctx.arcTo(x + w, y, x + w, y + rr, rr); ctx.lineTo(x + w, y + h); ctx.closePath(); }
 
-            // Disegna barre
-            anni.forEach((anno, idx) => {
-                const x = margin.left + idx * spacing + spacing * 0.25;
-                const yCapitale = margin.top + chartHeight - (capitali[idx] / maxVal) * chartHeight;
-                const heightCapitale = (capitali[idx] / maxVal) * chartHeight;
-
-                const xInteressi = x + barWidth + 5;
-                const yInteressi = margin.top + chartHeight - (interessi[idx] / maxVal) * chartHeight;
-                const heightInteressi = (interessi[idx] / maxVal) * chartHeight;
-
-                // Barra Capitale
-                ctx.fillStyle = '#10b981';
-                ctx.fillRect(x, yCapitale, barWidth, heightCapitale);
-
-                // Barra Interessi
-                ctx.fillStyle = '#f59e0b';
-                ctx.fillRect(xInteressi, yInteressi, barWidth, heightInteressi);
-            });
-
-            // Assi
-            ctx.strokeStyle = elc('grid');
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(margin.left, margin.top);
-            ctx.lineTo(margin.left, margin.top + chartHeight);
-            ctx.lineTo(margin.left + chartWidth, margin.top + chartHeight);
-            ctx.stroke();
-
-            // Labels X
-            ctx.fillStyle = elc('text2');
-            ctx.font = '12px Segoe UI';
-            ctx.textAlign = 'center';
-            anni.forEach((anno, idx) => {
-                const x = margin.left + idx * spacing + spacing * 0.5;
-                ctx.fillText('Anno ' + anno, x, margin.top + chartHeight + 25);
-            });
-
-            // Labels Y
-            ctx.textAlign = 'right';
-            for (let i = 0; i <= 5; i++) {
-                const val = (maxVal / 5) * i;
-                const y = margin.top + chartHeight - (val / maxVal) * chartHeight;
-                ctx.fillText(formatEuro(val), margin.left - 10, y + 5);
-                ctx.strokeStyle = elc('grid');
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(margin.left - 5, y);
-                ctx.lineTo(margin.left, y);
-                ctx.stroke();
+            ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            ctx.font = '12px "Segoe UI", system-ui, sans-serif';
+            for (let i = 0; i <= ticks; i++) {
+                const val = step * i, y = base - (val / maxVal) * cH;
+                ctx.strokeStyle = elc('grid'); ctx.globalAlpha = 0.3; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(margin.left, y); ctx.lineTo(margin.left + cW, y); ctx.stroke();
+                ctx.globalAlpha = 1; ctx.fillStyle = elc('text2');
+                ctx.fillText(fmtK(val), margin.left - 12, y);
             }
 
-            // Legenda
-            ctx.fillStyle = '#10b981';
-            ctx.fillRect(margin.left + chartWidth - 250, margin.top + 10, 15, 15);
-            ctx.fillStyle = elc('text');
-            ctx.textAlign = 'left';
-            ctx.font = '12px Segoe UI';
-            ctx.fillText('Quota Capitale', margin.left + chartWidth - 230, margin.top + 22);
+            const group = cW / anni.length;
+            const barW = Math.min(group * 0.34, 26);
+            const gap = group * 0.06;
+            anni.forEach((anno, idx) => {
+                const cx = margin.left + idx * group + group / 2;
+                const xP = cx - barW - gap / 2, xI = cx + gap / 2;
+                const hP = maxVal > 0 ? (fin(capitali[idx]) / maxVal) * cH : 0, hI = maxVal > 0 ? (fin(interessi[idx]) / maxVal) * cH : 0;
+                const rr = Math.min(4, barW / 2);
+                let g = ctx.createLinearGradient(0, base - hP, 0, base);
+                g.addColorStop(0, '#34d399'); g.addColorStop(1, '#059669');
+                ctx.fillStyle = g; topRect(xP, base - hP, barW, hP, rr); ctx.fill();
+                g = ctx.createLinearGradient(0, base - hI, 0, base);
+                g.addColorStop(0, '#fbbf24'); g.addColorStop(1, '#d97706');
+                ctx.fillStyle = g; topRect(xI, base - hI, barW, hI, rr); ctx.fill();
+            });
 
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillRect(margin.left + chartWidth - 120, margin.top + 10, 15, 15);
-            ctx.fillStyle = elc('text');
-            ctx.fillText('Quota Interessi', margin.left + chartWidth - 100, margin.top + 22);
+            ctx.strokeStyle = elc('grid'); ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(margin.left, base); ctx.lineTo(margin.left + cW, base); ctx.stroke();
+            ctx.globalAlpha = 1;
+
+            ctx.fillStyle = elc('text2'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            const lstep = Math.max(1, Math.ceil(anni.length / 12));
+            anni.forEach((anno, idx) => {
+                if (idx % lstep !== 0 && idx !== anni.length - 1) return;
+                const cx = margin.left + idx * group + group / 2;
+                ctx.fillText(String(anno), cx, base + 12);
+            });
+
+            ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+            ctx.font = '13px "Segoe UI", system-ui, sans-serif';
+            let lx = margin.left + cW - 210; const ly = 24;
+            ctx.fillStyle = '#10b981'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
+            ctx.fillStyle = elc('text'); ctx.fillText('Quota Capitale', lx + 20, ly);
+            lx += 130;
+            ctx.fillStyle = '#f59e0b'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
+            ctx.fillStyle = elc('text'); ctx.fillText('Quota Interessi', lx + 20, ly);
         }
 
         // ========== TABELLA AMMORTAMENTO ==========
@@ -1300,10 +1289,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             div.innerHTML = `
                 <h3 style="color: var(--emerald-light); margin-bottom: 15px;">Scenario ${count + 1}</h3>
                 <div class="scenario-inputs">
-                    <input type="number" class="scenario-importo" min="50000" max="1000000" step="10000" placeholder="Importo (€)" value="250000">
-                    <input type="number" class="scenario-tasso" min="0.5" max="10" step="0.1" placeholder="Tasso (%)" value="3.5">
-                    <input type="number" class="scenario-durata" min="5" max="40" step="1" placeholder="Durata (anni)" value="20">
-                    <input type="number" class="scenario-spread" min="0" max="5" step="0.1" placeholder="Spread (%)" value="0">
+                    <label class="sc-field"><span>Importo Mutuo (€)</span><input type="number" class="scenario-importo" min="50000" max="1000000" step="10000" value="250000"></label>
+                    <label class="sc-field"><span>Tasso Interesse (%)</span><input type="number" class="scenario-tasso" min="0.5" max="10" step="0.1" value="3.5"></label>
+                    <label class="sc-field"><span>Durata (anni)</span><input type="number" class="scenario-durata" min="5" max="40" step="1" value="20"></label>
+                    <label class="sc-field"><span>Spread (%)</span><input type="number" class="scenario-spread" min="0" max="5" step="0.1" value="0"></label>
                     <button class="remove-btn" onclick="rimuoviScenario(${count})">Rimuovi</button>
                 </div>
             `;
@@ -1369,7 +1358,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                         </div>
                         <div class="comparison-item">
                             <span class="comparison-label">Tasso:</span>
-                            <span class="comparison-value">${r.tasso.toFixed(2)}%</span>
+                            <span class="comparison-value">${r.tasso.toFixed(2).replace('.', ',')}%</span>
                         </div>
                         <div class="comparison-item">
                             <span class="comparison-label">Durata:</span>
@@ -1547,7 +1536,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     }
 
                     aggiornaSliderValue('importoVal', formatEuro(dataCalcolo.importo));
-                    aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1) + '%');
+                    aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1).replace('.', ',') + '%');
                     aggiornaSliderValue('durataVal', dataCalcolo.durata + ' anni');
                 } catch (e) {
                 }
@@ -1557,24 +1546,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app!</div>
-<script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-</script>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='20bjhe5bdpj',K='etherlabs_calcolatore-mutuo_v2';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='20bjhe5bdpj',K='etherlabs_calcolatore-mutuo_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

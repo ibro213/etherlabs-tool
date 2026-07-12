@@ -20,11 +20,22 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
+
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Pianificatore Budget Matrimonio Pro</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -400,7 +411,8 @@
 
         .btn-primary {
             background: linear-gradient(135deg, var(--emerald-dark), var(--emerald));
-            color: var(--bg);
+            background-color: var(--emerald);
+            color: #08130e;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -415,7 +427,7 @@
         }
 
         .btn-secondary {
-            background: var(--border2);
+            background: var(--bg2);
             color: var(--emerald-light);
             border: 1px solid var(--emerald);
         }
@@ -653,54 +665,24 @@
           .btn-small { min-height: 40px; }
           input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
         }
-
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
-@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
-.lock-btn:active{transform:translateY(0)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
-.install-hint strong{color:var(--el-emerald-light)}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 <script>/* colori grafici theme-aware */
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Budget Matrimonio</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app.</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Budget Matrimonio</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -798,7 +780,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             { it: 'Trucco & Capelli', en: 'Hair & Makeup', min: 2, max: 3 },
             { it: 'Anelli', en: 'Rings', min: 3, max: 5 },
             { it: 'Bomboniere', en: 'Favors/Bomboniere', min: 2, max: 3 },
-            { it: 'Varie & Emergenza', en: 'Miscellaneous/Emergency', min: 5, max: 8 }
+            { it: 'Varie & Emergenza', en: 'Miscellaneous/Emergency', min: 4, max: 7 }
         ];
 
         const vendors = [
@@ -817,9 +799,20 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         const expenseData = {};
         const vendorStatus = {};
 
+        function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+        const STORE_KEY = 'wedding-budget-pro';
+        function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify({budgetData, expenseData, vendorStatus})); }catch(e){} }
+        function loadState(){ try{ const raw=localStorage.getItem(STORE_KEY); if(!raw) return false; const s=JSON.parse(raw); if(s.budgetData) Object.assign(budgetData, s.budgetData); if(s.expenseData) Object.assign(expenseData, s.expenseData); if(s.vendorStatus) Object.assign(vendorStatus, s.vendorStatus); return true; }catch(e){ return false; } }
+
         function initApp() {
             initializeCategories();
             initializeVendors();
+            loadState();
+            document.getElementById('totalBudget').value = budgetData.totalBudget || '';
+            document.getElementById('guestCount').value = budgetData.guestCount || '';
+            document.getElementById('weddingDate').value = budgetData.weddingDate || '';
+            renderVendors();
             setupEventListeners();
             updateDashboard();
         }
@@ -857,11 +850,28 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             document.getElementById('weddingDate').addEventListener('change', e => {
                 budgetData.weddingDate = e.target.value;
+                saveState();
             });
         }
 
         function renderCategories() {
             const grid = document.getElementById('categoriesGrid');
+
+            const savedForms = {};
+            categories.forEach((_, idx) => {
+                const form = document.getElementById(`expenseForm-${idx}`);
+                if (!form) return;
+                const gv = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+                savedForms[idx] = {
+                    open: !form.classList.contains('hidden'),
+                    vendor: gv(`vendor-${idx}`),
+                    amount: gv(`amount-${idx}`),
+                    date: gv(`date-${idx}`),
+                    notes: gv(`notes-${idx}`),
+                    paid: gv(`paid-${idx}`)
+                };
+            });
+
             grid.innerHTML = '';
 
             categories.forEach((cat, idx) => {
@@ -925,6 +935,21 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 grid.appendChild(card);
             });
 
+            categories.forEach((_, idx) => {
+                const s = savedForms[idx];
+                if (!s) return;
+                if (s.open) {
+                    const form = document.getElementById(`expenseForm-${idx}`);
+                    if (form) form.classList.remove('hidden');
+                }
+                const sv = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+                sv(`vendor-${idx}`, s.vendor);
+                sv(`amount-${idx}`, s.amount);
+                sv(`date-${idx}`, s.date);
+                sv(`notes-${idx}`, s.notes);
+                if (s.paid) sv(`paid-${idx}`, s.paid);
+            });
+
             renderExpenses();
         }
 
@@ -964,9 +989,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     item.className = 'expense-item';
                     item.innerHTML = `
                         <div class="expense-details">
-                            <div class="expense-vendor">${exp.vendor}</div>
+                            <div class="expense-vendor">${esc(exp.vendor)}</div>
                             <div class="expense-meta">${exp.date ? new Date(exp.date).toLocaleDateString('it-IT') : ''} - ${exp.paid === 'paid' ? '✓ Pagato' : '○ Non Pagato'}</div>
-                            ${exp.notes ? `<div class="expense-meta">${exp.notes}</div>` : ''}
+                            ${exp.notes ? `<div class="expense-meta">${esc(exp.notes)}</div>` : ''}
                         </div>
                         <div style="display: flex; gap: 12px; align-items: center; white-space: nowrap;">
                             <div class="expense-amount">€${exp.amount.toFixed(2)}</div>
@@ -1012,10 +1037,13 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 const perGuest = totalSpent / budgetData.guestCount;
                 document.getElementById('perGuestValue').textContent = `€${perGuest.toFixed(2)}`;
                 document.getElementById('perGuestContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('perGuestContainer').classList.add('hidden');
             }
 
             renderCategories();
             drawChart();
+            saveState();
         }
 
         function drawChart() {
@@ -1097,6 +1125,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function updateVendorStatus(vendor, status) {
             vendorStatus[vendor] = status;
+            saveState();
         }
 
         function exportSummary() {
@@ -1137,24 +1166,18 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         initApp();
     </script>
-
-</div><!-- /appContent -->
-<script>
-(function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='i79h5weqk8',K='etherlabs_budget-matrimonio_v2';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+</div><!-- /appContent -->
+<script>(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='i79h5weqk8',K='etherlabs_budget-matrimonio_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+})();</script>
 </body>
 </html>

@@ -1381,6 +1381,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         } catch(e) { savedIdeas = []; }
         let selectedIdeasForComparison = [];
         let currentResults = null;
+        let editingId = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1759,9 +1760,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function saveIdea() {
             const ideaName = document.getElementById('ideaName').value.trim();
+            const category = document.getElementById('category').value;
 
-            if (!ideaName) {
-                alert('⚠️ Enter a name for the idea before saving!');
+            if (!ideaName || !category) {
+                alert('⚠️ Complete the idea name and category!');
                 return;
             }
 
@@ -1771,9 +1773,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             });
 
             const idea = {
-                id: Date.now(),
+                id: editingId !== null ? editingId : Date.now(),
                 name: ideaName,
-                category: document.getElementById('category').value,
+                category: category,
                 description: document.getElementById('description').value,
                 scores: scores,
                 totalScore: Object.values(scores).reduce((a, b) => a + b, 0),
@@ -1792,6 +1794,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             try {
             localStorage.setItem('savedIdeas', JSON.stringify(savedIdeas));
             } catch(e) {}
+            editingId = null;
             updateSavedIdeasList();
             alert('✅ Idea saved successfully!');
         }
@@ -1829,6 +1832,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function loadIdeaToEdit(ideaId) {
             const idea = savedIdeas.find(i => i.id === ideaId);
             if (!idea) return;
+            editingId = ideaId;
 
             document.getElementById('ideaName').value = idea.name;
             document.getElementById('category').value = idea.category;
@@ -2060,7 +2064,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Show selected tab
             document.getElementById(tabName).classList.add('active');
-            if(_el) _el.classList.add('active');
+            const btn = _el || document.querySelector('.tab-btn[onclick*="\'' + tabName + '\'"]');
+            if (btn) btn.classList.add('active');
 
             // Generate action plan when switching to action tab
             if (tabName === 'action') {
@@ -2072,6 +2077,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function resetForm() {
             if (confirm('Reset the form?')) {
+                editingId = null;
                 document.getElementById('ideaName').value = '';
                 document.getElementById('category').value = '';
                 document.getElementById('description').value = '';

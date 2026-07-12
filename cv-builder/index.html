@@ -1377,7 +1377,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <input type="file" id="photoFileInput" accept="image/*" style="display:none">
                             <div class="photo-upload-text">
                                 <span>📷 Click or drag an image here</span>
-                                <small>JPG, PNG, WebP — max 2 MB</small>
+                                <small>JPG, PNG, WebP — max 12 MB</small>
                             </div>
                         </div>
                         <button type="button" id="cropBtn" class="btn btn-secondary" style="display:none;margin-top:8px" onclick="if(_lastPhotoSrc)openCropper(_lastPhotoSrc)">✂️ Ritaglia / Riposiziona</button>
@@ -1531,6 +1531,7 @@ const T_ALL = { en: {
                 atsAnalyzed: 'Analysis complete'
             },
             confirmClear: 'Clear all fields? This cannot be undone.',
+            confirmPreset: 'Load this preset? Current data will be replaced.',
             atsHeader: 'ATS-OPTIMIZED RESUME', expName: "Name: ", expTitle: "Title: ", expPhone: "Phone: ", expLocation: "Location: ", expWebsite: "Website: ", fileSuffix: "_resume", atsPaste: "Paste a job post to see the keywords.", atsMatch: "match", atsPresent: "Present in resume", atsToAdd: "To add", atsNone: "none", atsAll: "all present ✓", rd1: "Summary present", rd2: "At least 1 experience", rd3: "At least 3 skills", rd4: "Email and phone", rd5: "Summary 200-700 chars", saving: "Saving...", savedAt: "Saved ", saveFailed: "Save failed" }, it: {
             yourName: 'Nome e Cognome',
             professionalTitle: 'Titolo Professionale',
@@ -1560,6 +1561,7 @@ const T_ALL = { en: {
                 atsAnalyzed: 'Analisi completata'
             },
             confirmClear: 'Cancellare tutti i campi? L\'operazione è irreversibile.',
+            confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
             confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
             saving: 'Salvataggio...',
             savedAt: 'Salvato ',
@@ -2001,7 +2003,7 @@ const PRESETS_ALL = { en: {
             } else {
                 area.innerHTML = `
                     <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-                    <div class="photo-upload-text"><span>📷 Click or drag an image here</span><small>JPG, PNG, WebP — max 2 MB</small></div>
+                    <div class="photo-upload-text"><span>📷 Click or drag an image here</span><small>JPG, PNG, WebP — max 12 MB</small></div>
                 `;
             }
             const fileInput = area.querySelector('#photoFileInput');
@@ -2364,7 +2366,7 @@ const PRESETS_ALL = { en: {
             renderPreviewList('previewLanguagesSection','previewLanguages', state.languages, l => `
                 <div class="preview-language-item">
                     <div>${escapeHtml(l.name)}</div>
-                    <div class="preview-language-level">${escapeHtml(LANG_LEVELS[l.level] || 'Select')}</div>
+                    <div class="preview-language-level">${l.level > 0 ? escapeHtml(LANG_LEVELS[l.level] || '') : ''}</div>
                 </div>`);
             renderPreviewList('previewCertificationsSection','previewCertifications', state.certifications, c => `
                 <div class="preview-entry">
@@ -2686,14 +2688,13 @@ const PRESETS_ALL = { en: {
                     Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
                     // Handle legacy photoUrl from old JSON exports
                     if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
-                    ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
-                        .forEach(id => { if (state[id] !== undefined) document.getElementById(id).value = state[id]; });
                     ['work','education','skills','languages','certifications'].forEach(k => {
                         state[k] = (state[k] || []).map(x => ({...x, id: newId()}));
                     });
-                    renderAll();
-                    updatePreview();
-                    updatePhotoUI();
+                    // Sync completo: input, select template/font, colore accento, modalità preview,
+                    // ordine sezioni, preview. Senza questo l'accento/template importato non veniva
+                    // applicato alla preview e il CV a schermo differiva dal PDF esportato.
+                    syncUIFromState();
                     scheduleSave();
                     showToast(T.toast.loaded);
                 } catch { showToast(T.toast.invalidJson); }
@@ -2872,7 +2873,7 @@ const PRESETS_ALL = { en: {
 
         document.getElementById('preset-select').addEventListener('change', (e) => {
             if (e.target.value) {
-                if (confirm('Load this preset? Current data will be replaced.')) {
+                if (confirm(T.confirmPreset)) {
                     loadPreset(e.target.value);
                 }
                 e.target.value = '';

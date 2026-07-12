@@ -620,7 +620,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Pregnancy Planner Pro</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<div class="lock-title">Pregnancy Planner</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1570,7 +1570,7 @@
                     lunch: document.getElementById('mealLunch').value,
                     snack2: document.getElementById('mealSnack2').value,
                     dinner: document.getElementById('mealDinner').value,
-                    water: parseInt(document.getElementById('mealWaterGlasses').value) || 0
+                    water: parseInt(document.getElementById('waterGlasses').value) || 0
                 };
 
                 const existingIndex = this.data.mealEntries.findIndex(e => e.date === date);
@@ -1835,6 +1835,18 @@
                 if (saved) {
                     this.data = JSON.parse(saved);
                 }
+                document.getElementById('lmpDate').value = this.data.lmpDate || '';
+                document.getElementById('prePregnancyWeight').value = this.data.prePregnancyWeight || '';
+                const bp = this.data.birthPlan || {};
+                document.getElementById('birthPlanPreferences').value = bp.preferences || '';
+                document.getElementById('birthPlanAllergies').value = bp.allergies || '';
+                const c = this.data.contacts || {};
+                document.getElementById('contactHospitalName').value = c.hospitalName || '';
+                document.getElementById('contactHospitalPhone').value = c.hospitalPhone || '';
+                document.getElementById('contactGynecologist').value = c.gynecologist || '';
+                document.getElementById('contactGynecologistPhone').value = c.gynecologistPhone || '';
+                document.getElementById('contactPediatrician').value = c.pediatrician || '';
+                document.getElementById('contactPediatricianPhone').value = c.pediatricianPhone || '';
                 this.renderMedicalVisits();
                 document.querySelectorAll('[id^="category"]').forEach(el => {
                     const category = el.id.replace('category', '').toLowerCase();

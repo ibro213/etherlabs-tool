@@ -1180,9 +1180,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Get tax regime
             const regime = document.getElementById('regime_fiscale').value;
-            const contributiRate = (parseFloat(document.getElementById('contributi_inps').value) || 26.07) / 100;
-            const irpefRate = (parseFloat(document.getElementById('irpef').value) || 23) / 100;
-            const coefRate = (parseFloat(document.getElementById('coefficiente').value) || 78) / 100;
+            const numOr = (id, d) => { const v = document.getElementById(id).value.trim(); if (v === '') return d; const n = parseFloat(v); return isNaN(n) ? d : n; };
+            const contributiRate = numOr('contributi_inps', 26.07) / 100;
+            const irpefRate = numOr('irpef', 23) / 100;
+            const coefRate = numOr('coefficiente', 78) / 100;
 
             // Carico fiscale effettivo per euro di fatturato (0-1)
             let aliquotaEffettiva;
@@ -1204,19 +1205,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             document.getElementById('fatturato_annuo').textContent = '€ ' + fatturatoAnnuo.toLocaleString('it-IT', { maximumFractionDigits: 0 });
 
-            // Working days per year
-            const giorniLavorativi = parseFloat(document.getElementById('giorni_lavorativi').value) || 5;
+            // Working days per year — un 0 esplicito (es. nessuna ferie) va rispettato, non sostituito col default.
+            const giorniLavorativi = numOr('giorni_lavorativi', 5);
             const settimane = 52;
             const giorniAnnuali = giorniLavorativi * settimane;
-            const settimaneFerite = parseFloat(document.getElementById('settimane_ferie').value) || 4;
-            const giorniMalattia = parseFloat(document.getElementById('giorni_malattia').value) || 5;
-            const giorniFestivi = parseFloat(document.getElementById('giorni_festivi').value) || 0;
+            const settimaneFerite = numOr('settimane_ferie', 4);
+            const giorniMalattia = numOr('giorni_malattia', 5);
+            const giorniFestivi = numOr('giorni_festivi', 0);
             const giorniEffettivi = giorniAnnuali - (settimaneFerite * giorniLavorativi) - giorniMalattia - giorniFestivi;
 
             document.getElementById('giorni_effettivi').textContent = Math.max(0, Math.round(giorniEffettivi));
 
             // Productive hours per day
-            const oreAlGiorno = parseFloat(document.getElementById('ore_produttive').value) || 6;
+            const oreAlGiorno = numOr('ore_produttive', 6);
 
             // Daily rate (minimum)
             const fatturatoGiornaliero = fatturatoAnnuo / Math.max(1, giorniEffettivi);

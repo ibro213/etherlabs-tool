@@ -679,7 +679,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Calorie Planner Pro</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<div class="lock-title">Diet & Calories</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1496,9 +1496,13 @@
         }
 
         function updateBMI() {
+            const bmiDisplay = document.getElementById('bmiDisplay');
+            const bmiCategoryDisplay = document.getElementById('bmiCategoryDisplay');
             if (!state.weights.length || !state.goals.height) {
                 document.getElementById('bmiValue').textContent = '--';
                 document.getElementById('bmiCategory').textContent = '--';
+                if (bmiDisplay) bmiDisplay.textContent = '--';
+                if (bmiCategoryDisplay) bmiCategoryDisplay.textContent = '--';
                 return;
             }
 
@@ -1507,6 +1511,7 @@
             const bmi = weight / (height * height);
 
             document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+            if (bmiDisplay) bmiDisplay.textContent = bmi.toFixed(1);
 
             let category = '';
             if (bmi < 18.5) category = 'Underweight';
@@ -1515,6 +1520,7 @@
             else category = 'Obese';
 
             document.getElementById('bmiCategory').textContent = category;
+            if (bmiCategoryDisplay) bmiCategoryDisplay.textContent = category;
         }
 
         // ===== MEALS DIARY =====
@@ -1705,10 +1711,14 @@
 
             [...state.weights].reverse().slice(0, 50).forEach((w, idx) => {
                 const row = tbody.insertRow();
+                const prev = state.weights[state.weights.length - 2 - idx];
+                const varCell = prev
+                    ? ((w.weight - prev.weight >= 0 ? '+' : '') + (w.weight - prev.weight).toFixed(1) + ' kg')
+                    : '-';
                 row.innerHTML = `
                     <td>${new Date(w.date).toLocaleDateString('it-IT')}</td>
                     <td>${w.weight.toFixed(1)}</td>
-                    <td>${idx === 0 ? '-' : (w.weight - state.weights[state.weights.length - 2 - idx].weight).toFixed(1) + ' kg'}</td>
+                    <td>${varCell}</td>
                     <td>${esc(w.note || '-')}</td>
                     <td><button class="btn btn-danger btn-small" onclick="deleteWeight('${w.date}')">Delete</button></td>
                 `;
@@ -1907,15 +1917,15 @@
                     </div>
                     <div class="form-group">
                         <label>Breakfast</label>
-                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="breakfast" value="${plan.breakfast}" placeholder="e.g. Eggs, bread, butter">
+                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="breakfast" value="${esc(plan.breakfast)}" placeholder="e.g. Eggs, bread, butter">
                     </div>
                     <div class="form-group">
                         <label>Lunch</label>
-                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="lunch" value="${plan.lunch}" placeholder="e.g. Chicken, rice, veggies">
+                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="lunch" value="${esc(plan.lunch)}" placeholder="e.g. Chicken, rice, veggies">
                     </div>
                     <div class="form-group">
                         <label>Dinner</label>
-                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="dinner" value="${plan.dinner}" placeholder="e.g. Fish, pasta, salad">
+                        <input type="text" class="meal-prep-input" data-day="${DAYS_EN[idx]}" data-meal="dinner" value="${esc(plan.dinner)}" placeholder="e.g. Fish, pasta, salad">
                     </div>
                 `;
                 container.appendChild(card);
@@ -1957,7 +1967,7 @@
             Object.entries(shoppingList).forEach(([ingredient, qty]) => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
-                    <td>${ingredient}</td>
+                    <td>${esc(ingredient)}</td>
                     <td>${qty}</td>
                     <td>Generic</td>
                 `;

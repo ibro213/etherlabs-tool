@@ -620,7 +620,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Gravidanza Planner Pro</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div class="lock-title">Gravidanza Planner</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1570,7 +1570,7 @@
                     lunch: document.getElementById('mealLunch').value,
                     snack2: document.getElementById('mealSnack2').value,
                     dinner: document.getElementById('mealDinner').value,
-                    water: parseInt(document.getElementById('mealWaterGlasses').value) || 0
+                    water: parseInt(document.getElementById('waterGlasses').value) || 0
                 };
 
                 const existingIndex = this.data.mealEntries.findIndex(e => e.date === date);
@@ -1835,6 +1835,18 @@
                 if (saved) {
                     this.data = JSON.parse(saved);
                 }
+                document.getElementById('lmpDate').value = this.data.lmpDate || '';
+                document.getElementById('prePregnancyWeight').value = this.data.prePregnancyWeight || '';
+                const bp = this.data.birthPlan || {};
+                document.getElementById('birthPlanPreferences').value = bp.preferences || '';
+                document.getElementById('birthPlanAllergies').value = bp.allergies || '';
+                const c = this.data.contacts || {};
+                document.getElementById('contactHospitalName').value = c.hospitalName || '';
+                document.getElementById('contactHospitalPhone').value = c.hospitalPhone || '';
+                document.getElementById('contactGynecologist').value = c.gynecologist || '';
+                document.getElementById('contactGynecologistPhone').value = c.gynecologistPhone || '';
+                document.getElementById('contactPediatrician').value = c.pediatrician || '';
+                document.getElementById('contactPediatricianPhone').value = c.pediatricianPhone || '';
                 this.renderMedicalVisits();
                 document.querySelectorAll('[id^="category"]').forEach(el => {
                     const category = el.id.replace('category', '').toLowerCase();
@@ -1858,7 +1870,7 @@
 </div><!-- /appContent -->
 <script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='1vdqsiiqsos',K='etherlabs_gravidanza-planner_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='d1apn8cw1a',K='etherlabs_gravidanza-planner_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}

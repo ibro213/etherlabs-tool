@@ -1093,7 +1093,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Savings Goal Tracker</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<div class="lock-title">Savings Tracker</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1724,8 +1724,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function addGoal() {
             const name = document.getElementById('goalName').value.trim();
             const targetAmount = parseFloat(document.getElementById('targetAmount').value);
-            const currentSaved = parseFloat(document.getElementById('currentSaved').value) || 0;
-            const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            const currentSaved = Math.max(0, parseFloat(document.getElementById('currentSaved').value) || 0);
+            const monthlyContribution = Math.max(0, parseFloat(document.getElementById('monthlyContribution').value) || 0);
             const targetDate = document.getElementById('targetDate').value;
             const priority = document.getElementById('priority').value;
             const emoji = document.getElementById('selectedEmoji').value;
@@ -1997,7 +1997,10 @@ function exportSavingsPDF() {
             const totalSaved = goals.reduce((sum, g) => sum + g.currentSaved, 0);
             const totalRemaining = Math.max(totalTarget - totalSaved, 0);
             const totalMonthly = goals.reduce((sum, g) => sum + g.monthlyContribution, 0);
-            const totalMonths = (goals.length > 0 && totalMonthly > 0) ? Math.ceil(totalRemaining / totalMonthly) : 0;
+            const perGoalMonths = goals
+                .filter(g => g.monthlyContribution > 0 && (g.targetAmount - g.currentSaved) > 0)
+                .map(g => Math.ceil((g.targetAmount - g.currentSaved) / g.monthlyContribution));
+            const totalMonths = perGoalMonths.length > 0 ? Math.max(...perGoalMonths) : 0;
             const progressPct = totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0;
 
             document.getElementById('summaryGrid').innerHTML = `
@@ -2263,17 +2266,26 @@ function exportSavingsPDF() {
             document.getElementById('calculatorResults').innerHTML = goals.map(goal => {
                 const newMonthly = goal.monthlyContribution + extraSavings;
                 const remaining = Math.max(goal.targetAmount - goal.currentSaved, 0);
-                const monthsNeeded = newMonthly > 0 ? Math.ceil(remaining / newMonthly) : 999;
-                const completionDate = new Date();
-                completionDate.setMonth(completionDate.getMonth() + monthsNeeded);
+                const monthsNeeded = newMonthly > 0 ? Math.ceil(remaining / newMonthly) : null;
 
-                const originalMonths = goal.monthlyContribution > 0 ? Math.ceil(remaining / goal.monthlyContribution) : 999;
-                const savedMonths = originalMonths - monthsNeeded;
+                let completionText;
+                if (remaining === 0) {
+                    completionText = 'Completed';
+                } else if (monthsNeeded !== null) {
+                    const completionDate = new Date();
+                    completionDate.setMonth(completionDate.getMonth() + monthsNeeded);
+                    completionText = completionDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                } else {
+                    completionText = 'N/A';
+                }
+
+                const originalMonths = goal.monthlyContribution > 0 ? Math.ceil(remaining / goal.monthlyContribution) : null;
+                const savedMonths = (originalMonths !== null && monthsNeeded !== null) ? originalMonths - monthsNeeded : 0;
 
                 return `
                     <div class="result-item">
                         <div class="result-label">${goal.emoji} ${esc(goal.name)}</div>
-                        <div class="result-value">${completionDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
+                        <div class="result-value">${completionText}</div>
                         ${savedMonths > 0 ? `<div style="color: var(--success); font-size: 0.8rem; margin-top: 6px;">${savedMonths} months saved</div>` : ''}
                     </div>
                 `;

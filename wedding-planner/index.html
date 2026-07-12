@@ -677,7 +677,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Wedding Planner Pro</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div class="lock-title">Wedding Planner</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1282,6 +1282,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
 
+        // Escape a value for a single-quoted JS string embedded in a double-quoted HTML attribute
+        // (es. onchange="fn('${jsAttr(x)}')"). Evita che apostrofi come "L'abito" rompano l'handler.
         function jsAttr(v) {
             return String(v == null ? '' : v)
                 .replace(/\\/g, '\\\\').replace(/'/g, "\\'")
@@ -1335,21 +1337,31 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   }
 
         function renderCountdown() {
-            const weddingDate = new Date(data.date);
-            const today = new Date();
-            const diff = weddingDate - today;
-            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-
-            const html = `
+            const box = document.getElementById('countdownBox');
+            if (!box) return;
+            // Nomi: mai una "&" isolata quando sono vuoti.
+            const names = [data.bride, data.groom].filter(Boolean).map(esc).join(' & ');
+            let wd = null;
+            if (data.date) { const [Y, Mo, D] = data.date.split('-').map(Number); wd = new Date(Y, Mo - 1, D); }
+            const valid = wd && !isNaN(wd.getTime());
+            let display, sub;
+            if (valid) {
+                const t = new Date(); t.setHours(0, 0, 0, 0);
+                const days = Math.round((wd - t) / 86400000);
+                display = days > 0 ? `Tra ${days} giorni` : days === 0 ? 'Oggi! 🎉' : `${Math.abs(days)} giorni fa`;
+                sub = wd.toLocaleDateString('it-IT');
+            } else {
+                // Stato iniziale (nessuna data): messaggio gentile, mai "NaN giorni / Data non valida".
+                display = '💍';
+                sub = 'Imposta la data delle nozze nelle Impostazioni per avviare il conto alla rovescia';
+            }
+            box.innerHTML = `
                 <div class="countdown-box">
-                    <h2>${esc(data.bride)} & ${esc(data.groom)}</h2>
-                    <div class="countdown-display">${days} giorni</div>
-                    <p style="margin-top: 16px; font-size: 14px;">${weddingDate.toLocaleDateString('it-IT')}</p>
+                    <h2>${names || 'Il vostro matrimonio'}</h2>
+                    <div class="countdown-display">${display}</div>
+                    <p style="margin-top: 16px; font-size: 14px;">${sub}</p>
                 </div>
             `;
-
-            const box = document.getElementById('countdownBox');
-            if (box) box.innerHTML = html;
         }
 
         function renderDashboard() {
@@ -1396,17 +1408,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="budget-amounts">
                             <div class="amount-field">
                                 <label style="${lbl}">Preventivo</label>
-                                <input type="number" min="0" placeholder="0" value="${b.preventivo || 0}"
+                                <input type="number" min="0" step="0.01" placeholder="0" value="${b.preventivo || 0}"
                                     onchange="updateBudget('${jsAttr(cat)}', 'preventivo', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Speso</label>
-                                <input type="number" min="0" placeholder="0" value="${b.speso || 0}"
+                                <input type="number" min="0" step="0.01" placeholder="0" value="${b.speso || 0}"
                                     onchange="updateBudget('${jsAttr(cat)}', 'speso', this.value)">
                             </div>
                             <div class="amount-field">
                                 <label style="${lbl}">Pagato</label>
-                                <input type="number" min="0" placeholder="0" value="${b.pagato || 0}"
+                                <input type="number" min="0" step="0.01" placeholder="0" value="${b.pagato || 0}"
                                     onchange="updateBudget('${jsAttr(cat)}', 'pagato', this.value)">
                             </div>
                         </div>
@@ -1427,7 +1439,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function updateBudget(cat, field, value) {
-            data.budget[cat][field] = parseInt(value) || 0;
+            data.budget[cat][field] = parseFloat(value) || 0;
             save();
             renderBudget();
             renderDashboard();
@@ -1646,7 +1658,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function addTable() {
-            data.tables.push({ nome: 'Tavolo ' + (data.tables.length + 1), posti: 8 });
+            const names = new Set(data.tables.map(t => t.nome));
+            let n = data.tables.length + 1;
+            while (names.has('Tavolo ' + n)) n++;
+            data.tables.push({ nome: 'Tavolo ' + n, posti: 8 });
             save();
             renderTables();
         }
@@ -1738,11 +1753,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const names = [data.bride, data.groom].filter(Boolean).join(' & ');
             let dateLine = '';
             if (data.date) {
-                const wd = new Date(data.date);
+                const [Y, Mo, D] = data.date.split('-').map(Number);
+                const wd = new Date(Y, Mo - 1, D);
                 if (!isNaN(wd)) {
-                    const today = new Date();
-                    const days = Math.ceil((wd - today) / (1000 * 60 * 60 * 24));
-                    dateLine = wd.toLocaleDateString(LOC) + '   -   ' + ('Tra ' + days + ' giorni');
+                    const today = new Date(); today.setHours(0, 0, 0, 0);
+                    const days = Math.round((wd - today) / 86400000);
+                    const dl = days > 0 ? 'Tra ' + days + ' giorni' : days === 0 ? 'Oggi!' : Math.abs(days) + ' giorni fa';
+                    dateLine = wd.toLocaleDateString(LOC) + '   -   ' + dl;
                 }
             }
             doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor.apply(doc, DK);
@@ -1787,7 +1804,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const catRows = budgetCategories
                 .map(cat => ({ cat, b: data.budget[cat] || {} }))
                 .filter(r => (r.b.preventivo || 0) > 0 || (r.b.speso || 0) > 0)
-                .slice(0, 8);
+                .slice(0, 10);
 
             doc.setFontSize(10);
             if (catRows.length === 0) {
@@ -1849,7 +1866,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 </div><!-- /appContent -->
 <script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='89mcym19q7',K='etherlabs_wedding-planner_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='2dp9n612ey9',K='etherlabs_wedding-planner_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}

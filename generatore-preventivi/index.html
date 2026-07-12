@@ -21,30 +21,21 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Preventivi">
-    <meta name="theme-color" content="#0a0b0d">
+    <title>Generatore Preventivi Pro ✦</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-    <title>Generatore Preventivi Pro ✦</title>
     <script>/* jsPDF UMD inline (vettoriale) */
     /** @license
  *
@@ -541,7 +532,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         button {
             background: var(--emerald);
             border: none;
-            color: var(--bg);
+            color: #08130e;
             padding: 10px 18px;
             border-radius: 6px;
             cursor: pointer; touch-action: manipulation;
@@ -840,6 +831,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             flex-wrap: wrap;
         }
 
+        .brand-color-row {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .brand-color-row label { font-size: 12px; font-weight: 600; color: var(--t2); }
+        .brand-color-row input[type="color"] {
+            width: 46px; height: 34px; padding: 2px;
+            border: 1px solid var(--brd); border-radius: 6px; background: var(--bg); cursor: pointer;
+        }
+        .brand-reset {
+            padding: 7px 12px; font-size: 12px; background: var(--bg); color: var(--t2);
+            border: 1px solid var(--brd); border-radius: 6px; cursor: pointer;
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .brand-reset:hover { border-color: var(--emerald); color: var(--t1); }
+        }
+
+
         .template-btn {
             padding: 8px 12px;
             font-size: 12px;
@@ -853,7 +861,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         .template-btn.active {
             background: var(--emerald);
-            color: var(--bg);
+            color: #08130e;
             border-color: var(--emerald);
         }
 
@@ -1110,7 +1118,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .template-classic .quote-title {
             font-family: Georgia, serif;
-            color: #1e3a5f;
+            color: var(--q-accent, #1e3a5f);
             font-size: 36px;
             letter-spacing: 4px;
             font-weight: normal;
@@ -1120,25 +1128,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             text-align: center;
         }
         .template-classic .section-title {
-            color: #1e3a5f;
+            color: var(--q-accent, #1e3a5f);
             border-bottom: 1px solid #c9a961;
             font-variant: small-caps;
             letter-spacing: 2px;
             font-weight: normal;
         }
         .template-classic .items-table th {
-            background: #1e3a5f;
+            background: var(--q-accent, #1e3a5f);
             color: #c9a961;
             font-variant: small-caps;
             letter-spacing: 1px;
         }
         .template-classic .total-final td {
-            background: #1e3a5f;
+            background: var(--q-accent, #1e3a5f);
             color: #c9a961;
         }
         .template-classic .company-name {
             font-family: Georgia, serif;
-            color: #1e3a5f;
+            color: var(--q-accent, #1e3a5f);
         }
 
         /* MINIMAL — clean sans, lots of whitespace, monochrome */
@@ -1163,7 +1171,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-weight: 600;
             letter-spacing: 8px;
             text-align: left;
-            color: #111827;
+            color: var(--q-accent, #111827);
             border: none;
             padding: 0;
             margin-bottom: 30px;
@@ -1179,17 +1187,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .template-minimal .items-table th {
             background: transparent;
             color: #6b7280;
-            border-bottom: 1px solid #111827;
+            border-bottom: 1px solid var(--q-accent, #111827);
             font-weight: 500;
             font-size: 11px;
             letter-spacing: 1px;
         }
         .template-minimal .total-final {
-            border-top: 2px solid #111827;
+            border-top: 2px solid var(--q-accent, #111827);
         }
         .template-minimal .total-final td {
             background: transparent;
-            color: #111827;
+            color: var(--q-accent, #111827);
             font-weight: 600;
         }
 
@@ -1201,7 +1209,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 40px;
         }
         .template-corporate .quote-title {
-            background: #047857;
+            background: var(--q-accent, #047857);
             color: white;
             padding: 18px;
             font-size: 24px;
@@ -1211,25 +1219,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .template-corporate .section-title {
             color: white;
-            background: #047857;
+            background: var(--q-accent, #047857);
             padding: 8px 14px;
             border: none;
             font-size: 13px;
             letter-spacing: 1px;
         }
         .template-corporate .items-table th {
-            background: #064e3b;
+            background: var(--q-accent, #064e3b);
             color: white;
         }
         .template-corporate .items-table tbody tr:nth-child(even) {
             background: #ecfdf5;
         }
         .template-corporate .total-final td {
-            background: #047857;
+            background: var(--q-accent, #047857);
             color: white;
         }
         .template-corporate .company-name {
-            color: #047857;
+            color: var(--q-accent, #047857);
             font-weight: 700;
         }
 
@@ -1241,7 +1249,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 40px;
         }
         .template-creative .quote-title {
-            background: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #f59e0b 100%);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, #ec4899 50%, #f59e0b 100%);
             color: white;
             padding: 26px;
             border-radius: 16px;
@@ -1250,7 +1258,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             box-shadow: 0 12px 30px rgba(236, 72, 153, 0.25);
         }
         .template-creative .section-title {
-            background: linear-gradient(90deg, #6366f1, #ec4899);
+            background: linear-gradient(90deg, var(--q-accent, #6366f1), #ec4899);
             color: white;
             padding: 8px 14px;
             border: none;
@@ -1262,7 +1270,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             overflow: hidden;
         }
         .template-creative .items-table thead {
-            background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, #ec4899 100%);
             color: white;
         }
         .template-creative .items-table th {
@@ -1270,12 +1278,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border: none;
         }
         .template-creative .total-final td {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1), #ec4899);
             color: white;
             border-radius: 6px;
         }
         .template-creative .company-name {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1), #ec4899);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1291,9 +1299,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-size: 13px;
         }
         .template-mono .quote-title {
-            color: #0f172a;
+            color: var(--q-accent, #0f172a);
             background: transparent;
-            border: 2px solid #0f172a;
+            border: 2px solid var(--q-accent, #0f172a);
             padding: 14px;
             font-size: 22px;
             text-align: center;
@@ -1302,10 +1310,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .template-mono .section-title {
             background: transparent;
-            color: #0f172a;
+            color: var(--q-accent, #0f172a);
             padding: 0 0 4px;
             border: none;
-            border-bottom: 2px solid #0f172a;
+            border-bottom: 2px solid var(--q-accent, #0f172a);
             font-size: 12px;
             letter-spacing: 2px;
         }
@@ -1314,7 +1322,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             color: #64748b;
         }
         .template-mono .items-table th {
-            background: #0f172a;
+            background: var(--q-accent, #0f172a);
             color: #fafafa;
             font-family: inherit;
             letter-spacing: 1px;
@@ -1323,7 +1331,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-bottom: 1px dashed #cbd5e1;
         }
         .template-mono .total-final td {
-            background: #0f172a;
+            background: var(--q-accent, #0f172a);
             color: #fafafa;
             font-family: inherit;
         }
@@ -1342,7 +1350,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .template-elegant .quote-title {
             font-family: Garamond, Georgia, serif;
-            color: #1c1917;
+            color: var(--q-accent, #1c1917);
             font-size: 48px;
             font-style: italic;
             font-weight: 400;
@@ -1363,14 +1371,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         .template-elegant .items-table th {
             background: transparent;
-            color: #1c1917;
-            border-top: 2px solid #1c1917;
-            border-bottom: 2px solid #1c1917;
+            color: var(--q-accent, #1c1917);
+            border-top: 2px solid var(--q-accent, #1c1917);
+            border-bottom: 2px solid var(--q-accent, #1c1917);
             font-style: italic;
             font-weight: normal;
         }
         .template-elegant .total-final td {
-            background: #1c1917;
+            background: var(--q-accent, #1c1917);
             color: #fcfaf6;
             font-style: italic;
         }
@@ -1378,7 +1386,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-family: Garamond, Georgia, serif;
             font-style: italic;
             font-size: 32px;
-            color: #1c1917;
+            color: var(--q-accent, #1c1917);
         }
 
         @media print {
@@ -1616,17 +1624,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Generatore Preventivi</div>
-<div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Generatore Preventivi</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">SBLOCCA</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <header>
@@ -1691,6 +1693,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="logo-upload-actions" id="logoActions" style="display:none;">
                             <button type="button" class="btn-secondary" onclick="document.getElementById('logoFile').click()">Sostituisci</button>
                             <button type="button" class="btn-danger" onclick="app.removeLogo()">Rimuovi</button>
+                            <button type="button" class="btn-secondary" id="logoCropBtn" onclick="if(_lastLogoSrc)openLogoCropper(_lastLogoSrc)">✂️ Ritaglia / riposiziona</button>
+                        </div>
+                        <div id="logoFitRow" style="display:none;gap:8px;margin-top:8px;align-items:center">
+                            <button type="button" class="btn-secondary" id="logoFitContain" onclick="setLogoFit('contain')">Adatta</button>
+                            <button type="button" class="btn-secondary" id="logoFitCover" onclick="setLogoFit('cover')">Riempi</button>
                         </div>
                     </div>
                 </div>
@@ -1891,6 +1898,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <button class="template-btn" data-template="mono" onclick="app.switchTemplate('mono')" title="Tech, monospace, stile terminale">Mono</button>
                     <button class="template-btn" data-template="elegant" onclick="app.switchTemplate('elegant')" title="Raffinato, italic serif, beige e oro">Elegant</button>
                 </div>
+                            <div class="brand-color-row">
+                    <label for="quoteAccent">Colore Brand</label>
+                    <input type="color" id="quoteAccent" value="#1e3a5f" oninput="app.setAccent(this.value)" title="Scegli il colore del tuo brand">
+                    <button type="button" class="brand-reset" onclick="app.resetAccent()">Ripristina template</button>
+                </div>
             </section>
 
             <!-- STORAGE -->
@@ -1942,12 +1954,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     </div>
 
     <script>
+        const TPL_ACCENT = { classic:'#1e3a5f', minimal:'#111827', corporate:'#047857', creative:'#6366f1', mono:'#0f172a', elegant:'#1c1917' };
+        const hexToRgb = h => { h = String(h||'').replace('#',''); if (h.length===3) h = h.split('').map(c=>c+c).join(''); return [parseInt(h.slice(0,2),16)||0, parseInt(h.slice(2,4),16)||0, parseInt(h.slice(4,6),16)||0]; };
+
         const app = {
             data: {
                 lineItems: [],
                 currentTemplate: 'classic',
+                accent: null,
                 quoteNumberCounter: parseInt(localStorage.getItem('quoteCounter')) || 1000,
-                logoData: ''  // base64 data URI
+                logoData: '',  // base64 data URI
+                logoFit: 'contain'
             },
 
             init() {
@@ -1956,6 +1973,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 this.loadFromLocalStorage();
                 this.applyLogoUI();
                 this.toggleInpsRate();
+                this.toggleWithholdingRate();
                 // If no line items were restored from localStorage, seed two empty rows
                 if (this.data.lineItems.length === 0) {
                     this.addLineItem();
@@ -2013,16 +2031,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const placeholder = document.getElementById('logoPlaceholder');
                 const preview = document.getElementById('logoPreview');
                 const actions = document.getElementById('logoActions');
+                const fitRow = document.getElementById('logoFitRow');
                 if (this.data.logoData) {
                     preview.src = this.data.logoData;
                     preview.style.display = 'block';
                     placeholder.style.display = 'none';
                     actions.style.display = 'flex';
+                    _lastLogoSrc = this.data.logoData;
+                    if (fitRow) fitRow.style.display = 'flex';
                 } else {
                     preview.style.display = 'none';
                     placeholder.style.display = 'block';
                     actions.style.display = 'none';
+                    _lastLogoSrc = null;
+                    if (fitRow) fitRow.style.display = 'none';
                 }
+                if (typeof updateFitButtons === 'function') updateFitButtons();
             },
 
             setupDragDrop() {
@@ -2118,6 +2142,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     companyEmail: document.getElementById('companyEmail').value,
                     companyPhone: document.getElementById('companyPhone').value,
                     logoData: this.data.logoData,
+                    logoFit: this.data.logoFit,
                     iban: document.getElementById('iban').value
                 };
                 localStorage.setItem('companyData', JSON.stringify(data));
@@ -2136,6 +2161,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     document.getElementById('companyPhone').value = d.companyPhone || '';
                     document.getElementById('iban').value = d.iban || '';
                     this.data.logoData = d.logoData || '';
+                    this.data.logoFit = d.logoFit || 'contain';
                 } catch(e) { /* ignore */ }
             },
 
@@ -2410,7 +2436,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 const paymentText = paymentTerms === 'Custom' ? paymentCustom : paymentTerms;
 
-                const logoHtml = logoData ? `<img src="${logoData}" alt="Logo">` : '<span>Logo</span>';
+                const logoHtml = logoData ? `<img src="${logoData}" alt="Logo" style="object-fit:${this.data.logoFit || 'contain'}">` : '<span>Logo</span>';
                 const inpsRatePct = parseFloat(document.getElementById('inpsRate').value) || 4;
                 const withholdingRatePct = parseFloat(document.getElementById('withholdingRate').value) || 20;
 
@@ -2439,11 +2465,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Data Preventivo</span>
-                                <span class="meta-value">${new Date(quoteDate).toLocaleDateString('it-IT')}</span>
+                                <span class="meta-value">${quoteDate ? new Date(quoteDate).toLocaleDateString('it-IT') : ''}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Data Validità</span>
-                                <span class="meta-value">${new Date(validityDate).toLocaleDateString('it-IT')}</span>
+                                <span class="meta-value">${validityDate ? new Date(validityDate).toLocaleDateString('it-IT') : ''}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Termini Pagamento</span>
@@ -2539,6 +2565,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 `;
 
                 document.getElementById('quotePreview').className = `template-${this.data.currentTemplate}`;
+                if (this.data.accent) document.getElementById('quotePreview').style.setProperty('--q-accent', this.data.accent);
+                else document.getElementById('quotePreview').style.removeProperty('--q-accent');
                 document.getElementById('quotePreview').innerHTML = html;
             },
 
@@ -2546,6 +2574,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 this.data.currentTemplate = template;
                 document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
                 document.querySelector(`[data-template="${template}"]`).classList.add('active');
+                if (!this.data.accent) { const inp = document.getElementById('quoteAccent'); if (inp) inp.value = TPL_ACCENT[template] || '#1e3a5f'; }
+                this.renderPreview();
+            },
+
+            setAccent(v) { this.data.accent = v; this.renderPreview(); },
+
+            resetAccent() {
+                this.data.accent = null;
+                const inp = document.getElementById('quoteAccent');
+                if (inp) inp.value = TPL_ACCENT[this.data.currentTemplate] || '#1e3a5f';
                 this.renderPreview();
             },
 
@@ -2630,10 +2668,10 @@ buildQuotePdf(name, safe) {
                     else t = t.replace(/,/g, '');
                     return parseFloat(t) || 0;
                 };
-                const dt = s => { try { return new Date(s).toLocaleDateString('en-GB'); } catch (e) { return s || ''; } };
+                const dt = s => { if (!s) return ''; try { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleDateString('en-GB'); } catch (e) { return s || ''; } };
                 const doc = new Ctor({ unit:'mm', format:'a4' });
                 const M = 15, W = 210, H = 297, cw = W - 2*M;
-                const accent = [5,150,105], ink = [26,26,26], muted = [95,95,95], line = [214,214,214], head = [238,245,242];
+                const accent = (app.data.accent ? hexToRgb(app.data.accent) : [5,150,105]), ink = [26,26,26], muted = [95,95,95], line = [214,214,214], head = [238,245,242];
                 let y = M;
                 const F = (st, sz, col) => { doc.setFont('helvetica', st); doc.setFontSize(sz); doc.setTextColor(col[0], col[1], col[2]); };
                 const ensure = h => { if (y + h > H - M) { doc.addPage(); y = M; } };
@@ -2881,7 +2919,7 @@ buildQuotePdf(name, safe) {
                     description: it.description || '', quantity: String(it.quantity != null ? it.quantity : 1),
                     price: String(it.unitPrice != null ? it.unitPrice : (it.price != null ? it.price : 0)), tax: iva
                 }));
-                const pay = (d.paymentTerms === 'Personalizzato' ? d.paymentCustom : d.paymentTerms) || '';
+                const pay = (d.paymentTerms === 'Custom' ? d.paymentCustom : d.paymentTerms) || '';
                 return {
                     country: 'IT',
                     currency: (typeof this.cur === 'function') ? this.cur() : '€',
@@ -2995,6 +3033,7 @@ buildQuotePdf(name, safe) {
                     inpsCharge: document.getElementById('inpsCharge').checked,
                     inpsRate: document.getElementById('inpsRate').value,
                     withholdingTax: document.getElementById('withholdingTax').checked,
+                    withholdingRate: document.getElementById('withholdingRate').value,
                     bollo: document.getElementById('bollo').checked,
                     lineItems: this.data.lineItems
                 };
@@ -3043,8 +3082,10 @@ buildQuotePdf(name, safe) {
                         document.getElementById('inpsCharge').checked = data.inpsCharge || false;
                         document.getElementById('inpsRate').value = data.inpsRate || '4';
                         document.getElementById('withholdingTax').checked = data.withholdingTax || false;
+                        document.getElementById('withholdingRate').value = data.withholdingRate || '20';
                         document.getElementById('bollo').checked = data.bollo || false;
                         this.toggleInpsRate();
+                        this.toggleWithholdingRate();
                         this.data.lineItems = data.lineItems || [];
                         this.renderLineItems();
                         this.calculateTotals();
@@ -3077,6 +3118,7 @@ buildQuotePdf(name, safe) {
                     if (data.inpsRate) document.getElementById('inpsRate').value = data.inpsRate;
                     if (typeof data.inpsCharge === 'boolean') document.getElementById('inpsCharge').checked = data.inpsCharge;
                     if (typeof data.withholdingTax === 'boolean') document.getElementById('withholdingTax').checked = data.withholdingTax;
+                    if (data.withholdingRate) document.getElementById('withholdingRate').value = data.withholdingRate;
                     if (typeof data.bollo === 'boolean') document.getElementById('bollo').checked = data.bollo;
                     if (Array.isArray(data.lineItems) && data.lineItems.length > 0) {
                         this.data.lineItems = data.lineItems;
@@ -3107,6 +3149,7 @@ buildQuotePdf(name, safe) {
                     inpsCharge: document.getElementById('inpsCharge').checked,
                     inpsRate: document.getElementById('inpsRate').value,
                     withholdingTax: document.getElementById('withholdingTax').checked,
+                    withholdingRate: document.getElementById('withholdingRate').value,
                     bollo: document.getElementById('bollo').checked,
                     lineItems: app.data.lineItems
                 };
@@ -3134,24 +3177,49 @@ buildQuotePdf(name, safe) {
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Suggerimento:</strong> Tocca <em>Condividi</em> → <em>Aggiungi a Home</em> per usarlo come app!</div>
+<div id="logoCropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
+  <div style="background:#ffffff;color:#1b1e22;border-radius:14px;padding:18px;max-width:min(520px,94vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
+    <div style="font-weight:700;margin-bottom:4px">Ritaglia logo</div>
+    <div style="font-size:.82rem;color:#5a616a;margin-bottom:10px">Trascina per spostare, trascina l'angolo verde per ridimensionare.</div>
+    <div id="logoCropStage" style="position:relative;width:100%;background:#f1f3f5;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
+      <img id="logoCropImg" alt="" style="display:block;width:100%;pointer-events:none">
+      <div id="logoCropBox" style="position:absolute;border:2px solid #10b981;box-shadow:0 0 0 9999px rgba(0,0,0,.35);box-sizing:border-box;cursor:move">
+        <div id="logoCropHandle" style="position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:#10b981;border:2px solid #fff;border-radius:50%;cursor:nwse-resize"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
+      <button type="button" id="logoCropCancel" style="background:#e5e7eb;color:#1b1e22;border:1px solid #cbd5e1;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer">Annulla</button>
+      <button type="button" id="logoCropApply" style="background:#10b981;color:#08130e;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer">Applica</button>
+    </div>
+  </div>
+</div>
 <script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+var _lastLogoSrc=null, _lcImg=new Image(), _lcR={x:0,y:0,w:0,h:0}, _lcDrag=null;
+function _lcq(id){return document.getElementById(id);}
+function _lcDim(){var im=_lcq('logoCropImg');return {w:im.clientWidth||1,h:im.clientHeight||1};}
+function _lcDraw(){var b=_lcq('logoCropBox');b.style.left=_lcR.x+'px';b.style.top=_lcR.y+'px';b.style.width=_lcR.w+'px';b.style.height=_lcR.h+'px';}
+function _lcClamp(){var d=_lcDim();_lcR.w=Math.max(24,Math.min(_lcR.w,d.w));_lcR.h=Math.max(24,Math.min(_lcR.h,d.h));_lcR.x=Math.max(0,Math.min(_lcR.x,d.w-_lcR.w));_lcR.y=Math.max(0,Math.min(_lcR.y,d.h-_lcR.h));}
+function openLogoCropper(src){_lcImg=new Image();_lcImg.onload=function(){_lcq('logoCropImg').src=src;_lcq('logoCropOverlay').style.display='flex';requestAnimationFrame(function(){var d=_lcDim();_lcR={x:0,y:0,w:d.w,h:d.h};_lcClamp();_lcDraw();});};_lcImg.src=src;}
+function logoCropApply(){try{var d=_lcDim();var sc=(_lcImg.naturalWidth||d.w)/d.w;var sx=_lcR.x*sc,sy=_lcR.y*sc,sw=_lcR.w*sc,sh=_lcR.h*sc;var cap=520,k=Math.min(1,cap/Math.max(sw,sh));var ow=Math.max(1,Math.round(sw*k)),oh=Math.max(1,Math.round(sh*k));var cv=document.createElement('canvas');cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(_lcImg,sx,sy,sw,sh,0,0,ow,oh);app.data.logoData=cv.toDataURL('image/png');}catch(e){}_lcq('logoCropOverlay').style.display='none';app.applyLogoUI();app.saveCompanyData();app.renderPreview();}
+function _lcMove(e){if(!_lcDrag)return;var dx=e.clientX-_lcDrag.sx,dy=e.clientY-_lcDrag.sy;if(_lcDrag.mode==='move'){_lcR.x=_lcDrag.x0+dx;_lcR.y=_lcDrag.y0+dy;}else{_lcR.w=_lcDrag.w0+dx;_lcR.h=_lcDrag.h0+dy;}_lcClamp();_lcDraw();}
+function _lcUp(){_lcDrag=null;document.removeEventListener('pointermove',_lcMove);document.removeEventListener('pointerup',_lcUp);}
+function updateFitButtons(){var c=_lcq('logoFitContain'),v=_lcq('logoFitCover');if(!c||!v)return;var act=(app.data.logoFit||'contain');[['contain',c],['cover',v]].forEach(function(p){var on=p[0]===act,b=p[1];b.style.background=on?'var(--emerald)':'';b.style.color=on?'#08130e':'';b.style.borderColor=on?'var(--emerald)':'';});}
+function setLogoFit(f){app.data.logoFit=f;updateFitButtons();app.saveCompanyData();app.renderPreview();}
+function _wireLogoCrop(){var st=_lcq('logoCropStage');if(!st)return;
+  st.addEventListener('pointerdown',function(e){var onH=(e.target===_lcq('logoCropHandle'));var onB=(e.target===_lcq('logoCropBox')||onH);if(!onB)return;e.preventDefault();_lcDrag={mode:onH?'resize':'move',sx:e.clientX,sy:e.clientY,x0:_lcR.x,y0:_lcR.y,w0:_lcR.w,h0:_lcR.h};try{st.setPointerCapture(e.pointerId);}catch(x){}document.addEventListener('pointermove',_lcMove);document.addEventListener('pointerup',_lcUp);});
+  _lcq('logoCropApply').addEventListener('click',logoCropApply);
+  _lcq('logoCropCancel').addEventListener('click',function(){_lcq('logoCropOverlay').style.display='none';});}
+if(document.readyState!=='loading')_wireLogoCrop();else document.addEventListener('DOMContentLoaded',_wireLogoCrop);
 </script>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='1qp0843jrjd',K='etherlabs_generatore-preventivi_v2';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='1qp0843jrjd',K='etherlabs_generatore-preventivi_v2';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Codice non valido. Riprova.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

@@ -1842,7 +1842,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     const mark = done ? '[x] ' : '- ';
                     const lines = doc.splitTextToSize(mark + t.text, cw - 28);
                     doc.text(lines[0] + (lines.length > 1 ? '...' : ''), x+14, ty);
-                    if (t.dueDate) { doc.setFontSize(7.5); doc.setTextColor.apply(doc, m.color); doc.text('due ' + t.dueDate, x+cw-14, ty, {align:'right'}); }
+                    if (t.dueDate) { doc.setFontSize(7.5); doc.setTextColor.apply(doc, m.color); doc.text('due ' + formatDate(t.dueDate), x+cw-14, ty, {align:'right'}); }
                     ty += lineH;
                 }
             });
@@ -2053,7 +2053,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const q1q2Tasks = tasks.filter(t => ['q1', 'q2'].includes(t.quad));
             const q3q4Tasks = tasks.filter(t => ['q3', 'q4'].includes(t.quad));
             const q1q2Completed = q1q2Tasks.filter(t => t.completed).length;
-            const productivityScore = total === 0 ? 0 : Math.round(((q1q2Completed + q3q4Tasks.length * 0.3) / (q1q2Tasks.length + q3q4Tasks.length * 0.3)) * 100);
+            const q3q4Completed = q3q4Tasks.filter(t => t.completed).length;
+            const productivityScore = total === 0 ? 0 : Math.round(((q1q2Completed + q3q4Completed * 0.3) / (q1q2Tasks.length + q3q4Tasks.length * 0.3)) * 100);
 
             document.getElementById('totalTasks').textContent = animateCounter(0, total, 300);
             document.getElementById('completedCount').textContent = animateCounter(0, completed, 300);

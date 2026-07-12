@@ -1203,8 +1203,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const monthlyExpenses = totalPersonal + totalProfessional;
 
             const regime = document.getElementById('tax_regime').value;
-            const socialSecurity = parseFloat(document.getElementById('social_security').value) || 15.3;
-            const incomeTax = parseFloat(document.getElementById('income_tax').value) || 22;
+            const numOr = (id, d) => { const v = document.getElementById(id).value.trim(); if (v === '') return d; const n = parseFloat(v); return isNaN(n) ? d : n; };
+            const socialSecurity = numOr('social_security', 15.3);
+            const incomeTax = numOr('income_tax', 22);
 
             let annualExpenses = monthlyExpenses * 12;
             let taxPercentage = 0;
@@ -1229,17 +1230,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             document.getElementById('annual_revenue').textContent = '$ ' + annualRevenue.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
-            const workingDaysPerWeek = parseFloat(document.getElementById('working_days').value) || 5;
+            // An explicit 0 (e.g. no vacation) must be honored, not replaced by the default.
+            const workingDaysPerWeek = numOr('working_days', 5);
             const weeksPerYear = 52;
             const annualDays = workingDaysPerWeek * weeksPerYear;
-            const vacationWeeks = parseFloat(document.getElementById('vacation_weeks').value) || 4;
-            const sickDays = parseFloat(document.getElementById('sick_days').value) || 5;
-            const publicHolidays = parseFloat(document.getElementById('public_holidays').value) || 0;
+            const vacationWeeks = numOr('vacation_weeks', 4);
+            const sickDays = numOr('sick_days', 5);
+            const publicHolidays = numOr('public_holidays', 0);
             const effectiveDays = annualDays - (vacationWeeks * workingDaysPerWeek) - sickDays - publicHolidays;
 
             document.getElementById('effective_days').textContent = Math.max(0, Math.round(effectiveDays));
 
-            const hoursPerDay = parseFloat(document.getElementById('productive_hours').value) || 6;
+            const hoursPerDay = numOr('productive_hours', 6);
 
             const dailyRate = annualRevenue / Math.max(1, effectiveDays);
             document.getElementById('daily_rate').textContent = '$ ' + dailyRate.toLocaleString('en-US', { maximumFractionDigits: 0 });

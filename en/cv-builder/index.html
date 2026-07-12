@@ -21,30 +21,21 @@
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
 
-/* ===== Lock Screen (EtherLabs) ===== */
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
 .lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Resume Builder">
-    <meta name="theme-color" content="#0a0b0d">
+    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <script>/* jsPDF UMD inline (vettoriale, offline) */
     /** @license
  *
@@ -640,6 +631,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         .btn-primary {
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            background-color: var(--emerald);
             color: #000;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
@@ -1230,17 +1222,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 </style>
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Resume Builder</div>
-<div class="lock-sub">Enter the code you received with your purchase</div>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Resume Builder</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -1391,9 +1377,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <input type="file" id="photoFileInput" accept="image/*" style="display:none">
                             <div class="photo-upload-text">
                                 <span>📷 Click or drag an image here</span>
-                                <small>JPG, PNG, WebP — max 2 MB</small>
+                                <small>JPG, PNG, WebP — max 12 MB</small>
                             </div>
                         </div>
+                        <button type="button" id="cropBtn" class="btn btn-secondary" style="display:none;margin-top:8px" onclick="if(_lastPhotoSrc)openCropper(_lastPhotoSrc)">✂️ Crop / Reposition</button>
                     </div>
                 </div>
 
@@ -1544,6 +1531,7 @@ const T_ALL = { en: {
                 atsAnalyzed: 'Analysis complete'
             },
             confirmClear: 'Clear all fields? This cannot be undone.',
+            confirmPreset: 'Load this preset? Current data will be replaced.',
             atsHeader: 'ATS-OPTIMIZED RESUME', expName: "Name: ", expTitle: "Title: ", expPhone: "Phone: ", expLocation: "Location: ", expWebsite: "Website: ", fileSuffix: "_resume", atsPaste: "Paste a job post to see the keywords.", atsMatch: "match", atsPresent: "Present in resume", atsToAdd: "To add", atsNone: "none", atsAll: "all present ✓", rd1: "Summary present", rd2: "At least 1 experience", rd3: "At least 3 skills", rd4: "Email and phone", rd5: "Summary 200-700 chars", saving: "Saving...", savedAt: "Saved ", saveFailed: "Save failed" }, it: {
             yourName: 'Nome e Cognome',
             professionalTitle: 'Titolo Professionale',
@@ -1573,6 +1561,7 @@ const T_ALL = { en: {
                 atsAnalyzed: 'Analisi completata'
             },
             confirmClear: 'Cancellare tutti i campi? L\'operazione è irreversibile.',
+            confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
             confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
             saving: 'Salvataggio...',
             savedAt: 'Salvato ',
@@ -1961,11 +1950,12 @@ const PRESETS_ALL = { en: {
             if (!file.type.startsWith('image/')) { showToast('Please select an image file'); return; }
             if (file.size > 12 * 1024 * 1024) { showToast('Image too large (max 12 MB)'); return; }
             resizePhoto(file, 512).then(function(dataUrl) {
-                state.photoData = dataUrl;
+                state.photoData = dataUrl; _lastPhotoSrc = dataUrl;
+                var cb = document.getElementById('cropBtn'); if (cb) cb.style.display = '';
                 updatePhotoUI(); updatePreview(); scheduleSave();
             }).catch(function() {
                 const reader = new FileReader();
-                reader.onload = function(e) { state.photoData = e.target.result; updatePhotoUI(); updatePreview(); scheduleSave(); };
+                reader.onload = function(e) { state.photoData = e.target.result; _lastPhotoSrc = e.target.result; var cb = document.getElementById('cropBtn'); if (cb) cb.style.display = ''; updatePhotoUI(); updatePreview(); scheduleSave(); };
                 reader.readAsDataURL(file);
             });
         }
@@ -2013,7 +2003,7 @@ const PRESETS_ALL = { en: {
             } else {
                 area.innerHTML = `
                     <input type="file" id="photoFileInput" accept="image/*" style="display:none">
-                    <div class="photo-upload-text"><span>📷 Click or drag an image here</span><small>JPG, PNG, WebP — max 2 MB</small></div>
+                    <div class="photo-upload-text"><span>📷 Click or drag an image here</span><small>JPG, PNG, WebP — max 12 MB</small></div>
                 `;
             }
             const fileInput = area.querySelector('#photoFileInput');
@@ -2022,6 +2012,9 @@ const PRESETS_ALL = { en: {
                 if (fileInput.files[0]) handlePhotoFile(fileInput.files[0]);
                 fileInput.value = '';
             });
+            var cb = document.getElementById('cropBtn');
+            if (cb) cb.style.display = state.photoData ? '' : 'none';
+            if (state.photoData && !_lastPhotoSrc) _lastPhotoSrc = state.photoData;
         }
 
         // ============ WORK ============
@@ -2373,7 +2366,7 @@ const PRESETS_ALL = { en: {
             renderPreviewList('previewLanguagesSection','previewLanguages', state.languages, l => `
                 <div class="preview-language-item">
                     <div>${escapeHtml(l.name)}</div>
-                    <div class="preview-language-level">${escapeHtml(LANG_LEVELS[l.level] || 'Select')}</div>
+                    <div class="preview-language-level">${l.level > 0 ? escapeHtml(LANG_LEVELS[l.level] || '') : ''}</div>
                 </div>`);
             renderPreviewList('previewCertificationsSection','previewCertifications', state.certifications, c => `
                 <div class="preview-entry">
@@ -2695,14 +2688,13 @@ const PRESETS_ALL = { en: {
                     Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
                     // Handle legacy photoUrl from old JSON exports
                     if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
-                    ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
-                        .forEach(id => { if (state[id] !== undefined) document.getElementById(id).value = state[id]; });
                     ['work','education','skills','languages','certifications'].forEach(k => {
                         state[k] = (state[k] || []).map(x => ({...x, id: newId()}));
                     });
-                    renderAll();
-                    updatePreview();
-                    updatePhotoUI();
+                    // Full sync: inputs, template/font selects, accent color, preview mode, section order,
+                    // preview. Without this the imported accent/template weren't applied to the preview,
+                    // so the on-screen CV disagreed with the exported PDF.
+                    syncUIFromState();
                     scheduleSave();
                     showToast(T.toast.loaded);
                 } catch { showToast(T.toast.invalidJson); }
@@ -2881,7 +2873,7 @@ const PRESETS_ALL = { en: {
 
         document.getElementById('preset-select').addEventListener('change', (e) => {
             if (e.target.value) {
-                if (confirm('Load this preset? Current data will be replaced.')) {
+                if (confirm(T.confirmPreset)) {
                     loadPreset(e.target.value);
                 }
                 e.target.value = '';
@@ -3011,12 +3003,55 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
         const restored = loadActiveProfile();
         renderProfileBar();
         if (restored) showToast(T.toast.restored);
+
+        // ============ PHOTO CROP / REPOSITION ============
+        function _cq(id){ return document.getElementById(id); }
+        var _lastPhotoSrc = (typeof state !== 'undefined' && state.photoData) ? state.photoData : null;
+        var _cropImg = new Image(), _cropRect = {x:0,y:0,s:0}, _cropDrag = null;
+        function _stageDim(){ var im=_cq('cropImg'); return { w: im.clientWidth||1, h: im.clientHeight||1 }; }
+        function _drawCropBox(){ var b=_cq('cropBox'); b.style.left=_cropRect.x+'px'; b.style.top=_cropRect.y+'px'; b.style.width=_cropRect.s+'px'; b.style.height=_cropRect.s+'px'; }
+        function _clampCrop(){ var d=_stageDim(); _cropRect.s=Math.max(32,Math.min(_cropRect.s,d.w,d.h)); _cropRect.x=Math.max(0,Math.min(_cropRect.x,d.w-_cropRect.s)); _cropRect.y=Math.max(0,Math.min(_cropRect.y,d.h-_cropRect.s)); }
+        function openCropper(src){
+          _cropImg=new Image();
+          _cropImg.onload=function(){ _cq('cropImg').src=src; _cq('cropOverlay').style.display='flex';
+            requestAnimationFrame(function(){ var d=_stageDim(); var s=Math.min(d.w,d.h)*0.82; _cropRect={x:(d.w-s)/2,y:(d.h-s)/2,s:s}; _clampCrop(); _drawCropBox(); }); };
+          _cropImg.onerror=function(){ if(typeof showToast==='function') showToast('Could not load image'); };
+          _cropImg.src=src;
+        }
+        function cropApply(){
+          try { var d=_stageDim(); var scale=(_cropImg.naturalWidth||d.w)/d.w;
+            var sx=_cropRect.x*scale, sy=_cropRect.y*scale, ss=_cropRect.s*scale;
+            var out=240, cv=document.createElement('canvas'); cv.width=out; cv.height=out;
+            cv.getContext('2d').drawImage(_cropImg, sx, sy, ss, ss, 0, 0, out, out);
+            state.photoData=cv.toDataURL('image/jpeg',0.9);
+          } catch(e){ state.photoData=_lastPhotoSrc; }
+          _cq('cropOverlay').style.display='none';
+          if(typeof updatePhotoUI==='function') updatePhotoUI();
+          updatePreview(); if(typeof scheduleSave==='function') scheduleSave();
+        }
+        function _cropMove(e){ if(!_cropDrag) return; var dx=e.clientX-_cropDrag.sx, dy=e.clientY-_cropDrag.sy;
+          if(_cropDrag.mode==='move'){ _cropRect.x=_cropDrag.x0+dx; _cropRect.y=_cropDrag.y0+dy; } else { _cropRect.s=_cropDrag.s0+Math.max(dx,dy); }
+          _clampCrop(); _drawCropBox(); }
+        function _cropUp(){ _cropDrag=null; document.removeEventListener('pointermove',_cropMove); document.removeEventListener('pointerup',_cropUp); }
+        function _wireCrop(){
+          var stage=_cq('cropStage'); if(!stage) return;
+          stage.addEventListener('pointerdown', function(e){
+            var onHandle=(e.target===_cq('cropHandle')); var onBox=(e.target===_cq('cropBox')||onHandle); if(!onBox) return; e.preventDefault();
+            _cropDrag={mode:onHandle?'resize':'move', sx:e.clientX, sy:e.clientY, x0:_cropRect.x, y0:_cropRect.y, s0:_cropRect.s};
+            try{ stage.setPointerCapture(e.pointerId); }catch(x){}
+            document.addEventListener('pointermove', _cropMove); document.addEventListener('pointerup', _cropUp);
+          });
+          _cq('cropApply').addEventListener('click', cropApply);
+          _cq('cropCancel').addEventListener('click', function(){ _cq('cropOverlay').style.display='none'; });
+          var cb=_cq('cropBtn'); if(cb) cb.style.display = (typeof state!=='undefined' && state.photoData) ? '' : 'none';
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _wireCrop); else _wireCrop();
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 
 <div id="el-lang" style="position:fixed;top:14px;right:62px;z-index:99999;display:flex;gap:4px;background:var(--el-card,#fff);border:1px solid var(--el-border,#e3e7ec);border-radius:20px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.12)">
-  <button type="button" data-lang="it" title="Italiano" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇮🇹</button>
-  <button type="button" data-lang="en" title="English" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px">🇬🇧</button>
+  <button type="button" data-lang="it" title="Italiano" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px;color:#08130e">🇮🇹</button>
+  <button type="button" data-lang="en" title="English" style="border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:16px;color:#08130e">🇬🇧</button>
 </div>
 <script>
 (function(){
@@ -3083,24 +3118,31 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
 
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
-<div id="installHint" style="display:none;margin:20px auto;max-width:640px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;text-align:center">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app!</div>
-<script>
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var _h=document.getElementById('installHint');if(_h)_h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-</script>
+<div id="cropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--el-bg2,#fff);color:var(--el-text1,#1b1e22);border-radius:14px;padding:18px;max-width:min(420px,92vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
+    <div style="font-weight:700;margin-bottom:4px">Crop photo</div>
+    <div style="font-size:.82rem;color:var(--el-text2,#5a616a);margin-bottom:10px">Drag to move, drag the green corner to resize. The square becomes your photo.</div>
+    <div id="cropStage" style="position:relative;width:100%;background:#111;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
+      <img id="cropImg" alt="" style="display:block;width:100%;pointer-events:none">
+      <div id="cropBox" style="position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.45);box-sizing:border-box;cursor:move">
+        <div id="cropHandle" style="position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:var(--el-emerald,#10b981);border:2px solid #fff;border-radius:50%;cursor:nwse-resize"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
+      <button type="button" id="cropCancel" class="btn btn-secondary">Cancel</button>
+      <button type="button" id="cropApply" class="btn btn-primary">Apply</button>
+    </div>
+  </div>
+</div>
 </div><!-- /appContent -->
-<script>
-(function(){
+<script>(function(){
 function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='2cs04t4tv4k',K='etherlabs_cv-builder_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+var H='2cs04t4tv4k',K='etherlabs_cv-builder_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
 function unlock(){ls.classList.add('hidden');ac.style.display=''}
 try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
 function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
+})();</script>
 </body>
 </html>

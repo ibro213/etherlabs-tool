@@ -20,11 +20,22 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
+
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
+.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Expense Splitter Pro ✦</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -185,7 +196,8 @@ select:hover {
 
         .btn-primary {
             background: linear-gradient(135deg, var(--emerald), var(--emeraldL));
-            color: var(--bg);
+            background-color: var(--emerald);
+            color: #08130e;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -196,9 +208,10 @@ select:hover {
 }
 
         .btn-secondary {
-            background: rgba(16, 185, 129, 0.15);
+            background-color: var(--bg2);
+            background-image: linear-gradient(rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.15));
             border: 1px solid var(--emerald);
-            color: var(--emerald);
+            color: var(--emeraldL);
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -772,50 +785,20 @@ select:hover {
           .btn-small { min-height: 40px; }
           input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
         }
-
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--el-bg) 0%,var(--el-bg2) 50%,var(--el-bg3) 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid var(--el-border);border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:var(--el-text1);font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:var(--el-text2);font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid var(--el-border);border-radius:12px;color:var(--el-text1);font-size:16px;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none}
-.lock-input:focus{border-color:var(--el-emerald)}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--el-emerald),var(--el-emerald-light));border:none;border-radius:12px;color:var(--el-bg);font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s;min-height:48px}
-@media (hover:hover) and (pointer:fine){.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}}
-.lock-btn:active{transform:translateY(0)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:var(--el-text3);font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid var(--el-border);border-radius:10px;color:var(--el-text2);font-size:.85rem;line-height:1.5}
-.install-hint strong{color:var(--el-emerald-light)}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<div id="lockScreen">
-<div class="lock-card">
-<div class="lock-icon">🔐</div>
-<div class="lock-title">Group Expense Splitter</div>
-<div class="lock-sub">Enter the unlock code you received with your purchase</div>
-<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false" inputmode="text">
-<button id="lockBtn" class="lock-btn">UNLOCK</button>
-<div id="lockError" class="lock-error"></div>
-<div id="installHint" class="install-hint">📱 <strong>Tip:</strong> Tap <em>Share</em> → <em>Add to Home Screen</em> to use it as an app.</div>
-<div class="lock-footer">© 2026 EtherLabs</div>
-</div>
-</div>
-
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<div class="lock-title">Expense Splitter</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
+<button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
+<div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
 
     <div class="container">
@@ -1062,6 +1045,8 @@ select:hover {
         // Initialize
         function init() {
             loadData();
+            if (!appData.currency) appData.currency = '$';
+            document.getElementById('currencySelector').value = appData.currency;
             renderGroupSelector();
             updateUI();
         }
@@ -1085,6 +1070,10 @@ select:hover {
 
         function getCurrentGroup() {
             return appData.groups.find(g => g.id === appData.currentGroupId);
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
         // Group Management
@@ -1160,7 +1149,11 @@ select:hover {
                 alert('Create a group first');
                 return;
             }
-            document.getElementById('participantModal').classList.add('active');
+            const modal = document.getElementById('participantModal');
+            const addBtn = modal.querySelector('button[onclick="addParticipant()"]');
+            if (addBtn) { addBtn.onclick = () => addParticipant(); addBtn.textContent = 'Add'; }
+            delete modal.dataset.editingId;
+            modal.classList.add('active');
             document.getElementById('participantNameInput').focus();
         }
 
@@ -1208,6 +1201,7 @@ select:hover {
 
         function editParticipant(participantId) {
             const group = getCurrentGroup();
+            if (!group) return;
             const participant = group.participants.find(p => p.id === participantId);
             if (!participant) return;
 
@@ -1246,6 +1240,7 @@ select:hover {
             }
 
             const group = getCurrentGroup();
+            if (!group) return;
             const participant = group.participants.find(p => p.id === participantId);
             if (!participant) return;
 
@@ -1277,9 +1272,19 @@ select:hover {
         function deleteParticipant(participantId) {
             if (!confirm('Delete this participant?')) return;
             const group = getCurrentGroup();
+            if (!group) return;
             group.participants = group.participants.filter(p => p.id !== participantId);
             group.expenses = group.expenses.filter(e => e.paidBy !== participantId);
-            group.expenses.forEach(e => { if (e.splits) delete e.splits[participantId]; });
+            group.expenses.forEach(e => {
+                if (e.splits && e.splits.hasOwnProperty(participantId)) {
+                    delete e.splits[participantId];
+                    // Recompute amount to the sum of remaining splits so paid == owed stays balanced
+                    const remaining = Object.values(e.splits).reduce((a, b) => a + b, 0);
+                    e.amount = remaining;
+                }
+            });
+            // Drop expenses whose splits are now empty
+            group.expenses = group.expenses.filter(e => !e.splits || Object.keys(e.splits).length > 0);
             saveData();
             updateUI();
             renderParticipants();
@@ -1323,10 +1328,13 @@ select:hover {
             document.getElementById('expenseModal').classList.add('active');
             document.getElementById('expenseModalTitle').textContent = 'Add Expense';
             document.getElementById('expenseSubmitBtn').textContent = 'Save Expense';
+            // Reset to add-mode so a cancelled edit can't leak its handler into the next add.
+            document.getElementById('expenseSubmitBtn').onclick = () => saveExpense();
+            delete document.getElementById('expenseModal').dataset.editingId;
 
             const paidBySelect = document.getElementById('expensePaidByInput');
             paidBySelect.innerHTML = group.participants.map(p =>
-                `<option value="${p.id}">${p.name}</option>`
+                `<option value="${p.id}">${escapeHtml(p.name)}</option>`
             ).join('');
 
             updateSplitUI();
@@ -1344,6 +1352,7 @@ select:hover {
             const splitType = document.getElementById('expenseSplitTypeInput').value;
             const group = getCurrentGroup();
             const splitUI = document.getElementById('splitUI');
+            if (!group) { splitUI.innerHTML = ''; return; }
 
             if (splitType === 'equal') {
                 splitUI.innerHTML = '<p style="color: var(--t2); font-size: 0.9rem;">We will split equally among all participants</p>';
@@ -1451,6 +1460,7 @@ select:hover {
                 amount: amount,
                 category: category,
                 paidBy: paidBy,
+                splitType: splitType,
                 splits: splits,
                 date: new Date().toISOString()
             };
@@ -1464,6 +1474,7 @@ select:hover {
 
         function editExpense(expenseId) {
             const group = getCurrentGroup();
+            if (!group) return;
             const expense = group.expenses.find(e => e.id === expenseId);
             if (!expense) return;
 
@@ -1477,11 +1488,13 @@ select:hover {
             document.getElementById('expenseDescInput').value = expense.description;
             document.getElementById('expenseAmountInput').value = expense.amount;
             document.getElementById('expenseCategoryInput').value = expense.category;
+            // Populate the "paid by" select BEFORE setting its value, otherwise the select is empty and paidBy is lost.
+            document.getElementById('expensePaidByInput').innerHTML = group.participants.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
             document.getElementById('expensePaidByInput').value = expense.paidBy;
 
-            // Determine split type from splits structure
-            let splitType = 'equal';
-            if (Object.keys(expense.splits).length > 0) {
+            // Determine split type: prefer stored value, fall back to inference for legacy data
+            let splitType = expense.splitType || 'equal';
+            if (!expense.splitType && Object.keys(expense.splits).length > 0) {
                 const splitValues = Object.values(expense.splits);
                 const allEqual = splitValues.every(v => Math.abs(v - splitValues[0]) < 0.01);
 
@@ -1500,6 +1513,7 @@ select:hover {
                     splitType = 'equal';
                 }
             }
+            expense.splitType = splitType;
 
             document.getElementById('expenseSplitTypeInput').value = splitType;
             updateSplitUI();
@@ -1848,24 +1862,18 @@ select:hover {
             init();
         });
     </script>
-
-</div><!-- /appContent -->
-<script>
-(function(){
-function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
-var H='g2u8tfalw8',K='etherlabs_divisore-spese_v2_en';
-var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
-function unlock(){ls.classList.add('hidden');ac.style.display=''}
-try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
-function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
-lb.addEventListener('click',tryU);
-li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
-if(/iPhone|iPad/.test(navigator.userAgent)&&!navigator.standalone){var h=document.getElementById('installHint');if(h)h.style.display='block'}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
-})();
-</script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
+</div><!-- /appContent -->
+<script>(function(){
+function cyrb53(s,d){d=d||0;for(var h=0xdeadbeef^d,r=0x41c6ce57^d,i=0;i<s.length;i++){var c=s.charCodeAt(i);h=Math.imul(h^c,2654435761);r=Math.imul(r^c,1597334677)}h=Math.imul(h^(h>>>16),2246822507);h^=Math.imul(r^(r>>>13),3266489909);r=Math.imul(r^(r>>>16),2246822507);r^=Math.imul(h^(h>>>13),3266489909);return(4294967296*(2097151&r)+(h>>>0)).toString(36)}
+var H='g2u8tfalw8',K='etherlabs_divisore-spese_v2_en';var ls=document.getElementById('lockScreen'),ac=document.getElementById('appContent'),li=document.getElementById('lockCodeInput'),lb=document.getElementById('lockBtn'),le=document.getElementById('lockError');
+function unlock(){ls.classList.add('hidden');ac.style.display=''}
+try{if(localStorage.getItem(K)===H)unlock()}catch(e){}
+function tryU(){var c=li.value.trim().toUpperCase();if(!c)return;if(cyrb53(c)===H){try{localStorage.setItem(K,H)}catch(e){}le.textContent='';unlock()}else{le.textContent='Invalid code. Try again.';li.classList.add('error');setTimeout(function(){li.classList.remove('error')},500)}}
+lb.addEventListener('click',tryU);li.addEventListener('keydown',function(e){if(e.key==='Enter')tryU()});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/etherlabs-tool/sw.js').catch(function(){});
+})();</script>
 </body>
 </html>
