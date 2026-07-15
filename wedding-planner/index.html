@@ -677,7 +677,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Wedding Planner</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div class="lock-title">Wedding Planner Pro</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1257,20 +1257,49 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             { title: 'Ultima Prova Abiti', timeline: '1 settimana', done: false }
         ];
 
+        // Istantanea dei default PRIMA che qualcuno tocchi `data`: serve a fondere i dati
+        // salvati invece di sostituirli (vedi init).
+        const DEFAULTS = JSON.parse(JSON.stringify(data));
+
         function init() {
             let stored = null;
             try {
                 stored = localStorage.getItem(STORAGE_KEY);
             } catch(e) {}
+            let saved = null;
             if (stored) {
-                try { data = JSON.parse(stored); } catch(e) { stored = null; }
+                try { saved = JSON.parse(stored); } catch(e) { saved = null; }
             }
-            if (!stored) {
-                data.budget = {};
-                budgetCategories.forEach(cat => {
-                    data.budget[cat] = { preventivo: 0, speso: 0, pagato: 0 };
+
+            // «Codice nuovo, dati vecchi»: chi ha usato una versione precedente ha in
+            // localStorage una struttura SENZA le chiavi aggiunte dopo (vendors, tables,
+            // menuPrefs...). Prima qui c'era `data = JSON.parse(stored)`, che SOSTITUIVA i
+            // default: al primo render `data.vendors.filter(...)` / `budget[cat].speso`
+            // esplodevano, la nav moriva e il cliente perdeva l'accesso ai suoi dati a ogni
+            // riapertura. I default vanno FUSI, mai sostituiti — e ogni forma va garantita,
+            // perché un JSON troncato o manomesso non deve poter uccidere il tool.
+            if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+                data = Object.assign({}, DEFAULTS, saved);
+                data.menuPrefs = Object.assign({}, DEFAULTS.menuPrefs,
+                    (saved.menuPrefs && typeof saved.menuPrefs === 'object' && !Array.isArray(saved.menuPrefs)) ? saved.menuPrefs : {});
+                if (!data.budget || typeof data.budget !== 'object' || Array.isArray(data.budget)) data.budget = {};
+                ['guests', 'vendors', 'tasks', 'tables'].forEach(k => {
+                    if (!Array.isArray(data[k])) data[k] = [];
                 });
-                data.tasks = defaultTasks;
+            } else {
+                data = JSON.parse(JSON.stringify(DEFAULTS));
+            }
+
+            // ogni categoria di budget deve esistere ED avere tutti i suoi campi, anche se
+            // l'abbiamo aggiunta dopo che il cliente aveva già salvato
+            budgetCategories.forEach(cat => {
+                const b = data.budget[cat];
+                data.budget[cat] = Object.assign({ preventivo: 0, speso: 0, pagato: 0 },
+                    (b && typeof b === 'object' && !Array.isArray(b)) ? b : {});
+            });
+
+            if (!saved) {
+                data.tasks = defaultTasks.map(t => Object.assign({}, t));
                 save();
             }
 

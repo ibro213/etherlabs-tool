@@ -677,7 +677,7 @@
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Wedding Planner</div><div class="lock-sub">Enter the code you received with your purchase</div>
+<div class="lock-title">Wedding Planner Pro</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1257,20 +1257,51 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             { title: 'Final Dress Fitting', timeline: '1 week', done: false }
         ];
 
+        // Snapshot of the defaults BEFORE anything touches `data`: used to merge saved data
+        // instead of replacing it (see init).
+        const DEFAULTS = JSON.parse(JSON.stringify(data));
+
         function init() {
             let stored = null;
             try {
                 stored = localStorage.getItem(STORAGE_KEY);
             } catch(e) {}
+            let saved = null;
             if (stored) {
-                try { data = JSON.parse(stored); } catch(e) { stored = null; }
+                try { saved = JSON.parse(stored); } catch(e) { saved = null; }
             }
-            if (!stored) {
-                data.budget = {};
-                budgetCategories.forEach(cat => {
-                    data.budget[cat] = { preventivo: 0, speso: 0, pagato: 0 };
+
+            // "New code, old data": a customer who used an earlier version has a structure in
+            // localStorage WITHOUT the keys we added later (vendors, tables, menuPrefs...).
+            // This used to be `data = JSON.parse(stored)`, which REPLACED the defaults: the
+            // first render then blew up on `data.vendors.filter(...)` / `budget[cat].speso`,
+            // the nav died and the customer lost access to their own data on every reopen.
+            // Same crash when opening the EN and IT files from the same folder: they share
+            // STORAGE_KEY 'wedpro' but have different budget categories.
+            // Defaults must be MERGED, never replaced — and every shape must be guaranteed,
+            // because a truncated or hand-edited JSON must not be able to kill the tool.
+            if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+                data = Object.assign({}, DEFAULTS, saved);
+                data.menuPrefs = Object.assign({}, DEFAULTS.menuPrefs,
+                    (saved.menuPrefs && typeof saved.menuPrefs === 'object' && !Array.isArray(saved.menuPrefs)) ? saved.menuPrefs : {});
+                if (!data.budget || typeof data.budget !== 'object' || Array.isArray(data.budget)) data.budget = {};
+                ['guests', 'vendors', 'tasks', 'tables'].forEach(k => {
+                    if (!Array.isArray(data[k])) data[k] = [];
                 });
-                data.tasks = defaultTasks;
+            } else {
+                data = JSON.parse(JSON.stringify(DEFAULTS));
+            }
+
+            // every budget category must exist AND have all its fields, even one we added
+            // after the customer had already saved
+            budgetCategories.forEach(cat => {
+                const b = data.budget[cat];
+                data.budget[cat] = Object.assign({ preventivo: 0, speso: 0, pagato: 0 },
+                    (b && typeof b === 'object' && !Array.isArray(b)) ? b : {});
+            });
+
+            if (!saved) {
+                data.tasks = defaultTasks.map(t => Object.assign({}, t));
                 save();
             }
 
