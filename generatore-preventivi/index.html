@@ -36,6 +36,7 @@
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     
+    
     <script>/* jsPDF UMD inline (vettoriale) */
     /** @license
  *
@@ -1772,6 +1773,33 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           .view-head h2 { font-size: 20px; }
         }
 
+        /* ===== dropdown azioni header + switch tema stile Apple ===== */
+        .qg-menu { position: relative; }
+        .qg-menu-btn { background: var(--emerald); color:#08130e; border:none; border-radius:6px; padding:10px 18px; font-weight:600; font-size:14px; cursor:pointer; touch-action:manipulation; }
+        @media (hover:hover){ .qg-menu-btn:hover { background: var(--emeraldL); } }
+        .qg-menu-list { position:absolute; top:calc(100% + 6px); right:0; min-width:215px; background:var(--bg2); border:1px solid var(--brd); border-radius:10px; padding:6px; display:none; flex-direction:column; gap:2px; z-index:6000; box-shadow:0 12px 34px rgba(0,0,0,.4); }
+        .qg-menu-list.open { display:flex; }
+        .qg-menu-list button { background:transparent; color:var(--t1); border:none; text-align:left; padding:11px 12px; border-radius:7px; font-size:14px; font-weight:500; width:100%; cursor:pointer; touch-action:manipulation; }
+        @media (hover:hover){ .qg-menu-list button:hover { background:rgba(16,185,129,.12); } }
+        #el-theme-toggle { display:none !important; }
+        .qg-side-foot { display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+        .theme-switch { display:inline-flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer; padding:4px; color:var(--t2); font-size:12px; touch-action:manipulation; }
+        .theme-switch .ts-track { width:42px; height:24px; border-radius:999px; background:#4b5563; position:relative; transition:background .2s; flex:0 0 auto; }
+        .theme-switch .ts-knob { position:absolute; top:2.5px; left:2.5px; width:19px; height:19px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; font-size:10px; }
+        .theme-switch.light .ts-track { background:var(--emerald); }
+        .theme-switch.light .ts-knob { transform:translateX(18px); }
+        .side-credit { font-size:11px; color:var(--t3); }
+        @media (max-width:760px){
+          .qg-side-foot { display:flex !important; flex-direction:row; margin:0; padding:0 6px; align-items:center; gap:8px; flex:0 0 auto; }
+          .side-credit { display:none; }
+          .theme-switch .ts-txt { display:none; }
+        }
+
+        @media (max-width:760px){
+          .header-actions, .qg-menu, .qg-menu-btn { width:100%; }
+          .qg-menu-list { left:0; right:auto; width:100%; min-width:0; }
+        }
+
 </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
@@ -1795,7 +1823,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           <button type="button" data-view="templates" onclick="app.showView('templates')"><span class="ic">🎨</span> Template</button>
           <button type="button" data-view="settings" onclick="app.showView('settings')"><span class="ic">⚙️</span> Impostazioni</button>
         </nav>
-        <div class="qg-side-foot">✦ EtherLabs Studio</div>
+        <div class="qg-side-foot">
+          <button type="button" class="theme-switch" id="themeSwitch" onclick="app.toggleThemeSwitch()" aria-label="Cambia tema" title="Tema chiaro / scuro">
+            <span class="ts-track"><span class="ts-knob"><span class="ts-ic">🌙</span></span></span><span class="ts-txt">Tema</span>
+          </button>
+          <span class="side-credit">✦ EtherLabs Studio</span>
+        </div>
       </aside>
       <main class="qg-main">
         <div class="qg-view active" id="view-editor">
@@ -1804,10 +1837,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <h1>Generatore Preventivi Pro <span style="color: var(--emeraldL);">✦</span> <span class="pro-badge">Pro</span></h1>
         </div>
         <div class="header-actions">
-            <button onclick="app.loadQuoteModal()">📂 Carica</button>
-            <button onclick="app.duplicateQuote()">📋 Duplica</button>
-            <button class="btn-secondary" onclick="app.resetForm()">🔄 Nuovo</button>
-            <button onclick="app.printQuote()">🖨️ Stampa PDF</button>
+            <div class="qg-menu">
+                <button type="button" class="qg-menu-btn" onclick="app.toggleActionsMenu(event)">☰ Menù</button>
+                <div class="qg-menu-list" id="actionsMenu">
+                    <button type="button" onclick="app.loadQuoteModal();app.closeActionsMenu()">📂 Carica</button>
+                    <button type="button" onclick="app.duplicateQuote();app.closeActionsMenu()">📋 Duplica</button>
+                    <button type="button" onclick="app.resetForm();app.closeActionsMenu()">🔄 Nuovo</button>
+                    <button type="button" onclick="app.printQuote();app.closeActionsMenu()">🖨️ Stampa PDF</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -3783,6 +3821,18 @@ buildQuotePdf(name, safe) {
       if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ()=>setTimeout(boot,0));
       else setTimeout(boot,0);
     })();
+    </script>
+
+    <script>
+    /* dropdown azioni header + switch tema Apple */
+    Object.assign(app, {
+      toggleActionsMenu(e){ if(e){e.stopPropagation();} const m=document.getElementById('actionsMenu'); if(m) m.classList.toggle('open'); },
+      closeActionsMenu(){ const m=document.getElementById('actionsMenu'); if(m) m.classList.remove('open'); },
+      syncThemeSwitch(){ const dark=document.documentElement.getAttribute('data-theme')!=='light'; const s=document.getElementById('themeSwitch'); if(s){ s.classList.toggle('light', !dark); const ic=s.querySelector('.ts-ic'); if(ic) ic.textContent = dark?'🌙':'☀️'; } },
+      toggleThemeSwitch(){ const b=document.getElementById('el-theme-toggle'); if(b) b.click(); this.syncThemeSwitch(); }
+    });
+    document.addEventListener('click', function(e){ const m=document.getElementById('actionsMenu'); if(m && m.classList.contains('open') && e.target.closest && !e.target.closest('.qg-menu')) m.classList.remove('open'); });
+    (function(){ function s(){ if(window.app&&app.syncThemeSwitch) app.syncThemeSwitch(); } if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){setTimeout(s,60);}); else setTimeout(s,60); })();
     </script>
 
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
