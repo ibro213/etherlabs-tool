@@ -20,7 +20,6 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
 #lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #lockScreen.hidden{display:none}
 .lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
@@ -36,6 +35,7 @@
     <title>Quote Generator Pro ✦</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    
     <script>/* jsPDF UMD inline (vettoriale) */
     /** @license
  *
@@ -1084,13 +1084,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 20px;
             background: #f9fafb;
             border-radius: 4px;
-            border-left: 4px solid var(--el-emerald-dark);
+            border-left: 4px solid var(--q-accent, #1e3a5f);
         }
 
         .notes-section h3 {
             font-size: 12px;
             text-transform: uppercase;
-            color: var(--el-emerald-dark);
+            color: var(--q-accent, #1e3a5f);
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
@@ -1253,7 +1253,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 40px;
         }
         .template-creative .quote-title {
-            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, #ec4899 50%, #f59e0b 100%);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, var(--q-accent2, #ec4899) 50%, #f59e0b 100%);
             color: white;
             padding: 26px;
             border-radius: 16px;
@@ -1262,7 +1262,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             box-shadow: 0 12px 30px rgba(236, 72, 153, 0.25);
         }
         .template-creative .section-title {
-            background: linear-gradient(90deg, var(--q-accent, #6366f1), #ec4899);
+            background: linear-gradient(90deg, var(--q-accent, #6366f1), var(--q-accent2, #ec4899));
             color: white;
             padding: 8px 14px;
             border: none;
@@ -1274,7 +1274,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             overflow: hidden;
         }
         .template-creative .items-table thead {
-            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1) 0%, var(--q-accent2, #ec4899) 100%);
             color: white;
         }
         .template-creative .items-table th {
@@ -1282,12 +1282,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border: none;
         }
         .template-creative .total-final td {
-            background: linear-gradient(135deg, var(--q-accent, #6366f1), #ec4899);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1), var(--q-accent2, #ec4899));
             color: white;
             border-radius: 6px;
         }
         .template-creative .company-name {
-            background: linear-gradient(135deg, var(--q-accent, #6366f1), #ec4899);
+            background: linear-gradient(135deg, var(--q-accent, #6366f1), var(--q-accent2, #ec4899));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1624,17 +1624,185 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             margin-right: 8px;
             vertical-align: middle;
         }
-    </style>
+        /* ============ APP SHELL (dashboard multi-view) ============ */
+        .app-shell { display: flex; min-height: 100vh; }
+        .qg-sidebar {
+            flex: 0 0 240px; width: 240px; background: var(--bg2);
+            border-right: 1px solid var(--brd); display: flex; flex-direction: column;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 12px;
+        }
+        .qg-brand { display: flex; align-items: center; gap: 10px; padding: 6px 10px 16px; border-bottom: 1px solid var(--brd); margin-bottom: 12px; }
+        .qg-brand .logo { width: 34px; height: 34px; border-radius: 9px; background: var(--emerald); color: #08130e; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; flex: 0 0 auto; }
+        .qg-brand b { font-size: 15px; color: var(--t1); line-height: 1.1; }
+        .qg-brand span { font-size: 11px; color: var(--t3); }
+        .qg-nav { display: flex; flex-direction: column; gap: 4px; }
+        .qg-nav button {
+            display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+            background: transparent; color: var(--t2); border: none; border-radius: 8px;
+            padding: 11px 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: .15s;
+        }
+        .qg-nav button .ic { width: 18px; text-align: center; font-size: 15px; }
+        @media (hover:hover){ .qg-nav button:hover { background: var(--bg3, rgba(16,185,129,.07)); color: var(--t1); } }
+        .qg-nav button.active { background: var(--emerald); color: #08130e; font-weight: 700; }
+        .qg-nav .qg-nav-sep { height: 1px; background: var(--brd); margin: 8px 4px; }
+        .qg-side-foot { margin-top: auto; padding: 12px 10px 4px; font-size: 11px; color: var(--t3); }
+        .qg-main { flex: 1; min-width: 0; }
+        .qg-view { display: none; }
+        .qg-view.active { display: block; }
+        /* editor view keeps its own full-height 2-col grid */
+        #view-editor.active { display: block; }
+        .view-pad { padding: 26px 30px; max-width: 1200px; margin: 0 auto; }
+        .view-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .view-head h2 { font-size: 24px; color: var(--emeraldL); margin: 0; }
+        .view-head .sub { color: var(--t3); font-size: 13px; margin-top: 3px; }
+        /* stat tiles */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; margin-bottom: 22px; }
+        .stat-tile { background: var(--bg2); border: 1px solid var(--brd); border-radius: 12px; padding: 18px 20px; }
+        .stat-tile .lbl { font-size: 12px; color: var(--t3); text-transform: uppercase; letter-spacing: .5px; }
+        .stat-tile .val { font-size: 30px; font-weight: 800; color: var(--t1); margin-top: 6px; line-height: 1; }
+        .stat-tile .val.money { color: var(--emeraldL); }
+        /* dashboard 2-col */
+        .dash-cols { display: grid; grid-template-columns: 1.3fr .9fr; gap: 18px; }
+        @media (max-width: 900px){ .dash-cols { grid-template-columns: 1fr; } }
+        .panel { background: var(--bg2); border: 1px solid var(--brd); border-radius: 12px; padding: 18px 20px; }
+        .panel h3 { font-size: 15px; color: var(--t1); margin: 0 0 14px; }
+        /* donut */
+        .donut-wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+        .donut { width: 150px; height: 150px; border-radius: 50%; flex: 0 0 auto; position: relative; }
+        .donut::after { content: ''; position: absolute; inset: 26px; background: var(--bg2); border-radius: 50%; }
+        .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; }
+        .donut-center b { font-size: 30px; color: var(--t1); line-height: 1; }
+        .donut-center span { font-size: 11px; color: var(--t3); }
+        .legend { display: flex; flex-direction: column; gap: 9px; }
+        .legend .row { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--t2); }
+        .legend .row i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+        .legend .row b { color: var(--t1); margin-left: auto; }
+        /* data tables */
+        .qg-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+        .qg-table th { text-align: left; color: var(--t3); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; padding: 10px 12px; border-bottom: 1px solid var(--brd); }
+        .qg-table td { padding: 12px; border-bottom: 1px solid var(--brd); color: var(--t2); vertical-align: middle; }
+        .qg-table tr:hover td { background: rgba(16,185,129,.04); }
+        .qg-table td b { color: var(--t1); font-weight: 600; }
+        .qg-empty { text-align: center; color: var(--t3); padding: 40px 20px; font-size: 14px; }
+        .qg-empty .big { font-size: 34px; display: block; margin-bottom: 8px; opacity: .7; }
+        /* status pill */
+        .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: capitalize; }
+        .pill.draft { background: rgba(148,163,184,.18); color: #94a3b8; }
+        .pill.sent { background: rgba(59,130,246,.16); color: #60a5fa; }
+        .pill.accepted { background: rgba(16,185,129,.16); color: var(--emeraldL); }
+        .pill.pending { background: rgba(245,158,11,.16); color: #fbbf24; }
+        .pill.rejected { background: rgba(239,68,68,.16); color: #f87171; }
+        .status-select { background: var(--bg); color: var(--t1); border: 1px solid var(--brd); border-radius: 6px; padding: 5px 8px; font-size: 12px; }
+        .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .row-actions button { padding: 6px 10px; font-size: 12px; }
+        .mini-btn { background: var(--bg); color: var(--emeraldL); border: 1px solid var(--brd); }
+        @media (hover:hover){ .mini-btn:hover { border-color: var(--emerald); } }
+        .mini-btn.danger { color: #f87171; }
+        /* catalog cards */
+        .card-grid2 { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 14px; }
+        .cat-card { background: var(--bg2); border: 1px solid var(--brd); border-radius: 11px; padding: 15px 16px; }
+        .cat-card h4 { margin: 0 0 4px; color: var(--t1); font-size: 15px; }
+        .cat-card p { margin: 0 0 4px; color: var(--t3); font-size: 12.5px; word-break: break-word; }
+        .cat-card .price { color: var(--emeraldL); font-weight: 700; font-size: 14px; }
+        .cat-card .acts { display: flex; gap: 7px; margin-top: 11px; }
+        /* template gallery */
+        .tpl-gallery { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 15px; }
+        .tpl-card { background: var(--bg2); border: 2px solid var(--brd); border-radius: 12px; padding: 14px; cursor: pointer; transition: .15s; }
+        @media (hover:hover){ .tpl-card:hover { border-color: var(--emerald); } }
+        .tpl-card.active { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,.15); }
+        .tpl-swatch { height: 74px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: flex-end; padding: 8px; }
+        .tpl-card b { color: var(--t1); font-size: 14px; }
+        .tpl-card small { display: block; color: var(--t3); font-size: 11.5px; margin-top: 2px; }
+        .brand-colors { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 6px; }
+        .brand-colors .bc { display: flex; align-items: center; gap: 10px; }
+        .brand-colors input[type=color] { width: 46px; height: 34px; border: 1px solid var(--brd); border-radius: 8px; background: none; cursor: pointer; }
+        .form-inline { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 12px; }
+        @media (max-width: 760px){
+            .app-shell { flex-direction: column; }
+            .qg-sidebar { flex: none; width: 100%; height: auto; position: static; flex-direction: row; overflow-x: auto; padding: 8px 58px 8px 8px; }
+            .qg-brand { display: none; }
+            .qg-nav { flex-direction: row; gap: 4px; }
+            .qg-nav button { white-space: nowrap; padding: 9px 12px; }
+            .qg-side-foot { display: none; }
+            .qg-nav .qg-nav-sep { display: none; }
+            .view-pad { padding: 18px 14px; }
+        }
+
+        /* ---- mobile hardening (tap-highlight · 100dvh · safe-area) ---- */
+        html, body { -webkit-tap-highlight-color: transparent; }
+        .container { height: 100dvh; }
+        .app-shell { min-height: 100vh; min-height: 100dvh; }
+        .qg-sidebar { padding-top: max(18px, env(safe-area-inset-top)); }
+        @supports (padding: max(0px)) {
+          .view-pad { padding-left: max(30px, env(safe-area-inset-left)); padding-right: max(30px, env(safe-area-inset-right)); }
+        }
+        @media (max-width: 760px) {
+          .app-shell { min-height: auto; }
+          .qg-sidebar { padding-top: max(8px, env(safe-area-inset-top)); padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+        }
+
+            /* ============ RESPONSIVE / MOBILE (fix resa smartphone) ============ */
+        @media (max-width: 860px) {
+          header { flex-direction: column; align-items: stretch; gap: 12px; }
+          h1 { font-size: 20px; }
+          .header-actions { flex-wrap: wrap; gap: 8px; }
+          .header-actions button { flex: 1 1 44%; min-width: 130px; font-size: 13px; padding: 10px 8px; }
+          .container { padding: 12px; gap: 14px; }
+          .editor-section { padding: 14px; }
+          .logo-upload-actions { flex-wrap: wrap; }
+          .logo-upload-actions button { flex: 1 1 auto; }
+          /* anteprima: entra nello schermo, scrolla in orizzontale solo se serve */
+          .preview-section { overflow-x: auto; }
+          .quote-preview { margin: 0 !important; padding: 24px !important; }
+          .quote-title { font-size: 24px !important; }
+          .company-name { font-size: 18px !important; }
+          .items-table { font-size: 12px; }
+          /* dashboard / liste */
+          .view-pad { padding: 18px 14px; }
+          .view-head { flex-direction: column; align-items: flex-start; }
+          .stat-grid { grid-template-columns: 1fr 1fr; }
+          .panel { overflow-x: auto; }
+          .qg-table { min-width: 500px; }   /* scrolla nel pannello invece di rompere il layout */
+          .form-inline { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+          .form-row { grid-template-columns: 1fr; }
+          .stat-grid { grid-template-columns: 1fr; }
+          .header-actions button { flex: 1 1 100%; }
+          .quote-preview { padding: 16px !important; }
+          .quote-title { font-size: 20px !important; }
+          .company-name { font-size: 17px !important; }
+          .donut-wrap { justify-content: center; }
+          .view-head h2 { font-size: 20px; }
+        }
+
+</style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
-<body>
-<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<body><div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
 <div class="lock-title">Quote Generator</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
-
+    <div class="app-shell">
+      <aside class="qg-sidebar">
+        <div class="qg-brand"><div class="logo">Q</div><div><b>Quote Generator</b><span>Pro</span></div></div>
+        <nav class="qg-nav" id="qgNav">
+          <button type="button" data-view="dashboard" onclick="app.showView('dashboard')"><span class="ic">▦</span> Dashboard</button>
+          <button type="button" data-view="editor" class="active" onclick="app.showView('editor')"><span class="ic">✏️</span> New Quote</button>
+          <button type="button" data-view="quotes" onclick="app.showView('quotes')"><span class="ic">📄</span> Quotes</button>
+          <div class="qg-nav-sep"></div>
+          <button type="button" data-view="clients" onclick="app.showView('clients')"><span class="ic">👥</span> Clients</button>
+          <button type="button" data-view="products" onclick="app.showView('products')"><span class="ic">📦</span> Products &amp; Services</button>
+          <div class="qg-nav-sep"></div>
+          <button type="button" data-view="templates" onclick="app.showView('templates')"><span class="ic">🎨</span> Templates</button>
+          <button type="button" data-view="settings" onclick="app.showView('settings')"><span class="ic">⚙️</span> Settings</button>
+        </nav>
+        <div class="qg-side-foot">✦ EtherLabs Studio</div>
+      </aside>
+      <main class="qg-main">
+        <div class="qg-view active" id="view-editor">
     <header>
         <div>
             <h1>Quote Generator Pro <span style="color: var(--emeraldL);">✦</span> <span class="pro-badge">Pro</span></h1>
@@ -1933,7 +2101,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 </div>
                 <div class="brand-color-row">
                     <label for="quoteAccent">Brand Color</label>
-                    <input type="color" id="quoteAccent" value="#1e3a5f" oninput="app.setAccent(this.value)" title="Pick your brand accent color">
+                    <input type="color" id="quoteAccent" class="js-accent" value="#1e3a5f" oninput="app.setAccent(this.value)" title="Pick your primary brand color">
+                    <label for="quoteAccent2" style="margin-left:6px">Secondary</label>
+                    <input type="color" id="quoteAccent2" class="js-accent2" value="#ec4899" oninput="app.setAccent2(this.value)" title="Second color of the Creative gradient">
                     <button type="button" class="brand-reset" onclick="app.resetAccent()">Reset to template</button>
                 </div>
             </section>
@@ -1955,6 +2125,132 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             </div>
         </div>
     </div>
+        </div><!-- /#view-editor -->
+
+        <!-- ============ DASHBOARD ============ -->
+        <div class="qg-view" id="view-dashboard">
+          <div class="view-pad">
+            <div class="view-head">
+              <div><h2>Dashboard</h2><div class="sub">Overview of your saved quotes</div></div>
+              <button type="button" onclick="app.newQuote()">+ New Quote</button>
+            </div>
+            <div class="stat-grid" id="dashStats"></div>
+            <div class="dash-cols">
+              <div class="panel"><h3>Recent quotes</h3><div id="dashRecent"></div></div>
+              <div class="panel"><h3>Status overview</h3><div id="dashChart"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ QUOTES ============ -->
+        <div class="qg-view" id="view-quotes">
+          <div class="view-pad">
+            <div class="view-head">
+              <div><h2>Quotes</h2><div class="sub">All quotes saved in this browser</div></div>
+              <button type="button" onclick="app.newQuote()">+ New Quote</button>
+            </div>
+            <div class="panel" id="quotesListPanel"></div>
+          </div>
+        </div>
+
+        <!-- ============ CLIENTS ============ -->
+        <div class="qg-view" id="view-clients">
+          <div class="view-pad">
+            <div class="view-head"><div><h2>Clients</h2><div class="sub">Your address book — reuse a client in one click</div></div></div>
+            <div class="panel">
+              <h3 id="clientFormTitle">Add client</h3>
+              <input type="hidden" id="clientEditId" value="">
+              <div class="form-inline">
+                <div class="form-group"><label>Name *</label><input type="text" id="cfName" placeholder="Contact name"></div>
+                <div class="form-group"><label>Company</label><input type="text" id="cfCompany" placeholder="Company"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="cfEmail" placeholder="email@example.com"></div>
+                <div class="form-group"><label>VAT / Tax ID</label><input type="text" id="cfVat" placeholder="VAT"></div>
+                <div class="form-group" style="grid-column:1/-1"><label>Address</label><input type="text" id="cfAddress" placeholder="Address"></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px">
+                <button type="button" onclick="app.saveClient()">💾 Save client</button>
+                <button type="button" class="btn-secondary" onclick="app.clearClientForm()">Clear</button>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:16px"><h3>Saved clients</h3><div id="clientsList"></div></div>
+          </div>
+        </div>
+
+        <!-- ============ PRODUCTS & SERVICES ============ -->
+        <div class="qg-view" id="view-products">
+          <div class="view-pad">
+            <div class="view-head"><div><h2>Products &amp; Services</h2><div class="sub">A reusable catalog — add an item to a quote in one click</div></div></div>
+            <div class="panel">
+              <h3 id="productFormTitle">Add item</h3>
+              <input type="hidden" id="productEditId" value="">
+              <div class="form-inline">
+                <div class="form-group" style="grid-column:1/-1"><label>Description *</label><input type="text" id="pfDesc" placeholder="e.g. Website development"></div>
+                <div class="form-group"><label>Default rate</label><input type="number" id="pfRate" placeholder="0.00" min="0" step="0.01"></div>
+                <div class="form-group"><label>Default qty</label><input type="number" id="pfQty" placeholder="1" min="0" step="0.01" value="1"></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px">
+                <button type="button" onclick="app.saveProduct()">💾 Save item</button>
+                <button type="button" class="btn-secondary" onclick="app.clearProductForm()">Clear</button>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:16px"><h3>Catalog</h3><div id="productsList"></div></div>
+          </div>
+        </div>
+
+        <!-- ============ TEMPLATES ============ -->
+        <div class="qg-view" id="view-templates">
+          <div class="view-pad">
+            <div class="view-head"><div><h2>Templates</h2><div class="sub">Pick a style and your brand colors — applies to the current quote</div></div>
+              <button type="button" class="btn-secondary" onclick="app.showView('editor')">See live preview →</button></div>
+            <div class="panel" style="margin-bottom:16px">
+              <h3>Brand colors</h3>
+              <div class="brand-colors">
+                <div class="bc"><label for="galAccent">Primary</label><input type="color" id="galAccent" class="js-accent" value="#1e3a5f" oninput="app.setAccent(this.value)"></div>
+                <div class="bc"><label for="galAccent2">Secondary (gradient)</label><input type="color" id="galAccent2" class="js-accent2" value="#ec4899" oninput="app.setAccent2(this.value)"></div>
+                <button type="button" class="btn-secondary" onclick="app.resetAccent()">Reset to template</button>
+              </div>
+              <p class="sub" style="margin-top:8px">The secondary color feeds the gradient used by the “Creative” template.</p>
+            </div>
+            <div class="tpl-gallery" id="tplGallery"></div>
+          </div>
+        </div>
+
+        <!-- ============ SETTINGS ============ -->
+        <div class="qg-view" id="view-settings">
+          <div class="view-pad">
+            <div class="view-head"><div><h2>Settings</h2><div class="sub">Defaults, company profile and data</div></div></div>
+            <div class="panel">
+              <h3>Defaults for new quotes</h3>
+              <div class="form-inline">
+                <div class="form-group"><label>Currency</label>
+                  <select id="setCurrency" onchange="app.saveSettings()">
+                    <option value="€">€ Euro</option><option value="$">$ Dollar</option><option value="£">£ Pound</option><option value="CHF">CHF</option>
+                  </select></div>
+                <div class="form-group"><label>Default VAT %</label><input type="number" id="setIva" min="0" step="0.5" onchange="app.saveSettings()"></div>
+                <div class="form-group"><label>Default payment terms</label><input type="text" id="setPayment" placeholder="e.g. 30 days" onchange="app.saveSettings()"></div>
+              </div>
+              <p class="sub" style="margin-top:8px">Applied when you start a new quote.</p>
+            </div>
+            <div class="panel" style="margin-top:16px">
+              <h3>Company profile</h3>
+              <p class="sub">Your logo, VAT, IBAN and contact details are edited in the quote editor and reused everywhere.</p>
+              <button type="button" class="btn-secondary" onclick="app.showView('editor')" style="margin-top:10px">Edit company profile →</button>
+            </div>
+            <div class="panel" style="margin-top:16px">
+              <h3>Data</h3>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button type="button" class="btn-secondary" onclick="app.exportData()">📥 Backup current quote (JSON)</button>
+                <button type="button" class="btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import JSON</button>
+                <button type="button" class="btn-secondary" onclick="app.resetForm()">🔄 New quote (keep company)</button>
+                <button type="button" class="mini-btn danger" onclick="app.resetAll()">🗑️ Reset everything</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div><!-- /.app-shell -->
+
 
     <!-- TOAST -->
     <div class="toast" id="toast"><span class="dot"></span><span id="toastText">Saveto</span></div>
@@ -3232,6 +3528,358 @@ buildQuotePdf(name, safe) {
         });
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
+    <script>
+    /* ============ Dashboard multi-view app (EtherLabs) ============ */
+    (function(){
+      const LS = { clients:'qg_clients', products:'qg_products', settings:'qg_settings', style:'qg_style' };
+      const getJSON = (k,def)=>{ try{ const v=JSON.parse(localStorage.getItem(k)); return v==null?def:v; }catch(e){ return def; } };
+      const setJSON = (k,v)=> localStorage.setItem(k, JSON.stringify(v));
+      const esc = s => app.escapeHtml ? app.escapeHtml(String(s==null?'':s)) : String(s==null?'':s);
+      const num = v => { const n=parseFloat(v); return isFinite(n)?n:0; };
+
+      Object.assign(app, {
+        // ---------------- NAVIGATION ----------------
+        showView(name){
+          document.querySelectorAll('.qg-view').forEach(v=>v.classList.remove('active'));
+          const v=document.getElementById('view-'+name); if(v)v.classList.add('active');
+          document.querySelectorAll('#qgNav button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+          if(name==='dashboard') this.renderDashboard();
+          if(name==='quotes')    this.renderQuotesList();
+          if(name==='clients')   this.renderClients();
+          if(name==='products')  this.renderProducts();
+          if(name==='templates') this.renderTemplates();
+          if(name==='settings')  this.loadSettings();
+          try{ window.scrollTo(0,0); }catch(e){}
+        },
+        newQuote(){ this.resetQuoteFields(); this.showView('editor'); this.toast('New quote'); },
+
+        // ---------------- QUOTES helpers ----------------
+        getQuotes(){ return getJSON('quotes', {}) || {}; },
+        quoteValue(q){
+          const d=(q&&q.data)||{}; const items=d.lineItems||[];
+          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice), 0);
+          const disc=num(d.discountGlobal);
+          sub -= (d.discountType==='percentage') ? sub*disc/100 : disc;
+          return Math.max(0, sub);
+        },
+        money(n){ const c=(typeof this.cur==='function')?this.cur():'€'; return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+c; },
+
+        // ---------------- DASHBOARD ----------------
+        renderDashboard(){
+          const quotes=Object.entries(this.getQuotes());
+          const by=s=>quotes.filter(([,q])=>(q.status||'draft')===s);
+          const nAcc=by('accepted').length, nSent=by('sent').length, nDraft=by('draft').length;
+          const revenue=by('accepted').reduce((s,[,q])=>s+this.quoteValue(q),0);
+          const tiles=[
+            {lbl:'Total quotes', val:quotes.length},
+            {lbl:'Accepted', val:nAcc},
+            {lbl:'Sent', val:nSent},
+            {lbl:'Accepted revenue', val:this.money(revenue), money:true},
+          ];
+          document.getElementById('dashStats').innerHTML = tiles.map(t=>
+            `<div class="stat-tile"><div class="lbl">${t.lbl}</div><div class="val${t.money?' money':''}">${t.money?t.val:esc(t.val)}</div></div>`).join('');
+          // recent (last 5 by date)
+          const recent=quotes.slice().sort((a,b)=>new Date(b[1].date||0)-new Date(a[1].date||0)).slice(0,5);
+          const rec=document.getElementById('dashRecent');
+          rec.innerHTML = recent.length ? `<table class="qg-table"><tbody>${recent.map(([k,q])=>{
+            const st=q.status||'draft';
+            return `<tr><td><b>${esc(q.name)}</b><br><span style="color:var(--t3);font-size:11px">${esc((q.data&&q.data.clientName)||'—')}</span></td>
+              <td>${this.money(this.quoteValue(q))}</td>
+              <td><span class="pill ${st}">${esc(st)}</span></td>
+              <td class="row-actions"><button class="mini-btn" onclick="app.openQuote('${encodeURIComponent(k)}')">Open</button></td></tr>`;
+          }).join('')}</tbody></table>` : `<div class="qg-empty"><span class="big">📄</span>No quotes yet. Create your first one.</div>`;
+          // donut
+          const total=quotes.length||1;
+          const segs=[['accepted','#059669',nAcc],['sent','#3b82f6',nSent],['draft','#6b7280',nDraft]];
+          let acc=0; const stops=segs.map(([,c,n])=>{ const from=acc/total*360; acc+=n; const to=acc/total*360; return `${c} ${from}deg ${to}deg`; }).join(',');
+          document.getElementById('dashChart').innerHTML = quotes.length ? `<div class="donut-wrap">
+            <div class="donut" style="background:conic-gradient(${stops})"><div class="donut-center"><b>${quotes.length}</b><span>total</span></div></div>
+            <div class="legend">${segs.map(([lbl,c,n])=>`<div class="row"><i style="background:${c}"></i>${lbl[0].toUpperCase()+lbl.slice(1)}<b>${n}</b></div>`).join('')}</div>
+          </div>` : `<div class="qg-empty">No data yet.</div>`;
+        },
+
+        // ---------------- QUOTES LIST ----------------
+        renderQuotesList(){
+          const quotes=Object.entries(this.getQuotes()).sort((a,b)=>new Date(b[1].date||0)-new Date(a[1].date||0));
+          const el=document.getElementById('quotesListPanel');
+          if(!quotes.length){ el.innerHTML=`<div class="qg-empty"><span class="big">📄</span>No quotes saved yet.<br><button style="margin-top:12px" onclick="app.newQuote()">+ New Quote</button></div>`; return; }
+          const opt=(cur,v,l)=>`<option value="${v}"${cur===v?' selected':''}>${l}</option>`;
+          el.innerHTML=`<table class="qg-table"><thead><tr><th>Name</th><th>Client</th><th>Date</th><th>Value</th><th>Status</th><th></th></tr></thead><tbody>${
+            quotes.map(([k,q])=>{ const ek=encodeURIComponent(k); const st=q.status||'draft';
+              return `<tr>
+                <td><b>${esc(q.name)}</b></td>
+                <td>${esc((q.data&&q.data.clientName)||'—')}</td>
+                <td>${q.date?new Date(q.date).toLocaleDateString('en-GB'):'—'}</td>
+                <td>${this.money(this.quoteValue(q))}</td>
+                <td><select class="status-select" onchange="app.setQuoteStatus('${ek}',this.value);app.renderQuotesList()">${opt(st,'draft','Draft')}${opt(st,'sent','Sent')}${opt(st,'accepted','Accepted')}</select></td>
+                <td class="row-actions">
+                  <button class="mini-btn" onclick="app.openQuote('${ek}')">Open</button>
+                  <button class="mini-btn danger" onclick="app.removeQuote('${ek}')">Delete</button>
+                </td></tr>`;
+            }).join('')}</tbody></table>`;
+        },
+        openQuote(ek){ this.loadQuote(ek); this.showView('editor'); },
+        removeQuote(ek){
+          let name=ek; try{ name=decodeURIComponent(ek); }catch(e){}
+          if(!confirm('Delete this quote?')) return;
+          const quotes=this.getQuotes(); delete quotes[name]; setJSON('quotes', quotes);
+          this.renderQuotesList(); this.toast('Quote deleted');
+        },
+
+        // ---------------- CLIENTS ----------------
+        getClients(){ return getJSON(LS.clients, []) || []; },
+        renderClients(){
+          const list=this.getClients(); const el=document.getElementById('clientsList');
+          if(!list.length){ el.innerHTML=`<div class="qg-empty"><span class="big">👥</span>No clients yet. Add one above.</div>`; return; }
+          el.innerHTML=`<div class="card-grid2">${list.map(c=>`
+            <div class="cat-card">
+              <h4>${esc(c.name)}</h4>
+              ${c.company?`<p>${esc(c.company)}</p>`:''}
+              ${c.email?`<p>${esc(c.email)}</p>`:''}
+              ${c.vat?`<p>VAT: ${esc(c.vat)}</p>`:''}
+              ${c.address?`<p>${esc(c.address)}</p>`:''}
+              <div class="acts">
+                <button class="mini-btn" onclick="app.useClient('${c.id}')">Use in quote</button>
+                <button class="mini-btn" onclick="app.editClient('${c.id}')">Edit</button>
+                <button class="mini-btn danger" onclick="app.deleteClient('${c.id}')">Delete</button>
+              </div>
+            </div>`).join('')}</div>`;
+        },
+        saveClient(){
+          const name=document.getElementById('cfName').value.trim();
+          if(!name){ this.toast('Client name is required','error'); return; }
+          const id=document.getElementById('clientEditId').value || ('c'+Date.now());
+          const rec={ id, name,
+            company:document.getElementById('cfCompany').value.trim(),
+            email:document.getElementById('cfEmail').value.trim(),
+            vat:document.getElementById('cfVat').value.trim(),
+            address:document.getElementById('cfAddress').value.trim() };
+          const list=this.getClients(); const i=list.findIndex(c=>c.id===id);
+          if(i>=0) list[i]=rec; else list.push(rec);
+          setJSON(LS.clients, list); this.clearClientForm(); this.renderClients(); this.toast('Client saved');
+        },
+        editClient(id){
+          const c=this.getClients().find(x=>x.id===id); if(!c)return;
+          document.getElementById('clientEditId').value=c.id;
+          document.getElementById('cfName').value=c.name||'';
+          document.getElementById('cfCompany').value=c.company||'';
+          document.getElementById('cfEmail').value=c.email||'';
+          document.getElementById('cfVat').value=c.vat||'';
+          document.getElementById('cfAddress').value=c.address||'';
+          document.getElementById('clientFormTitle').textContent='Edit client';
+          try{ window.scrollTo(0,0); }catch(e){}
+        },
+        deleteClient(id){
+          if(!confirm('Delete this client?'))return;
+          setJSON(LS.clients, this.getClients().filter(c=>c.id!==id)); this.renderClients(); this.toast('Client deleted');
+        },
+        clearClientForm(){
+          ['clientEditId','cfName','cfCompany','cfEmail','cfVat','cfAddress'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+          document.getElementById('clientFormTitle').textContent='Add client';
+        },
+        useClient(id){
+          const c=this.getClients().find(x=>x.id===id); if(!c)return;
+          const set=(f,v)=>{ const e=document.getElementById(f); if(e)e.value=v||''; };
+          set('clientName',c.name); set('clientCompany',c.company); set('clientEmail',c.email); set('clientVat',c.vat); set('clientAddress',c.address);
+          this.calculateTotals(); this.renderPreview(); this.showView('editor'); this.toast('Client added to quote');
+        },
+        saveClientFromEditor(){
+          const name=(document.getElementById('clientName').value||'').trim();
+          if(!name){ this.toast('Fill in the client name first','error'); return; }
+          const list=this.getClients();
+          const rec={ id:'c'+Date.now(), name,
+            company:document.getElementById('clientCompany').value.trim(),
+            email:document.getElementById('clientEmail').value.trim(),
+            vat:document.getElementById('clientVat').value.trim(),
+            address:document.getElementById('clientAddress').value.trim() };
+          if(list.some(c=>c.name.toLowerCase()===name.toLowerCase() && c.email===rec.email)){ this.toast('Client already saved'); return; }
+          list.push(rec); setJSON(LS.clients, list); this.toast('Client saved to address book');
+        },
+
+        // ---------------- PRODUCTS & SERVICES ----------------
+        getProducts(){ return getJSON(LS.products, []) || []; },
+        renderProducts(){
+          const list=this.getProducts(); const el=document.getElementById('productsList');
+          if(!list.length){ el.innerHTML=`<div class="qg-empty"><span class="big">📦</span>No items yet. Add your first product or service above.</div>`; return; }
+          el.innerHTML=`<div class="card-grid2">${list.map(p=>`
+            <div class="cat-card">
+              <h4>${esc(p.description)}</h4>
+              <p class="price">${this.money(num(p.rate))}${p.qty&&num(p.qty)!==1?` · qty ${esc(p.qty)}`:''}</p>
+              <div class="acts">
+                <button class="mini-btn" onclick="app.addProductToQuote('${p.id}')">Add to quote</button>
+                <button class="mini-btn" onclick="app.editProduct('${p.id}')">Edit</button>
+                <button class="mini-btn danger" onclick="app.deleteProduct('${p.id}')">Delete</button>
+              </div>
+            </div>`).join('')}</div>`;
+        },
+        saveProduct(){
+          const desc=document.getElementById('pfDesc').value.trim();
+          if(!desc){ this.toast('Description is required','error'); return; }
+          const id=document.getElementById('productEditId').value || ('p'+Date.now());
+          const rec={ id, description:desc, rate:document.getElementById('pfRate').value, qty:document.getElementById('pfQty').value||'1' };
+          const list=this.getProducts(); const i=list.findIndex(p=>p.id===id);
+          if(i>=0) list[i]=rec; else list.push(rec);
+          setJSON(LS.products, list); this.clearProductForm(); this.renderProducts(); this.toast('Item saved');
+        },
+        editProduct(id){
+          const p=this.getProducts().find(x=>x.id===id); if(!p)return;
+          document.getElementById('productEditId').value=p.id;
+          document.getElementById('pfDesc').value=p.description||'';
+          document.getElementById('pfRate').value=p.rate||'';
+          document.getElementById('pfQty').value=p.qty||'1';
+          document.getElementById('productFormTitle').textContent='Edit item';
+          try{ window.scrollTo(0,0); }catch(e){}
+        },
+        deleteProduct(id){
+          if(!confirm('Delete this item?'))return;
+          setJSON(LS.products, this.getProducts().filter(p=>p.id!==id)); this.renderProducts(); this.toast('Item deleted');
+        },
+        clearProductForm(){
+          document.getElementById('productEditId').value='';
+          document.getElementById('pfDesc').value=''; document.getElementById('pfRate').value=''; document.getElementById('pfQty').value='1';
+          document.getElementById('productFormTitle').textContent='Add item';
+        },
+        addProductToQuote(id){
+          const p=this.getProducts().find(x=>x.id===id); if(!p)return;
+          this.addLineItem();
+          const item=this.data.lineItems[this.data.lineItems.length-1];
+          item.description=p.description; item.quantity=num(p.qty)||1; item.unitPrice=num(p.rate);
+          this.renderLineItems(); this.calculateTotals(); this.renderPreview();
+          this.showView('editor'); this.toast('Added to quote');
+        },
+
+        // ---------------- TEMPLATES GALLERY ----------------
+        renderTemplates(){
+          const defs=[
+            ['classic','Classic','Traditional serif, navy'],
+            ['minimal','Minimal','Clean, monochrome'],
+            ['corporate','Corporate','Structured, emerald'],
+            ['creative','Creative','Vibrant gradient'],
+            ['mono','Mono','Tech, monospace'],
+            ['elegant','Elegant','Refined, italic serif'],
+          ];
+          const cur=this.data.currentTemplate;
+          const gal=document.getElementById('tplGallery');
+          gal.innerHTML=defs.map(([k,name,desc])=>{
+            const base=(typeof TPL_ACCENT!=='undefined'&&TPL_ACCENT[k])||'#1e3a5f';
+            const swatch = k==='creative'
+              ? `background:linear-gradient(135deg, ${this.data.accent||base} 0%, ${this.data.accent2||'#ec4899'} 60%, #f59e0b 100%)`
+              : `background:${this.data.accent||base}`;
+            return `<div class="tpl-card${k===cur?' active':''}" onclick="app.pickTemplate('${k}')">
+              <div class="tpl-swatch" style="${swatch}"></div>
+              <b>${name}</b><small>${desc}</small></div>`;
+          }).join('');
+          // sync color pickers
+          const a=this.data.accent || ((typeof TPL_ACCENT!=='undefined'&&TPL_ACCENT[cur])||'#1e3a5f');
+          document.querySelectorAll('.js-accent').forEach(i=>i.value=a);
+          document.querySelectorAll('.js-accent2').forEach(i=>i.value=this.data.accent2||'#ec4899');
+        },
+        pickTemplate(k){ this.switchTemplate(k); this.renderTemplates(); this.saveStyle(); },
+
+        // ---------------- COLORS (override, multi-input sync) ----------------
+        setAccent(v){ this.data.accent=v; document.querySelectorAll('.js-accent').forEach(i=>{ if(i.value!==v)i.value=v; }); this.renderPreview(); this.saveStyle(); },
+        setAccent2(v){ this.data.accent2=v; document.querySelectorAll('.js-accent2').forEach(i=>{ if(i.value!==v)i.value=v; });
+          const pv=document.getElementById('quotePreview'); if(pv)pv.style.setProperty('--q-accent2', v); this.renderPreview(); this.saveStyle(); },
+        resetAccent(){ this.data.accent=null; this.data.accent2=null;
+          const base=(typeof TPL_ACCENT!=='undefined'&&TPL_ACCENT[this.data.currentTemplate])||'#1e3a5f';
+          document.querySelectorAll('.js-accent').forEach(i=>i.value=base);
+          document.querySelectorAll('.js-accent2').forEach(i=>i.value='#ec4899');
+          const pv=document.getElementById('quotePreview'); if(pv)pv.style.removeProperty('--q-accent2');
+          this.renderPreview(); this.saveStyle(); if(this.renderTemplates && document.getElementById('view-templates').classList.contains('active')) this.renderTemplates(); },
+        applyStyle(){
+          const pv=document.getElementById('quotePreview');
+          if(this.data.accent2 && pv) pv.style.setProperty('--q-accent2', this.data.accent2);
+          document.querySelectorAll('.js-accent2').forEach(i=>i.value=this.data.accent2||'#ec4899');
+          if(this.data.accent){ document.querySelectorAll('.js-accent').forEach(i=>i.value=this.data.accent); }
+        },
+        saveStyle(){ setJSON(LS.style, { template:this.data.currentTemplate, accent:this.data.accent, accent2:this.data.accent2 }); },
+        loadStyle(){ const s=getJSON(LS.style,null); if(!s)return;
+          if(s.template){ this.data.currentTemplate=s.template; }
+          if(s.accent!=null) this.data.accent=s.accent;
+          if(s.accent2!=null) this.data.accent2=s.accent2;
+        },
+
+        // ---------------- SETTINGS ----------------
+        loadSettings(){
+          const s=getJSON(LS.settings, {});
+          const set=(id,v)=>{ const e=document.getElementById(id); if(e&&v!=null&&v!=='')e.value=v; };
+          set('setCurrency', s.currency); set('setIva', s.iva); set('setPayment', s.payment);
+        },
+        saveSettings(){
+          const g=id=>{ const e=document.getElementById(id); return e?e.value:''; };
+          setJSON(LS.settings, { currency:g('setCurrency'), iva:g('setIva'), payment:g('setPayment') });
+          this.toast('Settings saved');
+        },
+        applySettingsToNew(){
+          const s=getJSON(LS.settings, {});
+          if(s.currency){ const e=document.getElementById('currency'); if(e)e.value=s.currency; }
+          if(s.iva){ const e=document.getElementById('ivaRate'); if(e)e.value=s.iva; }
+          if(s.payment){ const e=document.getElementById('paymentCustom'); if(e)e.value=s.payment; }
+        },
+
+        // ---------------- RESET (bug fix) ----------------
+        resetQuoteFields(){
+          localStorage.removeItem('formData');
+          ['clientName','clientCompany','clientAddress','clientEmail','clientVat','paymentCustom','notes','discountGlobal'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+          const sd=(id,v)=>{ const e=document.getElementById(id); if(!e)return;
+            if(e.tagName==='SELECT'){ if(v!=null && [...e.options].some(o=>o.value===v)) e.value=v; else { const d=e.querySelector('option[selected]'); e.value = d ? d.value : (e.options[0]?e.options[0].value:e.value); } }
+            else e.value=v; };
+          sd('paymentTerms','Immediate'); sd('discountType','percentage'); sd('ivaRate','20'); sd('inpsRate','0'); sd('withholdingRate','20'); sd('bolloAmountInput','2');
+          ['inpsCharge','withholdingTax','bollo'].forEach(id=>{ const e=document.getElementById(id); if(e)e.checked=false; });
+          this.data.lineItems=[];
+          this.toggleInpsRate(); this.toggleWithholdingRate(); this.toggleStampDuty();
+          this.applySettingsToNew();
+          this.addLineItem(); this.addLineItem();
+          this.duplicateQuote();               // new number + renderPreview + calculateTotals
+          this.renderLineItems(); this.calculateTotals(); this.renderPreview();
+          if(this._saveFormNow) this._saveFormNow();   // reset autosave baseline immediately
+        },
+        resetForm(){
+          if(confirm('This clears the current quote (client + items + amounts).\nYour company profile (logo, VAT, IBAN) is kept.\nProceed?')){
+            this.resetQuoteFields(); this.toast('Quote reset');
+          }
+        },
+        resetAll(){
+          if(!confirm('Reset EVERYTHING: company profile, clients, products, saved quotes and current quote. This cannot be undone. Proceed?')) return;
+          ['formData','companyData','quotes','quoteCounter', LS.clients, LS.products, LS.settings, LS.style].forEach(k=>localStorage.removeItem(k));
+          location.reload();
+        },
+
+        // ---------------- immediate autosave (bug fix: discountGlobal) ----------------
+        _saveFormNow(){
+          try{
+            const g=id=>{ const e=document.getElementById(id); return e?e.value:''; };
+            const c=id=>{ const e=document.getElementById(id); return e?e.checked:false; };
+            const formData={ clientName:g('clientName'),clientCompany:g('clientCompany'),clientAddress:g('clientAddress'),clientEmail:g('clientEmail'),clientVat:g('clientVat'),
+              paymentTerms:g('paymentTerms'),paymentCustom:g('paymentCustom'),notes:g('notes'),discountGlobal:g('discountGlobal'),discountType:g('discountType'),ivaRate:g('ivaRate'),
+              inpsCharge:c('inpsCharge'),inpsRate:g('inpsRate'),withholdingTax:c('withholdingTax'),withholdingRate:g('withholdingRate'),bollo:c('bollo'),bolloAmount:g('bolloAmountInput'),
+              lineItems:this.data.lineItems };
+            localStorage.setItem('formData', JSON.stringify(formData));
+            if(this.saveCompanyData) this.saveCompanyData();
+          }catch(e){}
+        },
+
+        // ---------------- INIT ----------------
+        initDashboardApp(){
+          this.loadStyle();
+          if(this.data.currentTemplate) this.switchTemplate(this.data.currentTemplate);
+          if(this.data.accent!=null) this.setAccent(this.data.accent);
+          this.applyStyle();
+          this.renderPreview();
+          // immediate persistence: debounced save on any input + on unload
+          let t; document.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(()=>this._saveFormNow(), 400); }, true);
+          window.addEventListener('beforeunload', ()=>this._saveFormNow());
+          this.showView('editor');
+        }
+      });
+
+      // run after the base app.init()
+      function boot(){ if(window.app && app.initDashboardApp) app.initDashboardApp(); }
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ()=>setTimeout(boot,0));
+      else setTimeout(boot,0);
+    })();
+    </script>
+
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 <div id="logoCropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
