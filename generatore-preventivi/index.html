@@ -37,6 +37,7 @@
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     
     
+    
     <script>/* jsPDF UMD inline (vettoriale) */
     /** @license
  *
@@ -1800,6 +1801,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           .qg-menu-list { left:0; right:auto; width:100%; min-width:0; }
         }
 
+        /* ===== navigazione a hamburger su mobile ===== */
+        .qg-hamburger { display:none; }
+        @media (max-width:760px){
+          .qg-sidebar { flex:none !important; width:100% !important; height:auto !important; position:sticky !important; top:0; z-index:5000; flex-direction:column !important; overflow:visible !important; padding:8px 12px !important; }
+          .qg-brand { display:flex !important; align-items:center; gap:12px; padding:2px 0 !important; margin:0 !important; border:none !important; }
+          .qg-brand b { font-size:15px; } .qg-brand span { font-size:11px; }
+          .qg-hamburger { display:inline-flex !important; align-items:center; justify-content:center; margin-left:auto; width:44px; height:38px; background:transparent; border:1px solid var(--brd); border-radius:9px; color:var(--t1); font-size:19px; cursor:pointer; flex:0 0 auto; touch-action:manipulation; }
+          .qg-nav { display:none !important; flex-direction:column !important; gap:4px; margin-top:10px; }
+          .qg-sidebar.open .qg-nav { display:flex !important; }
+          .qg-nav button { white-space:normal !important; padding:12px !important; }
+          .qg-nav .qg-nav-sep { display:block !important; }
+          .qg-side-foot { display:none !important; }
+          .qg-sidebar.open .qg-side-foot { display:flex !important; flex-direction:row; margin:10px 0 0 !important; padding:0 !important; align-items:center; gap:8px; }
+        }
+
 </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 </head>
@@ -1810,8 +1826,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
     <div class="app-shell">
-      <aside class="qg-sidebar">
-        <div class="qg-brand"><div class="logo">Q</div><div><b>Generatore Preventivi</b><span>Pro</span></div></div>
+      <aside class="qg-sidebar" id="qgSidebar">
+        <div class="qg-brand"><div class="logo">Q</div><div><b>Generatore Preventivi</b><span>Pro</span></div><button type="button" class="qg-hamburger" onclick="app.toggleSidebar()" aria-label="Menu">☰</button></div>
         <nav class="qg-nav" id="qgNav">
           <button type="button" data-view="dashboard" onclick="app.showView('dashboard')"><span class="ic">▦</span> Dashboard</button>
           <button type="button" data-view="editor" class="active" onclick="app.showView('editor')"><span class="ic">✏️</span> Nuovo Preventivo</button>
@@ -1838,7 +1854,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         </div>
         <div class="header-actions">
             <div class="qg-menu">
-                <button type="button" class="qg-menu-btn" onclick="app.toggleActionsMenu(event)">☰ Menù</button>
+                <button type="button" class="qg-menu-btn" onclick="app.toggleActionsMenu(event)">Azioni ▾</button>
                 <div class="qg-menu-list" id="actionsMenu">
                     <button type="button" onclick="app.loadQuoteModal();app.closeActionsMenu()">📂 Carica</button>
                     <button type="button" onclick="app.duplicateQuote();app.closeActionsMenu()">📋 Duplica</button>
@@ -3514,6 +3530,7 @@ buildQuotePdf(name, safe) {
           document.querySelectorAll('.qg-view').forEach(v=>v.classList.remove('active'));
           const v=document.getElementById('view-'+name); if(v)v.classList.add('active');
           document.querySelectorAll('#qgNav button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+          var _sb=document.getElementById('qgSidebar'); if(_sb) _sb.classList.remove('open');
           if(name==='dashboard') this.renderDashboard();
           if(name==='quotes')    this.renderQuotesList();
           if(name==='clients')   this.renderClients();
@@ -3827,6 +3844,7 @@ buildQuotePdf(name, safe) {
     /* dropdown azioni header + switch tema Apple */
     Object.assign(app, {
       toggleActionsMenu(e){ if(e){e.stopPropagation();} const m=document.getElementById('actionsMenu'); if(m) m.classList.toggle('open'); },
+      toggleSidebar(){ const s=document.getElementById('qgSidebar'); if(s) s.classList.toggle('open'); },
       closeActionsMenu(){ const m=document.getElementById('actionsMenu'); if(m) m.classList.remove('open'); },
       syncThemeSwitch(){ const dark=document.documentElement.getAttribute('data-theme')!=='light'; const s=document.getElementById('themeSwitch'); if(s){ s.classList.toggle('light', !dark); const ic=s.querySelector('.ts-ic'); if(ic) ic.textContent = dark?'🌙':'☀️'; } },
       toggleThemeSwitch(){ const b=document.getElementById('el-theme-toggle'); if(b) b.click(); this.syncThemeSwitch(); }
