@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>ResumeBuilder Pro - Create Your Professional Resume</title>
     <script>/* jsPDF UMD inline (vettoriale, offline) */
     /** @license
  *
@@ -1220,6 +1211,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 .section-order-item.sortable-chosen{box-shadow:0 6px 18px rgba(0,0,0,.16);border-color:var(--el-emerald,#10b981)}
 .section-order-item .so-num{color:var(--el-text3,#9198a1);font-variant-numeric:tabular-nums;font-size:.8rem;min-width:16px}
 </style>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -1380,7 +1390,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                                 <small>JPG, PNG, WebP — max 12 MB</small>
                             </div>
                         </div>
-                        <button type="button" id="cropBtn" class="btn btn-secondary" style="display:none;margin-top:8px" onclick="if(_lastPhotoSrc)openCropper(_lastPhotoSrc)">✂️ Ritaglia / Riposiziona</button>
+                        <button type="button" id="cropBtn" class="btn btn-secondary" style="display:none;margin-top:8px" onclick="if(_lastPhotoSrc)openCropper(_lastPhotoSrc)">✂️ Crop / Reposition</button>
                     </div>
                 </div>
 
@@ -1949,27 +1959,39 @@ const PRESETS_ALL = { en: {
         function handlePhotoFile(file) {
             if (!file.type.startsWith('image/')) { showToast('Please select an image file'); return; }
             if (file.size > 12 * 1024 * 1024) { showToast('Image too large (max 12 MB)'); return; }
-            resizePhoto(file, 512).then(function(dataUrl) {
+            function apply(dataUrl) {
                 state.photoData = dataUrl; _lastPhotoSrc = dataUrl;
                 var cb = document.getElementById('cropBtn'); if (cb) cb.style.display = '';
                 updatePhotoUI(); updatePreview(); scheduleSave();
-            }).catch(function() {
-                const reader = new FileReader();
-                reader.onload = function(e) { state.photoData = e.target.result; _lastPhotoSrc = e.target.result; var cb = document.getElementById('cropBtn'); if (cb) cb.style.display = ''; updatePhotoUI(); updatePreview(); scheduleSave(); };
+            }
+            function rawFallback() {
+                var reader = new FileReader();
+                reader.onload = function(e) { apply(e.target.result); };
+                reader.onerror = function() { showToast('Could not load image'); };
                 reader.readAsDataURL(file);
+            }
+            // Guardia anti-blocco (iOS): se il resize non conclude, carica comunque la foto via FileReader.
+            var settled = false;
+            var guard = setTimeout(function() { if (!settled) { settled = true; rawFallback(); } }, 2500);
+            resizePhoto(file, 512).then(function(dataUrl) {
+                if (settled) return; settled = true; clearTimeout(guard); apply(dataUrl);
+            }).catch(function() {
+                if (settled) return; settled = true; clearTimeout(guard); rawFallback();
             });
         }
         function resizePhoto(file, maxSize) {
             return new Promise(function(resolve, reject) {
                 function finish(src, w, h) {
-                    var scale = Math.min(1, maxSize / Math.max(w, h));
-                    var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
-                    var canvas = document.createElement('canvas');
-                    canvas.width = cw; canvas.height = ch;
-                    var ctx = canvas.getContext('2d');
-                    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(src, 0, 0, cw, ch);
-                    resolve(canvas.toDataURL('image/jpeg', 0.9));
+                    try {
+                        var scale = Math.min(1, maxSize / Math.max(w, h));
+                        var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+                        var canvas = document.createElement('canvas');
+                        canvas.width = cw; canvas.height = ch;
+                        var ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(src, 0, 0, cw, ch);
+                        resolve(canvas.toDataURL('image/jpeg', 0.9));
+                    } catch (e) { reject(e); }   // mai lanciare dentro onload: bloccherebbe la Promise
                 }
                 function fallbackImg() {
                     var url = URL.createObjectURL(file);
@@ -1978,7 +2000,10 @@ const PRESETS_ALL = { en: {
                     img.onerror = function() { URL.revokeObjectURL(url); reject(); };
                     img.src = url;
                 }
-                if (window.createImageBitmap) {
+                // iOS/Safari: createImageBitmap è inaffidabile (può non risolversi mai) → usa il path <img>
+                var ua = navigator.userAgent || '';
+                var isAppleWebKit = /iP(hone|ad|od)/.test(ua) || (/Safari/.test(ua) && !/Chrome|CriOS|Chromium|Android/.test(ua));
+                if (window.createImageBitmap && !isAppleWebKit) {
                     createImageBitmap(file, { imageOrientation: 'from-image' })
                         .then(function(bmp) { finish(bmp, bmp.width, bmp.height); })
                         .catch(fallbackImg);
@@ -2691,9 +2716,9 @@ const PRESETS_ALL = { en: {
                     ['work','education','skills','languages','certifications'].forEach(k => {
                         state[k] = (state[k] || []).map(x => ({...x, id: newId()}));
                     });
-                    // Sync completo: input, select template/font, colore accento, modalità preview,
-                    // ordine sezioni, preview. Senza questo l'accento/template importato non veniva
-                    // applicato alla preview e il CV a schermo differiva dal PDF esportato.
+                    // Full sync: inputs, template/font selects, accent color, preview mode, section order,
+                    // preview. Without this the imported accent/template weren't applied to the preview,
+                    // so the on-screen CV disagreed with the exported PDF.
                     syncUIFromState();
                     scheduleSave();
                     showToast(T.toast.loaded);
@@ -3004,7 +3029,7 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
         renderProfileBar();
         if (restored) showToast(T.toast.restored);
 
-        // ============ RITAGLIA / RIPOSIZIONA FOTO ============
+        // ============ PHOTO CROP / REPOSITION ============
         function _cq(id){ return document.getElementById(id); }
         var _lastPhotoSrc = (typeof state !== 'undefined' && state.photoData) ? state.photoData : null;
         var _cropImg = new Image(), _cropRect = {x:0,y:0,s:0}, _cropDrag = null;
@@ -3015,7 +3040,7 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
           _cropImg=new Image();
           _cropImg.onload=function(){ _cq('cropImg').src=src; _cq('cropOverlay').style.display='flex';
             requestAnimationFrame(function(){ var r=_imgRect(); var s=Math.min(r.w,r.h)*0.82; _cropRect={x:r.ox+(r.w-s)/2,y:r.oy+(r.h-s)/2,s:s}; _clampCrop(); _drawCropBox(); }); };
-          _cropImg.onerror=function(){ if(typeof showToast==='function') showToast('Impossibile caricare l\'immagine'); };
+          _cropImg.onerror=function(){ if(typeof showToast==='function') showToast('Could not load image'); };
           _cropImg.src=src;
         }
         function cropApply(){
@@ -3121,8 +3146,8 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 <div id="cropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--el-bg2,#fff);color:var(--el-text1,#1b1e22);border-radius:14px;padding:18px;max-width:min(420px,92vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
-    <div style="font-weight:700;margin-bottom:4px">Ritaglia foto</div>
-    <div style="font-size:.82rem;color:var(--el-text2,#5a616a);margin-bottom:10px">Trascina per spostare, trascina l'angolo verde per ridimensionare. Il quadrato diventa la tua foto.</div>
+    <div style="font-weight:700;margin-bottom:4px">Crop photo</div>
+    <div style="font-size:.82rem;color:var(--el-text2,#5a616a);margin-bottom:10px">Drag to move, drag the green corner to resize. The square becomes your photo.</div>
     <div id="cropStage" style="position:relative;width:100%;max-height:58vh;display:flex;align-items:center;justify-content:center;background:#111;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
       <img id="cropImg" alt="" style="display:block;max-width:100%;max-height:58vh;width:auto;height:auto;pointer-events:none">
       <div id="cropBox" style="position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.45);box-sizing:border-box;cursor:move">
@@ -3130,8 +3155,8 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
-      <button type="button" id="cropCancel" class="btn btn-secondary">Annulla</button>
-      <button type="button" id="cropApply" class="btn btn-primary">Applica</button>
+      <button type="button" id="cropCancel" class="btn btn-secondary">Cancel</button>
+      <button type="button" id="cropApply" class="btn btn-primary">Apply</button>
     </div>
   </div>
 </div>
