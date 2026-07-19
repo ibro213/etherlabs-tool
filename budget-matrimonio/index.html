@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Pianificatore Budget Matrimonio Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Pianificatore Budget Matrimonio Pro</title>
     <style>
         * {
             margin: 0;
@@ -676,6 +667,55 @@
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Menu a tab + layout organizzato (aggiunto) ===== */
+.tab-menu{position:sticky;top:0;z-index:50;display:flex;gap:8px;flex-wrap:wrap;
+  background:rgba(10,18,16,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:12px;border:1px solid var(--border2);border-radius:14px;margin-bottom:28px;}
+.tab-btn{flex:1 1 auto;min-width:120px;padding:12px 14px;border-radius:10px;
+  background:var(--bg3);border:1px solid var(--border);color:var(--text2);
+  font-size:.95em;font-weight:600;cursor:pointer;touch-action:manipulation;
+  transition:all .2s ease;white-space:nowrap;font-family:inherit;}
+.tab-btn.active{background:var(--emerald);border-color:var(--emerald);color:var(--bg);}
+@media (hover:hover) and (pointer:fine){.tab-btn:hover{border-color:var(--emerald);color:var(--text1);}.tab-btn.active:hover{color:var(--bg);}}
+.tab-panel{display:none;animation:tabIn .25s ease;}
+.tab-panel.active{display:block;}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+/* riepilogo totali compatto e sempre visibile */
+.dashboard-grid{gap:12px;margin-bottom:20px;}
+.dashboard-card{padding:16px;}
+.dashboard-card .card-value{font-size:1.4em;margin-bottom:8px;}
+/* simmetria: card ad altezza piena e allineate nelle righe */
+.categories-grid,.vendor-grid{align-items:stretch;}
+.category-card{height:100%;}
+.vendor-item{height:100%;min-height:62px;}
+@media (max-width:768px){
+  .dashboard-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .dashboard-card{padding:12px;}
+  .dashboard-card .card-value{font-size:1.2em;}
+  .tab-menu{padding:8px;gap:6px;}
+  .tab-btn{flex:1 1 42%;min-width:0;font-size:.9em;padding:11px 6px;}
+}
+</style>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -717,6 +757,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             </div>
         </div>
 
+        <nav class="tab-menu" id="tabMenu" role="tablist">
+            <button type="button" class="tab-btn active" data-target="panel-config">⚙️ Configura</button>
+            <button type="button" class="tab-btn" data-target="panel-cat">📋 Categorie</button>
+            <button type="button" class="tab-btn" data-target="panel-vendors">✅ Fornitori</button>
+            <button type="button" class="tab-btn" data-target="panel-summary">📊 Riepilogo</button>
+        </nav>
+
+        <div class="tab-panel active" id="panel-config">
         <div class="setup-section">
             <h2>Configurazione Matrimonio</h2>
             <div class="setup-grid">
@@ -739,23 +787,30 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             <div class="per-guest-label">Costo per Ospite</div>
             <div class="per-guest-value" id="perGuestValue">€0</div>
         </div>
+        </div><!-- /panel-config -->
 
+        <div class="tab-panel" id="panel-cat">
         <div class="section">
             <h2>Ripartizione Categorie</h2>
             <div class="categories-grid" id="categoriesGrid"></div>
         </div>
+        </div><!-- /panel-cat -->
 
+        <div class="tab-panel" id="panel-summary">
         <div class="chart-container">
             <div style="display: flex; justify-content: center; align-items: center;">
                 <canvas id="budgetChart" width="300" height="300"></canvas>
             </div>
             <div class="legend" id="legend"></div>
         </div>
+        </div><!-- /panel-summary -->
 
+        <div class="tab-panel" id="panel-vendors">
         <div class="vendor-checklist">
             <h2>Checklist Fornitori</h2>
             <div class="vendor-grid" id="vendorGrid"></div>
         </div>
+        </div><!-- /panel-vendors -->
 
         <div style="text-align: center; margin-bottom: 40px;">
             <button class="btn btn-primary" onclick="exportSummary()">📥 Esporta Riepilogo</button>
@@ -1165,6 +1220,25 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         initApp();
+
+        /* ===== Navigazione a tab (aggiunto) ===== */
+        (function(){
+            var menu = document.getElementById('tabMenu');
+            if(!menu) return;
+            var VALID = ['panel-config','panel-cat','panel-vendors','panel-summary'];
+            function activate(id){
+                if(VALID.indexOf(id)<0) id='panel-config';
+                document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id===id); });
+                menu.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-target')===id); });
+                try{ localStorage.setItem('bm-tab', id); }catch(e){}
+                // il canvas nascosto può disegnare male: ridisegno il grafico entrando nel Riepilogo
+                if(id==='panel-summary' && typeof drawChart==='function'){ try{ drawChart(); }catch(e){} }
+                if(window.scrollTo){ try{ window.scrollTo({top:0, behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); } }
+            }
+            menu.addEventListener('click', function(e){ var b=e.target.closest('.tab-btn'); if(b) activate(b.getAttribute('data-target')); });
+            var saved=null; try{ saved=localStorage.getItem('bm-tab'); }catch(e){}
+            activate(VALID.indexOf(saved)>=0 ? saved : 'panel-config');
+        })();
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
