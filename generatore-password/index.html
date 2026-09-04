@@ -562,7 +562,7 @@ button:hover {
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
-<div class="lock-title">Generatore Password</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
+<div class="lock-title">Generatore Password Pro</div><div class="lock-sub">Inserisci il codice ricevuto con l'acquisto</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODICE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">SBLOCCA</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
@@ -1049,8 +1049,20 @@ button:hover {
 
         // ==================== VAULT ====================
         function loadVault() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            return data ? JSON.parse(data) : [];
+            // Difensivo: i dati salvati da una versione precedente (o un JSON troncato dalla
+            // quota) non devono poter uccidere il tool. Prima un JSON.parse non protetto e
+            // una forma inattesa lasciavano il vault irraggiungibile a ogni riapertura, senza
+            // alcun modo di recuperare le password salvate.
+            let data = null;
+            try { data = localStorage.getItem(STORAGE_KEY); } catch(e) { return []; }
+            if (!data) return [];
+            let v = null;
+            try { v = JSON.parse(data); } catch(e) { return []; }
+            if (!Array.isArray(v)) return [];
+            // ogni voce deve avere i campi che il render si aspetta, anche se aggiunti dopo
+            return v.filter(e => e && typeof e === 'object').map(e => Object.assign({
+                id: Date.now(), service: '', username: '', password: '', created: ''
+            }, e));
         }
 
         function saveVault(vault) {
@@ -1160,7 +1172,9 @@ button:hover {
                 '"': '&quot;',
                 "'": '&#039;'
             };
-            return text.replace(/[&<>"']/g, m => map[m]);
+            // null-safe come esc() negli altri tool: un campo assente (voce salvata da una
+            // versione precedente) faceva `undefined.replace` e rompeva l'intero render
+            return String(text == null ? '' : text).replace(/[&<>"']/g, m => map[m]);
         }
 
         // ==================== INIT ====================
