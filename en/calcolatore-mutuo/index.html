@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Mortgage Calculator Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -366,6 +357,11 @@
             color: var(--text1);
         }
 
+        /* Period column ("Month 1 · Nov 2026") stays on one line; the table scrolls sideways on phones */
+        #amortizationTable td:first-child {
+            white-space: nowrap;
+        }
+
         @media (hover: hover) and (pointer: fine) {
 tbody tr:hover {
             background: rgba(16, 185, 129, 0.05);
@@ -545,6 +541,8 @@ button.secondary:hover {
             color: #ffb74d;
             border: 1px solid #ff9800;
         }
+        :root:not([data-theme="dark"]) .message.success { color: #1b5e20; } /* light theme: the pale green/orange text was almost invisible on the light box */
+        :root:not([data-theme="dark"]) .message.warning { color: #8a4b00; }
 
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -619,6 +617,25 @@ button.secondary:hover {
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -843,6 +860,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
     <script>
         // ========== STATE & STORAGE ==========
         const storageKey = 'mortpro';
+        // Local date YYYY-MM-DD (toISOString() is UTC: in a US evening it would already be tomorrow)
+        function todayISO() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
         let calcData = {
             amount: 250000,
             rate: 3.5,
@@ -850,7 +869,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             rateType: 'fixed',
             spread: 1.5,
             baseRate: 2,
-            startDate: new Date().toISOString().split('T')[0],
+            startDate: todayISO(),
             amortization: []
         };
 
@@ -882,14 +901,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('rateRange').addEventListener('input', (e) => {
                 document.getElementById('rateNum').value = e.target.value;
                 calcData.rate = parseFloat(e.target.value);
-                updateSliderValue('rateVal', calcData.rate.toFixed(1) + '%');
+                updateSliderValue('rateVal', (calcData.rate || 0).toFixed(1) + '%');
                 calculateMortgage();
             });
 
             document.getElementById('rateNum').addEventListener('input', (e) => {
                 document.getElementById('rateRange').value = e.target.value;
                 calcData.rate = parseFloat(e.target.value);
-                updateSliderValue('rateVal', calcData.rate.toFixed(1) + '%');
+                updateSliderValue('rateVal', (calcData.rate || 0).toFixed(1) + '%');
                 calculateMortgage();
             });
 
@@ -897,14 +916,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('termRange').addEventListener('input', (e) => {
                 document.getElementById('termNum').value = e.target.value;
                 calcData.term = parseFloat(e.target.value);
-                updateSliderValue('termVal', calcData.term + ' years');
+                updateSliderValue('termVal', (calcData.term || 0) + ' years');
                 calculateMortgage();
             });
 
             document.getElementById('termNum').addEventListener('input', (e) => {
                 document.getElementById('termRange').value = e.target.value;
                 calcData.term = parseFloat(e.target.value);
-                updateSliderValue('termVal', calcData.term + ' years');
+                updateSliderValue('termVal', (calcData.term || 0) + ' years');
                 calculateMortgage();
             });
 
@@ -934,6 +953,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             // Start Date
             document.getElementById('startDate').addEventListener('change', (e) => {
                 calcData.startDate = e.target.value;
+                updateAmortizationTable();
+            });
+
+            // Redraw the charts when the theme changes (theme-aware background/text)
+            window.addEventListener('el-theme-change', () => {
+                if (calcData.amortization && calcData.amortization.length) drawCharts();
             });
 
             // Tabs
@@ -957,7 +982,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function setTodayDate() {
             if (!calcData.startDate) {
-                calcData.startDate = new Date().toISOString().split('T')[0];
+                calcData.startDate = todayISO();
             }
             document.getElementById('startDate').value = calcData.startDate;
         }
@@ -965,17 +990,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         // ========== CORE CALCULATIONS ==========
         function getCurrentRate() {
             if (calcData.rateType === 'variable') {
-                return calcData.spread + calcData.baseRate;
+                return (Number(calcData.spread) || 0) + (Number(calcData.baseRate) || 0);
             }
-            return calcData.rate;
+            return Number(calcData.rate) || 0;
         }
 
         function calculateMortgage() {
-            const P = calcData.amount;
+            const P = Number(calcData.amount) || 0;
             const r = getCurrentRate() / 100 / 12; // monthly rate
-            const n = calcData.term * 12; // number of payments
+            const n = Math.round((Number(calcData.term) || 0) * 12); // number of payments
 
-            if (r === 0) {
+            if (P <= 0 || n <= 0) {
+                calcData.amortization = [];
+            } else if (r === 0) {
                 const payment = P / n;
                 calcData.amortization = generateAmortizationZero(P, n);
             } else {
@@ -1034,12 +1061,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function updateResults() {
             const amort = calcData.amortization;
-            if (amort.length === 0) return;
+            const amount = amort.length ? calcData.amount : 0;
 
-            const payment = amort[0].payment;
+            const payment = amort.length ? amort[0].payment : 0;
             const totalInterest = amort.reduce((sum, m) => sum + m.interest, 0);
-            const totalCost = calcData.amount + totalInterest;
-            const ratio = (totalInterest / calcData.amount) * 100;
+            const totalCost = amount + totalInterest;
+            const ratio = amount > 0 ? (totalInterest / amount) * 100 : 0;
 
             document.getElementById('monthlyPayment').textContent = formatCurrency(payment);
             document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
@@ -1197,10 +1224,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
             ctx.font = '13px "Segoe UI", system-ui, sans-serif';
-            let lx = margin.left + cW - 190; const ly = 24;
+            const lw1 = ctx.measureText('Principal').width, lw2 = ctx.measureText('Interest').width;
+            let lx = margin.left + cW - (20 + lw1 + 24 + 20 + lw2); const ly = 24;
             ctx.fillStyle = '#10b981'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
             ctx.fillStyle = elc('text'); ctx.fillText('Principal', lx + 20, ly);
-            lx += 105;
+            lx += 20 + lw1 + 24;
             ctx.fillStyle = '#f59e0b'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
             ctx.fillStyle = elc('text'); ctx.fillText('Interest', lx + 20, ly);
         }
@@ -1214,13 +1242,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const view = document.querySelector('.toggle-btn.active').dataset.view;
 
             if (view === 'monthly') {
+                const start = new Date((calcData.startDate || '') + 'T00:00:00');
+                const payMonth = (k) => {
+                    if (isNaN(start.getTime())) return '';
+                    const d = new Date(start.getFullYear(), start.getMonth() + k, 1);
+                    return ' · ' + d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                };
                 amort.forEach(m => {
                     const tr = document.createElement('tr');
                     const isHighlight = m.principal > m.interest;
                     if (isHighlight) tr.classList.add('highlight');
 
                     tr.innerHTML = `
-                        <td>Month ${m.month}</td>
+                        <td>Month ${m.month}${payMonth(m.month)}</td>
                         <td>${formatCurrency(m.payment)}</td>
                         <td>${formatCurrency(m.principal)}</td>
                         <td>${formatCurrency(m.interest)}</td>
@@ -1282,13 +1316,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         // ========== SCENARIO COMPARISON ==========
+        let scenarioSeq = 0;
         function addScenario() {
             const list = document.getElementById('scenarioList');
             const count = list.children.length;
+            const id = scenarioSeq++;
 
             const div = document.createElement('div');
             div.className = 'section';
-            div.dataset.scenario = count;
+            div.dataset.scenario = id;
             div.innerHTML = `
                 <h3 style="color: var(--emerald-light); margin-bottom: 15px;">Scenario ${count + 1}</h3>
                 <div class="scenario-inputs">
@@ -1296,7 +1332,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <label class="sc-field"><span>Interest Rate (%)</span><input type="number" class="scenario-rate" min="0.5" max="10" step="0.1" value="3.5"></label>
                     <label class="sc-field"><span>Term (years)</span><input type="number" class="scenario-term" min="5" max="40" step="1" value="20"></label>
                     <label class="sc-field"><span>Spread (%)</span><input type="number" class="scenario-spread" min="0" max="5" step="0.1" value="0"></label>
-                    <button class="remove-btn" onclick="removeScenario(${count})">Remove</button>
+                    <button class="remove-btn" onclick="removeScenario(${id})">Remove</button>
                 </div>
             `;
             list.appendChild(div);
@@ -1305,14 +1341,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         function removeScenario(idx) {
             const elem = document.querySelector(`[data-scenario="${idx}"]`);
             if (elem) elem.remove();
+            document.querySelectorAll('#scenarioList > [data-scenario] h3').forEach((h, i) => { h.textContent = 'Scenario ' + (i + 1); });
         }
 
         function compareScenarios() {
             const scenarios = Array.from(document.querySelectorAll('[data-scenario]')).map(el => {
                 return {
-                    amount: parseFloat(el.querySelector('.scenario-amount').value),
-                    rate: parseFloat(el.querySelector('.scenario-rate').value),
-                    term: parseFloat(el.querySelector('.scenario-term').value),
+                    amount: parseFloat(el.querySelector('.scenario-amount').value) || 0,
+                    rate: parseFloat(el.querySelector('.scenario-rate').value) || 0,
+                    term: parseFloat(el.querySelector('.scenario-term').value) || 0,
                     spread: parseFloat(el.querySelector('.scenario-spread').value) || 0
                 };
             });
@@ -1396,6 +1433,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             }
 
             const amort = calcData.amortization;
+            if (!amort || !amort.length) {
+                showMessage('earlyrepay', 'Enter a valid loan amount, rate and term in the Mortgage Calculator tab', 'warning');
+                return;
+            }
             const payment = amort[0].payment;
             const totalPayment = payment + extraAmount;
 
@@ -1502,7 +1543,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('termRange').value = 20;
             document.getElementById('fixedRate').checked = true;
             document.getElementById('variableOptions').style.display = 'none';
-            setTodayDate();
+            document.getElementById('spread').value = 1.5;
+            document.getElementById('baseRate').value = 2;
+            updateSliderValue('amountVal', formatCurrency(250000));
+            updateSliderValue('rateVal', '3.5%');
+            updateSliderValue('termVal', '20 years');
             calcData = {
                 amount: 250000,
                 rate: 3.5,
@@ -1510,9 +1555,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 rateType: 'fixed',
                 spread: 1.5,
                 baseRate: 2,
-                startDate: new Date().toISOString().split('T')[0],
+                startDate: todayISO(),
                 amortization: []
             };
+            setTodayDate();
             calculateMortgage();
             showMessage('calculator', '✓ Form reset to default values', 'success');
         }
@@ -1526,7 +1572,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const saved = localStorage.getItem(storageKey);
             if (saved) {
                 try {
-                    calcData = JSON.parse(saved);
+                    const o = JSON.parse(saved) || {};
+                    ['amount', 'rate', 'term', 'spread', 'baseRate'].forEach(k => { if (!Number.isFinite(o[k])) o[k] = calcData[k]; });
+                    calcData = Object.assign({}, calcData, o);
                     document.getElementById('amountNum').value = calcData.amount;
                     document.getElementById('amountRange').value = calcData.amount;
                     document.getElementById('rateNum').value = calcData.rate;
@@ -1551,7 +1599,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

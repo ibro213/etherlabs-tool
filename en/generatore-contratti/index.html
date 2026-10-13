@@ -20,24 +20,15 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <meta name="description" content="Generate professional freelance contracts (service agreement, collaboration, NDA, license) in minutes. Live preview, PDF print, 100% offline.">
     <meta name="theme-color" content="#060a0a">
     <title>Freelance Contract Generator — Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -481,6 +472,10 @@
             font-size: 0.9em;
         }
         .clause-detail input:focus { outline: none; border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,0.08); }
+        /* visible unit/caption above the clause number fields */
+        .clause-detail label { display: block; margin: 0 0 6px 2px; font-size: 0.78em; color: var(--text2); }
+        /* fields and groups that do not apply to the chosen contract type (see syncTypeFields) */
+        [data-types][hidden] { display: none !important; }
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -899,9 +894,30 @@
             .step-label { display: none; }
             .step-bar { gap: 0; padding: 0; }
             .container { padding: 16px; }
+            /* on phones the fixed theme button covered the form while scrolling: keep it at the top of the page */
+            #el-theme-toggle { position: absolute; }
         }
     </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -941,11 +957,11 @@
                 <span class="step-label">Project</span>
             </div>
             <div class="step-line" id="line4" aria-hidden="true"><div class="fill"></div></div>
-            <div class="step-node" data-step="5" role="button" tabindex="0" aria-label="Step 5: Compensation">
+            <div class="step-node" data-step="5" data-types="prestazione collaborazione locazione compravendita" role="button" tabindex="0" aria-label="Step 5: Compensation">
                 <div class="step-circle">5</div>
                 <span class="step-label">Compensation</span>
             </div>
-            <div class="step-line" id="line5" aria-hidden="true"><div class="fill"></div></div>
+            <div class="step-line" id="line5" aria-hidden="true" data-types="prestazione collaborazione locazione compravendita"><div class="fill"></div></div>
             <div class="step-node" data-step="6" role="button" tabindex="0" aria-label="Step 6: Clauses">
                 <div class="step-circle">6</div>
                 <span class="step-label">Clauses</span>
@@ -998,7 +1014,7 @@
                                 <label for="freelancerTaxId" class="required">Tax ID / EIN</label>
                                 <input type="text" id="freelancerTaxId" placeholder="E.g. 12-3456789 (EIN) or 123-45-6789 (SSN)" autocapitalize="characters" spellcheck="false" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" data-types="prestazione collaborazione">
                                 <label for="freelancerSpecialty">Specialty</label>
                                 <input type="text" id="freelancerSpecialty" placeholder="E.g. Web Developer" autocomplete="organization-title">
                             </div>
@@ -1052,7 +1068,7 @@
                         <h2 class="section-title">Project Details</h2>
                         <p class="section-subtitle">Describe the work, deliverables and timeline</p>
 
-                        <div class="template-section">
+                        <div class="template-section" data-types="prestazione collaborazione">
                             <label>Quick Template</label>
                             <div class="template-grid">
                                 <button type="button" class="template-btn" data-template="developer">Web Developer</button>
@@ -1072,7 +1088,7 @@
                             <label for="projectDescription" class="required">Detailed Description</label>
                             <textarea id="projectDescription" placeholder="Describe in detail the work to be done, the objectives and expectations..." autocapitalize="sentences" required></textarea>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-types="prestazione collaborazione">
                             <label for="deliverableInput">Deliverables</label>
                             <div class="row-add">
                                 <input type="text" id="deliverableInput" placeholder="E.g. 5 responsive web pages" autocapitalize="sentences">
@@ -1081,26 +1097,30 @@
                             <div class="dynamic-list" id="deliverableList" aria-live="polite"></div>
                         </div>
                         <div class="inline-group">
-                            <div class="form-group">
+                            <div class="form-group" data-types="prestazione collaborazione nda locazione">
                                 <label for="startDate" class="required">Start Date</label>
                                 <input type="date" id="startDate" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" data-types="prestazione collaborazione compravendita">
                                 <label for="endDate" class="required">Delivery Date</label>
                                 <input type="date" id="endDate" required>
                             </div>
+                            <div class="form-group" data-types="locazione">
+                                <label for="leaseMonths" class="required">Lease Term (months)</label>
+                                <input type="number" id="leaseMonths" placeholder="E.g. 12" min="1" value="12" inputmode="numeric" required>
+                            </div>
                         </div>
-                        <div class="inline-group">
+                        <div class="inline-group" data-types="prestazione collaborazione">
                             <div class="form-group">
                                 <label for="revisions">Included Revisions</label>
                                 <input type="number" id="revisions" value="2" min="0" inputmode="numeric">
                             </div>
                             <div class="form-group">
-                                <label for="revisionPrice">Extra Revision Price (€)</label>
+                                <label for="revisionPrice">Extra Revision Price ($)</label>
                                 <input type="number" id="revisionPrice" placeholder="100" min="0" step="0.01" inputmode="decimal">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-types="prestazione collaborazione">
                             <label>Milestones</label>
                             <div class="milestone-row">
                                 <input type="text" id="milestoneDesc" placeholder="E.g. Design approved" aria-label="Milestone description" autocapitalize="sentences">
@@ -1116,7 +1136,7 @@
                     <div class="form-section" data-step="5">
                         <h2 class="section-title">Financial Terms</h2>
                         <p class="section-subtitle">Define compensation, payment method and timing</p>
-                        <div class="form-group">
+                        <div class="form-group" data-types="prestazione collaborazione">
                             <label for="compensationType" class="required">Compensation Type</label>
                             <select id="compensationType" required>
                                 <option value="">Select compensation type</option>
@@ -1127,12 +1147,16 @@
                         </div>
                         <div class="inline-group">
                             <div class="form-group">
-                                <label for="totalAmount" class="required">Total Amount (€)</label>
+                                <label for="totalAmount" class="required">Total Amount ($)</label>
                                 <input type="number" id="totalAmount" placeholder="5000" min="0" step="0.01" inputmode="decimal" required>
                             </div>
-                            <div class="form-group">
-                                <label for="hourlyRate">Hourly Rate (€)</label>
+                            <div class="form-group" data-types="prestazione collaborazione">
+                                <label for="hourlyRate">Hourly Rate ($)</label>
                                 <input type="number" id="hourlyRate" placeholder="50" min="0" step="0.01" inputmode="decimal">
+                            </div>
+                            <div class="form-group" data-types="locazione">
+                                <label for="leasePayDay">Rent Due Day (of the month)</label>
+                                <input type="number" id="leasePayDay" placeholder="E.g. 1" min="1" max="31" value="1" inputmode="numeric">
                             </div>
                         </div>
                         <div class="form-group">
@@ -1145,7 +1169,7 @@
                                 <option value="altro">Other</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-types="prestazione collaborazione compravendita">
                             <label for="paymentTiming" class="required">Payment Schedule</label>
                             <select id="paymentTiming" required>
                                 <option value="">Select schedule</option>
@@ -1156,7 +1180,7 @@
                                 <option value="personalizzato">Custom</option>
                             </select>
                         </div>
-                        <div class="inline-group">
+                        <div class="inline-group" data-types="prestazione collaborazione">
                             <div class="form-group">
                                 <label for="latePenalty">Late Payment Penalty (%)</label>
                                 <input type="number" id="latePenalty" placeholder="5" min="0" step="0.1" inputmode="decimal">
@@ -1166,12 +1190,14 @@
                                 <input type="number" id="graceDays" placeholder="0" min="0" inputmode="numeric">
                             </div>
                         </div>
+                        <div data-types="prestazione collaborazione">
                         <div class="checkbox-group">
                             <input type="checkbox" id="expensesReimbursable">
                             <label for="expensesReimbursable">Reimbursable Extra Expenses</label>
                         </div>
                         <div class="clause-detail" id="expensesDetail">
                             <input type="text" id="expensesDescription" placeholder="E.g. Hosting, software licenses, travel..." autocapitalize="sentences">
+                        </div>
                         </div>
                     </div>
 
@@ -1180,6 +1206,8 @@
                         <h2 class="section-title">Contract Clauses</h2>
                         <p class="section-subtitle">Customize the clauses to include in the contract</p>
 
+                        <!-- Each .clause-set is shown only for the types listed in data-types (see syncClauseSets) -->
+                        <div class="clause-set" data-types="prestazione collaborazione">
                         <div class="checkbox-group">
                             <input type="checkbox" id="ipClause" checked>
                             <label for="ipClause">Intellectual Property — Transfer to client upon payment</label>
@@ -1193,6 +1221,7 @@
                             <label for="nonCompeteClause">Non-Compete</label>
                         </div>
                         <div class="clause-detail" id="nonCompeteDetail">
+                            <label for="nonCompeteMonths">Duration in months</label>
                             <input type="number" id="nonCompeteMonths" placeholder="Duration in months" min="1" value="12" inputmode="numeric" aria-label="Non-compete duration in months">
                         </div>
                         <div class="checkbox-group">
@@ -1200,11 +1229,103 @@
                             <label for="resolutionClause">Early Termination with Notice</label>
                         </div>
                         <div class="clause-detail" id="resolutionDetail">
+                            <label for="resolutionDays">Notice period in days</label>
                             <input type="number" id="resolutionDays" placeholder="Notice period in days" min="1" value="30" inputmode="numeric" aria-label="Notice period in days">
                         </div>
+                        </div>
+                        <div class="clause-set" data-types="nda">
+                            <p class="section-subtitle" style="margin-bottom:16px">Always included: definition of confidential information, purpose and permitted use, confidentiality obligations, exclusions.</p>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ndaDurationClause" checked>
+                                <label for="ndaDurationClause">Term of the Obligations</label>
+                            </div>
+                            <div class="clause-detail" id="ndaDurationDetail">
+                                <label for="ndaYears">Term in years</label>
+                                <input type="number" id="ndaYears" placeholder="Years" min="1" value="5" inputmode="numeric" aria-label="Term of the confidentiality obligations in years">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ndaReturnClause" checked>
+                                <label for="ndaReturnClause">Return or Destruction of Information</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ndaNoLicenseClause" checked>
+                                <label for="ndaNoLicenseClause">No License or Transfer of Rights</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ndaPenaltyClause" checked>
+                                <label for="ndaPenaltyClause">Remedies — Damages and Injunctive Relief</label>
+                            </div>
+                            <div class="clause-detail" id="ndaPenaltyDetail">
+                                <label for="ndaPenaltyAmount">Liquidated damages in $ (optional: leave empty for actual damages)</label>
+                                <input type="number" id="ndaPenaltyAmount" placeholder="Liquidated damages in $ (optional)" min="0" step="0.01" inputmode="decimal" aria-label="Liquidated damages amount in dollars">
+                            </div>
+                        </div>
+                        <div class="clause-set" data-types="locazione">
+                            <p class="section-subtitle" style="margin-bottom:16px">Always included: premises, term, rent and payment.</p>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseDepositClause" checked>
+                                <label for="leaseDepositClause">Security Deposit</label>
+                            </div>
+                            <div class="clause-detail" id="leaseDepositDetail">
+                                <label for="leaseDepositMonths">Months of rent (deposit limits vary by state)</label>
+                                <input type="number" id="leaseDepositMonths" placeholder="Months of rent" min="0" step="0.5" value="1" inputmode="decimal" aria-label="Security deposit in months of rent">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseChargesClause" checked>
+                                <label for="leaseChargesClause">Charges and Utilities</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseUseClause" checked>
+                                <label for="leaseUseClause">Permitted Use of the Property</label>
+                            </div>
+                            <div class="clause-detail" id="leaseUseDetail">
+                                <input type="text" id="leaseUse" placeholder="E.g. residential, office, retail" autocapitalize="none" aria-label="Permitted use of the property">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseSubletClause" checked>
+                                <label for="leaseSubletClause">No Subletting or Assignment</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseMaintenanceClause" checked>
+                                <label for="leaseMaintenanceClause">Maintenance and Repairs</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseNoticeClause" checked>
+                                <label for="leaseNoticeClause">Termination and Notice</label>
+                            </div>
+                            <div class="clause-detail" id="leaseNoticeDetail">
+                                <label for="leaseNotice">Notice period in days</label>
+                                <input type="number" id="leaseNotice" placeholder="Notice period in days" min="1" value="60" inputmode="numeric" aria-label="Notice period in days">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="leaseInventoryClause" checked>
+                                <label for="leaseInventoryClause">Move-In Checklist and Return of the Property</label>
+                            </div>
+                        </div>
+                        <div class="clause-set" data-types="compravendita">
+                            <p class="section-subtitle" style="margin-bottom:16px">Always included: goods, price and payment, delivery, transfer of title and risk.</p>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="saleWarrantyClause" checked>
+                                <label for="saleWarrantyClause">Warranty Against Defects</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="saleConditionClause" checked>
+                                <label for="saleConditionClause">Condition of the Goods — Inspected and accepted</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="saleWithdrawalClause">
+                                <label for="saleWithdrawalClause">Returns and Cancellation by the Buyer</label>
+                            </div>
+                            <div class="clause-detail" id="saleWithdrawalDetail">
+                                <label for="saleWithdrawalDays">Days after delivery</label>
+                                <input type="number" id="saleWithdrawalDays" placeholder="Days to cancel" min="1" value="14" inputmode="numeric" aria-label="Days the Buyer has to cancel">
+                            </div>
+                        </div>
+                        <div class="clause-set" data-types="prestazione collaborazione compravendita">
                         <div class="checkbox-group">
                             <input type="checkbox" id="forceClause" checked>
                             <label for="forceClause">Force Majeure</label>
+                        </div>
                         </div>
                         <div class="checkbox-group">
                             <input type="checkbox" id="jurisdictionClause" checked>
@@ -1213,11 +1334,13 @@
                         <div class="clause-detail" id="jurisdictionDetail">
                             <input type="text" id="jurisdictionCity" placeholder="E.g. New York" autocapitalize="words" aria-label="Jurisdiction city">
                         </div>
+                        <div class="clause-set" data-types="prestazione collaborazione">
                         <div class="checkbox-group">
                             <input type="checkbox" id="cancellationPenalty">
                             <label for="cancellationPenalty">Project Cancellation Fee</label>
                         </div>
                         <div class="clause-detail" id="cancellationDetail">
+                            <label for="cancellationPercent">Fee as % of the total amount</label>
                             <input type="number" id="cancellationPercent" placeholder="%" min="0" max="100" value="30" inputmode="numeric" aria-label="Cancellation fee percentage">
                         </div>
                         <div class="checkbox-group">
@@ -1229,7 +1352,9 @@
                             <label for="warrantyClause">Post-Delivery Warranty</label>
                         </div>
                         <div class="clause-detail" id="warrantyDetail">
+                            <label for="warrantyMonths">Warranty months from delivery</label>
                             <input type="number" id="warrantyMonths" placeholder="Warranty months" min="1" value="1" inputmode="numeric" aria-label="Warranty months">
+                        </div>
                         </div>
                     </div>
 
@@ -1286,6 +1411,15 @@
             .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
             .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // "YYYY-MM-DD" -> "November 1, 2026" (same style as the contract date), read as a LOCAL
+        // date: new Date('2026-11-01') is UTC midnight and printed the previous day in US time zones.
+        const fmtLongDate = iso => {
+            const p = String(iso || '').split('-').map(Number);
+            const d = p.length === 3 ? new Date(p[0], p[1] - 1, p[2]) : new Date(NaN);
+            return isNaN(d) ? '' : d.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+        };
+        // English names for the (internal, Italian) contract type keys, used in file names
+        const TYPE_NAME = {prestazione:'Service Agreement', collaborazione:'Freelance Collaboration', nda:'NDA', locazione:'Lease Agreement', compravendita:'Sale of Goods'};
 
         const templates = {
             developer: { specialty:'Web Developer', description:'Development of a complete web application with responsive frontend and robust backend. Includes hosting, maintenance and technical support for the first 3 months.' },
@@ -1297,9 +1431,9 @@
         };
 
         function nextStep() {
-            if (!validateStep(currentStep)) { showNotification('Please fill in all required fields','error'); return; }
+            if (!validateStep(currentStep)) { showNotification(validateStep.msg || 'Please fill in all required fields','error'); return; }
             saveStepData();
-            if (currentStep < 6) { currentStep++; updateUI(); }
+            if (currentStep < 6) { currentStep++; if (skipsStep(currentStep)) currentStep++; updateUI(); }
             else {
                 // saveStepData() above just saved the step-6 clauses: re-render the preview BEFORE
                 // printing, otherwise the printed contract omits every clause (they are checked by
@@ -1311,12 +1445,12 @@
                 setTimeout(() => printContract(), 700);
             }
         }
-        function previousStep() { saveStepData(); if (currentStep > 1) { currentStep--; updateUI(); } }
+        function previousStep() { saveStepData(); if (currentStep > 1) { currentStep--; if (skipsStep(currentStep)) currentStep--; updateUI(); } }
         function goToStep(step) {
             if (step === currentStep) return;
             if (step > currentStep) {
                 for (let s = currentStep; s < step; s++) {
-                    if (!validateStep(s)) { showNotification('Please fill in all required fields','error'); return; }
+                    if (!validateStep(s)) { showNotification(validateStep.msg || 'Please fill in all required fields','error'); return; }
                     saveStepData();
                     currentStep = s + 1;
                 }
@@ -1344,11 +1478,17 @@
             }
             $('prevBtn').style.display = currentStep === 1 ? 'none' : 'inline-flex';
             $('nextBtn').textContent = currentStep === 6 ? 'Complete ✓' : 'Next →';
+            syncTypeFields();
+            // on reaching step 6 save the preselected clauses right away: until a field was touched,
+            // the preview, Copy and Download TXT used to leave them out (e.g. Governing Law in the NDA)
+            if (currentStep === 6) saveStepData();
             updatePreview();
             window.scrollTo({top: 0, behavior:'smooth'});
         }
 
         function validateStep(step) {
+            // specific message for the caller (it used to be overwritten at once by the generic one)
+            validateStep.msg = '';
             if (step === 1) {
                 if (!formData.contractType) {
                     document.querySelectorAll('#contractTypeGrid .card').forEach(c => c.classList.add('error'));
@@ -1358,7 +1498,10 @@
             }
             const section = document.querySelector(`.form-section[data-step="${step}"]`);
             if (!section) return true;
-            const fields = section.querySelectorAll('[required]');
+            // the NDA text uses nothing from the compensation step: do not force a made-up amount
+            if (step === 5 && formData.contractType === 'nda') { section.querySelectorAll('.error').forEach(f => f.classList.remove('error')); return true; }
+            // fields hidden because they do not apply to the chosen type are not required
+            const fields = [...section.querySelectorAll('[required]')].filter(f => !f.closest('[hidden]'));
             let valid = true, firstInvalid = null;
             fields.forEach(f => {
                 const val = f.value.trim();
@@ -1367,14 +1510,16 @@
                 if (bad) { f.classList.add('error'); valid = false; if (!firstInvalid) firstInvalid = f; }
                 else f.classList.remove('error');
             });
-            if (step === 4 && valid) {
+            if (step === 4 && valid && !$('startDate').closest('[hidden]') && !$('endDate').closest('[hidden]')) {
                 const s = $('startDate').value, e = $('endDate').value;
                 if (s && e && new Date(e) < new Date(s)) {
                     $('endDate').classList.add('error');
-                    showNotification('Delivery date must be after the start date','error');
+                    validateStep.msg = 'Delivery date must be after the start date';
                     return false;
                 }
             }
+            // every required field is filled, so the problem is the email format
+            if (!valid && ![...fields].some(f => !f.value.trim())) validateStep.msg = 'Please enter a valid email address';
             if (firstInvalid) firstInvalid.focus({preventScroll:true});
             return valid;
         }
@@ -1382,9 +1527,82 @@
         function saveStepData() {
             if (currentStep === 2) formData.freelancer = { name:$('freelancerName').value, taxId:$('freelancerTaxId').value, address:$('freelancerAddress').value, email:$('freelancerEmail').value, phone:$('freelancerPhone').value, specialty:$('freelancerSpecialty').value };
             else if (currentStep === 3) formData.client = { name:$('clientName').value, taxId:$('clientTaxId').value, address:$('clientAddress').value, email:$('clientEmail').value, contact:$('clientContact').value };
-            else if (currentStep === 4) formData.project = { title:$('projectTitle').value, description:$('projectDescription').value, deliverables, startDate:$('startDate').value, endDate:$('endDate').value, revisions:$('revisions').value, revisionPrice:$('revisionPrice').value, milestones };
-            else if (currentStep === 5) formData.conditions = { compensationType:$('compensationType').value, totalAmount:$('totalAmount').value, hourlyRate:$('hourlyRate').value, paymentMethod:$('paymentMethod').value, paymentTiming:$('paymentTiming').value, latePenalty:$('latePenalty').value, graceDays:$('graceDays').value, expensesReimbursable:$('expensesReimbursable').checked, expensesDescription:$('expensesDescription').value };
-            else if (currentStep === 6) formData.clauses = { ipClause:$('ipClause').checked, confidenceClause:$('confidenceClause').checked, nonCompeteClause:$('nonCompeteClause').checked, nonCompeteMonths:$('nonCompeteMonths').value, resolutionClause:$('resolutionClause').checked, resolutionDays:$('resolutionDays').value, forceClause:$('forceClause').checked, jurisdictionClause:$('jurisdictionClause').checked, jurisdictionCity:$('jurisdictionCity').value, cancellationPenalty:$('cancellationPenalty').checked, cancellationPercent:$('cancellationPercent').value, exclusivityClause:$('exclusivityClause').checked, warrantyClause:$('warrantyClause').checked, warrantyMonths:$('warrantyMonths').value };
+            else if (currentStep === 4) formData.project = { title:$('projectTitle').value, description:$('projectDescription').value, deliverables, startDate:$('startDate').value, endDate:$('endDate').value, revisions:$('revisions').value, revisionPrice:$('revisionPrice').value, milestones, leaseMonths:$('leaseMonths').value };
+            else if (currentStep === 5) formData.conditions = { compensationType:$('compensationType').value, totalAmount:$('totalAmount').value, hourlyRate:$('hourlyRate').value, paymentMethod:$('paymentMethod').value, paymentTiming:$('paymentTiming').value, latePenalty:$('latePenalty').value, graceDays:$('graceDays').value, expensesReimbursable:$('expensesReimbursable').checked, expensesDescription:$('expensesDescription').value, leasePayDay:$('leasePayDay').value };
+            else if (currentStep === 6) formData.clauses = { ipClause:$('ipClause').checked, confidenceClause:$('confidenceClause').checked, nonCompeteClause:$('nonCompeteClause').checked, nonCompeteMonths:$('nonCompeteMonths').value, resolutionClause:$('resolutionClause').checked, resolutionDays:$('resolutionDays').value, forceClause:$('forceClause').checked, jurisdictionClause:$('jurisdictionClause').checked, jurisdictionCity:$('jurisdictionCity').value, cancellationPenalty:$('cancellationPenalty').checked, cancellationPercent:$('cancellationPercent').value, exclusivityClause:$('exclusivityClause').checked, warrantyClause:$('warrantyClause').checked, warrantyMonths:$('warrantyMonths').value,
+                // NDA / lease / sale clauses (keys added; the existing ones are unchanged)
+                ndaDurationClause:$('ndaDurationClause').checked, ndaYears:$('ndaYears').value, ndaReturnClause:$('ndaReturnClause').checked, ndaNoLicenseClause:$('ndaNoLicenseClause').checked, ndaPenaltyClause:$('ndaPenaltyClause').checked, ndaPenaltyAmount:$('ndaPenaltyAmount').value,
+                leaseDepositClause:$('leaseDepositClause').checked, leaseDepositMonths:$('leaseDepositMonths').value, leaseChargesClause:$('leaseChargesClause').checked, leaseUseClause:$('leaseUseClause').checked, leaseUse:$('leaseUse').value, leaseSubletClause:$('leaseSubletClause').checked, leaseMaintenanceClause:$('leaseMaintenanceClause').checked, leaseNoticeClause:$('leaseNoticeClause').checked, leaseNotice:$('leaseNotice').value, leaseInventoryClause:$('leaseInventoryClause').checked,
+                saleWarrantyClause:$('saleWarrantyClause').checked, saleConditionClause:$('saleConditionClause').checked, saleWithdrawalClause:$('saleWithdrawalClause').checked, saleWithdrawalDays:$('saleWithdrawalDays').value };
+        }
+
+        // Step 2-5 texts for NDA, lease and sale ("selector" or "selector@attribute").
+        // The freelance types use the original HTML texts, saved in data-orig on the first change.
+        const TYPE_TEXT = (() => {
+            const party = { 'label[for="freelancerName"]':'Name / Company Name' };
+            return {
+                nda: Object.assign({}, party, {
+                    '.step-node[data-step="2"] .step-label':'Disclosing Party', '.step-node[data-step="2"]@aria-label':'Step 2: Disclosing Party',
+                    '.step-node[data-step="3"] .step-label':'Receiving Party', '.step-node[data-step="3"]@aria-label':'Step 3: Receiving Party',
+                    '.step-node[data-step="4"] .step-label':'Purpose', '.step-node[data-step="4"]@aria-label':'Step 4: Purpose',
+                    '.step-node[data-step="6"]@aria-label':'Step 5: Clauses',
+                    '.form-section[data-step="2"] > .section-title':'Disclosing Party Details', '.form-section[data-step="2"] > .section-subtitle':'The party sharing the confidential information',
+                    '.form-section[data-step="3"] > .section-title':'Receiving Party Details', '.form-section[data-step="3"] > .section-subtitle':'The party receiving the confidential information',
+                    '.form-section[data-step="4"] > .section-title':'Purpose of the Agreement', '.form-section[data-step="4"] > .section-subtitle':'The relationship for which confidential information is shared, and the effective date',
+                    'label[for="projectTitle"]':'Purpose of the Relationship', '#projectTitle@placeholder':'E.g. Evaluation of a business partnership',
+                    'label[for="projectDescription"]':'Confidential Information', '#projectDescription@placeholder':'E.g. business plans, price lists, source code, customer data...',
+                    'label[for="startDate"]':'Effective Date'
+                }),
+                locazione: Object.assign({}, party, {
+                    '.step-node[data-step="2"] .step-label':'Landlord', '.step-node[data-step="2"]@aria-label':'Step 2: Landlord',
+                    '.step-node[data-step="3"] .step-label':'Tenant', '.step-node[data-step="3"]@aria-label':'Step 3: Tenant',
+                    '.step-node[data-step="4"] .step-label':'Property', '.step-node[data-step="4"]@aria-label':'Step 4: Property',
+                    '.step-node[data-step="5"] .step-label':'Rent', '.step-node[data-step="5"]@aria-label':'Step 5: Rent',
+                    '.form-section[data-step="2"] > .section-title':'Landlord Details', '.form-section[data-step="2"] > .section-subtitle':'The owner or party leasing the property',
+                    '.form-section[data-step="3"] > .section-title':'Tenant Details', '.form-section[data-step="3"] > .section-subtitle':'The party renting the property',
+                    '.form-section[data-step="4"] > .section-title':'Property Details', '.form-section[data-step="4"] > .section-subtitle':'Address, description, start date and length of the lease',
+                    '.form-section[data-step="5"] > .section-title':'Rent', '.form-section[data-step="5"] > .section-subtitle':'Monthly rent, due day and payment method',
+                    'label[for="projectTitle"]':'Property Address', '#projectTitle@placeholder':'E.g. 10 Elm St, Apt 2, Boston, MA 02108',
+                    'label[for="projectDescription"]':'Property Description', '#projectDescription@placeholder':'E.g. two-bedroom apartment on the second floor, with one parking space...',
+                    'label[for="startDate"]':'Lease Start Date',
+                    'label[for="totalAmount"]':'Monthly Rent ($)', '#totalAmount@placeholder':'1500'
+                }),
+                compravendita: Object.assign({}, party, {
+                    '.step-node[data-step="2"] .step-label':'Seller', '.step-node[data-step="2"]@aria-label':'Step 2: Seller',
+                    '.step-node[data-step="3"] .step-label':'Buyer', '.step-node[data-step="3"]@aria-label':'Step 3: Buyer',
+                    '.step-node[data-step="4"] .step-label':'Goods', '.step-node[data-step="4"]@aria-label':'Step 4: Goods',
+                    '.step-node[data-step="5"] .step-label':'Price', '.step-node[data-step="5"]@aria-label':'Step 5: Price',
+                    '.form-section[data-step="2"] > .section-title':'Seller Details', '.form-section[data-step="2"] > .section-subtitle':'The party selling the goods',
+                    '.form-section[data-step="3"] > .section-title':'Buyer Details', '.form-section[data-step="3"] > .section-subtitle':'The party buying the goods',
+                    '.form-section[data-step="4"] > .section-title':'Goods Details', '.form-section[data-step="4"] > .section-subtitle':'Describe the goods sold and the delivery date',
+                    '.form-section[data-step="5"] > .section-title':'Price and Payment', '.form-section[data-step="5"] > .section-subtitle':'Sale price, payment method and schedule',
+                    'label[for="projectTitle"]':'Goods Sold', '#projectTitle@placeholder':'E.g. 2019 Ford Transit van',
+                    'label[for="projectDescription"]':'Description and Features', '#projectDescription@placeholder':'E.g. serial number or VIN, mileage, included accessories...',
+                    'label[for="totalAmount"]':'Sale Price ($)', '#totalAmount@placeholder':'12500'
+                })
+            };
+        })();
+        const TYPE_TEXT_KEYS = [...new Set(Object.values(TYPE_TEXT).flatMap(Object.keys))];
+        // The NDA has no financial terms: step 5 is skipped
+        function skipsStep(s) { return s === 5 && formData.contractType === 'nda'; }
+
+        // Fit the steps to the chosen type: show only the fields, groups and clauses of that type
+        // (data-types attribute) and use its texts. NDA, lease and sale used to get the freelance
+        // fields and clauses. With no type chosen yet, the freelance look (the tool's initial one) applies.
+        function syncTypeFields() {
+            const t = formData.contractType || 'prestazione', map = TYPE_TEXT[t] || {};
+            document.querySelectorAll('[data-types]').forEach(el => { el.hidden = !el.dataset.types.split(' ').includes(t); });
+            TYPE_TEXT_KEYS.forEach(k => {
+                const [sel, attr] = k.split('@');
+                document.querySelectorAll(sel).forEach(el => {
+                    const key = attr ? 'orig' + attr.replace(/-/g, '') : 'orig';
+                    if (el.dataset[key] === undefined) el.dataset[key] = attr ? (el.getAttribute(attr) || '') : el.textContent;
+                    const v = map[k] !== undefined ? map[k] : el.dataset[key];
+                    if (attr) el.setAttribute(attr, v); else el.textContent = v;
+                });
+            });
+            // NDA: step 5 is hidden, so Clauses is the 5th circle (the last one is never "completed")
+            document.querySelector('.step-node[data-step="6"] .step-circle').textContent = skipsStep(5) ? 5 : 6;
         }
 
         function addDeliverable() {
@@ -1411,7 +1629,7 @@
         function removeMilestone(i) { milestones.splice(i,1); renderMilestones(); updatePreview(); }
         function renderMilestones() {
             const list=$('milestoneList'), total=milestones.reduce((s,m)=>s+m.percent,0);
-            list.innerHTML = milestones.map((m,i) => `<div class="dynamic-item"><span>${escapeHtml(m.desc)} — ${new Date(m.date).toLocaleDateString('en-US')} — ${m.percent}%</span><button type="button" class="remove-btn" onclick="removeMilestone(${i})" aria-label="Remove milestone">Remove</button></div>`).join('');
+            list.innerHTML = milestones.map((m,i) => `<div class="dynamic-item"><span>${escapeHtml(m.desc)} — ${fmtLongDate(m.date)} — ${m.percent}%</span><button type="button" class="remove-btn" onclick="removeMilestone(${i})" aria-label="Remove milestone">Remove</button></div>`).join('');
             if (milestones.length) list.innerHTML += `<div class="milestone-total">Total: ${total}%</div>`;
             updatePreview();
         }
@@ -1424,6 +1642,7 @@
                     document.querySelectorAll('#contractTypeGrid .card').forEach(x => { x.classList.remove('selected','error'); x.setAttribute('aria-checked','false'); });
                     this.classList.add('selected'); this.setAttribute('aria-checked','true');
                     formData.contractType = this.dataset.value;
+                    syncTypeFields(); // step bar labels match the type right away
                     updatePreview();
                 };
                 c.addEventListener('click', select);
@@ -1445,6 +1664,8 @@
             document.querySelectorAll('.template-btn').forEach(b => b.addEventListener('click', function() {
                 const t = templates[this.dataset.template];
                 $('freelancerSpecialty').value = t.specialty;
+                // the field belongs to step 2, which is not re-saved from here: keep the preview in sync
+                if (formData.freelancer) formData.freelancer.specialty = t.specialty;
                 $('projectDescription').value = t.description;
                 $('projectDescription').classList.remove('error');
                 document.querySelectorAll('.template-btn').forEach(x => x.classList.remove('used'));
@@ -1454,7 +1675,7 @@
             }));
 
             // Clause toggles → show detail
-            const toggles = {expensesReimbursable:'expensesDetail',nonCompeteClause:'nonCompeteDetail',resolutionClause:'resolutionDetail',jurisdictionClause:'jurisdictionDetail',cancellationPenalty:'cancellationDetail',warrantyClause:'warrantyDetail'};
+            const toggles = {expensesReimbursable:'expensesDetail',nonCompeteClause:'nonCompeteDetail',resolutionClause:'resolutionDetail',jurisdictionClause:'jurisdictionDetail',cancellationPenalty:'cancellationDetail',warrantyClause:'warrantyDetail',ndaDurationClause:'ndaDurationDetail',ndaPenaltyClause:'ndaPenaltyDetail',leaseDepositClause:'leaseDepositDetail',leaseUseClause:'leaseUseDetail',leaseNoticeClause:'leaseNoticeDetail',saleWithdrawalClause:'saleWithdrawalDetail'};
             Object.entries(toggles).forEach(([cbId, detailId]) => {
                 const cb = $(cbId), detail = $(detailId);
                 const sync = () => { detail.style.display = cb.checked ? 'block' : 'none'; };
@@ -1478,7 +1699,7 @@
           prestazione: {
             title:"SERVICE AGREEMENT",
             roleA:"the Provider", roleB:"the Client", sigA:"The Provider", sigB:"The Client",
-            whereas:x=>`The Provider carries out independent professional activity${x.f.specialty?' as a '+x.e(x.f.specialty):''} and the Client wishes to engage the Provider for the project <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            whereas:x=>`The Provider carries out independent professional activity${x.f.specialty?' as '+(/^[aeio]/i.test(x.f.specialty)?'an ':'a ')+x.e(x.f.specialty):''} and the Client wishes to engage the Provider for the project <strong>${x.e(x.p.title)||'—'}</strong>.`,
             core:x=>{const a=[];
               a.push({t:`Scope of Services`,c:`The Provider agrees to perform the following services: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Deliverables:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
               a.push({t:`Manner of Performance and Independence`,c:`The Provider performs the services in full organizational and technical autonomy, without any relationship of subordination, using its own means and without fixed hours, coordinating with the Client only as to the required results.`});
@@ -1491,7 +1712,7 @@
           collaborazione: {
             title:"FREELANCE COLLABORATION AGREEMENT",
             roleA:"the Freelancer", roleB:"the Client", sigA:"The Freelancer", sigB:"The Client",
-            whereas:x=>`The Freelancer is an independent professional operating under its own business registration${x.f.specialty?' in '+x.e(x.f.specialty):''} and the Client wishes to engage the Freelancer on an ongoing, coordinated basis for <strong>${x.e(x.p.title)||'—'}</strong>.`,
+            whereas:x=>`The Freelancer is an independent professional operating under its own business registration${x.f.specialty?' as '+(/^[aeio]/i.test(x.f.specialty)?'an ':'a ')+x.e(x.f.specialty):''} and the Client wishes to engage the Freelancer on an ongoing, coordinated basis for <strong>${x.e(x.p.title)||'—'}</strong>.`,
             core:x=>{const a=[];
               a.push({t:`Purpose of the Collaboration`,c:`The Freelancer will provide the following activities: ${x.e(x.p.description)||'—'}${x.deliverables.length?'<br><br><strong>Planned activities:</strong><ul>'+x.deliverables.map(d=>`<li>${x.e(d)}</li>`).join('')+'</ul>':''}`});
               a.push({t:`Independent Nature of the Relationship`,c:`This agreement does not create any employment relationship. The Freelancer acts independently, under its own business registration, freely managing time, place and manner of performance, and remains solely responsible for its own taxes and social contributions.`});
@@ -1505,12 +1726,20 @@
             roleA:"the Disclosing Party", roleB:"the Receiving Party", sigA:"The Disclosing Party", sigB:"The Receiving Party",
             whereas:x=>`The parties wish to start or continue a relationship in connection with <strong>${x.e(x.p.title)||'—'}</strong> and, for that purpose, the Disclosing Party may share confidential information with the Receiving Party that requires protection.`,
             core:x=>{const a=[];
-              a.push({t:`Definition of Confidential Information`,c:`"Confidential Information" means any information, in any form, disclosed by the Disclosing Party — including technical, commercial, financial data, know-how, plans and personal data${x.p.description?' relating to: '+x.e(x.p.description):''}.`});
+              a.push({t:`Definition of Confidential Information`,c:`"Confidential Information" means any information, in any form, disclosed by the Disclosing Party — including technical, commercial, financial data, know-how, plans and personal data${x.p.description?' relating to: '+x.e(x.p.description.replace(/[\s.]+$/,'')):''}.`});
+              a.push({t:`Purpose and Permitted Use`,c:`The Receiving Party shall use the Confidential Information solely for the purpose stated above and may share it only with its employees, contractors and advisers who need to know it for that purpose and are bound by confidentiality obligations at least as strict as those in this agreement. The Receiving Party is responsible for any breach by those persons.`});
               a.push({t:`Confidentiality Obligations`,c:`The Receiving Party agrees to keep the Confidential Information secret, to use it solely for the purposes stated above, and not to disclose it to third parties without the prior written consent of the Disclosing Party, applying protective measures no less than those used for its own confidential information.`});
               a.push({t:`Exclusions`,c:`Information is not confidential if it: (a) is in the public domain through no fault of the Receiving Party; (b) was already lawfully known; (c) is independently developed; or (d) must be disclosed by law or order of an authority, with notice to the Disclosing Party where possible.`});
-              a.push({t:`Duration of the Obligations`,c:`The confidentiality obligations remain in force ${x.p.endDate?'until '+x.fmtDate(x.p.endDate):'for 5 (five) years'} from disclosure of the Confidential Information, and survive termination of the relationship between the parties.`});
-              a.push({t:`Return and Destruction`,c:`At the Disclosing Party's request, the Receiving Party will return or destroy all media containing Confidential Information, including copies.`});
-              a.push({t:`No License`,c:`This agreement transfers no intellectual property right and grants no license over the Confidential Information, which remains owned by the Disclosing Party.`});
+              if(x.p.startDate) a.push({t:`Effective Date`,c:`This agreement is effective as of ${x.fmtDate(x.p.startDate)}.`});
+              // Step-6 clauses (checked by default: they apply until the user unchecks them).
+              // The term used to come from the Delivery Date ("until October 31, 2027 from disclosure"): now in years.
+              const yrs=x.e(x.cl.ndaYears)||'5', pen=parseFloat(x.cl.ndaPenaltyAmount);
+              if(x.cl.ndaDurationClause!==false) a.push({t:`Duration of the Obligations`,c:`The confidentiality obligations remain in force for ${yrs} ${parseFloat(yrs)===1?'year':'years'} from disclosure of the Confidential Information, and survive termination of the relationship between the parties.`});
+              if(x.cl.ndaReturnClause!==false) a.push({t:`Return and Destruction`,c:`At the Disclosing Party's request, the Receiving Party will return or destroy all media containing Confidential Information, including copies.`});
+              if(x.cl.ndaNoLicenseClause!==false) a.push({t:`No License`,c:`This agreement transfers no intellectual property right and grants no license over the Confidential Information, which remains owned by the Disclosing Party.`});
+              if(x.cl.ndaPenaltyClause!==false) a.push(pen>0
+                ? {t:`Liquidated Damages and Injunctive Relief`,c:`If the Receiving Party breaches this agreement, it shall pay the Disclosing Party <strong>${x.fmtEur(pen)}</strong> as liquidated damages. The parties agree that this amount is a reasonable estimate of harm that would be difficult to calculate, and is not a penalty. Because a breach may cause harm that money alone cannot repair, the Disclosing Party may also seek an injunction to stop or prevent any breach.`}
+                : {t:`Remedies`,c:`The Receiving Party shall be liable for all damages caused by its breach of this agreement. Because a breach may cause harm that money alone cannot repair, the Disclosing Party may also seek an injunction to stop or prevent any breach, in addition to any other remedy available by law.`});
               return a;}
           },
           locazione: {
@@ -1518,13 +1747,26 @@
             roleA:"the Landlord", roleB:"the Tenant", sigA:"The Landlord", sigB:"The Tenant",
             whereas:x=>`The Landlord has the availability of the property located at <strong>${x.e(x.p.title)||'—'}</strong> and wishes to lease it to the Tenant, who accepts.`,
             core:x=>{const a=[];
-              a.push({t:`Premises`,c:`The Landlord leases to the Tenant the property located at ${x.e(x.p.title)||'—'}${x.p.description?`, described as: ${x.e(x.p.description)}`:''}. The property is delivered in its current condition of fact and law.`});
-              a.push({t:`Term`,c:`The lease runs from ${x.fmtDate(x.p.startDate)} to ${x.fmtDate(x.p.endDate)}, renewable in accordance with applicable law unless terminated within the required notice period.`});
-              a.push({t:`Rent and Payment`,c:`The rent is <strong>${x.co.totalAmount?x.fmtEur(x.co.totalAmount):'—'}</strong> per month${x.co.paymentMethod?', payable by '+({bonifico:'bank transfer',paypal:'PayPal',assegno:'check',altro:'traceable means'}[x.co.paymentMethod]||'traceable means'):''}, in advance by the agreed day of each month.`});
-              a.push({t:`Security Deposit`,c:`As security for the contractual obligations the Tenant pays a security deposit, not applied to rent, refunded at the end of the lease after inspection of the property.`});
-              a.push({t:`Charges and Utilities`,c:`Ordinary charges and utilities are borne by the Tenant; extraordinary expenses remain with the Landlord, unless otherwise agreed in writing.`});
-              a.push({t:`Use of the Property`,c:`The Tenant shall use the property with due care, without changing its intended use. Subletting or assignment of the lease without the Landlord's written consent is prohibited.`});
-              a.push({t:`Maintenance and Return`,c:`Ordinary maintenance is borne by the Tenant, extraordinary maintenance by the Landlord. At the end the Tenant shall return the property in the condition received, except for normal wear and tear.`});
+              // step 5-6 values; before reaching them the field defaults apply (1st of the month, 1 month)
+              const day=parseInt(x.co.leasePayDay===undefined?'1':x.co.leasePayDay,10), sfx=['th','st','nd','rd'], v=day%100;
+              const dueDay=day>=1&&day<=31?`on or before the ${day}${sfx[(v-20)%10]||sfx[v]||sfx[0]} day`:'by the agreed day';
+              const dm=x.cl.leaseDepositMonths===undefined?1:parseFloat(x.cl.leaseDepositMonths), rent=parseFloat(x.co.totalAmount);
+              const use=x.e(x.cl.leaseUse).trim(), ntc=x.e(x.cl.leaseNotice)||'60';
+              // lease term in months from step 4 (replaces the Delivery Date): end = start + months - 1 day
+              const mon=parseInt(x.p.leaseMonths,10), sd=String(x.p.startDate||'').split('-').map(Number);
+              let endIso=x.p.endDate, durStr='';
+              if(mon>0){ durStr=mon%12===0?(mon===12?'one year':`${mon/12} years`):(mon===1?'one month':`${mon} months`);
+                if(sd.length===3&&sd[0]){ const d=new Date(sd[0],sd[1]-1+mon,sd[2]-1); endIso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; } }
+              a.push({t:`Premises`,c:`The Landlord leases to the Tenant the property located at ${x.e(x.p.title)||'—'}${x.p.description?`, described as: ${x.e(x.p.description.replace(/[\s.]+$/,''))}`:''}. The property is delivered in its current condition of fact and law.`});
+              a.push({t:`Term`,c:`${durStr?`The lease term is ${durStr}, running`:'The lease runs'} from ${x.fmtDate(x.p.startDate)} to ${x.fmtDate(endIso)}, renewable in accordance with applicable law unless terminated within the required notice period.`});
+              a.push({t:`Rent and Payment`,c:`The rent is <strong>${x.co.totalAmount?x.fmtEur(x.co.totalAmount):'—'}</strong> per month${x.co.paymentMethod?', payable by '+({bonifico:'bank transfer',paypal:'PayPal',assegno:'check',altro:'traceable means'}[x.co.paymentMethod]||'traceable means'):''}, in advance ${dueDay} of each month.`});
+              if(x.cl.leaseDepositClause!==false) a.push({t:`Security Deposit`,c:`As security for the Tenant's obligations, the Tenant shall pay the Landlord, upon signing, a security deposit${dm>0?` equal to ${dm===1?"one month's rent":dm.toLocaleString('en-US')+" months' rent"}${rent>0?` (${x.fmtEur(rent*dm)})`:''}`:''}. The deposit shall not be applied toward rent and will be returned, less any lawful deductions for unpaid amounts or damage beyond normal wear and tear, within the time required by applicable law after the Tenant moves out.`});
+              if(x.cl.leaseChargesClause!==false) a.push({t:`Charges and Utilities`,c:`Ordinary charges and utilities are borne by the Tenant; extraordinary expenses remain with the Landlord, unless otherwise agreed in writing.`});
+              if(x.cl.leaseUseClause!==false) a.push({t:`Use of the Property`,c:`${use?`The property may be used solely for the following purpose: <strong>${use}</strong>. `:''}The Tenant shall use the property with due care and shall not change its intended use without the Landlord's written consent.`});
+              if(x.cl.leaseSubletClause!==false) a.push({t:`No Subletting or Assignment`,c:`The Tenant may not sublet all or part of the property, assign this lease, or allow anyone else to occupy the property without the Landlord's prior written consent.`});
+              if(x.cl.leaseMaintenanceClause!==false) a.push({t:`Maintenance and Repairs`,c:`The Tenant shall keep the property clean and in good condition and shall pay for minor repairs and for any damage caused by the Tenant or the Tenant's guests. The Landlord is responsible for major repairs and for keeping the property fit for its intended use as required by law. The Tenant shall promptly notify the Landlord of any needed repairs and shall not make alterations without the Landlord's written consent.`});
+              if(x.cl.leaseNoticeClause!==false) a.push({t:`Termination and Notice`,c:`Either party may end this lease at the end of the term by giving the other party at least ${ntc} ${parseFloat(ntc)===1?"day's":"days'"} written notice. The Tenant may also end the lease early by giving the Landlord at least ${ntc} ${parseFloat(ntc)===1?"day's":"days'"} written notice. The Landlord may end the lease early only as permitted by applicable law.`});
+              if(x.cl.leaseInventoryClause!==false) a.push({t:`Move-In Checklist and Return of the Property`,c:`At move-in the parties shall inspect the property together and sign a written checklist of its condition, listing any furniture and appliances, which forms part of this lease. At the end of the lease the Tenant shall return the property and all keys in the condition shown on that checklist, except for normal wear and tear.`});
               return a;}
           },
           compravendita: {
@@ -1532,12 +1774,14 @@
             roleA:"the Seller", roleB:"the Buyer", sigA:"The Seller", sigB:"The Buyer",
             whereas:x=>`The Seller declares to be the lawful owner of the goods covered by this agreement and wishes to sell them to the Buyer, who wishes to purchase them: <strong>${x.e(x.p.title)||'—'}</strong>.`,
             core:x=>{const a=[];
-              a.push({t:`Goods`,c:`The Seller sells and transfers to the Buyer the following goods: ${x.e(x.p.title)||'—'}${x.p.description?` — ${x.e(x.p.description)}`:''}.`});
+              a.push({t:`Goods`,c:`The Seller sells and transfers to the Buyer the following goods: ${x.e(x.p.title)||'—'}${x.p.description?` — ${x.e(x.p.description.replace(/[\s.]+$/,''))}`:''}.`});
               a.push({t:`Price and Payment`,c:`The sale price is <strong>${x.co.totalAmount?x.fmtEur(x.co.totalAmount):'—'}</strong>${x.co.paymentMethod?', paid by '+({bonifico:'bank transfer',paypal:'PayPal',assegno:'check',altro:'agreed means'}[x.co.paymentMethod]||'agreed means'):''}${x.co.paymentTiming?' ('+({'100-0':'100% upfront','50-50':'50% deposit + 50% on delivery','30-40-30':'30% + 40% + 30%',consegna:'on delivery',personalizzato:'per agreement'}[x.co.paymentTiming]||'')+')':''}.`});
               if(x.p.startDate||x.p.endDate) a.push({t:`Delivery`,c:`The goods shall be delivered by ${x.fmtDate(x.p.endDate||x.p.startDate)} at the place agreed by the parties.`});
               a.push({t:`Transfer of Title and Risk`,c:`Title passes to the Buyer upon full payment of the price. Risk of loss or damage passes to the Buyer upon delivery of the goods.`});
-              a.push({t:`Warranty Against Defects`,c:`The Seller warrants that the goods are free from defects that make them unfit for use or appreciably reduce their value. The Buyer must report any defects within the terms provided by applicable law.`});
-              a.push({t:`Condition of the Goods`,c:`The Buyer declares to have examined the goods and to accept them in their current condition, deeming them fit for the intended use.`});
+              // step-6 clauses (warranty and condition checked by default, returns not)
+              if(x.cl.saleWarrantyClause!==false) a.push({t:`Warranty Against Defects`,c:`The Seller warrants that the goods are free from defects that make them unfit for use or appreciably reduce their value. The Buyer must report any defects within the terms provided by applicable law.`});
+              if(x.cl.saleConditionClause!==false) a.push({t:`Condition of the Goods`,c:`The Buyer declares to have examined the goods and to accept them in their current condition, deeming them fit for the intended use.`});
+              if(x.cl.saleWithdrawalClause) a.push({t:`Returns and Cancellation`,c:`The Buyer may cancel this sale within ${x.e(x.cl.saleWithdrawalDays)||'14'} days after delivery by notifying the Seller in writing and returning the goods unused, in their original condition and, where possible, in their original packaging. Return shipping costs are paid by the Buyer unless the goods are defective. The Seller shall refund the price within 14 days after receiving the returned goods.`});
               return a;}
           }
         };
@@ -1555,8 +1799,9 @@
             bottomBar.style.display = 'flex';
             const tpl = CT[contractType] || CT.prestazione;
             const today = new Date().toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
-            const fmtDate = d => d ? new Date(d).toLocaleDateString('en-US') : 'TBD';
-            const fmtEur = v => '€ ' + parseFloat(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+            const fmtDate = d => fmtLongDate(d) || 'TBD';
+            // US dollars (name kept: the contract templates call x.fmtEur)
+            const fmtEur = v => { const n = parseFloat(v) || 0; return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); };
             const compLabel = {fisso:'Fixed Amount', orario:'Hourly Rate', milestone:'Per Milestone'};
             const payLabel = {bonifico:'Bank Transfer', paypal:'PayPal', assegno:'Check', altro:'Other'};
             const timingLabel = {'100-0':'100% upfront','50-50':'50% deposit + 50% on delivery','30-40-30':'30% + 40% + 30%',consegna:'On delivery',personalizzato:'Custom'};
@@ -1580,19 +1825,29 @@
             h += `<div class="preview-section"><h3>Whereas</h3><p>${tpl.whereas(x)}</p></div>`;
             let n = 1;
             tpl.core(x).forEach(art => { h += `<div class="article"><div class="article-title">Art. ${n++} — ${art.t}</div><div class="article-content">${art.c}</div></div>`; });
-            // The optional clauses below use the freelance party roles (Client/Contractor) and
+            // The optional clauses below use the freelance party roles (tpl.roleA = the Provider /
+            // the Freelancer, as defined at the top; "the Contractor" was never defined) and
             // service-specific wording: render them only for the freelance types, otherwise they
             // wrongly appear in Lease/Sale/NDA contracts.
+            // The NDA / lease / sale clauses live in CT[type].core; generic confidentiality is only for the
+            // freelance types (the NDA has its own) and force majeure does not fit the NDA or the lease.
+            // These groups match the data-types of the step-6 .clause-set blocks.
             const isFreelance = contractType==='prestazione'||contractType==='collaborazione';
-            if (cl.ipClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Intellectual Property</div><div class="article-content">All work and materials developed under this agreement shall become the exclusive property of the Client upon full payment of the agreed amount. The Contractor assigns all copyright and intellectual property rights related to the work performed.</div></div>`;
-            if (cl.confidenceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Confidentiality</div><div class="article-content">The parties agree to maintain strict confidentiality regarding any confidential information exchanged during the performance of this agreement. Such information shall not be disclosed to third parties without prior written consent, except as required by law.</div></div>`;
-            if (cl.nonCompeteClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Non-Compete</div><div class="article-content">During the term of this agreement and for the following ${e(cl.nonCompeteMonths)||'12'} months, the Contractor agrees not to provide similar services to direct competitors of the Client in relation to the subject matter of this agreement.</div></div>`;
-            if (cl.resolutionClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Early Termination</div><div class="article-content">Either party may terminate this agreement by providing ${e(cl.resolutionDays)||'30'} days' written notice. In the event of termination by the Client, the Contractor shall be entitled to compensation for work already performed as of the effective date of termination.</div></div>`;
-            if (cl.forceClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Force Majeure</div><div class="article-content">Neither party shall be liable for any failure to perform caused by force majeure events, defined as unforeseeable and unavoidable circumstances that render the performance of contractual obligations impossible.</div></div>`;
-            if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Governing Law and Jurisdiction</div><div class="article-content">Any dispute arising out of this agreement shall be subject to the exclusive jurisdiction of the courts of ${e(cl.jurisdictionCity)||'New York'}.</div></div>`;
-            if (cl.cancellationPenalty && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Cancellation Fee</div><div class="article-content">In the event of project cancellation by the Client, the Client shall pay the Contractor a fee equal to ${e(cl.cancellationPercent)||'30'}% of the total agreed amount.</div></div>`;
-            if (cl.exclusivityClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Exclusivity</div><div class="article-content">For the duration of this agreement, the Contractor shall dedicate the time and resources necessary for the project to the Client, agreeing not to accept competing engagements without prior written consent.</div></div>`;
-            if (cl.warrantyClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Warranty</div><div class="article-content">The Contractor warrants the delivered work for ${e(cl.warrantyMonths)||'1'} month(s) from delivery. During this period the Contractor agrees to correct any defects or malfunctions found in the delivered work at no additional cost.</div></div>`;
+            const hasForce = isFreelance || contractType==='compravendita';
+            if (cl.ipClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Intellectual Property</div><div class="article-content">All work and materials developed under this agreement shall become the exclusive property of the Client upon full payment of the agreed amount. ${tpl.sigA} assigns all copyright and intellectual property rights related to the work performed.</div></div>`;
+            if (cl.confidenceClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Confidentiality</div><div class="article-content">The parties agree to maintain strict confidentiality regarding any confidential information exchanged during the performance of this agreement. Such information shall not be disclosed to third parties without prior written consent, except as required by law.</div></div>`;
+            if (cl.nonCompeteClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Non-Compete</div><div class="article-content">During the term of this agreement and for the following ${e(cl.nonCompeteMonths)||'12'} months, ${tpl.roleA} agrees not to provide similar services to direct competitors of the Client in relation to the subject matter of this agreement.</div></div>`;
+            if (cl.resolutionClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Early Termination</div><div class="article-content">Either party may terminate this agreement by providing ${e(cl.resolutionDays)||'30'} days' written notice. In the event of termination by the Client, ${tpl.roleA} shall be entitled to compensation for work already performed as of the effective date of termination.</div></div>`;
+            if (cl.forceClause && hasForce) h += `<div class="article"><div class="article-title">Art. ${n++} — Force Majeure</div><div class="article-content">Neither party shall be liable for any failure to perform caused by force majeure events, defined as unforeseeable and unavoidable circumstances that render the performance of contractual obligations impossible.</div></div>`;
+            // Lease: the law and courts of the place where the property is. NDA and sale also name the governing law.
+            const city = e(cl.jurisdictionCity).trim();
+            const law = contractType==='locazione' ? `This lease is governed by the laws of the state where the property is located. Any dispute arising out of this lease shall be brought in the courts of ${city||'the county where the property is located'}.`
+                : (contractType==='nda'||contractType==='compravendita') ? `This agreement is governed by the laws in force in ${city||'New York'}. Any dispute arising out of this agreement shall be subject to the exclusive jurisdiction of the courts of ${city||'New York'}.`
+                : `Any dispute arising out of this agreement shall be subject to the exclusive jurisdiction of the courts of ${e(cl.jurisdictionCity)||'New York'}.`;
+            if (cl.jurisdictionClause) h += `<div class="article"><div class="article-title">Art. ${n++} — Governing Law and Jurisdiction</div><div class="article-content">${law}</div></div>`;
+            if (cl.cancellationPenalty && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Cancellation Fee</div><div class="article-content">In the event of project cancellation by the Client, the Client shall pay ${tpl.roleA} a fee equal to ${e(cl.cancellationPercent)||'30'}% of the total agreed amount.</div></div>`;
+            if (cl.exclusivityClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Exclusivity</div><div class="article-content">For the duration of this agreement, ${tpl.roleA} shall dedicate the time and resources necessary for the project to the Client, agreeing not to accept competing engagements without prior written consent.</div></div>`;
+            if (cl.warrantyClause && isFreelance) h += `<div class="article"><div class="article-title">Art. ${n++} — Warranty</div><div class="article-content">${tpl.sigA} warrants the delivered work for ${e(cl.warrantyMonths)||'1'} month(s) from delivery. During this period ${tpl.roleA} agrees to correct any defects or malfunctions found in the delivered work at no additional cost.</div></div>`;
             h += `<div class="article disclaimer" style="background:rgba(201,154,46,0.08);border:1px solid rgba(201,154,46,0.35);border-radius:8px"><div class="article-title">Disclaimer</div><div class="article-content">This document is an automatically generated template and does not constitute legal advice. Have it reviewed by a qualified professional before signing.</div><div class="disclaimer-note">ⓘ This notice is an on-screen reminder only: <strong>it will NOT appear in the downloaded PDF/contract</strong>.</div></div>`;
             h += `<div class="signature-section"><div class="signature-block"><div class="sig-label">${e(tpl.sigA)}</div><div class="sig-name">${nm(f.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div><div class="signature-block"><div class="sig-label">${e(tpl.sigB)}</div><div class="sig-name">${nm(c.name)}</div><div class="line"></div><div class="sig-sub">Signature</div><div class="sig-meta">Date ________________ Place ________________</div></div></div>`;
             previewContent.innerHTML = h;
@@ -1605,15 +1860,25 @@
             const fd = formData || {};
             const fn = (fd.freelancer && fd.freelancer.name) || '';
             const cn = (fd.client && fd.client.name) || '';
-            const fname = ['Contract', fd.contractType, fn, cn].filter(Boolean).join(' - ').replace(/[\\/:*?"<>|]/g, '_');
+            const fname = ['Contract', TYPE_NAME[fd.contractType] || fd.contractType, fn, cn].filter(Boolean).join(' - ').replace(/[\\/:*?"<>|]/g, '_');
             const oldTitle = document.title;
             document.title = fname || 'Contract';
             window.print();
             setTimeout(() => { document.title = oldTitle; }, 1200);
         }
 
+        // Text of the contract for Copy / Download TXT: the disclaimer is screen-only
+        // (hidden in print), so it must not end up in the exported contract either.
+        function contractText() {
+            const d = document.querySelector('#previewContent .disclaimer');
+            if (d) d.style.display = 'none';
+            const t = $('previewContent').innerText;
+            if (d) d.style.display = '';
+            return t;
+        }
+
         async function copyToClipboard() {
-            const text = $('previewContent').innerText;
+            const text = contractText();
             try {
                 if (navigator.clipboard && window.isSecureContext) {
                     await navigator.clipboard.writeText(text);
@@ -1631,9 +1896,9 @@
         }
 
         function downloadAsText() {
-            const blob = new Blob([$('previewContent').innerText], {type:'text/plain;charset=utf-8'});
+            const blob = new Blob([contractText()], {type:'text/plain;charset=utf-8'});
             const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = `Contract_${formData.contractType||'draft'}_${Date.now()}.txt`;
+            a.download = `Contract_${(TYPE_NAME[formData.contractType]||'draft').replace(/\s+/g,'-')}_${Date.now()}.txt`;
             document.body.appendChild(a); a.click(); a.remove();
             setTimeout(() => URL.revokeObjectURL(a.href), 1000);
             showNotification('Contract downloaded','success');
@@ -1651,7 +1916,7 @@
         }
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

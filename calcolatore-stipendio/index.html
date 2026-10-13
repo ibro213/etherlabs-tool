@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Calcolatore Stipendio Netto Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Calcolatore Stipendio Netto Pro</title>
     <style>
         :root {
             --bg: var(--el-bg);
@@ -99,6 +90,7 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             color: var(--bg);
+            -webkit-text-fill-color: currentColor; /* l'h1 ha il testo trasparente: senza questo "Pro" era invisibile */
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -422,6 +414,7 @@ button:hover {
 
         .bar-item {
             flex: 1;
+            height: 100%; /* senza altezza definita le barre in % restavano tutte alla min-height */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -724,6 +717,14 @@ button:hover {
           .btn-small { min-height: 40px; }
           input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], textarea, select { font-size: 16px; }
         }
+
+        /* Pulsante Stampa: si stampa solo il riepilogo dei risultati, nero su bianco */
+        #printArea { display: none; }
+        @media print {
+            body.print-results > *:not(#printArea) { display: none !important; }
+            body.print-results { background: #fff !important; padding: 0 !important; }
+            body.print-results #printArea { display: block !important; white-space: pre-wrap; font-family: monospace; font-size: 13px; color: #000; padding: 24px; }
+        }
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -735,6 +736,25 @@ button:hover {
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -764,8 +784,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <h3>Stipendio Lordo Annuo</h3>
                     <div class="form-group">
                         <label for="ral">RAL (€)</label>
-                        <input type="range" id="ralSlider" min="0" max="150000" step="1000" value="30000" oninput="updateRAL()">
-                        <input type="number" id="ral" min="0" step="100" value="30000" oninput="updateRAL()">
+                        <input type="range" id="ralSlider" min="0" max="150000" step="1000" value="30000" oninput="updateRAL(this)">
+                        <input type="number" id="ral" min="0" step="100" value="30000" oninput="updateRAL(this)">
                         <div class="slider-value" id="ralDisplay">€ 30.000</div>
                     </div>
                 </div>
@@ -812,6 +832,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                             <option value="liguria">Liguria</option>
                             <option value="marche">Marche</option>
                             <option value="umbria">Umbria</option>
+                            <option value="abruzzo">Abruzzo</option>
                             <option value="molise">Molise</option>
                             <option value="basilicata">Basilicata</option>
                             <option value="calabria">Calabria</option>
@@ -819,7 +840,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                             <option value="sardegna">Sardegna</option>
                             <option value="aosta">Valle d'Aosta</option>
                             <option value="friuli">Friuli-Venezia Giulia</option>
-                            <option value="trentino">Trentino-Alto Adige</option>
+                            <option value="trento">Trentino (Prov. Trento)</option>
+                            <option value="bolzano">Alto Adige (Prov. Bolzano)</option>
                         </select>
                     </div>
                 </div>
@@ -834,9 +856,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="figli">Figli a carico ≥ 21 anni</label>
+                        <label for="figli">Figli a carico da 21 a 29 anni</label>
                         <input type="number" id="figli" min="0" max="10" value="0" onchange="calculate()">
-                        <small style="color: var(--t3); display: block; margin-top: 0.35rem;">I figli sotto i 21 anni danno diritto all'Assegno Unico, non alla detrazione IRPEF.</small>
+                        <small style="color: var(--t3); display: block; margin-top: 0.35rem;">I figli sotto i 21 anni danno diritto all'Assegno Unico, non alla detrazione IRPEF. Dal 2025 la detrazione non spetta per i figli di 30 anni o più, salvo disabilità.</small>
                     </div>
                 </div>
             </div>
@@ -921,7 +943,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             <!-- Pie Chart -->
             <div class="chart-container">
-                <h3 class="chart-title">Composizione Stipendio Netto</h3>
+                <h3 class="chart-title">Dove va il tuo lordo</h3>
                 <canvas id="pieCanvas" width="400" height="400" style="max-width: 100%; display: block; margin: 0 auto;"></canvas>
             </div>
 
@@ -941,7 +963,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         <div id="confronto" class="tab-content">
             <div class="card" style="margin-bottom: 2rem;">
                 <h3>Confronta Due Scenari</h3>
-                <p style="color: var(--t2); margin-bottom: 1.5rem;">Compila i dati per due diversi scenari di stipendio e confronta i risultati</p>
+                <p style="color: var(--t2); margin-bottom: 1.5rem;">Inserisci RAL e regione di due scenari e confronta i risultati: contratto, mensilità e familiari a carico sono quelli impostati nel Calcolatore.</p>
             </div>
 
             <div class="comparison-container">
@@ -963,6 +985,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                             <option value="veneto">Veneto</option>
                             <option value="toscana">Toscana</option>
                             <option value="emilia">Emilia-Romagna</option>
+                            <option value="liguria">Liguria</option>
+                            <option value="marche">Marche</option>
+                            <option value="umbria">Umbria</option>
+                            <option value="abruzzo">Abruzzo</option>
+                            <option value="molise">Molise</option>
+                            <option value="basilicata">Basilicata</option>
+                            <option value="calabria">Calabria</option>
+                            <option value="puglia">Puglia</option>
+                            <option value="sardegna">Sardegna</option>
+                            <option value="aosta">Valle d'Aosta</option>
+                            <option value="friuli">Friuli-Venezia Giulia</option>
+                            <option value="trento">Trentino (Prov. Trento)</option>
+                            <option value="bolzano">Alto Adige (Prov. Bolzano)</option>
                         </select>
                     </div>
                     <div id="comp1Results"></div>
@@ -986,6 +1021,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                             <option value="veneto">Veneto</option>
                             <option value="toscana">Toscana</option>
                             <option value="emilia">Emilia-Romagna</option>
+                            <option value="liguria">Liguria</option>
+                            <option value="marche">Marche</option>
+                            <option value="umbria">Umbria</option>
+                            <option value="abruzzo">Abruzzo</option>
+                            <option value="molise">Molise</option>
+                            <option value="basilicata">Basilicata</option>
+                            <option value="calabria">Calabria</option>
+                            <option value="puglia">Puglia</option>
+                            <option value="sardegna">Sardegna</option>
+                            <option value="aosta">Valle d'Aosta</option>
+                            <option value="friuli">Friuli-Venezia Giulia</option>
+                            <option value="trento">Trentino (Prov. Trento)</option>
+                            <option value="bolzano">Alto Adige (Prov. Bolzano)</option>
                         </select>
                     </div>
                     <div id="comp2Results"></div>
@@ -1007,16 +1055,16 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <p><strong style="color: var(--emeraldL);">Lordo Annuo (RAL):</strong> Lo stipendio lordo dichiarato nel contratto di lavoro.</p>
                     <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Contributi INPS:</strong> 9,19% del lordo per il regime ordinario (5,84% per l'apprendistato), versati dal dipendente per la previdenza sociale.</p>
                     <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Imponibile IRPEF:</strong> Lordo meno contributi INPS.</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">IRPEF Lorda:</strong> Imposta progressiva calcolata con le aliquote 2025: 23%, 35% e 43%.</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Detrazioni:</strong> Detrazione per lavoro dipendente (art. 13 TUIR, fino a 1.955€), detrazioni per familiari a carico (art. 12) e ulteriore detrazione "taglio del cuneo" 2025 (1.000€ per redditi 20.000-32.000€, decrescente fino a 40.000€).</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Bonus / Tratt. Integrativo:</strong> Somma non tassata per i redditi bassi: trattamento integrativo 1.200€ (redditi ≤ 15.000€) e bonus 2025 pari al 7,1%-5,3%-4,8% del reddito (redditi ≤ 20.000€).</p>
-                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Addizionali:</strong> Tasse regionali e comunali aggiunte all'IRPEF, variano per regione (1,23%-3,33% regionale, ~0,8% comunale).</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">IRPEF Lorda:</strong> Imposta progressiva calcolata con le aliquote 2026: 23%, 33% e 43% (la Legge di Bilancio 2026, L. 199/2025, ha ridotto il secondo scaglione dal 35% al 33%). Con un reddito oltre 200.000€ le detrazioni per oneri e spese dell'art. 16-ter TUIR (escluse le spese sanitarie) si riducono di 440€: il calcolatore non considera questi oneri, quindi la riduzione non cambia i risultati.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Detrazioni:</strong> Detrazione per lavoro dipendente (art. 13 TUIR, fino a 1.955€), detrazioni per familiari a carico (art. 12) e ulteriore detrazione "taglio del cuneo" (1.000€ per redditi 20.000-32.000€, decrescente fino a 40.000€; strutturale dal 2025, invariata nel 2026).</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Bonus / Tratt. Integrativo:</strong> Somma non tassata per i redditi bassi: trattamento integrativo 1.200€ (redditi ≤ 15.000€) e bonus "taglio del cuneo" pari al 7,1%-5,3%-4,8% del reddito (redditi ≤ 20.000€), invariati nel 2026. Tra 15.000€ e 28.000€ il trattamento integrativo spetta solo se le detrazioni per lavoro dipendente e per familiari a carico superano l'IRPEF lorda, pari alla differenza e al massimo 1.200€; la norma non conta l'ulteriore detrazione "taglio del cuneo" né i 65€ aggiuntivi tra 25.000€ e 35.000€. Il calcolatore non considera le detrazioni per interessi di mutui stipulati fino al 2021 e per spese sanitarie e ristrutturazioni rateizzate sostenute fino al 2021, che per legge si aggiungono alla somma.</p>
+                    <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Addizionali:</strong> Tasse regionali e comunali aggiunte all'IRPEF, non dovute se l'IRPEF netta è zero. L'addizionale regionale applica all'imponibile gli scaglioni e le aliquote dell'anno d'imposta 2026 della regione scelta (ogni aliquota sulla sola parte di reddito nel suo scaglione), con le regole speciali e le detrazioni regionali indicate nella scheda «Addizionali per Regione»; l'addizionale comunale usa un'aliquota media indicativa per regione (0,70%-1,00%). Il calcolo è per competenza: le addizionali dell'anno d'imposta 2026 si trattengono a rate nelle buste paga del 2027 (tranne l'acconto della comunale, trattenuto nel 2026), mentre nelle buste paga del 2026 si trattengono quelle del 2025.</p>
                     <p style="margin-top: 1rem;"><strong style="color: var(--emeraldL);">Netto Annuo:</strong> Lordo − INPS − IRPEF Netta − Addizionali + Bonus/Trattamento integrativo.</p>
                 </div>
             </div>
 
             <div class="card">
-                <h3>Scaglioni IRPEF 2025</h3>
+                <h3>Scaglioni IRPEF 2026</h3>
                 <div style="color: var(--t2); line-height: 1.8;">
                     <div style="margin-bottom: 1.5rem;">
                         <div style="color: var(--emeraldL); font-weight: 700;">Da € 0 a € 28.000</div>
@@ -1024,7 +1072,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     </div>
                     <div style="margin-bottom: 1.5rem;">
                         <div style="color: var(--emeraldL); font-weight: 700;">Da € 28.001 a € 50.000</div>
-                        <div>Aliquota: 35%</div>
+                        <div>Aliquota: 33% (35% fino al 2025)</div>
                     </div>
                     <div>
                         <div style="color: var(--emeraldL); font-weight: 700;">Oltre € 50.000</div>
@@ -1036,8 +1084,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             <div class="card">
                 <h3>Note Importanti</h3>
                 <div style="color: var(--t2); line-height: 1.8;">
-                    <p>• Questo calcolatore fornisce stime approssimative in base ai dati medi 2025.</p>
+                    <p>• Questo calcolatore fornisce stime approssimative basate sulla normativa fiscale 2026 e su aliquote comunali medie.</p>
                     <p style="margin-top: 0.5rem;">• Gli importi effettivi possono variare in base a fattori specifici (bonus, straordinari, ecc.).</p>
+                    <p style="margin-top: 0.5rem;">• Non sono calcolate le imposte sostitutive 2026 del 5% sugli aumenti da rinnovo contrattuale e del 15% sulle maggiorazioni per lavoro notturno, festivo e a turni.</p>
                     <p style="margin-top: 0.5rem;">• Le addizionali regionali variano significativamente tra le regioni italiane.</p>
                     <p style="margin-top: 0.5rem;">• Consultare la busta paga ufficiale per valori precisi.</p>
                     <p style="margin-top: 0.5rem;">• Per questioni fiscali, rivolgersi a un commercialista qualificato.</p>
@@ -1046,46 +1095,92 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             <div class="card">
                 <h3>Addizionali per Regione</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: var(--t2);">
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Lombardia:</span> 1,23% regionale + 0,72% comunale</div>
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Lazio:</span> 1,85% regionale + 0,90% comunale</div>
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Campania:</span> 3,33% regionale + 1,00% comunale</div>
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Sicilia:</span> 3,33% regionale + 0,80% comunale</div>
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Piemonte:</span> 1,62% regionale + 0,80% comunale</div>
-                    <div><span style="color: var(--emeraldL); font-weight: 700;">Veneto:</span> 1,73% regionale + 0,70% comunale</div>
-                </div>
+                <div id="regionInfo" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: var(--t2);"></div>
+                <p style="color: var(--t3); font-size: 0.85rem; margin-top: 1rem;">Addizionale regionale dell'anno d'imposta 2026 (per i dipendenti trattenuta a rate nelle buste paga del 2027): ogni aliquota si applica solo alla parte di imponibile compresa nel suo scaglione, salvo le regole indicate. Novità 2026: nuove aliquote in Emilia-Romagna, Piemonte e Puglia, detrazione del Lazio limitata a 28.001-30.000 €, esenzione della Valle d'Aosta confermata. Molise: aliquote 2025, perché i valori 2026 non sono ancora verificati. Fonti: MEF - Dipartimento delle Finanze, leggi regionali e provinciali, siti delle Regioni. Le detrazioni per figli si calcolano sui figli a carico indicati nel Calcolatore (21-29 anni): i figli più piccoli, che pure ne hanno diritto, non sono conteggiati (in Piemonte, per esempio, contano anche loro per superare i due figli a carico). Non incluse: aliquote e detrazioni legate alla disabilità e la detrazione per figli minorenni della Sardegna. Aliquota comunale: media indicativa.</p>
             </div>
         </div>
     </div>
 
     <footer>
         <div class="footer-text">✦ Made by EtherLabs — <a href="https://etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener">etsy.com/shop/EtherLabsStudio</a></div>
-        <p style="color: var(--t3); margin-top: 1rem; font-size: 0.85rem;">© 2026 EtherLabs · Calcolatore aggiornato alla normativa fiscale 2025. Questo strumento fornisce stime: per valori precisi consultare la propria busta paga o un commercialista.</p>
+        <p style="color: var(--t3); margin-top: 1rem; font-size: 0.85rem;">© 2026 EtherLabs · Calcolatore aggiornato alla normativa fiscale 2026. Questo strumento fornisce stime: per valori precisi consultare la propria busta paga o un commercialista.</p>
     </footer>
 
     <script>
-        // Regional tax rates (addizionale regionale)
-        const regionalRates = {
-            'lombardia': 1.23,
-            'lazio': 1.85,
-            'campania': 3.33,
-            'sicilia': 3.33,
-            'piemonte': 1.62,
-            'veneto': 1.73,
-            'toscana': 2.83,
-            'emilia': 1.58,
-            'liguria': 2.20,
-            'marche': 2.38,
-            'umbria': 2.78,
-            'molise': 2.20,
-            'basilicata': 2.41,
-            'calabria': 3.33,
-            'puglia': 2.03,
-            'sardegna': 2.73,
-            'aosta': 1.58,
-            'friuli': 1.73,
-            'trentino': 1.58
+        // Addizionale regionale IRPEF, anno d'imposta 2026 (per i dipendenti trattenuta a rate nelle buste paga 2027).
+        // Fonti: MEF - Dipartimento delle Finanze ("Addizionale regionale all'IRPEF - aliquote
+        // applicabili"), leggi regionali e provinciali, siti delle Regioni. Novità 2026: Emilia-Romagna,
+        // Piemonte, Puglia, Lazio (detrazione); Valle d'Aosta proroga l'esenzione (L.R. 29/2025).
+        // Molise: valori 2025, la maggiorazione di 0,30 punti per il 2026 non è confermata da due fonti.
+        // scaglioni: [fino a €, aliquota %], null = oltre; ogni aliquota vale solo per la parte di
+        //   imponibile nel suo scaglione. intero: se l'imponibile non supera "fino", "aliquota" su
+        //   tutto il reddito. unicaPerFascia: l'aliquota della fascia del reddito vale su tutto.
+        //   esenteFino: nessuna addizionale fino alla soglia, oltre si paga su tutto il reddito.
+        //   detrazione(rc, figli): detrazioni regionali, mai oltre l'imposta. nota: per la scheda Informazioni.
+        // Non inclusi: agevolazioni per disabili e detrazione figli minorenni della Sardegna.
+        const addRegionale2026 = {
+            lombardia:  { scaglioni: [[15000, 1.23], [28000, 1.58], [50000, 1.72], [null, 1.73]] },
+            lazio:      { scaglioni: [[15000, 1.73], [null, 3.33]], intero: { fino: 28000, aliquota: 1.73 },   // L.R. 20/2025
+                          detrazione: rc => (rc > 28000 && rc <= 30000) ? 60 : 0,
+                          nota: "1,73% su tutto il reddito se l'imponibile non supera 28.000 €; detrazione di 60 € tra 28.001 e 30.000 €" },
+            campania:   { scaglioni: [[15000, 1.73], [28000, 2.96], [50000, 3.20], [null, 3.33]],
+                          detrazione: (rc, figli) => (rc <= 28000 && figli >= 2) ? 30 * figli : 0,
+                          nota: 'detrazione di 30 € per figlio con almeno 2 figli a carico e imponibile fino a 28.000 €' },
+            sicilia:    { scaglioni: [[null, 1.23]] },
+            piemonte:   { scaglioni: [[15000, 1.62], [28000, 2.68], [50000, 3.31], [null, 3.33]],   // L.R. 16/2025
+                          detrazione: (rc, figli) => figli > 2 ? 100 * figli : 0,
+                          nota: 'detrazione di 100 € per ogni figlio con più di due figli a carico' },
+            veneto:     { scaglioni: [[null, 1.23]] },
+            toscana:    { scaglioni: [[15000, 1.42], [28000, 1.43], [50000, 3.32], [null, 3.33]] },
+            emilia:     { scaglioni: [[15000, 1.33], [28000, 1.93], [50000, 2.78], [null, 3.33]] },   // L.R. 1/2025 e 9/2025
+            liguria:    { scaglioni: [[28000, 1.23], [50000, 3.18], [null, 3.23]],
+                          detrazione: (rc, figli) => (rc <= 28000 && figli >= 2) ? 45 * figli : 0,
+                          nota: 'detrazione di 45 € per figlio con almeno 2 figli a carico e imponibile fino a 28.000 €' },
+            marche:     { scaglioni: [[15000, 1.23], [28000, 1.53], [50000, 1.70], [null, 1.73]] },
+            umbria:     { scaglioni: [[15000, 1.73], [28000, 3.02], [50000, 3.12], [null, 3.33]], intero: { fino: 28000, aliquota: 1.23 },   // L.R. 2/2025
+                          detrazione: rc => (rc > 28000 && rc <= 50000) ? 150 : 0,
+                          nota: "1,23% su tutto il reddito se l'imponibile non supera 28.000 €; detrazione di 150 € tra 28.001 e 50.000 €" },
+            abruzzo:    { scaglioni: [[28000, 1.67], [50000, 2.87], [null, 3.33]] },   // L.R. 9/2025
+            molise:     { scaglioni: [[15000, 2.03], [28000, 2.23], [null, 3.63]],
+                          nota: 'aliquote 2025, maggiorate di 0,30 punti per il disavanzo sanitario (la maggiorazione per il 2026 non è ancora verificata)' },
+            basilicata: { scaglioni: [[null, 1.23]] },
+            calabria:   { scaglioni: [[null, 1.73]] },
+            puglia:     { scaglioni: [[15000, 1.33], [28000, 2.13], [50000, 3.23], [null, 3.33]],   // decreto del Commissario ad acta n. 3/2026
+                          nota: 'aliquote aumentate per il 2026 (decreto del 28 maggio 2026) per coprire il disavanzo sanitario' },
+            sardegna:   { scaglioni: [[null, 1.23]] },
+            aosta:      { scaglioni: [[null, 1.23]], esenteFino: 15000,   // esenzione prorogata al 2026 dalla L.R. 29/2025
+                          nota: 'nessuna addizionale se il reddito non supera 15.000 €, oltre si paga su tutto il reddito' },
+            friuli:     { scaglioni: [[15000, 0.70], [null, 1.23]], unicaPerFascia: true,
+                          nota: "l'aliquota della fascia si applica a tutto il reddito" },
+            trento:     { scaglioni: [[50000, 1.23], [null, 1.73]], esenteFino: 30000,
+                          detrazione: (rc, figli) => rc <= 50000 ? 246 * figli : 0,
+                          nota: 'nessuna addizionale fino a 30.000 € di imponibile, oltre si paga su tutto il reddito; detrazione di 246 € per figlio a carico fino a 50.000 €' },
+            bolzano:    { scaglioni: [[50000, 1.23], [null, 1.73]],
+                          detrazione: (rc, figli) => rc <= 90000 ? 430.5 + 125 * Math.min(1, Math.max(0, (rc - 50000) / 25000)) + 340 * figli : 0,
+                          nota: 'fino a 90.000 € di imponibile detrazione di 430,50 € (più fino a 125 € oltre 50.000 €) e di 340 € per figlio a carico' }
         };
+        const addRegionaleBase = { scaglioni: [[null, 1.23]] };   // aliquota base nazionale
+
+        function addizionaleRegionale(rc, region, figli) {
+            const r = addRegionale2026[region] || addRegionaleBase;
+            if (r.esenteFino != null && rc <= r.esenteFino) return 0;
+            let imposta = 0;
+            if (r.intero && rc <= r.intero.fino) {
+                imposta = rc * r.intero.aliquota / 100;
+            } else if (r.unicaPerFascia) {
+                imposta = rc * r.scaglioni.find(s => s[0] === null || rc <= s[0])[1] / 100;
+            } else {
+                let da = 0;
+                for (const [fino, aliquota] of r.scaglioni) {
+                    const a = fino === null ? rc : Math.min(rc, fino);
+                    if (a > da) imposta += (a - da) * aliquota / 100;
+                    if (fino === null || rc <= fino) break;
+                    da = fino;
+                }
+            }
+            const detrazione = r.detrazione ? r.detrazione(rc, Math.max(0, figli || 0)) : 0;
+            return Math.max(0, imposta - detrazione);
+        }
 
         // Addizionale comunale per regione (rispecchia la card Informazioni)
         const municipalRates = {
@@ -1098,14 +1193,16 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         const inpsRateStd = 0.0919;          // regime ordinario
         const inpsRateApprendistato = 0.0584; // apprendistato
 
-        // Scaglioni IRPEF 2025 (D.Lgs 216/2023, L.207/2024): 23% <=28k, 35% 28-50k, 43% >50k
+        // Scaglioni IRPEF 2026 (art. 11 TUIR come modificato dalla L. 30 dicembre 2025 n. 199): 23% <=28k, 33% 28-50k, 43% >50k.
+        // Oltre 200.000 € di reddito la L. 199/2025 riduce di 440 € le detrazioni per oneri dell'art. 16-ter TUIR
+        // (escluse le spese sanitarie): il calcolatore non considera oneri, quindi qui non c'è nulla da ridurre.
         const taxBrackets = [
             { max: 28000, rate: 0.23 },
-            { max: 50000, rate: 0.35 },
+            { max: 50000, rate: 0.33 },
             { max: Infinity, rate: 0.43 }
         ];
 
-        // Detrazione per lavoro dipendente — art. 13 TUIR, valori 2025
+        // Detrazione per lavoro dipendente — art. 13 TUIR, valori in vigore dal 2025 (invariati nel 2026)
         function detrazioneLavoroDip(rc) {
             let d;
             if (rc <= 15000) d = 1955;
@@ -1117,7 +1214,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             return Math.max(d, 0);
         }
 
-        // Detrazioni per familiari a carico — art. 12 TUIR (figli solo >=21 dopo Assegno Unico)
+        // Detrazioni per familiari a carico — art. 12 TUIR (dal 2025 figli solo da 21 a 29 anni, L. 207/2024)
         function detrazioniFamiliari(rc, coniuge, figli) {
             let dc = 0;
             if (coniuge) {
@@ -1133,34 +1230,45 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             }
             let df = 0;
             for (let i = 0; i < figli; i++) {
-                const base = 95000 + i * 15000;
+                // con più figli i 95.000€ aumentano "per tutti" di 15.000€ per ogni figlio dopo il primo (art. 12 c. 1 lett. c)
+                const base = 95000 + (figli - 1) * 15000;
                 const q = (base - rc) / base;
                 if (q > 0) df += 950 * q;
             }
             return Math.max(dc, 0) + Math.max(df, 0);
         }
 
-        // Ulteriore detrazione "taglio cuneo" 2025 (L.207/2024): redditi 20.000-40.000
-        function ulterioreDetrazione2025(rc) {
+        // Ulteriore detrazione "taglio cuneo" (L.207/2024, strutturale dal 2025, invariata nel 2026): redditi 20.000-40.000
+        function ulterioreDetrazioneCuneo(rc) {
             if (rc > 20000 && rc <= 32000) return 1000;
             if (rc > 32000 && rc <= 40000) return 1000 * (40000 - rc) / 8000;
             return 0;
         }
 
-        // Somma integrativa 2025 non tassata (L.207/2024): redditi <=20.000
-        function bonus2025(rc) {
+        // Somma non tassata "taglio cuneo" (L.207/2024, strutturale dal 2025, invariata nel 2026): redditi <=20.000
+        function bonusCuneo(rc) {
             if (rc <= 8500) return rc * 0.071;
             if (rc <= 15000) return rc * 0.053;
             if (rc <= 20000) return rc * 0.048;
             return 0;
         }
 
-        // Trattamento integrativo (DL 3/2020): 1.200€ per redditi <=15.000 con capienza
-        function trattamentoIntegrativo(rc, irpefLorda, detLavDip) {
-            return (rc <= 15000 && irpefLorda > detLavDip) ? 1200 : 0;
+        // Trattamento integrativo (DL 3/2020 art. 1): 1.200€ per redditi <=15.000 con capienza,
+        // cioè imposta lorda superiore alla detrazione art. 13 diminuita di 75€ (circ. AdE 4/E/2025).
+        // Redditi 15.000-28.000 (c. 1-bis, L. 234/2021): differenza, max 1.200€, tra la somma delle detrazioni
+        // artt. 12 e 13 c. 1 TUIR e l'imposta lorda. Non contano i 65€ dell'art. 13 c. 1-bis né l'ulteriore
+        // detrazione "taglio cuneo" (fuori dall'elenco della norma); mutui fino al 2021 e spese sanitarie e
+        // ristrutturazioni rateizzate fino al 2021 contano per legge ma il calcolatore non li conosce.
+        function trattamentoIntegrativo(rc, irpefLorda, detLavDip, detFam) {
+            if (rc <= 15000) return irpefLorda > detLavDip - 75 ? 1200 : 0;
+            if (rc <= 28000) {
+                const det13c1 = detLavDip - (rc > 25000 ? 65 : 0);   // senza i 65€ del comma 1-bis (25.000-35.000)
+                return Math.min(1200, Math.max(0, det13c1 + detFam - irpefLorda));
+            }
+            return 0;
         }
 
-        // Motore unico: da RAL a netto (2025)
+        // Motore unico: da RAL a netto, per competenza: IRPEF e addizionali dell'anno d'imposta 2026
         function computeNet(ral, mensilita, apprendistato, coniuge, figli, region) {
             const inpsRate = apprendistato ? inpsRateApprendistato : inpsRateStd;
             const inps = ral * inpsRate;
@@ -1168,17 +1276,18 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const irpefLorda = calculateIRPEF(rc);
             const detLavDip = detrazioneLavoroDip(rc);
             const detFam = detrazioniFamiliari(rc, coniuge, figli);
-            const ult = ulterioreDetrazione2025(rc);
+            const ult = ulterioreDetrazioneCuneo(rc);
             const detrazioni = detLavDip + detFam + ult;
             const irpefNetta = Math.max(0, irpefLorda - detrazioni);
-            const regionalRate = (regionalRates[region] || 1.23) / 100;
             const municipalRate = (municipalRates[region] ?? municipalRateDefault) / 100;
-            const addizionali = rc * regionalRate + rc * municipalRate;
-            const bonusTot = trattamentoIntegrativo(rc, irpefLorda, detLavDip) + bonus2025(rc);
+            // le addizionali sono dovute solo se l'IRPEF netta è dovuta (D.Lgs. 446/1997 art. 50, D.Lgs. 360/1998 art. 1)
+            const addRegionale = irpefNetta > 0 ? addizionaleRegionale(rc, region, figli) : 0;
+            const addizionali = irpefNetta > 0 ? addRegionale + rc * municipalRate : 0;
+            const bonusTot = trattamentoIntegrativo(rc, irpefLorda, detLavDip, detFam) + bonusCuneo(rc);
             const nettoAnnuo = ral - inps - irpefNetta - addizionali + bonusTot;
             const nettoMensile = mensilita > 0 ? nettoAnnuo / mensilita : 0;
             return { ral, inps, imponibile: rc, irpefLorda, detrazioni, irpefNetta,
-                     addizionali, bonusTot, nettoAnnuo, nettoMensile };
+                     addizionali, addRegionale, bonusTot, nettoAnnuo, nettoMensile };
         }
 
         // Persistenza input (sopravvive al refresh)
@@ -1205,25 +1314,29 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 if (!s) return;
                 const d = JSON.parse(s);
                 if (!d) return;
-                const set = (id, v) => { const el = document.getElementById(id); if (el != null && v != null && v !== '') el.value = v; };
+                // nei menu si imposta solo un valore che esiste ancora tra le opzioni
+                const set = (id, v) => { const el = document.getElementById(id); if (el != null && v != null && v !== '' && (el.tagName !== 'SELECT' || [...el.options].some(o => o.value === String(v)))) el.value = v; };
+                // le versioni precedenti avevano un'unica voce "trentino": si carica come Provincia di Trento
+                const reg = v => v === 'trentino' ? 'trento' : v;
                 set('ral', d.ral); set('ralSlider', d.ral);
-                set('contractType', d.contractType); set('mensilita', d.mensilita); set('region', d.region);
+                set('contractType', d.contractType); set('mensilita', d.mensilita); set('region', reg(d.region));
                 if (d.coniuge != null) document.getElementById('coniuge').checked = d.coniuge;
                 set('figli', d.figli);
-                set('comp1Ral', d.comp1Ral); set('comp1Region', d.comp1Region);
-                set('comp2Ral', d.comp2Ral); set('comp2Region', d.comp2Region);
+                set('comp1Ral', d.comp1Ral); set('comp1Region', reg(d.comp1Region));
+                set('comp2Ral', d.comp2Ral); set('comp2Region', reg(d.comp2Region));
                 const rd = document.getElementById('ralDisplay');
                 if (rd && d.ral != null) rd.textContent = '€ ' + (parseInt(d.ral) || 0).toLocaleString('it-IT');
             } catch (e) {}
         }
 
-        function updateRAL() {
+        function updateRAL(src) {
             const slider = document.getElementById('ralSlider');
             const input = document.getElementById('ral');
             const display = document.getElementById('ralDisplay');
 
-            // Sync values - determine which one was changed
-            if (document.activeElement === slider) {
+            // Sync values - use the element that fired the event: not every browser focuses
+            // a range input while dragging, and then activeElement made the slider snap back
+            if (src ? src === slider : document.activeElement === slider) {
                 input.value = slider.value;
             } else {
                 slider.value = input.value;
@@ -1240,6 +1353,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function formatCurrency(num) {
             return '€ ' + formatNumber(Math.round(num));
+        }
+
+        // Percentuale con la virgola decimale italiana (es. 78,3%)
+        function formatPercent(num, decimals) {
+            return num.toFixed(decimals).replace('.', ',') + '%';
         }
 
         function calculateIRPEF(imponibile) {
@@ -1299,25 +1417,25 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             chart.innerHTML = `
                 <div class="bar-item">
                     <div class="bar" style="height: ${nettoPercent}%; background: linear-gradient(180deg, var(--el-emerald) 0%, var(--el-emerald-dark) 100%);">
-                        <div class="bar-value">${nettoPercent.toFixed(1)}%</div>
+                        <div class="bar-value">${formatPercent(nettoPercent, 1)}</div>
                     </div>
                     <div class="bar-label">Netto</div>
                 </div>
                 <div class="bar-item">
                     <div class="bar" style="height: ${inpsPercent}%; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);">
-                        <div class="bar-value">${inpsPercent.toFixed(1)}%</div>
+                        <div class="bar-value">${formatPercent(inpsPercent, 1)}</div>
                     </div>
                     <div class="bar-label">INPS</div>
                 </div>
                 <div class="bar-item">
                     <div class="bar" style="height: ${irpefPercent}%; background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);">
-                        <div class="bar-value">${irpefPercent.toFixed(1)}%</div>
+                        <div class="bar-value">${formatPercent(irpefPercent, 1)}</div>
                     </div>
                     <div class="bar-label">IRPEF</div>
                 </div>
                 <div class="bar-item">
                     <div class="bar" style="height: ${addizionaliPercent}%; background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);">
-                        <div class="bar-value">${addizionaliPercent.toFixed(1)}%</div>
+                        <div class="bar-value">${formatPercent(addizionaliPercent, 1)}</div>
                     </div>
                     <div class="bar-label">Addizionali</div>
                 </div>
@@ -1335,10 +1453,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const addizionaliPercent = (addizionali / total) * 100;
 
             drawPie(ctx, [
-                { label: `Netto ${nettoPercent.toFixed(1)}%`, value: nettoPercent, color: '#10b981' },
-                { label: `INPS ${inpsPercent.toFixed(1)}%`, value: inpsPercent, color: '#f59e0b' },
-                { label: `IRPEF ${irpefPercent.toFixed(1)}%`, value: irpefPercent, color: '#ef4444' },
-                { label: `Addizionali ${addizionaliPercent.toFixed(1)}%`, value: addizionaliPercent, color: '#8b5cf6' }
+                { label: `Netto ${formatPercent(nettoPercent, 1)}`, value: nettoPercent, color: '#10b981' },
+                { label: `INPS ${formatPercent(inpsPercent, 1)}`, value: inpsPercent, color: '#f59e0b' },
+                { label: `IRPEF ${formatPercent(irpefPercent, 1)}`, value: irpefPercent, color: '#ef4444' },
+                { label: `Addizionali ${formatPercent(addizionaliPercent, 1)}`, value: addizionaliPercent, color: '#8b5cf6' }
             ]);
         }
 
@@ -1362,8 +1480,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 currentAngle += sliceAngle;
             }
 
-            // Draw legend
-            let legendY = ctx.canvas.height - 60;
+            // Draw legend (start high enough that all entries fit inside the canvas)
+            let legendY = ctx.canvas.height - data.length * 25 - 10;
             for (let i = 0; i < data.length; i++) {
                 ctx.fillStyle = data[i].color;
                 ctx.fillRect(20, legendY + (i * 25), 15, 15);
@@ -1375,7 +1493,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function updateExportText(r) {
             const mensilita = parseInt(document.getElementById('mensilita').value) || 13;
-            const region = document.getElementById('region').value;
+            const regionSel = document.getElementById('region');
+            const region = regionSel.selectedIndex >= 0 ? regionSel.options[regionSel.selectedIndex].text : regionSel.value;
             const contractType = document.getElementById('contractType').value;
             const contractLabels = { indeterminato: 'Tempo Indeterminato', determinato: 'Tempo Determinato', apprendistato: 'Apprendistato' };
             const inpsRate = contractType === 'apprendistato' ? '5,84' : '9,19';
@@ -1399,7 +1518,7 @@ Lordo Annuo:                 ${formatCurrency(r.ral)}
 Contributi INPS (-${inpsRate}%):    ${formatCurrency(r.inps)}
 Imponibile IRPEF:            ${formatCurrency(r.imponibile)}
 
-CALCOLO IRPEF 2025
+CALCOLO IRPEF 2026
 ─────────────────────────────────────────────
 IRPEF Lorda:                 ${formatCurrency(r.irpefLorda)}
 Detrazioni Fiscali:          ${formatCurrency(r.detrazioni)}
@@ -1417,14 +1536,15 @@ Netto Mensile (${mensilita}):        ${formatCurrency(r.nettoMensile)}
 
 COMPOSIZIONE STIPENDIO LORDO
 ─────────────────────────────────────────────
-Netto:                       ${((r.nettoAnnuo / lordo) * 100).toFixed(2)}%
-INPS:                        ${((r.inps / lordo) * 100).toFixed(2)}%
-IRPEF:                       ${((r.irpefNetta / lordo) * 100).toFixed(2)}%
-Addizionali:                 ${((r.addizionali / lordo) * 100).toFixed(2)}%
+Netto:                       ${formatPercent((r.nettoAnnuo / lordo) * 100, 2)}
+INPS:                        ${formatPercent((r.inps / lordo) * 100, 2)}
+IRPEF:                       ${formatPercent((r.irpefNetta / lordo) * 100, 2)}
+Addizionali:                 ${formatPercent((r.addizionali / lordo) * 100, 2)}
 
 ─────────────────────────────────────────────
-Scaglioni IRPEF 2025: 23% fino a 28.000€ · 35% 28-50.000€ · 43% oltre 50.000€
-Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
+Scaglioni IRPEF 2026: 23% fino a 28.000€ · 33% 28-50.000€ · 43% oltre 50.000€
+Stime basate su normativa 2026 (addizionali dell'anno d'imposta 2026).
+Per valori precisi consultare la busta paga.
 © 2026 EtherLabs · etsy.com/shop/EtherLabsStudio
             `;
 
@@ -1460,16 +1580,22 @@ Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
             document.body.removeChild(element);
         }
 
+        // Stampa nella pagina stessa invece che in un popup (bloccato dai blocchi popup, dai browser
+        // mobili e dai visualizzatori): durante la stampa si vede solo il riepilogo (regole @media print)
         function printResults() {
             const text = document.getElementById('exportText').textContent;
-            const printWindow = window.open('', '', 'height=600,width=800');
-            if (!printWindow) {
-                alert('Impossibile aprire la finestra di stampa. Disattiva il blocco popup e riprova.');
-                return;
+            if (!text.trim()) { alert('Nessun risultato da stampare: inserisci prima la RAL.'); return; }
+            let area = document.getElementById('printArea');
+            if (!area) {
+                area = document.createElement('pre');
+                area.id = 'printArea';
+                document.body.appendChild(area);
             }
-            printWindow.document.write('<pre style="font-family:monospace;font-size:13px;padding:24px;">' + text + '</pre>');
-            printWindow.document.close();
-            printWindow.print();
+            area.textContent = text;
+            document.body.classList.add('print-results');
+            const fine = () => { document.body.classList.remove('print-results'); window.removeEventListener('afterprint', fine); };
+            window.addEventListener('afterprint', fine);
+            window.print();
         }
 
         function switchTab(tabName, _el) {
@@ -1505,8 +1631,14 @@ Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
             displayComparisonResults(result1, result2);
         }
 
+        // Il confronto usa contratto, mensilità e familiari a carico impostati nel Calcolatore,
+        // così a parità di RAL e regione il netto coincide con quello del Calcolatore
         function calculateScenario(ral, region) {
-            return computeNet(ral, 13, false, false, 0, region);
+            const mensilita = parseInt(document.getElementById('mensilita').value) || 13;
+            const apprendistato = document.getElementById('contractType').value === 'apprendistato';
+            const coniuge = document.getElementById('coniuge').checked;
+            const figli = parseInt(document.getElementById('figli').value) || 0;
+            return computeNet(ral, mensilita, apprendistato, coniuge, figli, region);
         }
 
         function displayComparisonResults(result1, result2) {
@@ -1579,22 +1711,40 @@ Stime basate su normativa 2025. Per valori precisi consultare la busta paga.
                 </div>
                 <div class="comparison-result">
                     <span class="comparison-label">Variazione Percentuale</span>
-                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diffPercent === null ? 'n/d' : (diff >= 0 ? '+' : '') + diffPercent.toFixed(2) + '%'}</span>
+                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diffPercent === null ? 'n/d' : (diff >= 0 ? '+' : '') + formatPercent(diffPercent, 2)}</span>
                 </div>
                 <div class="comparison-result">
                     <span class="comparison-label">Differenza Mensile</span>
-                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diff >= 0 ? '+' : '-'}${formatCurrency(Math.abs(diff) / 13)}</span>
+                    <span class="comparison-value" style="color: ${diff >= 0 ? '#4ade80' : '#ef4444'};">${diff >= 0 ? '+' : '-'}${formatCurrency(Math.abs(result2.nettoMensile - result1.nettoMensile))}</span>
                 </div>
             `;
 
             document.getElementById('comparisonSummary').innerHTML = summaryHtml;
         }
 
+        // Scheda Informazioni "Addizionali per Regione": generata dalla stessa tabella usata nel calcolo
+        function renderRegionInfo() {
+            const box = document.getElementById('regionInfo');
+            if (!box) return;
+            const pct = n => formatPercent(n, 2);
+            box.innerHTML = [...document.getElementById('region').options].map(o => {
+                const r = addRegionale2026[o.value];
+                if (!r) return '';
+                const s = r.scaglioni;
+                const aliquote = s.length === 1 ? pct(s[0][1]) + ' (aliquota unica)'
+                    : s.map(([fino, al]) => pct(al) + (fino === null ? ' oltre' : ' fino a ' + formatNumber(fino) + ' €')).join(' · ');
+                return `<div><span style="color: var(--emeraldL); font-weight: 700;">${o.text}:</span> ${aliquote}${r.nota ? '; ' + r.nota : ''}. Comunale ${pct(municipalRates[o.value] ?? municipalRateDefault)}</div>`;
+            }).join('');
+        }
+
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
+            renderRegionInfo();
             nsLoad();
             calculate();
         });
+        // Ridisegna la torta al cambio tema: la legenda sul canvas usa il colore del testo del tema
+        window.addEventListener('el-theme-change', () => calculate());
     </script>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>

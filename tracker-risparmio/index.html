@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Tracker Obiettivi Risparmio - Premium</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Tracker Obiettivi Risparmio - Premium</title>
     <style>
         :root {
             --bg: var(--el-bg);
@@ -1090,6 +1081,25 @@
     <meta name="theme-color" content="#eef1f4">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -1104,7 +1114,7 @@
         <div class="header">
             <div class="header-content">
                 <h1>Tracker Obiettivi Risparmio</h1>
-                <p>Gestisci i tuoi obiettivi di risparmio in modo intelligente e efficace</p>
+                <p>Gestisci i tuoi obiettivi di risparmio in modo intelligente ed efficace</p>
             </div>
             <div>
                 <span class="premium-badge">Premium Tool</span>
@@ -1186,7 +1196,7 @@
                 </div>
 
                 <div style="margin-bottom: 28px; margin-top: 8px;">
-                    <label class="emoji-section-label">Scegli un Emoji</label>
+                    <label class="emoji-section-label">Scegli un'Emoji</label>
                     <div class="emoji-grid">
                         <div class="emoji-option selected" data-emoji="💰" onclick="selectEmoji(this)">💰</div>
                         <div class="emoji-option" data-emoji="🎯" onclick="selectEmoji(this)">🎯</div>
@@ -1261,7 +1271,7 @@
         </div>
     </div>
 
-    <svg style="display: none;">
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
         <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style="stop-color:var(--el-emerald-light);stop-opacity:1" />
@@ -1681,7 +1691,27 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
         function saveGoals() { try { localStorage.setItem(LS_KEY, JSON.stringify(goals)); } catch (e) {} }
-        function loadGoals() { try { const s = localStorage.getItem(LS_KEY); if (s) goals = JSON.parse(s) || []; } catch (e) {} }
+        // Normalizza ogni goal coi default: chi aggiorna da una versione precedente può avere
+        // obiettivi senza i campi nuovi (deposits, monthlyContribution...) e i calcoli su
+        // undefined producono NaN/Invalid Date che poi rompono il render.
+        function normalizeGoal(g, i) {
+            if (!g || typeof g !== 'object') return null;
+            const n = Object.assign(
+                { id: Date.now() + (i || 0), name: '', targetAmount: 0, currentSaved: 0, monthlyContribution: 0, targetDate: '', category: '', priority: 'medium', emoji: '💰', deposits: [] },
+                g,
+                { deposits: Array.isArray(g.deposits) ? g.deposits : [] }
+            );
+            ['targetAmount', 'currentSaved', 'monthlyContribution'].forEach(k => { n[k] = Number(n[k]) || 0; });
+            n.deposits = n.deposits.map(d => Object.assign({}, d, { amount: Number(d && d.amount) || 0 }));
+            if (!n.emoji) n.emoji = '💰';
+            if (!n.priority) n.priority = 'medium';
+            return n;
+        }
+        function loadGoals() { try { const s = localStorage.getItem(LS_KEY); if (s) goals = (JSON.parse(s) || []).map(normalizeGoal).filter(Boolean); } catch (e) { goals = []; } }
+        // Local calendar date (YYYY-MM-DD): toISOString() is UTC and gives tomorrow/yesterday near midnight.
+        function localISO(d) { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+        // Add months without day overflow (Jan 31 + 1 month = Feb 28/29, not Mar 3).
+        function addMonths(d, n) { const r = new Date(d.getFullYear(), d.getMonth() + n, 1); r.setDate(Math.min(d.getDate(), new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate())); return r; }
 
         const templates = {
             emergency: { name: 'Fondo Emergenza', amount: 15000, emoji: '🚨', priority: 'high', months: 12 },
@@ -1709,9 +1739,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             document.getElementById('currentSaved').value = 0;
             document.getElementById('monthlyContribution').value = Math.ceil(t.amount / t.months);
 
-            const targetDate = new Date();
-            targetDate.setMonth(targetDate.getMonth() + t.months);
-            document.getElementById('targetDate').value = targetDate.toISOString().split('T')[0];
+            const targetDate = addMonths(new Date(), t.months);
+            document.getElementById('targetDate').value = localISO(targetDate);
             document.getElementById('priority').value = t.priority;
 
             selectedEmoji = t.emoji;
@@ -1735,7 +1764,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return;
             }
 
-            const resolvedDate = targetDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            const resolvedDate = targetDate || localISO(addMonths(new Date(), 12));
 
             if (editingGoalId !== null) {
                 const goal = goals.find(g => g.id === editingGoalId);
@@ -1770,7 +1799,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function clearForm() {
             document.getElementById('goalName').value = '';
             document.getElementById('targetAmount').value = '';
-            document.getElementById('currentSaved').value = '0';
+            document.getElementById('currentSaved').value = '';
             document.getElementById('monthlyContribution').value = '';
             document.getElementById('targetDate').value = '';
             document.getElementById('priority').value = 'medium';
@@ -1816,7 +1845,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function openDepositModal(goalId) {
             activeDepositGoalId = goalId;
             document.getElementById('depositAmount').value = '';
-            document.getElementById('depositDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('depositDate').value = localISO();
             document.getElementById('depositModal').classList.add('active');
             setTimeout(() => document.getElementById('depositAmount').focus(), 100);
         }
@@ -1828,7 +1857,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function confirmDeposit() {
             const amount = parseFloat(document.getElementById('depositAmount').value);
-            const date = document.getElementById('depositDate').value || new Date().toISOString().split('T')[0];
+            const date = document.getElementById('depositDate').value || localISO();
 
             if (!amount || amount <= 0) {
                 alert('Inserisci un importo valido!');
@@ -1885,14 +1914,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function calculateCompletionDate(goal) {
-            if (goal.currentSaved >= goal.targetAmount) return new Date();
-            if (goal.monthlyContribution <= 0) return null;
+            const target = Number(goal.targetAmount), saved = Number(goal.currentSaved), monthly = Number(goal.monthlyContribution);
+            if (!(target > 0)) return null;
+            if (saved >= target) return new Date();
+            if (!(monthly > 0)) return null;
 
-            const remaining = goal.targetAmount - goal.currentSaved;
-            const monthsNeeded = remaining / goal.monthlyContribution;
-            const completionDate = new Date();
-            completionDate.setMonth(completionDate.getMonth() + Math.ceil(monthsNeeded));
-            return completionDate;
+            const monthsNeeded = (target - saved) / monthly;
+            if (!isFinite(monthsNeeded)) return null;   // niente NaN → niente Invalid Date su .toISOString()
+            const completionDate = addMonths(new Date(), Math.ceil(monthsNeeded));
+            return isNaN(completionDate.getTime()) ? null : completionDate;
         }
 
         function createCircularProgress(percentage) {
@@ -1969,7 +1999,7 @@ function exportSavingsPDF() {
                 if (y > H - 70) { doc.addPage(); y = 60; }
                 const gp = (Number(g.targetAmount) > 0) ? Math.min(100, Math.round((Number(g.currentSaved) || 0) / Number(g.targetAmount) * 100)) : 0;
                 const cDate = calculateCompletionDate(g);
-                const cText = (Number(g.currentSaved) >= Number(g.targetAmount)) ? 'Completato' : (cDate ? formatDate(cDate.toISOString().split('T')[0]) : 'N/D');
+                const cText = (Number(g.currentSaved) >= Number(g.targetAmount)) ? 'Completato' : (cDate ? formatDate(localISO(cDate)) : 'N/D');
                 doc.setTextColor.apply(doc, DK); doc.text(String(g.name || '—').slice(0, 30), M, y);
                 doc.text(money(g.currentSaved), 260, y);
                 doc.text(money(g.targetAmount), 350, y);
@@ -2046,12 +2076,12 @@ function exportSavingsPDF() {
                 const percentage = Math.min((goal.currentSaved / goal.targetAmount) * 100, 100);
                 const status = getGoalStatus(goal);
                 const completionDate = calculateCompletionDate(goal);
-                const completionText = completionDate ? formatDate(completionDate.toISOString().split('T')[0]) : 'N/D';
+                const completionText = completionDate ? formatDate(localISO(completionDate)) : 'N/D';
 
                 const statusLabels = {
                     'complete': { badge: 'status-complete', text: 'Completato' },
                     'ahead': { badge: 'status-ahead', text: 'In Anticipo' },
-                    'on-track': { badge: 'status-on-track', text: 'In Pista' },
+                    'on-track': { badge: 'status-on-track', text: 'In Linea' },
                     'behind': { badge: 'status-behind', text: 'In Ritardo' }
                 };
 
@@ -2126,7 +2156,7 @@ function exportSavingsPDF() {
                     <div class="log-card">
                         <div class="log-header">
                             <div class="log-title">${goal.emoji} ${esc(goal.name)}</div>
-                            <span style="color: var(--text3); font-size: 0.8rem;">${goal.deposits.length} depositi</span>
+                            <span style="color: var(--text3); font-size: 0.8rem;">${goal.deposits.length} deposit${goal.deposits.length === 1 ? 'o' : 'i'}</span>
                         </div>
                         ${sortedDeposits.map(d => `
                             <div class="log-entry">
@@ -2272,8 +2302,7 @@ function exportSavingsPDF() {
                 if (remaining === 0) {
                     completionText = 'Completato';
                 } else if (monthsNeeded !== null) {
-                    const completionDate = new Date();
-                    completionDate.setMonth(completionDate.getMonth() + monthsNeeded);
+                    const completionDate = addMonths(new Date(), monthsNeeded);
                     completionText = completionDate.toLocaleDateString('it-IT', { month: 'short', year: 'numeric' });
                 } else {
                     completionText = 'N/D';
@@ -2286,7 +2315,7 @@ function exportSavingsPDF() {
                     <div class="result-item">
                         <div class="result-label">${goal.emoji} ${esc(goal.name)}</div>
                         <div class="result-value">${completionText}</div>
-                        ${savedMonths > 0 ? `<div style="color: var(--success); font-size: 0.8rem; margin-top: 6px;">${savedMonths} mesi risparmiati</div>` : ''}
+                        ${savedMonths > 0 ? `<div style="color: var(--success); font-size: 0.8rem; margin-top: 6px;">${savedMonths} ${savedMonths === 1 ? 'mese risparmiato' : 'mesi risparmiati'}</div>` : ''}
                     </div>
                 `;
             }).join('');

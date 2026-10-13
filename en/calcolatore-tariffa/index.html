@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Rate Calculator Pro - Freelancer Rate Calculator</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -425,6 +416,25 @@ button.secondary:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -556,7 +566,7 @@ button.secondary:hover {
                     </div>
                 </div>
                 <div class="info-box">
-                    <strong>Note:</strong> For simplified regime, tax is calculated on gross income at the chosen rate. For standard regime, social security and income tax are added.
+                    <strong>Note:</strong> The Simplified, Standard and Self-employed regimes apply their flat rate to your gross revenue. Choose <em>Custom</em> to use your own Social Security + Income Tax percentages.
                 </div>
             </div>
         </div>
@@ -1133,9 +1143,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const W = doc.internal.pageSize.getWidth(); const M = 48; let y = 0;
             const EM = [16,185,129], DK = [17,24,28], GR = [110,130,140];
             const money = (v, dec) => '$ ' + (Number(v)||0).toLocaleString('en-US', { minimumFractionDigits: dec||0, maximumFractionDigits: dec||0 });
+            const moneyS = (v, dec) => (v < 0 ? '-' : '') + money(Math.abs(Number(v)||0), dec);
             doc.setFillColor.apply(doc, EM); doc.rect(0,0,W,78,'F');
             doc.setTextColor(6,10,10); doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.text('Freelance Rate Report', M, 46);
-            doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString(), M, 64);
+            doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString('en-US'), M, 64);
             y = 118;
             doc.setTextColor.apply(doc, DK); doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text('Your recommended rate', M, y); y += 8;
             doc.setDrawColor(225,230,234); doc.line(M,y,W-M,y); y += 22;
@@ -1160,7 +1171,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.text('BILLABLE HOURS / MO', M, y); doc.text('AT MINIMUM', 320, y); doc.text('AT RECOMMENDED', W-M, y, {align:'right'}); y += 6;
             doc.setDrawColor(235,238,241); doc.line(M,y,W-M,y); y += 16;
             doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK);
-            const sc = (h, mn, rc) => { doc.text(h + ' hours', M, y); doc.text(money(Math.max(0,mn),0) + ' / mo', 320, y); doc.setTextColor.apply(doc, EM); doc.setFont('helvetica','bold'); doc.text(money(Math.max(0,rc),0) + ' / mo', W-M, y, {align:'right'}); doc.setFont('helvetica','normal'); doc.setTextColor.apply(doc, DK); y += 18; };
+            const sc = (h, mn, rc) => { doc.text(h + ' hours', M, y); doc.text(moneyS(mn,0) + ' / mo', 320, y); doc.setTextColor.apply(doc, EM); doc.setFont('helvetica','bold'); doc.text(moneyS(rc,0) + ' / mo', W-M, y, {align:'right'}); doc.setFont('helvetica','normal'); doc.setTextColor.apply(doc, DK); y += 18; };
             sc('100', RES.income100Min, RES.income100Rec);
             sc('160', RES.income160Min, RES.income160Rec);
             const H = doc.internal.pageSize.getHeight();
@@ -1221,6 +1232,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 taxPercentage = (socialSecurity + incomeTax) / 100;
             }
 
+            if (regime === 'custom') taxPercentage = Math.min(0.95, Math.max(0, taxPercentage));
+
             let annualRevenue;
             if (regime === 'custom') {
                 annualRevenue = annualExpenses / (1 - taxPercentage);
@@ -1247,13 +1260,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             document.getElementById('daily_rate').textContent = '$ ' + dailyRate.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
             const hourlyRate = dailyRate / Math.max(1, hoursPerDay);
-            document.getElementById('hourly_rate').textContent = '$ ' + hourlyRate.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('hourly_rate').textContent = '$ ' + hourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             const recommendedDaily = dailyRate * 1.2;
             const recommendedHourly = hourlyRate * 1.2;
 
             document.getElementById('recommended_daily').textContent = '$ ' + recommendedDaily.toLocaleString('en-US', { maximumFractionDigits: 0 });
-            document.getElementById('recommended_hourly').textContent = '$ ' + recommendedHourly.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('recommended_hourly').textContent = '$ ' + recommendedHourly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             const taxRate = regime === 'custom'
                 ? taxPercentage
@@ -1264,12 +1277,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const income160Min = (160 * hourlyRate * (1 - taxRate)) - monthlyExpenses;
             const income160Rec = (160 * recommendedHourly * (1 - taxRate)) - monthlyExpenses;
 
-            document.getElementById('income_100_min').textContent = '$ ' + Math.max(0, income100Min).toLocaleString('en-US', { maximumFractionDigits: 0 });
-            document.getElementById('income_100_rec').textContent = '$ ' + Math.max(0, income100Rec).toLocaleString('en-US', { maximumFractionDigits: 0 });
-            document.getElementById('income_160_min').textContent = '$ ' + Math.max(0, income160Min).toLocaleString('en-US', { maximumFractionDigits: 0 });
-            document.getElementById('income_160_rec').textContent = '$ ' + Math.max(0, income160Rec).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            const fmtIncome = v => (v < 0 ? '−$ ' : '$ ') + Math.abs(v).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            document.getElementById('income_100_min').textContent = fmtIncome(income100Min);
+            document.getElementById('income_100_rec').textContent = fmtIncome(income100Rec);
+            document.getElementById('income_160_min').textContent = fmtIncome(income160Min);
+            document.getElementById('income_160_rec').textContent = fmtIncome(income160Rec);
             const regimeLabels = { simplified15: 'Simplified (15%)', standard25: 'Standard (25%)', selfemployed30: 'Self-employed (30%)', custom: 'Custom' };
-            RES = { hourlyRate, dailyRate, recommendedHourly, recommendedDaily, annualRevenue, effectiveDays, monthlyExpenses, totalPersonal, totalProfessional, regime: regimeLabels[regime] || regime, income100Min, income100Rec, income160Min, income160Rec };
+            RES = { hourlyRate, dailyRate, recommendedHourly, recommendedDaily, annualRevenue, effectiveDays: Math.max(0, effectiveDays), monthlyExpenses, totalPersonal, totalProfessional, regime: regimeLabels[regime] || regime, income100Min, income100Rec, income160Min, income160Rec };
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1286,7 +1300,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         });
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

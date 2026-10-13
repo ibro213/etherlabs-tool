@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Calcolatore FIRE - Indipendenza Finanziaria Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Calcolatore FIRE - Indipendenza Finanziaria Pro</title>
     <style>
         * {
             margin: 0;
@@ -498,6 +489,12 @@ button:hover {
                 padding: 10px;
             }
 
+            /* scenario table scrolls inside its card instead of widening the page */
+            .scenarios-table {
+                display: block;
+                overflow-x: auto;
+            }
+
             .container {
                 padding: 0;
             }
@@ -592,6 +589,25 @@ button:hover {
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -729,7 +745,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     </div>
 
                     <div class="card full-width">
-                        <div class="card-label">Percentuale raggiunte</div>
+                        <div class="card-label">Percentuale raggiunta</div>
                         <div class="progress-bar-container">
                             <div class="progress-bar" id="progressBar" style="width: 13%"></div>
                         </div>
@@ -1413,15 +1429,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 // Update UI
                 document.getElementById('fireNumber').textContent = '€' + fireNumber.toLocaleString('it-IT', {maximumFractionDigits: 0});
                 document.getElementById('currentGap').textContent = '€' + currentGap.toLocaleString('it-IT', {maximumFractionDigits: 0});
-                document.getElementById('yearsToFire').textContent = yearsToFire.toFixed(1);
-                document.getElementById('fireDate').textContent = Math.floor(fireDate);
+                const reachable = yearsToFire < 100;
+                document.getElementById('yearsToFire').textContent = reachable ? yearsToFire.toFixed(1).replace('.', ',') : '100+';
+                document.getElementById('fireDate').textContent = reachable ? Math.floor(fireDate) : '—';
                 document.getElementById('monthlySavings').textContent = '€' + monthlySavings.toLocaleString('it-IT', {maximumFractionDigits: 0});
                 document.getElementById('monthlyIncome').textContent = '€' + monthlyIncome.toLocaleString('it-IT', {maximumFractionDigits: 0});
 
                 // Update progress bar
                 document.getElementById('progressBar').style.width = progressPercentage + '%';
                 document.getElementById('progressPercentage').textContent =
-                    progressPercentage.toFixed(1) + '% - €' +
+                    progressPercentage.toFixed(1).replace('.', ',') + '% - €' +
                     inputs.currentAssets.toLocaleString('it-IT', {maximumFractionDigits: 0}) + ' / €' +
                     fireNumber.toLocaleString('it-IT', {maximumFractionDigits: 0});
 
@@ -1496,14 +1513,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                     const monthlyIncome = (finalWealth * withdrawalRate) / 12;
 
-                    document.getElementById('years' + scenario.id).textContent = yearsToFire.toFixed(1);
+                    document.getElementById('years' + scenario.id).textContent = yearsToFire < 100 ? yearsToFire.toFixed(1).replace('.', ',') : '100+';
                     document.getElementById('wealth' + scenario.id).textContent = '€' + finalWealth.toLocaleString('it-IT', {maximumFractionDigits: 0});
                     document.getElementById('income' + scenario.id).textContent = '€' + monthlyIncome.toLocaleString('it-IT', {maximumFractionDigits: 0});
 
                     // Allinea etichetta e colonna tasso dello scenario Base al rendimento inserito
                     if (scenario.id === 'Base') {
-                        const pct = scenario.rate * 100;
-                        const pctStr = (Number.isInteger(pct) ? String(pct) : pct.toFixed(1)) + '%';
+                        const pct = Math.round(scenario.rate * 1000) / 10;
+                        const pctStr = (Number.isInteger(pct) ? String(pct) : pct.toFixed(1).replace('.', ',')) + '%';
                         document.getElementById('rateBase').textContent = pctStr;
                         document.getElementById('labelBase').textContent = '📊 Base (' + pctStr + ')';
                     }
@@ -1528,7 +1545,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     );
 
                     const year = new Date().getFullYear() + yearsToMilestone;
-                    document.getElementById('milestone' + milestone.id).textContent = Math.floor(year);
+                    document.getElementById('milestone' + milestone.id).textContent = yearsToMilestone < 100 ? Math.floor(year) : '—';
                 });
             }
 
@@ -1661,7 +1678,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const realReturn = (1 + inputs.investmentReturn) / (1 + inputs.inflationRate) - 1;
                 const baseSavings = inputs.annualIncome * inputs.savingsRate;
                 const originalYears = this.calculateYearsToFIRE(inputs.currentAssets, baseSavings, realReturn, fireNumber);
-                const fmtSaved = (saved) => (saved >= 0 ? '−' : '+') + Math.abs(saved).toFixed(1) + ' anni';
+                const fmtSaved = (saved) => (saved >= 0 ? '−' : '+') + Math.abs(saved).toFixed(1).replace('.', ',') + ' anni';
 
                 // 1) Risparmio mensile aggiuntivo — indipendente
                 if (additionalSavings > 0) {
@@ -1722,8 +1739,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const inputs = calculator.getInputs();
             const r = calculator.results || {};
             const fireNumber = r.fireNumber || 0;
-            const yearsToFire = (r.yearsToFire != null ? r.yearsToFire : 0).toFixed(1);
-            const fireDate = r.fireDate;
+            const reachable = !(r.yearsToFire >= 100);
+            const yearsToFire = reachable ? (r.yearsToFire != null ? r.yearsToFire : 0).toFixed(1).replace('.', ',') : 'Non raggiungibile';
+            const fireDate = reachable ? r.fireDate : 'N/D';
 
             let content = 'RAPPORTO ANALISI FIRE - Indipendenza Finanziaria\n';
             content += '='.repeat(50) + '\n\n';
@@ -1735,7 +1753,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             content += 'Patrimonio attuale: €' + inputs.currentAssets.toLocaleString('it-IT') + '\n\n';
 
             content += 'RISULTATI FIRE:\n';
-            content += 'Numero FIRE: €' + fireNumber.toLocaleString('it-IT') + '\n';
+            content += 'Numero FIRE: €' + fireNumber.toLocaleString('it-IT', {maximumFractionDigits: 0}) + '\n';
             content += 'Anni rimanenti: ' + yearsToFire + '\n';
             content += 'Data stimata FIRE: ' + fireDate + '\n';
             content += 'Risparmi mensili: €' + (r.monthlySavings || 0).toLocaleString('it-IT', {maximumFractionDigits: 0}) + '\n';
@@ -1772,7 +1790,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const bigCard = (label, value, x, w) => { doc.setFillColor(240,250,246); doc.roundedRect(x, y, w, 84, 10, 10, 'F'); doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, GR); doc.text(label, x+18, y+26); doc.setFont('helvetica','bold'); doc.setFontSize(24); doc.setTextColor.apply(doc, EM); doc.text(value, x+18, y+62); };
             const hw = (W - M*2 - 20) / 2;
             bigCard('Numero FIRE', money(RES.fireNumber, 0), M, hw);
-            bigCard('Tempo per raggiungerlo', reachable ? (RES.yearsToFire.toFixed(1) + ' anni') : 'Non raggiungibile', M + hw + 20, hw);
+            bigCard('Tempo per raggiungerlo', reachable ? (RES.yearsToFire.toFixed(1).replace('.', ',') + ' anni') : 'Non raggiungibile', M + hw + 20, hw);
             y += 100;
 
             doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, GR);
@@ -1784,9 +1802,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             rowr('Età attuale -> Età FIRE obiettivo', RES.currentAge + ' -> ' + RES.targetAge);
             rowr('Risparmi attuali', money(RES.currentAssets, 0));
             rowr('Contributo annuo', money(RES.annualSavings, 0));
-            rowr('Rendimento annuo atteso', RES.investmentReturn.toFixed(1) + ' %');
-            rowr('Tasso di inflazione', RES.inflationRate.toFixed(1) + ' %');
-            rowr('Tasso di prelievo sicuro', RES.withdrawalRate.toFixed(1) + ' %');
+            rowr('Rendimento annuo atteso', RES.investmentReturn.toFixed(1).replace('.', ',') + ' %');
+            rowr('Tasso di inflazione', RES.inflationRate.toFixed(1).replace('.', ',') + ' %');
+            rowr('Tasso di prelievo sicuro', RES.withdrawalRate.toFixed(1).replace('.', ',') + ' %');
             rowr('Spese annue (adattate al piano)', money(RES.targetExpenses, 0));
             y += 14;
 
@@ -1833,6 +1851,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function calculateAll() {
             if (calculator) calculator.calculateAll();
         }
+        window.addEventListener('el-theme-change', calculateAll);
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
 <button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>

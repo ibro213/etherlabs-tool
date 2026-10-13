@@ -20,24 +20,6 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-/* ===== Lock Screen ===== */
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}
-.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
-.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
-.lock-input:focus{border-color:#10b981}
-.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
-.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
-.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
-.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
-@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 
 <meta charset="UTF-8">
@@ -144,6 +126,25 @@
     }
 </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -647,7 +648,7 @@ function buildVCard(d){ d = d || collectData();
 }
 function downloadVCard(){ var blob=new Blob([buildVCard()],{type:'text/vcard;charset=utf-8'});
   var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url;
-  a.download=(collectData().fullName||'contact').replace(/[^\w\-]+/g,'_')+'.vcf'; a.click();
+  a.download=(collectData().fullName||'contact').replace(/[^\p{L}\p{N}\-]+/gu,'_')+'.vcf'; a.click(); // \p{L}: "Pérez" non diventa "P_rez"
   URL.revokeObjectURL(url); notify(t('msgVcf')); }
 var _qrCache = { key:'', url:'' };
 function makeQrDataUrl(text, scale){ scale=scale||3;
@@ -713,7 +714,8 @@ const TEMPLATES = {
     + (photo(d,70,true)?`<div style="margin-bottom:10px;">${photo(d,70,true)}</div>`:'')
     + nameBlock(d,color) + contactBlock(d,color,mode) + socialBlock(d,mode)
     + `</td></tr></tbody></table>`),
-  bold: (d,color,mode)=> { const tc=textOn(color); const soft='rgba(255,255,255,0.82)'; return root(
+  /* soft: colore pieno (Outlook desktop ignora rgba) e scuro sui colori accento chiari, dove il bianco sparirebbe */
+  bold: (d,color,mode)=> { const tc=textOn(color); const soft=tc==='#ffffff'?'#e6eaee':'#3a3f45'; return root(
     // banda-header coesa: foto + nome + ruolo + azienda tutti dentro il blocco colorato, verticalmente centrati
     `<table cellpadding="0" cellspacing="0" border="0" role="presentation"><tbody><tr><td style="background-color:${color};padding:16px 22px;border-radius:10px;">`
     + `<table cellpadding="0" cellspacing="0" border="0" role="presentation"><tbody><tr>`
@@ -907,7 +909,17 @@ $('language').innerHTML = Object.keys(I18N).map(k=>`<option value="${k}">${I18N[
 
 ['fullName','jobTitle','company','email','phone','website','linkedin','instagram','x','facebook','youtube','photoUrl']
   .forEach(id=>$(id).addEventListener('input', updatePreview));
-$('language').addEventListener('change', e=>{ state.lang=e.target.value; applyI18n(); updatePreview(); });
+/* i dati di esempio di partenza seguono la lingua finché l'utente non li ha toccati (prima restavano in inglese anche in IT/FR/DE/ES) */
+const SAMPLE_IDS=['fullName','jobTitle','company','email','phone','website'], SAMPLE_KEYS=['phName','phTitle','phCo','phEmail','phPhone','phWebsite'];
+function _sampleFor(lang){ const L=I18N[lang]||I18N.en; return SAMPLE_KEYS.map(k=>L[k]); }
+function localizeSample(fromLang){ const cur=SAMPLE_IDS.map(id=>$(id).value);
+  const same=a=>a.every((v,i)=>v===cur[i]);
+  if(!(same(SAMPLE_IDS.map(id=>$(id).defaultValue)) || same(_sampleFor(fromLang)))) return;
+  const nx=_sampleFor(state.lang); SAMPLE_IDS.forEach((id,i)=>{ $(id).value=nx[i]; }); }
+const THEME_LBL={ en:['Toggle theme','Light / dark theme'], it:['Cambia tema','Tema chiaro / scuro'], fr:['Changer de thème','Thème clair / sombre'], de:['Design wechseln','Helles / dunkles Design'], es:['Cambiar tema','Tema claro / oscuro'] };
+function themeLabel(){ const b=document.getElementById('el-theme-toggle'); if(!b) return; const l=THEME_LBL[state.lang]||THEME_LBL.en; b.setAttribute('aria-label',l[0]); b.title=l[1]; }
+document.querySelectorAll('.color-btn').forEach(b=>{ b.setAttribute('aria-label', b.dataset.color); b.title=b.dataset.color; });
+$('language').addEventListener('change', e=>{ const old=state.lang; state.lang=e.target.value; localizeSample(old); applyI18n(); themeLabel(); updatePreview(); });
 $('fontFamily').addEventListener('change', e=>{ state.fontFamily=e.target.value; updatePreview(); });
 document.querySelectorAll('.template-btn').forEach(b=>b.addEventListener('click', function(){ document.querySelectorAll('.template-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active'); state.template=this.dataset.template; updatePreview(); }));
 document.querySelectorAll('.color-btn').forEach(b=>b.addEventListener('click', function(){ document.querySelectorAll('.color-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active'); state.accentColor=this.dataset.color; $('customColor').value=this.dataset.color; updatePreview(); }));
@@ -916,7 +928,7 @@ $('customColor').addEventListener('input', e=>{ state.accentColor=e.target.value
   if(id==='togglePhoto')state.includePhoto=on; else if(id==='toggleSocial')state.showSocial=on; else state.includeSeparator=on; updatePreview(); }));
 $('photoSize').addEventListener('change', e=>{ state.photoSize=e.target.value; updatePreview(); });
 $('photoShape').addEventListener('change', e=>{ state.photoShape=e.target.value; updatePreview(); });
-$('handwritingStyle').addEventListener('change', e=>{ state.handwritingStyle=e.target.value; if(state.handwritten) updatePreview(); });
+$('handwritingStyle').addEventListener('change', e=>{ state.handwritingStyle=e.target.value; updatePreview(); }); // sempre: updatePreview salva, altrimenti con la firma spenta lo stile scelto si perdeva al ricaricamento
 $('toggleHandwritten').addEventListener('click', function(){ this.classList.toggle('active'); state.handwritten=this.classList.contains('active'); updatePreview(); });
 $('resetBtn').addEventListener('click', resetAll);
 $('photoFile').addEventListener('change', e=>loadPhotoFile(e.target.files[0]));
@@ -1033,8 +1045,9 @@ $('exampleBtn').addEventListener('click', loadExample);
 
 /* ---------- boot ---------- */
 (function init(){ const saved=loadState();
-  if(saved){ applyData(saved); } else { state.lang=detectLang(); $('language').value=state.lang; }
+  if(saved){ applyData(saved); } else { state.lang=detectLang(); $('language').value=state.lang; if(state.lang!=='en') localizeSample('en'); }
   applyI18n(); updatePreview();
+  document.addEventListener('DOMContentLoaded', themeLabel); // il bottone tema è dopo questo script
   window.addEventListener('resize', fitPreview);
   if (document.fonts && document.fonts.load) {
     Promise.all(SIG_FAMILIES.map(function(f){ return document.fonts.load('40px "' + f + '"'); }))
@@ -1043,7 +1056,7 @@ $('exampleBtn').addEventListener('click', loadExample);
 })();
 </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

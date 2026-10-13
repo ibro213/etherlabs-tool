@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Invoice Generator Pro - PREMIUM TOOL</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <script>/** @license
  *
  * jsPDF - PDF Document creation from JavaScript
@@ -450,6 +441,9 @@ const I18N = {
     status: 'Status', pricesInclTax: 'Prices include {tax}', forfettario: 'Flat-rate scheme (IT)',
     cassaLabel: 'Contribution / markup (%)', ritenutaLabel: 'Withholding tax (%)', rivalsaInRit: 'Contribution subject to withholding',
     cassaRow: 'Contribution', ritenutaRow: 'Withholding tax', nettoAPagare: 'Net payable',
+    bolloCliente: 'Charge the stamp duty to the client', bolloRow: 'Stamp duty',
+    bolloNote: 'Stamp duty paid virtually pursuant to art. 6 of the Italian Ministerial Decree of 17 June 2014.',
+    intentoProt: 'Declaration of intent protocol no.', intentoDate: 'Declaration of intent protocol date',
     detailsTitle: 'Invoice Details', previewTitle: 'Invoice Preview',
     invoiceNumber: 'Invoice Number', invoiceDate: 'Invoice Date', dueDate: 'Due Date',
     fromSender: 'From (Sender)', companyName: 'Company Name', uploadLogo: 'Upload Logo',
@@ -478,7 +472,10 @@ const I18N = {
     phCompany: 'Your Company Inc.', phClient: 'Client Name', phDesc: 'Description',
     phTerms: 'Net 30 days', phAddress: '123 Main Street', phCity: 'New York, NY 10001',
     phEmail: 'info@company.com', phPhone: '+1 555 123 4567', phTaxId: 'EIN 12-3456789',
-    phBank: 'Bank of America', phAcct: 'IBAN / Account no.', phNotes: 'Additional notes and terms…'
+    phBank: 'Bank of America', phAcct: 'IBAN / Account no.', phNotes: 'Additional notes and terms…',
+    cropLogo: '✂️ Crop / reposition', fitContain: 'Contain', fitCover: 'Cover', cropTitle: 'Crop logo',
+    cropHint: 'Drag to move, drag the green corner to resize.', cancel: 'Cancel', apply: 'Apply',
+    curUSD: 'Dollar ($)', curEUR: 'Euro (€)', curGBP: 'Pound (£)', curCHF: 'Swiss Franc (CHF)'
   },
   it: {
     _name: 'Italiano',
@@ -489,6 +486,9 @@ const I18N = {
     status: 'Stato', pricesInclTax: 'Prezzi {tax} inclusa', forfettario: 'Regime Forfettario',
     cassaLabel: 'Cassa / Rivalsa INPS (%)', ritenutaLabel: "Ritenuta d'acconto (%)", rivalsaInRit: 'Rivalsa soggetta a ritenuta',
     cassaRow: 'Cassa / Rivalsa', ritenutaRow: "Ritenuta d'acconto", nettoAPagare: 'Netto a pagare',
+    bolloCliente: 'Addebita il bollo al cliente', bolloRow: 'Marca da bollo',
+    bolloNote: "Imposta di bollo assolta in modo virtuale ai sensi dell'art. 6 del D.M. 17 giugno 2014.",
+    intentoProt: "Protocollo dichiarazione d'intento", intentoDate: "Data protocollo dichiarazione d'intento",
     detailsTitle: 'Dati Fattura', previewTitle: 'Anteprima Fattura',
     invoiceNumber: 'Numero Fattura', invoiceDate: 'Data Fattura', dueDate: 'Scadenza',
     fromSender: 'Da (Mittente)', companyName: 'Ragione Sociale', uploadLogo: 'Carica Logo',
@@ -513,7 +513,10 @@ const I18N = {
     phCompany: 'La Tua Azienda S.r.l.', phClient: 'Nome Cliente', phDesc: 'Descrizione',
     phTerms: '30 giorni', phAddress: 'Via Roma 12', phCity: '20100 Milano MI',
     phEmail: 'info@azienda.it', phPhone: '+39 02 1234567', phTaxId: 'P.IVA 01234567890',
-    phBank: 'Nome banca', phAcct: 'IBAN', phNotes: 'Note e condizioni aggiuntive…'
+    phBank: 'Nome banca', phAcct: 'IBAN', phNotes: 'Note e condizioni aggiuntive…',
+    cropLogo: '✂️ Ritaglia / riposiziona', fitContain: 'Adatta', fitCover: 'Riempi', cropTitle: 'Ritaglia logo',
+    cropHint: "Trascina per spostare, trascina l'angolo verde per ridimensionare.", cancel: 'Annulla', apply: 'Applica',
+    curUSD: 'Dollaro ($)', curEUR: 'Euro (€)', curGBP: 'Sterlina (£)', curCHF: 'Franco svizzero (CHF)'
   },
   fr: {
     _name: 'Français',
@@ -524,6 +527,9 @@ const I18N = {
     status: 'Statut', pricesInclTax: 'Prix {tax} incluse', forfettario: 'Régime forfaitaire (IT)',
     cassaLabel: 'Cotisation / majoration (%)', ritenutaLabel: 'Retenue à la source (%)', rivalsaInRit: 'Cotisation soumise à la retenue',
     cassaRow: 'Cotisation', ritenutaRow: 'Retenue à la source', nettoAPagare: 'Net à payer',
+    bolloCliente: 'Refacturer le droit de timbre au client', bolloRow: 'Droit de timbre',
+    bolloNote: "Droit de timbre acquitté de manière virtuelle conformément à l'art. 6 du décret ministériel italien du 17 juin 2014.",
+    intentoProt: "Protocole de la déclaration d'intention", intentoDate: "Date du protocole de la déclaration d'intention",
     detailsTitle: 'Détails de la facture', previewTitle: 'Aperçu de la facture',
     invoiceNumber: 'Numéro de facture', invoiceDate: 'Date de facture', dueDate: 'Échéance',
     fromSender: 'De (Émetteur)', companyName: 'Nom de l’entreprise', uploadLogo: 'Charger logo',
@@ -548,7 +554,10 @@ const I18N = {
     phCompany: 'Votre Entreprise SARL', phClient: 'Nom du client', phDesc: 'Description',
     phTerms: '30 jours', phAddress: '12 rue de la Paix', phCity: '75001 Paris',
     phEmail: 'contact@societe.fr', phPhone: '+33 1 23 45 67 89', phTaxId: 'N° TVA FR12345678901',
-    phBank: 'Nom de la banque', phAcct: 'IBAN', phNotes: 'Notes et conditions…'
+    phBank: 'Nom de la banque', phAcct: 'IBAN', phNotes: 'Notes et conditions…',
+    cropLogo: '✂️ Recadrer / repositionner', fitContain: 'Contenir', fitCover: 'Remplir', cropTitle: 'Recadrer le logo',
+    cropHint: 'Faites glisser pour déplacer, tirez le coin vert pour redimensionner.', cancel: 'Annuler', apply: 'Appliquer',
+    curUSD: 'Dollar ($)', curEUR: 'Euro (€)', curGBP: 'Livre sterling (£)', curCHF: 'Franc suisse (CHF)'
   },
   de: {
     _name: 'Deutsch',
@@ -559,6 +568,9 @@ const I18N = {
     status: 'Status', pricesInclTax: 'Preise inkl. {tax}', forfettario: 'Pauschalregelung (IT)',
     cassaLabel: 'Beitrag / Aufschlag (%)', ritenutaLabel: 'Quellensteuer (%)', rivalsaInRit: 'Beitrag unterliegt Quellensteuer',
     cassaRow: 'Beitrag', ritenutaRow: 'Quellensteuer', nettoAPagare: 'Nettobetrag',
+    bolloCliente: 'Stempelsteuer dem Kunden berechnen', bolloRow: 'Stempelsteuer',
+    bolloNote: 'Stempelsteuer virtuell entrichtet gemäß Art. 6 des italienischen Ministerialdekrets vom 17. Juni 2014.',
+    intentoProt: 'Protokollnr. der Absichtserklärung', intentoDate: 'Protokolldatum der Absichtserklärung',
     detailsTitle: 'Rechnungsdaten', previewTitle: 'Rechnungsvorschau',
     invoiceNumber: 'Rechnungsnummer', invoiceDate: 'Rechnungsdatum', dueDate: 'Fällig am',
     fromSender: 'Von (Absender)', companyName: 'Firmenname', uploadLogo: 'Logo hochladen',
@@ -583,7 +595,10 @@ const I18N = {
     phCompany: 'Ihre Firma GmbH', phClient: 'Kundenname', phDesc: 'Beschreibung',
     phTerms: '30 Tage', phAddress: 'Hauptstraße 12', phCity: '10115 Berlin',
     phEmail: 'info@firma.de', phPhone: '+49 30 1234567', phTaxId: 'USt-IdNr. DE123456789',
-    phBank: 'Name der Bank', phAcct: 'IBAN', phNotes: 'Zusätzliche Anmerkungen…'
+    phBank: 'Name der Bank', phAcct: 'IBAN', phNotes: 'Zusätzliche Anmerkungen…',
+    cropLogo: '✂️ Zuschneiden / verschieben', fitContain: 'Einpassen', fitCover: 'Füllen', cropTitle: 'Logo zuschneiden',
+    cropHint: 'Zum Verschieben ziehen, zum Skalieren die grüne Ecke ziehen.', cancel: 'Abbrechen', apply: 'Übernehmen',
+    curUSD: 'Dollar ($)', curEUR: 'Euro (€)', curGBP: 'Pfund (£)', curCHF: 'Schweizer Franken (CHF)'
   },
   es: {
     _name: 'Español',
@@ -594,6 +609,9 @@ const I18N = {
     status: 'Estado', pricesInclTax: 'Precios con {tax} incluido', forfettario: 'Régimen forfait (IT)',
     cassaLabel: 'Cotización / recargo (%)', ritenutaLabel: 'Retención (%)', rivalsaInRit: 'Cotización sujeta a retención',
     cassaRow: 'Cotización', ritenutaRow: 'Retención', nettoAPagare: 'Neto a pagar',
+    bolloCliente: 'Cobrar el impuesto de timbre al cliente', bolloRow: 'Impuesto de timbre',
+    bolloNote: 'Impuesto de timbre liquidado de forma virtual según el art. 6 del Decreto Ministerial italiano de 17 de junio de 2014.',
+    intentoProt: 'Protocolo de la declaración de intenciones', intentoDate: 'Fecha del protocolo de la declaración de intenciones',
     detailsTitle: 'Datos de la factura', previewTitle: 'Vista previa',
     invoiceNumber: 'Número de factura', invoiceDate: 'Fecha de factura', dueDate: 'Vencimiento',
     fromSender: 'De (Emisor)', companyName: 'Nombre de empresa', uploadLogo: 'Subir logo',
@@ -618,7 +636,10 @@ const I18N = {
     phCompany: 'Tu Empresa S.L.', phClient: 'Nombre del cliente', phDesc: 'Descripción',
     phTerms: '30 días', phAddress: 'Calle Mayor 12', phCity: '28001 Madrid',
     phEmail: 'info@empresa.es', phPhone: '+34 91 123 45 67', phTaxId: 'NIF B12345678',
-    phBank: 'Nombre del banco', phAcct: 'IBAN', phNotes: 'Notas y condiciones…'
+    phBank: 'Nombre del banco', phAcct: 'IBAN', phNotes: 'Notas y condiciones…',
+    cropLogo: '✂️ Recortar / reposicionar', fitContain: 'Ajustar', fitCover: 'Rellenar', cropTitle: 'Recortar logo',
+    cropHint: 'Arrastra para mover, arrastra la esquina verde para redimensionar.', cancel: 'Cancelar', apply: 'Aplicar',
+    curUSD: 'Dólar ($)', curEUR: 'Euro (€)', curGBP: 'Libra (£)', curCHF: 'Franco suizo (CHF)'
   }
 };
 
@@ -735,6 +756,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
         .li-field { display: flex; flex-direction: column; gap: 0.3rem; }
         .li-mini { display: none; font-size: 0.7rem; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; margin: 0; }
         .line-item input { width: 100%; padding: 0.7rem; }
+        .line-item select.natura { width: 100%; padding: 0.45rem 0.25rem; font-size: 0.8rem; }   /* the code (N3.5, N6.9) stays readable in the narrow rate column */
         .line-item-total { padding: 0.75rem; background: var(--emerald-glow); border-radius: 0.5rem; color: var(--emerald-light); font-weight: 600; text-align: right; min-height: 44px; display: flex; align-items: center; justify-content: flex-end; }
         .line-item-remove { padding: 0.75rem; background: var(--error); color: #08130e; border: none; border-radius: 0.5rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-weight: 600; min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease, transform 0.2s ease; align-self: center; }
 
@@ -777,8 +799,9 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
         .export-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
         .export-btn { flex: 1; min-width: 120px; padding: 1rem; font-size: 0.85rem; min-height: 48px; }
 
-        .success-message { background: var(--emerald-glow); color: var(--success); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; border: 1px solid var(--success); border-left: 4px solid var(--emerald-light); }
-        .success-message.show { display: block; animation: slideIn 0.3s ease; }
+        /* fixed toast: showing it never pushes the page down; it fades out */
+        .success-message { position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 10px); z-index: 99990; width: max-content; max-width: calc(100vw - 2rem); background: linear-gradient(var(--emerald-glow), var(--emerald-glow)), var(--bg2); color: var(--success); padding: 1rem 1.25rem; border-radius: 0.5rem; border: 1px solid var(--success); border-left: 4px solid var(--emerald-light); box-shadow: 0 8px 24px rgba(0,0,0,0.25); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s; }
+        .success-message.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity 0.3s ease, transform 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ---------- STICKY PREVIEW: stays visible while filling the form ---------- */
@@ -802,6 +825,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
             .line-item { grid-template-columns: 1fr; gap: 0.75rem; padding: 1rem; }
             .li-mini { display: block; }
             .line-item-remove { width: 100%; }
+            .line-item select.natura { font-size: 16px; }   /* full width here; 16px avoids the iOS focus zoom */
             .preview { font-size: 0.85rem; padding: 1.5rem; }
             .preview-header { flex-direction: column; align-items: center; }
             .preview-company-info { text-align: center; margin-top: 1rem; }
@@ -815,9 +839,18 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
             button { padding: 0.75rem 1.25rem; font-size: 0.85rem; }
             .panel { padding: 1rem; }
         }
+        /* phones: the single column shrinks to the screen instead of growing to the invoice table's width;
+           a table still too wide scrolls inside the preview card, never the whole page */
+        @media screen and (max-width: 768px) {
+            .main-content, .form-row { grid-template-columns: minmax(0, 1fr); }
+            .preview { overflow-x: auto; }
+            /* Classic/Bold header band bleeds by -2.5rem (the desktop card padding); here the card padding is 1.5rem */
+            .preview-header[style*="margin:-2.5rem"] { margin-top: -1.5rem !important; margin-left: -1.5rem !important; margin-right: -1.5rem !important; }
+        }
 
         @media print {
             @page { margin: 12mm; }
+            html { color-scheme: light !important; } /* dark app theme would paint the page margins dark with "Background graphics" on */
             body { background: #fff !important; color: #000 !important; }
             header, .controls, .success-message, .export-buttons, .panel-title, .main-content > .panel:first-child { display: none !important; }
             .container { margin: 0 !important; padding: 0 !important; max-width: none !important; }
@@ -825,10 +858,32 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
             .preview-panel { position: static !important; max-height: none !important; overflow: visible !important; background: #fff !important; border: none !important; padding: 0 !important; }
             .preview { box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; min-height: 0 !important; }
             .preview-logo-area:not(.has-logo) { display: none !important; }
-            table, tr, td, th, .totals-section, .payment-section, .preview-notes, .forf-note { page-break-inside: avoid; }
+            .preview-header[style*="margin:-2.5rem"] { margin-top: 0 !important; margin-left: 0 !important; margin-right: 0 !important; } /* no card padding to bleed into: the band was cut by the page edge */
+            tr, td, th, .totals-section, .payment-section, .preview-notes, .forf-note, .forf-bollo { page-break-inside: avoid; break-inside: avoid; } /* not table: a long one breaks between rows, its header row repeats */
+            .print-tail { page-break-inside: avoid; break-inside: avoid; } /* last box + EtherLabs footer (see beforeprint) */
+            .print-tail footer.el-brand { font-family: var(--ui-font); }
         }
     </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -859,10 +914,10 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
             <div class="control-group">
                 <label data-i18n="currency">Currency</label>
                 <select id="currency">
-                    <option value="$">Dollar ($)</option>
-                    <option value="€">Euro (€)</option>
-                    <option value="£">Pound (£)</option>
-                    <option value="CHF">Swiss Franc (CHF)</option>
+                    <option value="$" data-i18n="curUSD">Dollar ($)</option>
+                    <option value="€" data-i18n="curEUR">Euro (€)</option>
+                    <option value="£" data-i18n="curGBP">Pound (£)</option>
+                    <option value="CHF" data-i18n="curCHF">Swiss Franc (CHF)</option>
                 </select>
             </div>
             <div class="control-group">
@@ -943,9 +998,9 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                         <label data-i18n="uploadLogo">Upload Logo</label>
                         <input type="file" id="fromLogoFile" accept="image/*" style="cursor: pointer;">
                         <div id="logoToolsGroup" style="display:none;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px">
-                            <button type="button" id="logoCropBtn" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="if(_lastLogoSrc)openLogoCropper(_lastLogoSrc)">✂️ Crop / reposition</button>
-                            <button type="button" id="logoFitContain" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="setLogoFit('contain')">Contain</button>
-                            <button type="button" id="logoFitCover" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="setLogoFit('cover')">Cover</button>
+                            <button type="button" id="logoCropBtn" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="if(_lastLogoSrc)openLogoCropper(_lastLogoSrc)" data-i18n="cropLogo">✂️ Crop / reposition</button>
+                            <button type="button" id="logoFitContain" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="setLogoFit('contain')" data-i18n="fitContain">Contain</button>
+                            <button type="button" id="logoFitCover" class="secondary" style="text-transform:none;letter-spacing:0;padding:0.55rem 1rem;min-height:0" onclick="setLogoFit('cover')" data-i18n="fitCover">Cover</button>
                         </div>
                     </div>
                     <div class="control-group">
@@ -1010,6 +1065,10 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                     </div>
                     <div class="line-items" id="lineItems"></div>
                     <button class="secondary" onclick="addLineItem()" data-i18n="addLine">+ Add Line Item</button>
+                    <div class="form-row" id="intentoWrap" style="display:none;margin-top:1.25rem;">
+                        <div class="control-group"><label data-i18n="intentoProt">Declaration of intent protocol no.</label><input type="text" id="intentoProt" maxlength="60" placeholder="17011712345678-000001"></div>
+                        <div class="control-group"><label data-i18n="intentoDate">Declaration of intent protocol date</label><input type="date" id="intentoDate"></div>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -1029,6 +1088,10 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
                     <div class="control-group" style="flex-direction:row;align-items:center;gap:8px;">
                         <input type="checkbox" id="rivalsaInRitenuta" checked style="width:auto;">
                         <label for="rivalsaInRitenuta" data-i18n="rivalsaInRit" style="margin:0;">Contribution subject to withholding</label>
+                    </div>
+                    <div class="control-group" id="bolloClienteWrap" style="display:none;flex-direction:row;align-items:center;gap:8px;margin-top:0.75rem;">
+                        <input type="checkbox" id="bolloCliente" style="width:auto;">
+                        <label for="bolloCliente" data-i18n="bolloCliente" style="margin:0;">Charge the stamp duty to the client</label>
                     </div>
                 </div>
 
@@ -1070,7 +1133,7 @@ const CURRENCY_ISO = { '$': 'USD', '€': 'EUR', '£': 'GBP', 'CHF': 'CHF' };
 const state = {
     country: 'US', lang: 'en', currency: '$', template: 'professional',
     accent: null,          // hex string; null => template default
-    status: 'none', taxInclusive: false, forfettario: false, logoDataUrl: null, logoFit: 'contain'
+    status: 'none', taxInclusive: false, forfettario: false, bolloCliente: false, logoDataUrl: null, logoFit: 'contain'
 };
 
 const TEMPLATES = {
@@ -1083,7 +1146,20 @@ const TEMPLATES = {
 
 const STATUS_COLORS = { paid: [16, 185, 129], due: [245, 158, 11], overdue: [239, 68, 68] };
 const FORF_TEXT = "Operazione effettuata ai sensi dell'art. 1, commi 54-89, L. 190/2014 - Regime forfetario. Il prestatore non è soggetto a ritenuta d'acconto ai sensi dell'art. 1, comma 67, Legge 190/2014.";
-const FORF_BOLLO = "Imposta di bollo assolta sull'originale ai sensi del D.M. 17/06/2014.";
+/* Natura IVA (FatturaPA) of an Italian line at 0% outside forfettario: code -> short label, also written as RiferimentoNormativo */
+const NATURE = {
+    'N1': 'Escluse ex art. 15 DPR 633/72', 'N2.1': 'Non soggette ex artt. 7-7septies DPR 633/72', 'N2.2': 'Non soggette - altri casi',
+    'N3.1': 'Non imponibili - esportazioni', 'N3.2': 'Non imponibili - cessioni intracomunitarie', 'N3.3': 'Non imponibili - cessioni verso San Marino',
+    'N3.4': 'Non imponibili - assimilate alle esportazioni', 'N3.5': "Non imponibili - a seguito di dichiarazioni d'intento", 'N3.6': 'Non imponibili - altre operazioni',
+    'N4': 'Esenti', 'N5': 'Regime del margine / IVA non esposta in fattura',
+    'N6.1': 'Inversione contabile - rottami e materiali di recupero', 'N6.2': 'Inversione contabile - oro e argento', 'N6.3': 'Inversione contabile - subappalto settore edile',
+    'N6.4': 'Inversione contabile - cessione di fabbricati', 'N6.5': 'Inversione contabile - telefoni cellulari', 'N6.6': 'Inversione contabile - prodotti elettronici',
+    'N6.7': 'Inversione contabile - comparto edile e settori connessi', 'N6.8': 'Inversione contabile - settore energetico', 'N6.9': 'Inversione contabile - altri casi',
+    'N7': 'IVA assolta in altro stato UE'
+};
+/* amounts not subject to IVA that carry the 2 € imposta di bollo over 77,47 € (DPR 642/72, tariffa art. 13).
+   No bollo on exports, intra-EU, San Marino and assimilated sales (N3.1-N3.4) nor on operations taxed with IVA (N5, N6.x, N7) */
+const NATURE_BOLLO = ['N1', 'N2.1', 'N2.2', 'N3.5', 'N3.6', 'N4'];
 const LS_KEY = 'invoiceGeneratorPro.v2';
 
 const $ = id => document.getElementById(id);
@@ -1132,7 +1208,25 @@ function fmtMoney(value) {
 }
 function fmtPct(n) {
     const v = Number(n) || 0;
-    return (Number.isInteger(v) ? v.toString() : v.toFixed(2).replace('.', ',')) + '%';
+    if (Number.isInteger(v)) return v.toString() + '%';
+    let s;
+    try { s = v.toLocaleString(COUNTRIES[state.country].locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    catch (e) { s = v.toFixed(2); }
+    return s + '%';
+}
+/* number typed in a free-text field: accepts the country's decimal comma (12,50) as well as 12.50 */
+function parseLocalNum(raw) {
+    let s = String(raw == null ? '' : raw).replace(/[^0-9.,-]/g, '');
+    const lc = s.lastIndexOf(','), ld = s.lastIndexOf('.');
+    let commaDecimal;
+    if (lc >= 0 && ld >= 0) commaDecimal = lc > ld;                    // 1.234,56 vs 1,234.56
+    else if (lc >= 0) {
+        let dec = '.';
+        try { dec = (1.5).toLocaleString(COUNTRIES[state.country].locale).charAt(1); } catch (e) {}
+        commaDecimal = dec === ',' || !/^-?\d{1,3}(,\d{3})+$/.test(s); // 12,50 -> 12.5 ; 1,000 -> 1000 in en locales
+    } else commaDecimal = false;
+    s = commaDecimal ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
+    return parseFloat(s) || 0;
 }
 function fmtDate(v) {
     if (!v) return '—';
@@ -1191,6 +1285,8 @@ function addLineItem(vals) {
     vals = vals || {};
     const id = Date.now() + Math.floor(Math.random() * 100000);
     const defTax = $('defaultTax').value;
+    const nat = NATURE[vals.natura] ? vals.natura : 'N2.2';      // older saves have no natura: N2.2
+    const natOpts = Object.keys(NATURE).map(k => `<option value="${k}"${k === nat ? ' selected' : ''}>${k} – ${esc(NATURE[k])}</option>`).join('');
     const item = document.createElement('div');
     item.className = 'line-item';
     item.id = `line-${id}`;
@@ -1198,11 +1294,15 @@ function addLineItem(vals) {
         <div class="li-field li-desc"><label class="li-mini" data-i18n="colDesc"></label><input type="text" class="description" data-i18n-ph="phDesc" value="${esc(vals.description || '')}"></div>
         <div class="li-field"><label class="li-mini" data-i18n="colQty"></label><input type="number" class="quantity" value="${esc(vals.quantity != null ? vals.quantity : '1')}" step="0.01" min="0"></div>
         <div class="li-field"><label class="li-mini" data-i18n="colPrice"></label><input type="number" class="price" value="${esc(vals.price != null ? vals.price : '0')}" step="0.01" min="0"></div>
-        <div class="li-field"><label class="li-mini" data-i18n="colTax"></label><input type="number" class="tax" value="${esc(vals.tax != null ? vals.tax : defTax)}" step="0.01" min="0"></div>
+        <div class="li-field"><label class="li-mini" data-i18n="colTax"></label><input type="number" class="tax" value="${esc(vals.tax != null ? vals.tax : defTax)}" step="0.01" min="0"><select class="natura" title="Natura IVA (FatturaPA)" aria-label="Natura IVA" style="display:none">${natOpts}</select></div>
         <div class="li-field"><label class="li-mini" data-i18n="colAmount"></label><div class="line-item-total">${fmtMoney(0)}</div></div>
         <button class="line-item-remove" onclick="removeLineItem(${id})">✕</button>`;
     lineItemsContainer.appendChild(item);
     item.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updatePreview));
+    item.querySelector('.natura').addEventListener('change', updatePreview);
+    const taxInp = item.querySelector('.tax');
+    if (vals.tax == null) taxInp.dataset.autoRate = '1';      // rate taken from the default (see moveDefaultRates)
+    taxInp.addEventListener('input', () => { delete taxInp.dataset.autoRate; taxInp.dataset.handSet = '1'; });
     applyI18n(item);
     updatePreview();
 }
@@ -1225,6 +1325,8 @@ function computeInvoice() {
         const price = parseFloat(row.querySelector('.price').value) || 0;
         let rate = parseFloat(row.querySelector('.tax').value) || 0;
         if (forf) rate = 0;
+        // Natura IVA: forfettario N2.2 (automatic); Italian line at 0% the code picked on the line
+        const natura = forf ? 'N2.2' : (state.country === 'IT' && rate === 0 ? row.querySelector('.natura').value : null);
 
         const gross = qty * price;
         let net, lineTax;
@@ -1232,12 +1334,12 @@ function computeInvoice() {
         else { net = gross; lineTax = gross * rate / 100; }
 
         subtotal += net;
-        items.push({ desc, qty, price, rate, net, lineTax, exempt: forf, lineTotal: net + lineTax });
+        items.push({ desc, qty, price, rate, net, lineTax, exempt: forf, natura, lineTotal: net + lineTax });
     });
 
     // sconto
     const raw = $('discount').value.trim();
-    const dNum = parseFloat(raw) || 0;
+    const dNum = parseLocalNum(raw);
     let discountAmount = raw.includes('%') ? subtotal * (dNum / 100) : dNum;
     if (discountAmount < 0) discountAmount = 0;
     if (discountAmount > subtotal) discountAmount = subtotal;
@@ -1263,13 +1365,19 @@ function computeInvoice() {
         taxTotal += it.taxDue;
     });
 
-    const grandTotal = imponibile + cassaTotal + taxTotal;            // totale fattura (lordo)
+    // imposta di bollo: dovuta oltre 77,47 € di importi non soggetti a IVA (forfettario, o righe 0% con Natura in NATURE_BOLLO);
+    // se addebitata al cliente i 2 € restano fuori da base IVA, cassa e ritenuta
+    const bolloBase = forf ? imponibile + cassaTotal + taxTotal
+        : items.reduce((s, it) => s + (NATURE_BOLLO.includes(it.natura) ? it.taxBase : 0), 0);
+    const bolloDue = state.country === 'IT' && bolloBase > 77.47;
+    const bolloAmount = (bolloDue && state.bolloCliente) ? 2 : 0;
+    const grandTotal = imponibile + cassaTotal + taxTotal + bolloAmount;   // totale fattura (lordo)
     const ritBase = imponibile + (rivalsaInRit ? cassaTotal : 0);     // rivalsa GS soggetta a ritenuta
     const ritenutaAmount = ritBase * ritenutaRate / 100;
     const nettoAPagare = grandTotal - ritenutaAmount;
 
     return { items, subtotal, discountAmount, discountFactor, imponibile, cassaRate, cassaTotal,
-             taxTotal, grandTotal, ritenutaRate, ritenutaAmount, nettoAPagare, forf, incl };
+             taxTotal, grandTotal, ritenutaRate, ritenutaAmount, nettoAPagare, forf, incl, bolloDue, bolloAmount, rivalsaInRit };
 }
 
 function updateTotals(calc) {
@@ -1280,10 +1388,43 @@ function updateTotals(calc) {
     $('subtotal').value = fmtMoney(calc.subtotal);
     $('taxTotal').value = fmtMoney(calc.taxTotal);
     $('grandTotal').value = fmtMoney(calc.grandTotal);
+    $('bolloClienteWrap').style.display = calc.bolloDue ? 'flex' : 'none';   // only where the bollo note applies
+    $('intentoWrap').style.display = calc.items.some(it => it.natura === 'N3.5') ? '' : 'none';   // dichiarazione d'intento
+}
+
+/* ---------- forfettario: line items show 0 (exempt) while it is on ----------
+   the line's own rate is parked in data-std-rate (and still saved by buildData),
+   so switching forfettario off, or to a country without it, brings the rates back */
+function syncForfTaxInputs() {
+    const forf = state.forfettario && COUNTRIES[state.country].forfettario;
+    document.querySelectorAll('.line-item .tax').forEach(inp => {
+        if (forf && inp.dataset.stdRate == null) { inp.dataset.stdRate = inp.value; inp.value = '0'; inp.disabled = true; }
+        else if (!forf && inp.dataset.stdRate != null) { inp.value = inp.dataset.stdRate; delete inp.dataset.stdRate; inp.disabled = false; }
+    });
+}
+function lineRate(inp) { return inp.dataset.stdRate != null ? inp.dataset.stdRate : inp.value; }
+
+/* Italy outside forfettario: a line at 0% shows its Natura IVA select (forfettario keeps the automatic N2.2) */
+function syncNaturaSelects() {
+    const show = state.country === 'IT' && !(state.forfettario && COUNTRIES[state.country].forfettario);
+    document.querySelectorAll('.line-item').forEach(row => {
+        row.querySelector('.natura').style.display = show && (parseFloat(row.querySelector('.tax').value) || 0) === 0 ? '' : 'none';
+    });
+}
+
+/* country switch: lines still on the default rate take the new country's default; a rate typed by hand stays.
+   Lines loaded from saved data (origin unknown) move only when their rate equals the old default. */
+function moveDefaultRates(oldDef, newDef) {
+    document.querySelectorAll('.line-item .tax').forEach(inp => {
+        if (inp.dataset.handSet || !(inp.dataset.autoRate || parseFloat(lineRate(inp)) === parseFloat(oldDef))) return;
+        if (inp.dataset.stdRate != null) inp.dataset.stdRate = newDef; else inp.value = newDef;
+    });
 }
 
 /* ---------- master update ---------- */
 function updatePreview() {
+    syncForfTaxInputs();
+    syncNaturaSelects();
     updateInvoiceNumber();
     const calc = computeInvoice();
     updateTotals(calc);
@@ -1337,7 +1478,7 @@ function renderPreview(calc) {
 
     let itemsHTML = '';
     calc.items.forEach(it => {
-        const taxCell = it.exempt ? esc(t('exempt')) : fmtPct(it.rate);
+        const taxCell = it.exempt ? esc(t('exempt')) : fmtPct(it.rate) + (it.natura ? ' ' + esc(it.natura) : '');
         itemsHTML += `<tr>
             <td>${esc(it.desc)}</td>
             <td style="text-align:center;">${it.qty}</td>
@@ -1361,15 +1502,15 @@ function renderPreview(calc) {
 
     // forfettario note
     let forfHTML = '';
-    if (calc.forf) {
-        forfHTML = `<div class="forf-note">${esc(FORF_TEXT)}</div>`;
-        if (calc.grandTotal > 77.47) forfHTML += `<div class="forf-bollo">${esc(FORF_BOLLO)}</div>`;
-    }
+    if (calc.forf) forfHTML = `<div class="forf-note">${esc(FORF_TEXT)}</div>`;
+    if (calc.bolloDue) forfHTML += `<div class="forf-bollo">${esc(t('bolloNote'))}</div>`;
 
     const discRow = calc.discountAmount > 0
         ? `<div class="summary-row"><span class="summary-label">${esc(t('discount').replace(/\s*\(.*\)/, ''))}:</span><span class="summary-value">-${esc(fmtMoney(calc.discountAmount))}</span></div>` : '';
     const cassaRow = calc.cassaTotal > 0
         ? `<div class="summary-row"><span class="summary-label">${esc(t('cassaRow'))} (${fmtPct(calc.cassaRate)}):</span><span class="summary-value">${esc(fmtMoney(calc.cassaTotal))}</span></div>` : '';
+    const bolloRow = calc.bolloAmount > 0
+        ? `<div class="summary-row"><span class="summary-label">${esc(t('bolloRow'))}:</span><span class="summary-value">${esc(fmtMoney(calc.bolloAmount))}</span></div>` : '';
     const ritRow = calc.ritenutaAmount > 0
         ? `<div class="summary-row"><span class="summary-label">${esc(t('ritenutaRow'))} (${fmtPct(calc.ritenutaRate)}):</span><span class="summary-value">-${esc(fmtMoney(calc.ritenutaAmount))}</span></div>` : '';
     const nettoRow = calc.ritenutaAmount > 0
@@ -1419,6 +1560,7 @@ function renderPreview(calc) {
             ${discRow}
             ${cassaRow}
             <div class="summary-row"><span class="summary-label">${esc(taxWord())}:</span><span class="summary-value">${esc(fmtMoney(calc.taxTotal))}</span></div>
+            ${bolloRow}
             <div class="summary-row total"><span class="summary-label">${esc(t('grandTotal'))}:</span><span class="summary-value" style="color:${st.accentCss};">${esc(fmtMoney(calc.grandTotal))}</span></div>
             ${ritRow}
             ${nettoRow}
@@ -1600,7 +1742,7 @@ async function buildInvoicePdf() {
         descLines.forEach((ln, li) => doc.text(ln, colX[0] + pad, ty + li * lineH));
         cell(String(it.qty), 1, ty);
         cell(fmtMoney(it.price), 2, ty);
-        cell(it.exempt ? t('exempt') : fmtPct(it.rate), 3, ty);
+        cell(it.exempt ? t('exempt') : fmtPct(it.rate) + (it.natura ? ' ' + it.natura : ''), 3, ty);
         cell(fmtMoney(it.lineTotal), 4, ty);
         doc.setDrawColor(225, 225, 225); doc.setLineWidth(0.1);
         doc.line(M, y + rowH, M + CW, y + rowH);
@@ -1614,6 +1756,7 @@ async function buildInvoicePdf() {
     if (calc.discountAmount > 0) rows.push([t('discount').replace(/\s*\(.*\)/, ''), '-' + fmtMoney(calc.discountAmount)]);
     if (calc.cassaTotal > 0) rows.push([`${t('cassaRow')} (${fmtPct(calc.cassaRate)})`, fmtMoney(calc.cassaTotal)]);
     rows.push([taxWord(), fmtMoney(calc.taxTotal)]);
+    if (calc.bolloAmount > 0) rows.push([t('bolloRow'), fmtMoney(calc.bolloAmount)]);
     const hasRit = calc.ritenutaAmount > 0;
     const totalsH = rows.length * 6.5 + 14 + (calc.incl ? 5 : 0) + (hasRit ? 13 : 0);
     if (y + totalsH > BOTTOM) { doc.addPage(); y = M; }
@@ -1666,9 +1809,9 @@ async function buildInvoicePdf() {
     }
 
     // forfettario legal block
-    if (calc.forf) {
-        const parts = [FORF_TEXT];
-        if (calc.grandTotal > 77.47) parts.push(FORF_BOLLO);
+    if (calc.forf || calc.bolloDue) {
+        const parts = calc.forf ? [FORF_TEXT] : [];
+        if (calc.bolloDue) parts.push(t('bolloNote'));
         parts.forEach(txt => {
             const lines = doc.splitTextToSize(txt, CW - 8);
             const h = lines.length * 4.2 + 5;
@@ -1717,6 +1860,21 @@ async function downloadPDF() {
     } catch (e) { console.error(e); showSuccessMessage(t('msgErr') + (e && e.message ? e.message : '?')); }
 }
 function printInvoice() { window.print(); }
+/* print: the EtherLabs footer joins the invoice's last box in one block that does not split, so it never ends up alone on a page */
+let _printTail = null;
+window.addEventListener('beforeprint', () => {
+    const last = $('preview').lastElementChild, brand = document.querySelector('footer.el-brand');
+    if (!last || !brand || _printTail) return;
+    _printTail = { brand, parent: brand.parentNode, next: brand.nextSibling, wrap: document.createElement('div') };
+    _printTail.wrap.className = 'print-tail';
+    last.before(_printTail.wrap); _printTail.wrap.append(last, brand);
+});
+window.addEventListener('afterprint', () => {
+    if (!_printTail) return;
+    const { brand, parent, next, wrap } = _printTail;
+    if (wrap.firstElementChild && wrap.firstElementChild !== brand) wrap.before(wrap.firstElementChild);   // the last box back in place
+    wrap.remove(); parent.insertBefore(brand, next); _printTail = null;
+});
 function copyToClipboard() {
     const text = $('preview').innerText;
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1741,7 +1899,7 @@ function downloadAsText() {
 function buildData() {
     const data = {
         country: state.country, lang: state.lang, currency: state.currency, template: state.template,
-        accent: state.accent, status: state.status, taxInclusive: state.taxInclusive, forfettario: state.forfettario,
+        accent: state.accent, status: state.status, taxInclusive: state.taxInclusive, forfettario: state.forfettario, bolloCliente: state.bolloCliente,
         defaultTax: $('defaultTax').value, invoiceCounter: $('invoiceCounter').value,
         invoiceDate: $('invoiceDate').value, dueDate: $('dueDate').value,
         fromName: $('fromName').value, fromLogo: $('fromLogo').value, fromLogoFile: state.logoDataUrl, logoFit: state.logoFit,
@@ -1751,13 +1909,17 @@ function buildData() {
         toEmail: $('toEmail').value, toTax: $('toTax').value,
         discount: $('discount').value, bankName: $('bankName').value, bankIBAN: $('bankIBAN').value,
         cassaRate: $('cassaRate').value, ritenutaRate: $('ritenutaRate').value, rivalsaInRitenuta: $('rivalsaInRitenuta').checked,
-        paymentTerms: $('paymentTerms').value, notes: $('notes').value, lineItems: []
+        paymentTerms: $('paymentTerms').value, notes: $('notes').value,
+        fromCap: $('fromCap').value, fromProv: $('fromProv').value, toCap: $('toCap').value, toProv: $('toProv').value,
+        codiceDestinatario: $('codiceDestinatario').value, pecDestinatario: $('pecDestinatario').value,
+        intentoProt: $('intentoProt').value, intentoDate: $('intentoDate').value, lineItems: []
     };
     document.querySelectorAll('.line-item').forEach(row => data.lineItems.push({
         description: row.querySelector('.description').value,
         quantity: row.querySelector('.quantity').value,
         price: row.querySelector('.price').value,
-        tax: row.querySelector('.tax').value
+        tax: lineRate(row.querySelector('.tax')),
+        natura: row.querySelector('.natura').value
     }));
     return data;
 }
@@ -1801,13 +1963,15 @@ function applyData(data) {
     state.logoDataUrl = data.fromLogoFile || null;
     state.logoFit = data.logoFit || 'contain';
     syncLogoTools();
-    ['fromAddress','fromCity','fromEmail','fromPhone','fromTax','toName','toAddress','toCity','toEmail','toTax','discount','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate']
+    ['fromAddress','fromCity','fromEmail','fromPhone','fromTax','toName','toAddress','toCity','toEmail','toTax','discount','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate',
+     'fromCap','fromProv','toCap','toProv','codiceDestinatario','pecDestinatario','intentoProt','intentoDate']
         .forEach(k => { if ($(k)) $(k).value = data[k] || ''; });
     $('rivalsaInRitenuta').checked = data.rivalsaInRitenuta !== undefined ? !!data.rivalsaInRitenuta : true;
 
     state.status = data.status || 'none'; $('status').value = state.status;
     state.taxInclusive = !!data.taxInclusive; $('taxInclusive').checked = state.taxInclusive;
     state.forfettario = !!data.forfettario && COUNTRIES[country].forfettario; $('forfettario').checked = state.forfettario;
+    state.bolloCliente = !!data.bolloCliente; $('bolloCliente').checked = state.bolloCliente;   // older saves have no field: off
 
     state.template = TEMPLATES[data.template] ? data.template : 'professional';
     document.querySelectorAll('.template-btn').forEach(b => b.classList.toggle('active', b.dataset.template === state.template));
@@ -1829,19 +1993,22 @@ function ensureOption(sel, value, label) {
 
 function showSuccessMessage(msg) {
     const el = $('successMessage'); el.textContent = msg; el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3000);
+    clearTimeout(showSuccessMessage.timer);   // a new message restarts the 3 s countdown
+    showSuccessMessage.timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
 /* ---------- events ---------- */
-$('country').addEventListener('change', e => { applyCountry(e.target.value); applyI18n(); updatePreview(); });
+$('country').addEventListener('change', e => { const oldDef = $('defaultTax').value; applyCountry(e.target.value); moveDefaultRates(oldDef, $('defaultTax').value); applyI18n(); updatePreview(); });
 $('language').addEventListener('change', e => { state.lang = e.target.value; applyI18n(); updatePreview(); });
 $('currency').addEventListener('change', e => { state.currency = e.target.value; applyI18n(); updatePreview(); });
 $('status').addEventListener('change', e => { state.status = e.target.value; updatePreview(); });
 $('taxInclusive').addEventListener('change', e => { state.taxInclusive = e.target.checked; updatePreview(); });
 $('forfettario').addEventListener('change', e => { state.forfettario = e.target.checked; updatePreview(); });
+$('bolloCliente').addEventListener('change', e => { state.bolloCliente = e.target.checked; updatePreview(); });
 $('accentColor').addEventListener('input', e => { state.accent = e.target.value; updatePreview(); });
 $('accentReset').addEventListener('click', () => { state.accent = null; $('accentColor').value = TEMPLATES[state.template].defAccent; updatePreview(); });
-['defaultTax','invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate']
+['defaultTax','invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate',
+ 'fromCap','fromProv','toCap','toProv','codiceDestinatario','pecDestinatario','intentoProt','intentoDate']
     .forEach(id => $(id).addEventListener('input', updatePreview));
 $('rivalsaInRitenuta').addEventListener('change', updatePreview);
 
@@ -1884,7 +2051,7 @@ function _lcq(id){return document.getElementById(id);}
 function _lcRect(){var stage=_lcq('logoCropStage'),im=_lcq('logoCropImg');var sr=stage.getBoundingClientRect(),ir=im.getBoundingClientRect();return {ox:ir.left-sr.left,oy:ir.top-sr.top,w:im.clientWidth||1,h:im.clientHeight||1};}
 function _lcDraw(){var b=_lcq('logoCropBox');b.style.left=_lcR.x+'px';b.style.top=_lcR.y+'px';b.style.width=_lcR.w+'px';b.style.height=_lcR.h+'px';}
 function _lcClamp(){var r=_lcRect();_lcR.w=Math.max(24,Math.min(_lcR.w,r.w));_lcR.h=Math.max(24,Math.min(_lcR.h,r.h));_lcR.x=Math.max(r.ox,Math.min(_lcR.x,r.ox+r.w-_lcR.w));_lcR.y=Math.max(r.oy,Math.min(_lcR.y,r.oy+r.h-_lcR.h));}
-function openLogoCropper(src){_lcImg=new Image();_lcImg.onload=function(){_lcq('logoCropImg').src=src;_lcq('logoCropOverlay').style.display='flex';requestAnimationFrame(function(){var r=_lcRect();_lcR={x:r.ox,y:r.oy,w:r.w,h:r.h};_lcClamp();_lcDraw();});};_lcImg.src=src;}
+function openLogoCropper(src){applyI18n(_lcq('logoCropOverlay'));_lcImg=new Image();_lcImg.onload=function(){_lcq('logoCropImg').src=src;_lcq('logoCropOverlay').style.display='flex';requestAnimationFrame(function(){var r=_lcRect();_lcR={x:r.ox,y:r.oy,w:r.w,h:r.h};_lcClamp();_lcDraw();});};_lcImg.src=src;}
 function logoCropApply(){try{var r=_lcRect();var sc=(_lcImg.naturalWidth||r.w)/r.w;var sx=(_lcR.x-r.ox)*sc,sy=(_lcR.y-r.oy)*sc,sw=_lcR.w*sc,sh=_lcR.h*sc;var cap=520,k=Math.min(1,cap/Math.max(sw,sh));var ow=Math.max(1,Math.round(sw*k)),oh=Math.max(1,Math.round(sh*k));var cv=document.createElement('canvas');cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(_lcImg,sx,sy,sw,sh,0,0,ow,oh);state.logoDataUrl=cv.toDataURL('image/png');}catch(e){}_lcq('logoCropOverlay').style.display='none';syncLogoTools();updatePreview();}
 function _lcMove(e){if(!_lcDrag)return;var dx=e.clientX-_lcDrag.sx,dy=e.clientY-_lcDrag.sy;if(_lcDrag.mode==='move'){_lcR.x=_lcDrag.x0+dx;_lcR.y=_lcDrag.y0+dy;}else{_lcR.w=_lcDrag.w0+dx;_lcR.h=_lcDrag.h0+dy;}_lcClamp();_lcDraw();}
 function _lcUp(){_lcDrag=null;document.removeEventListener('pointermove',_lcMove);document.removeEventListener('pointerup',_lcUp);}
@@ -1905,8 +2072,9 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
         applyData(saved);
     } else {
         applyCountry(detectCountry());
-        $('invoiceDate').valueAsDate = new Date();
-        const due = new Date(); due.setDate(due.getDate() + 30); $('dueDate').valueAsDate = due;
+        const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        $('invoiceDate').value = iso(new Date());
+        const due = new Date(); due.setDate(due.getDate() + 30); $('dueDate').value = iso(due);
         $('accentColor').value = TEMPLATES[state.template].defAccent;
         applyI18n();
         addLineItem();
@@ -1937,6 +2105,7 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
     if(codDest==='0000000'&&!pec)W.push('Serve Codice Destinatario (7 caratteri) OPPURE la PEC del cliente');
     if(!d.fromCap)W.push('CAP mittente mancante');
     if(!d.toCap)W.push('CAP cliente mancante');
+    if((d.intentoProt||'').trim()&&!d.intentoDate)W.push("Data del protocollo della dichiarazione d'intento mancante");
     var prog=(d.invoiceNumber||'1').replace(/[^A-Za-z0-9]/g,'').slice(0,10)||'1';
     var nazDest=(d.toCountry||'IT').toUpperCase().slice(0,2);
     var L=[];
@@ -1961,33 +2130,49 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
     L.push('</FatturaElettronicaHeader>');
     L.push('<FatturaElettronicaBody><DatiGenerali><DatiGeneraliDocumento>');
     L.push('<TipoDocumento>TD01</TipoDocumento><Divisa>EUR</Divisa><Data>'+xe((d.invoiceDate||'').slice(0,10))+'</Data><Numero>'+xe(d.invoiceNumber||'1')+'</Numero>');
-    if((+calc.ritenutaAmount||0)>0&&!forf){
+    // ritenuta d'acconto: every line is in its base, the cassa too when "rivalsa soggetta a ritenuta" -> <Ritenuta>SI</Ritenuta>
+    var rit=(+calc.ritenutaAmount||0)>0&&!forf;
+    if(rit){
       L.push('<DatiRitenuta><TipoRitenuta>RT01</TipoRitenuta><ImportoRitenuta>'+n2(calc.ritenutaAmount)+'</ImportoRitenuta><AliquotaRitenuta>'+n2(calc.ritenutaRate)+'</AliquotaRitenuta><CausalePagamento>'+xe(d.causaleRitenuta||'A')+'</CausalePagamento></DatiRitenuta>');
     }
-    var imponibile=+calc.imponibile||0, bollo=(forf&&imponibile>77.47)?2:0;
+    // DatiBollo: same condition as the bollo note on preview/PDF (calc.bolloDue)
+    var bollo=calc.bolloDue?2:0, bolloCli=+calc.bolloAmount||0;
     if(bollo>0)L.push('<DatiBollo><BolloVirtuale>SI</BolloVirtuale><ImportoBollo>'+n2(bollo)+'</ImportoBollo></DatiBollo>');
+    // riepilogo groups by AliquotaIVA + Natura (it.natura: N2.2 in forfettario, the line's code on an Italian 0% line).
+    // ImponibileImporto = base IVA reale (netto scontato + quota cassa), così Imposta = Imponibile×Aliquota
+    // riconcilia (controllo SdI 00423) anche con sconto e/o cassa previdenziale. The bollo charged to the client joins N1, outside the cassa.
+    var groups={},gk=[];
+    function addG(al,na,imp,cassa){var k=al+'|'+na;if(!groups[k]){groups[k]={al:al,na:na,imp:0,cassa:0};gk.push(k);}groups[k].imp+=imp;groups[k].cassa+=cassa;}
+    (calc.items||[]).forEach(function(it){addG(forf?0:it.rate,it.natura||'',(it.taxBase!=null?it.taxBase:(it.net||0)),(it.discNet!=null?it.discNet:(it.net||0))*(+calc.cassaRate||0)/100);});
+    if(bolloCli>0)addG(0,'N1',bolloCli,0);
     if((+calc.cassaRate||0)>0&&(+calc.cassaTotal||0)>0){
-      L.push('<DatiCassaPrevidenziale><TipoCassa>TC22</TipoCassa><AlCassa>'+n2(calc.cassaRate)+'</AlCassa><ImportoContributoCassa>'+n2(calc.cassaTotal)+'</ImportoContributoCassa><AliquotaIVA>'+n2(forf?0:(calc.items[0]?calc.items[0].rate:0))+'</AliquotaIVA>'+(forf?'<Natura>N2.2</Natura>':'')+'</DatiCassaPrevidenziale>');
+      // one block per rate/Natura, so each DatiRiepilogo reconciles with its lines + its share of the cassa
+      var cg=gk.filter(function(k){return groups[k].cassa>0;});
+      cg.forEach(function(k){var g=groups[k];
+        L.push('<DatiCassaPrevidenziale><TipoCassa>TC22</TipoCassa><AlCassa>'+n2(calc.cassaRate)+'</AlCassa><ImportoContributoCassa>'+n2(cg.length===1?calc.cassaTotal:g.cassa)+'</ImportoContributoCassa><AliquotaIVA>'+n2(g.al)+'</AliquotaIVA>'+(rit&&calc.rivalsaInRit?'<Ritenuta>SI</Ritenuta>':'')+(g.na?'<Natura>'+g.na+'</Natura>':'')+'</DatiCassaPrevidenziale>');
+      });
     }
-    L.push('<ImportoTotaleDocumento>'+n2(calc.grandTotal)+'</ImportoTotaleDocumento>');
+    L.push('<ImportoTotaleDocumento>'+n2(calc.grandTotal)+'</ImportoTotaleDocumento>'); // includes the bollo charged to the client
     if(d.notes)L.push('<Causale>'+xe(String(d.notes).slice(0,200))+'</Causale>');
     L.push('</DatiGeneraliDocumento></DatiGenerali>');
     L.push('<DatiBeniServizi>');
     // Lo sconto globale è uniforme su tutte le righe: lo rappresentiamo con ScontoMaggiorazione (SC)
     // così PrezzoTotale (netto scontato) è coerente con PrezzoUnitario×Quantità per lo SdI.
     var df=(calc.discountFactor!=null?+calc.discountFactor:1); var discPct=(1-df)*100;
+    // dichiarazione d'intento on the N3.5 lines: AltriDatiGestionali INTENTO (Agenzia delle Entrate, from 2022)
+    var prot=(d.intentoProt||'').trim();
+    var intento=prot?'<AltriDatiGestionali><TipoDato>INTENTO</TipoDato><RiferimentoTesto>'+xe(prot.slice(0,60))+'</RiferimentoTesto>'+(d.intentoDate?'<RiferimentoData>'+xe(d.intentoDate.slice(0,10))+'</RiferimentoData>':'')+'</AltriDatiGestionali>':'';
     (calc.items||[]).forEach(function(it,i){
       // PrezzoUnitario in FatturaPA è sempre NETTO (IVA esclusa): usa il netto/qtà, valido anche in modalità "IVA inclusa".
       var unit=(it.qty>0)?(it.net/it.qty):(+it.price||0);
       var sconto=(discPct>0.0000001)?'<ScontoMaggiorazione><Tipo>SC</Tipo><Percentuale>'+n2(discPct)+'</Percentuale></ScontoMaggiorazione>':'';
-      L.push('<DettaglioLinee><NumeroLinea>'+(i+1)+'</NumeroLinea><Descrizione>'+xe(it.desc||'-')+'</Descrizione><Quantita>'+n2(it.qty)+'</Quantita><PrezzoUnitario>'+unit.toFixed(8)+'</PrezzoUnitario>'+sconto+'<PrezzoTotale>'+n2(it.discNet!=null?it.discNet:it.net)+'</PrezzoTotale><AliquotaIVA>'+n2(forf?0:it.rate)+'</AliquotaIVA>'+(forf?'<Natura>N2.2</Natura>':'')+'</DettaglioLinee>');
+      L.push('<DettaglioLinee><NumeroLinea>'+(i+1)+'</NumeroLinea><Descrizione>'+xe(it.desc||'-')+'</Descrizione><Quantita>'+n2(it.qty)+'</Quantita><PrezzoUnitario>'+unit.toFixed(8)+'</PrezzoUnitario>'+sconto+'<PrezzoTotale>'+n2(it.discNet!=null?it.discNet:it.net)+'</PrezzoTotale><AliquotaIVA>'+n2(forf?0:it.rate)+'</AliquotaIVA>'+(rit?'<Ritenuta>SI</Ritenuta>':'')+(it.natura?'<Natura>'+it.natura+'</Natura>':'')+(it.natura==='N3.5'?intento:'')+'</DettaglioLinee>');
     });
-    var groups={};
-    // ImponibileImporto = base IVA reale (netto scontato + quota cassa), così Imposta = Imponibile×Aliquota
-    // riconcilia (controllo SdI 00423) anche con sconto e/o cassa previdenziale.
-    (calc.items||[]).forEach(function(it){var al=forf?0:it.rate;if(!groups[al])groups[al]={al:al,imp:0};groups[al].imp+=(it.taxBase!=null?it.taxBase:(it.net||0));});
-    Object.keys(groups).forEach(function(k){var g=groups[k]; var imposta=(forf||g.al===0)?0:(g.imp*g.al/100);
-      L.push('<DatiRiepilogo><AliquotaIVA>'+n2(g.al)+'</AliquotaIVA>'+(forf?'<Natura>N2.2</Natura>':'')+'<ImponibileImporto>'+n2(g.imp)+'</ImponibileImporto><Imposta>'+n2(imposta)+'</Imposta>'+(forf?'<RiferimentoNormativo>Operazione in regime forfettario ex art.1 c.54-89 L.190/2014</RiferimentoNormativo>':'')+'</DatiRiepilogo>');
+    // bollo charged to the client: its own line, Natura N1 (escluso art. 15 DPR 633/72), no discount, outside the cassa base
+    if(bolloCli>0)L.push('<DettaglioLinee><NumeroLinea>'+((calc.items||[]).length+1)+'</NumeroLinea><Descrizione>Imposta di bollo</Descrizione><Quantita>1.00</Quantita><PrezzoUnitario>'+bolloCli.toFixed(8)+'</PrezzoUnitario><PrezzoTotale>'+n2(bolloCli)+'</PrezzoTotale><AliquotaIVA>0.00</AliquotaIVA><Natura>N1</Natura></DettaglioLinee>');
+    gk.forEach(function(k){var g=groups[k]; var imposta=(g.na||g.al===0)?0:(g.imp*g.al/100);
+      var rif=!g.na?'':(forf&&g.na==='N2.2'?'Operazione in regime forfettario ex art.1 c.54-89 L.190/2014':NATURE[g.na]);
+      L.push('<DatiRiepilogo><AliquotaIVA>'+n2(g.al)+'</AliquotaIVA>'+(g.na?'<Natura>'+g.na+'</Natura>':'')+'<ImponibileImporto>'+n2(g.imp)+'</ImponibileImporto><Imposta>'+n2(imposta)+'</Imposta>'+(rif?'<RiferimentoNormativo>'+xe(rif)+'</RiferimentoNormativo>':'')+'</DatiRiepilogo>');
     });
     L.push('</DatiBeniServizi>');
     if(d.bankIBAN){
@@ -2002,7 +2187,8 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
     var d={fromName:gv('fromName'),fromTax:gv('fromTax'),fromAddress:gv('fromAddress'),fromCap:gv('fromCap'),fromCity:gv('fromCity'),fromProv:gv('fromProv'),
       toName:gv('toName'),toTax:gv('toTax'),toAddress:gv('toAddress'),toCap:gv('toCap'),toCity:gv('toCity'),toProv:gv('toProv'),toCountry:'IT',
       codiceDestinatario:gv('codiceDestinatario'),pec:gv('pecDestinatario'),
-      invoiceNumber:gv('invoiceNumber'),invoiceDate:gv('invoiceDate'),dueDate:gv('dueDate'),bankIBAN:gv('bankIBAN'),notes:gv('notes')};
+      invoiceNumber:gv('invoiceNumber'),invoiceDate:gv('invoiceDate'),dueDate:gv('dueDate'),bankIBAN:gv('bankIBAN'),notes:gv('notes'),
+      intentoProt:gv('intentoProt'),intentoDate:gv('intentoDate')};
     var r=genXml(d,calc);
     if(r.warnings.length){ if(!confirm('Attenzione, la FatturaPA potrebbe non essere accettata dallo SdI:\n\n• '+r.warnings.join('\n• ')+'\n\nScarico comunque l\'XML?')) return; }
     var fn='IT'+((r.sid.piva||r.sid.cf||'00000000000'))+'_'+r.prog+'.xml';
@@ -2021,12 +2207,12 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
 })();
 </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 <div id="logoCropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
   <div style="background:#ffffff;color:#1b1e22;border-radius:14px;padding:18px;max-width:min(520px,94vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
-    <div style="font-weight:700;margin-bottom:4px">Crop logo</div>
-    <div style="font-size:.82rem;color:#5a616a;margin-bottom:10px">Drag to move, drag the green corner to resize.</div>
+    <div style="font-weight:700;margin-bottom:4px" data-i18n="cropTitle">Crop logo</div>
+    <div style="font-size:.82rem;color:#5a616a;margin-bottom:10px" data-i18n="cropHint">Drag to move, drag the green corner to resize.</div>
     <div id="logoCropStage" style="position:relative;width:100%;max-height:58vh;display:flex;align-items:center;justify-content:center;background:#f1f3f5;border-radius:10px;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none">
       <img id="logoCropImg" alt="" style="display:block;max-width:100%;max-height:58vh;width:auto;height:auto;pointer-events:none">
       <div id="logoCropBox" style="position:absolute;border:2px solid #10b981;box-shadow:0 0 0 9999px rgba(0,0,0,.35);box-sizing:border-box;cursor:move">
@@ -2034,8 +2220,8 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
-      <button type="button" id="logoCropCancel" style="background:#e5e7eb;color:#1b1e22;border:1px solid #cbd5e1;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;min-height:0">Cancel</button>
-      <button type="button" id="logoCropApply" style="background:#10b981;color:#08130e;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0;min-height:0">Apply</button>
+      <button type="button" id="logoCropCancel" style="background:#e5e7eb;color:#1b1e22;border:1px solid #cbd5e1;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;min-height:0" data-i18n="cancel">Cancel</button>
+      <button type="button" id="logoCropApply" style="background:#10b981;color:#08130e;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0;min-height:0" data-i18n="apply">Apply</button>
     </div>
   </div>
 </div>

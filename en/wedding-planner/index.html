@@ -3,16 +3,703 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <title>Wedding Planner Pro - Your Perfect Wedding</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #eef1f4;
+            --bg-card: #ffffff;
+            --gold: #10b981;
+            --gold-light: #059669;
+            --text-primary: #14201c;
+            --text-secondary: #5f7269;
+            --border: #e2e8e5;
+            --success: #059669;
+            --warning: #b7791f;
+            --danger: #ef4444;
+            --ink-on-gold: #062018;
+            --gold-2: #34d399;
+            --gold-rgb: 16, 185, 129;
+            --gold-text: #046a48;
+        }
+        :root[data-theme="dark"] {
+            --bg-dark: #060a0a;
+            --bg-card: #0f1a17;
+            --gold: #10b981;
+            --gold-light: #34d399;
+            --text-primary: #e8f0ec;
+            --text-secondary: #7a9a8e;
+            --border: #162e26;
+            --success: #34d399;
+            --warning: #facc15;
+            --danger: #ef4444;
+            --gold-text: var(--gold);
+        }
+        /* Color Theme (Settings): data-accent on <html> redefines only the accent, in light and dark mode.
+           --ink-on-gold stays >= 4.5:1 on --gold, --gold-light and --gold-2 (buttons, active item, countdown).
+           --gold-text is the accent used as text: darker in light mode, >= 4.5:1 on white, page and pills. */
+        :root[data-accent="gold"] { --gold: #ae8016; --gold-light: #a07614; --gold-2: #e4a922; --gold-rgb: 174, 128, 22; --ink-on-gold: #1a1100; --gold-text: #79570a; }
+        :root[data-accent="silver"] { --gold: #7c8998; --gold-light: #707e8f; --gold-2: #abb4bd; --gold-rgb: 124, 137, 152; --ink-on-gold: #0b1118; --gold-text: #505e6f; }
+        :root[data-accent="rose"] { --gold: #d95f7c; --gold-light: #d54c6c; --gold-2: #e89eb0; --gold-rgb: 217, 95, 124; --ink-on-gold: #22050d; --gold-text: #ad2948; }
+        :root[data-theme="dark"][data-accent="gold"] { --gold: #dfb248; --gold-light: #e8cb85; --gold-2: #e8cb85; --gold-rgb: 223, 178, 72; }
+        :root[data-theme="dark"][data-accent="silver"] { --gold: #b1b9c1; --gold-light: #cbd1d7; --gold-2: #cbd1d7; --gold-rgb: 177, 185, 193; }
+        :root[data-theme="dark"][data-accent="rose"] { --gold: #ee8ea6; --gold-light: #f3b4c4; --gold-2: #f3b4c4; --gold-rgb: 238, 142, 166; }
+        :root[data-theme="dark"][data-accent] { --gold-text: var(--gold); }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            height: 100dvh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 32px;
+            text-align: center;
+            color: var(--gold-text);
+        }
+
+        .logo-small {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .nav-item {
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer; touch-action: manipulation;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .nav-item:hover {
+            background: rgba(var(--gold-rgb), 0.1);
+            border-color: var(--gold);
+            color: var(--gold-text);
+        }
+        }
+
+        .nav-item.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--ink-on-gold);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .page {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* DASHBOARD */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--gold-text);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* COUNTDOWN */
+        .countdown-box {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            color: var(--ink-on-gold);
+            margin-bottom: 32px;
+        }
+
+        .countdown-box h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .countdown-display {
+            font-size: 48px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+        }
+
+        /* BUDGET */
+        .budget-category {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .budget-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .budget-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .amount-field {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px;
+            color: var(--text-primary);
+        }
+
+        .amount-field input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+            font-size: 13px;
+        }
+
+        .amount-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            background: var(--border);
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            background: var(--gold);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* GUESTS */
+        .guest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .guest-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .guest-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .guest-input {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        .guest-input select {
+            cursor: pointer;
+        }
+
+        /* narrow content area (phone, or a window up to 960px with the sidebar): guest rows and vendor cards wrap
+           instead of running off the screen. Guest: name on its own row, then Side | RSVP | People. */
+        @media (max-width: 960px) {
+            .guest-item { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .guest-item > :first-child { grid-column: 1 / -1; }
+            .guest-item select { width: 100%; min-width: 0; }
+            .vendor-header { flex-wrap: wrap; gap: 8px; }
+            .vendor-header > :first-child { flex: 1 1 100%; }
+            .vendor-header .guest-input, .vendor-details .guest-input { width: 100%; }
+            .vendor-details { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-si { background: rgba(74, 222, 128, 0.2); color: var(--success); }
+        .status-no { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .status-attesa { background: rgba(250, 204, 21, 0.2); color: var(--warning); }
+
+        /* VENDORS */
+        .vendor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .vendor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .vendor-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .vendor-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(var(--gold-rgb), 0.2);
+            color: var(--gold-text);
+        }
+
+        .vendor-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .vendor-detail {
+            color: var(--text-secondary);
+        }
+
+        .vendor-detail strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* TASKS */
+        .task-group {
+            margin-bottom: 28px;
+        }
+
+        .task-timeline {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--gold-text);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .task-item {
+            background: var(--bg-card);
+            border-left: 3px solid var(--gold);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .task-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* TABLES & MENU */
+        .menu-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .menu-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .menu-count {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--gold-text);
+            margin-bottom: 8px;
+        }
+
+        .menu-type {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* SETTINGS */
+        .settings-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(var(--gold-rgb), 0.1);
+        }
+
+        .button {
+            background: var(--gold);
+            color: var(--ink-on-gold);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .button:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(var(--gold-rgb), 0.3);
+        }
+        }
+
+        .button.secondary {
+            background: transparent;
+            color: var(--gold-text);
+            border: 1px solid var(--gold);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .button.secondary:hover {
+            background: rgba(var(--gold-rgb), 0.1);
+        }
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button-group .button {
+            flex: 1 1 auto;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+            border-radius: 12px;
+            padding: 24px;
+            color: var(--ink-on-gold);
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .total-section h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .total-amount {
+            font-size: 42px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* ADD BUTTON */
+        .add-button {
+            display: inline-block;
+            padding: 10px 16px;
+            background: var(--gold);
+            color: var(--ink-on-gold);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+        .add-button:hover {
+            background: var(--gold-light);
+        }
+        }
+    
+  /* ========== MOBILE NAV (added fix) ========== */
+  .mob-menu-btn {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 500;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--gold-text);
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .mob-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 200;
+  }
+  @media (max-width: 768px) {
+    body { overflow: auto !important; height: auto !important; }
+    .mob-menu-btn { display: flex !important; }
+    .mob-overlay.show { display: block; }
+    .sidebar, nav.sidebar, aside.sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      z-index: 300 !important;
+      transform: translateX(-100%) !important;
+      pointer-events: none !important;
+      transition: transform 0.3s ease !important;
+      width: 270px !important;
+      max-width: 85vw !important;
+      overflow-y: auto !important;
+    }
+    .sidebar.mob-open {
+      transform: translateX(0) !important;
+      pointer-events: auto !important;
+    }
+    .content, .main-content, .main, .app-content {
+      margin-left: 0 !important;
+      width: 100% !important;
+      padding-top: 60px !important;
+    }
+    .header, .top-header, .topbar {
+      padding-left: 64px !important;
+    }
+  }
+  /* ========================================= */
+
+        /* ===== Mobile / iPhone patch (standard EtherLabs) ===== */
+        * { -webkit-tap-highlight-color: transparent; }
+        body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+        input, select, textarea { font-size: 16px; }
+        button, .button, .nav-item, .add-button, .mob-menu-btn { touch-action: manipulation; }
+        .button:active, .nav-item:active, .add-button:active, .mob-menu-btn:active { transform: scale(0.97); }
+        @media (max-width: 768px) {
+            button, .button, .nav-item, .add-button { min-height: 44px; }
+        }
+#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+@media print{#el-theme-toggle{display:none}}
+</style>
+<style>
+* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -733,11 +1420,11 @@
                         <div class="stat-label">Confirmed Guests</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="budgetSpent">€ 0</div>
+                        <div class="stat-value" id="budgetSpent">$0</div>
                         <div class="stat-label">Spent</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="budgetRemaining">€ 0</div>
+                        <div class="stat-value" id="budgetRemaining">$0</div>
                         <div class="stat-label">Remaining</div>
                     </div>
                     <div class="stat-card">
@@ -755,7 +1442,7 @@
                 <div id="budgetCategories"></div>
                 <div class="total-section">
                     <h3>Total Budget</h3>
-                    <div class="total-amount" id="totalBudget">€ 0</div>
+                    <div class="total-amount" id="totalBudget">$0</div>
                 </div>
             </div>
 
@@ -811,15 +1498,19 @@
                     <div class="form-group">
                         <label>Color Theme</label>
                         <select id="theme" onchange="saveSettings()">
-                            <option value="gold">Gold & Black</option>
-                            <option value="silver">Silver & Black</option>
-                            <option value="rose">Rose & Black</option>
+                            <option value="emerald">Emerald</option>
+                            <option value="gold">Gold</option>
+                            <option value="silver">Silver</option>
+                            <option value="rose">Rose</option>
                         </select>
                     </div>
                     <div class="button-group">
                         <button class="button" onclick="exportBackup()">Export Backup</button>
+                        <button class="button" type="button" onclick="document.getElementById('importFile').click()">Import Backup</button>
+                        <input type="file" id="importFile" accept=".json,application/json" onchange="importBackup(this)" hidden>
                         <button class="button secondary" onclick="resetData()">Reset Data</button>
                     </div>
+                    <div id="backupMsg" role="status" style="display: none; margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--success);"></div>
                 </div>
             </div>
         </div>
@@ -1238,7 +1929,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             vendors: [],
             tasks: [],
             tables: [],
-            menuPrefs: { carne: 0, pesce: 0, vegetariano: 0, vegano: 0, bambini: 0 }
+            menuPrefs: { carne: 0, pesce: 0, vegetariano: 0, vegano: 0, bambini: 0 },
+            theme: 'emerald'
         };
 
         const budgetCategories = [
@@ -1261,12 +1953,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         // instead of replacing it (see init).
         const DEFAULTS = JSON.parse(JSON.stringify(data));
 
-        function init() {
+        // IT and EN share localStorage ('wedpro') and backups: a bilingual-bundle buyer can open data created in
+        // Italian here. Default names of the Italian version, in the same order as the English ones: on load they
+        // become the English names (fromOtherLanguage), so nothing stays hidden or is counted twice.
+        const OTHER_LANG = {
+            budget: ['Location', 'Catering', 'Abito Sposa', 'Abito Sposo', 'Fiori', 'Fotografo', 'Musica', 'Bomboniere', 'Viaggio Nozze', 'Altro'],
+            timelines: ['12 mesi', '6 mesi', '3 mesi', '1 mese', '1 settimana', 'giorno'],
+            tasks: ['Scegliere la Location', 'Contattare Fornitori', 'Inviti Stampati', 'Confermare Catering', 'Ordine Abiti', 'Assegnare Tavoli', 'Confermare Dettagli Fornitori', 'Ultima Prova Abiti'],
+            menus: ['Carne', 'Pesce', 'Vegetariano', 'Vegano', 'Bambini']
+        };
+        const TIMELINES = ['12 months', '6 months', '3 months', '1 month', '1 week', 'day'];
+        const MENUS = ['Meat', 'Fish', 'Vegetarian', 'Vegan', 'Kids'];
+
+        // imported: an already-validated backup object (importBackup), used instead of localStorage
+        function init(imported) {
             let stored = null;
             try {
-                stored = localStorage.getItem(STORAGE_KEY);
+                if (!imported) stored = localStorage.getItem(STORAGE_KEY);
             } catch(e) {}
-            let saved = null;
+            let saved = imported || null;
             if (stored) {
                 try { saved = JSON.parse(stored); } catch(e) { saved = null; }
             }
@@ -1281,7 +1986,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             // Defaults must be MERGED, never replaced — and every shape must be guaranteed,
             // because a truncated or hand-edited JSON must not be able to kill the tool.
             if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
-                data = Object.assign({}, DEFAULTS, saved);
+                // copy of DEFAULTS: init also runs on import, and the default arrays must not be shared
+                data = Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), saved);
                 data.menuPrefs = Object.assign({}, DEFAULTS.menuPrefs,
                     (saved.menuPrefs && typeof saved.menuPrefs === 'object' && !Array.isArray(saved.menuPrefs)) ? saved.menuPrefs : {});
                 if (!data.budget || typeof data.budget !== 'object' || Array.isArray(data.budget)) data.budget = {};
@@ -1291,10 +1997,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             } else {
                 data = JSON.parse(JSON.stringify(DEFAULTS));
             }
+            fromOtherLanguage();
 
             // every budget category must exist AND have all its fields, even one we added
             // after the customer had already saved
-            budgetCategories.forEach(cat => {
+            budgetCats().forEach(cat => {
                 const b = data.budget[cat];
                 data.budget[cat] = Object.assign({ preventivo: 0, speso: 0, pagato: 0 },
                     (b && typeof b === 'object' && !Array.isArray(b)) ? b : {});
@@ -1304,14 +2011,59 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 data.tasks = defaultTasks.map(t => Object.assign({}, t));
                 save();
             }
+            if (imported) save();
 
             loadSettings();
             renderAll();
         }
 
+        function fromOtherLanguage() {
+            const hasAmount = b => !!b && typeof b === 'object' && ['preventivo', 'speso', 'pagato'].some(k => Number(b[k]));
+            OTHER_LANG.budget.forEach((foreign, i) => {
+                const local = budgetCategories[i];
+                if (foreign === local || !(foreign in data.budget)) return;
+                if (!hasAmount(data.budget[local])) data.budget[local] = data.budget[foreign];
+                else if (hasAmount(data.budget[foreign])) return; // amounts in both: both stay, both visible
+                delete data.budget[foreign];
+            });
+            data.tasks.forEach(t => {
+                const i = t && typeof t === 'object' ? OTHER_LANG.timelines.indexOf(t.timeline) : -1;
+                if (i >= 0) t.timeline = TIMELINES[i];
+            });
+            data.tasks.forEach(t => {
+                const i = t && typeof t === 'object' ? OTHER_LANG.tasks.indexOf(t.title) : -1;
+                if (i < 0) return;
+                const title = defaultTasks[i].title;
+                // if the same task already exists in English, this one keeps its name (visible, counted once)
+                if (!data.tasks.some(u => u !== t && u && u.timeline === t.timeline && u.title === title)) t.title = title;
+            });
+            data.guests.forEach(g => {
+                const i = g && typeof g === 'object' ? OTHER_LANG.menus.indexOf(g.menu) : -1;
+                if (i >= 0) g.menu = MENUS[i];
+            });
+        }
+
+        // Categories shown: the defaults + any unknown ones found in the data, so the Budget page shows
+        // everything the dashboard adds up.
+        function budgetCats() {
+            return budgetCategories.concat(Object.keys(data.budget).filter(k => budgetCategories.indexOf(k) < 0));
+        }
+
         function esc(v) {
             return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
+
+        // Money for display (UI + PDF): always $ with en-US grouping, whatever the browser locale
+        // (a bare toLocaleString() printed "€ 4.500,5" on a European browser). Cents only when
+        // there are any, minus sign before the symbol. Stored amounts stay plain numbers.
+        function fmtMoney(n) {
+            n = Math.round((Number(n) || 0) * 100) / 100;
+            const s = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+            return (n < 0 ? '-$' : '$') + s;
+        }
+
+        // "1 day" / "3 days"
+        function daysLabel(n) { return n + (n === 1 ? ' day' : ' days'); }
 
         // Escape a value for a single-quoted JS string embedded in a double-quoted HTML attribute
         // (e.g. onchange="fn('${jsAttr(x)}')"). Prevents apostrophes like "Bride's Dress" from
@@ -1380,7 +2132,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             if (valid) {
                 const t = new Date(); t.setHours(0, 0, 0, 0);
                 const days = Math.round((wd - t) / 86400000);
-                display = days > 0 ? `${days} days to go` : days === 0 ? 'Today! 🎉' : `${Math.abs(days)} days ago`;
+                display = days > 0 ? `${daysLabel(days)} to go` : days === 0 ? 'Today! 🎉' : `${daysLabel(Math.abs(days))} ago`;
                 sub = wd.toLocaleDateString('en-US');
             } else {
                 // Default state (no date yet): friendly prompt, never "NaN days / Invalid Date".
@@ -1399,15 +2151,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function renderDashboard() {
             renderCountdown();
 
-            const confirmed = data.guests.filter(g => g.confermato === 'si').length;
+            // People, not rows: a "Smith Family" entry with People = 4 counts 4.
+            const confirmed = data.guests.filter(g => g.confermato === 'si').reduce((s, g) => s + (parseInt(g.persone) || 1), 0);
             document.getElementById('guestCount').textContent = confirmed;
 
             const spent = Object.values(data.budget).reduce((sum, cat) => sum + (cat.speso || 0), 0);
             const total = Object.values(data.budget).reduce((sum, cat) => sum + (cat.preventivo || 0), 0);
             const remaining = total - spent;
 
-            document.getElementById('budgetSpent').textContent = '€ ' + spent.toLocaleString();
-            document.getElementById('budgetRemaining').textContent = '€ ' + remaining.toLocaleString();
+            document.getElementById('budgetSpent').textContent = fmtMoney(spent);
+            document.getElementById('budgetRemaining').textContent = fmtMoney(remaining);
 
             const done = data.tasks.filter(t => t.done).length;
             const percent = data.tasks.length > 0 ? Math.round((done / data.tasks.length) * 100) : 0;
@@ -1416,8 +2169,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const upcoming = data.tasks.filter(t => !t.done).slice(0, 3);
             const upcomingHtml = upcoming.map(t => `
                 <div style="padding: 12px 0; border-bottom: 1px solid var(--border);">
-                    <strong>${t.title}</strong>
-                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${t.timeline}</div>
+                    <strong>${esc(t.title)}</strong>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${esc(t.timeline)}</div>
                 </div>
             `).join('');
 
@@ -1426,7 +2179,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function renderBudget() {
             const lbl = 'font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;';
-            const html = budgetCategories.map((cat, i) => {
+            const html = budgetCats().map((cat, i) => {
                 const b = data.budget[cat];
                 const spent = b.speso || 0;
                 const budget = b.preventivo || 0;
@@ -1457,7 +2210,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <div class="progress-fill" data-bfill style="width: ${percent}%"></div>
                         </div>
                         <div data-brem style="font-size: 12px; color: var(--text-secondary); text-align: right;">
-                            Remaining: € ${Math.max(budget - spent, 0).toLocaleString()}
+                            Remaining: ${fmtMoney(Math.max(budget - spent, 0))}
                         </div>
                     </div>
                 `;
@@ -1469,13 +2222,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function updateBudgetTotal() {
             const total = Object.values(data.budget).reduce((sum, b) => sum + (b.preventivo || 0), 0);
-            document.getElementById('totalBudget').textContent = '€ ' + total.toLocaleString();
+            document.getElementById('totalBudget').textContent = fmtMoney(total);
         }
 
         // Update only this category's derived numbers + total, without rebuilding the inputs
         // (rebuilding them destroyed the fields while the user was typing — unusable on mobile).
         function updateBudget(i, field, value) {
-            const cat = budgetCategories[i];
+            const cat = budgetCats()[i];
             if (!cat || !data.budget[cat]) return;
             data.budget[cat][field] = parseFloat(value) || 0;
             save();
@@ -1487,7 +2240,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const fill = cell.querySelector('[data-bfill]');
                 if (fill) fill.style.width = percent + '%';
                 const rem = cell.querySelector('[data-brem]');
-                if (rem) rem.textContent = 'Remaining: € ' + Math.max(budget - spent, 0).toLocaleString();
+                if (rem) rem.textContent = 'Remaining: ' + fmtMoney(Math.max(budget - spent, 0));
             }
             updateBudgetTotal();
             renderDashboard();
@@ -1495,15 +2248,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function guestSummaryHtml() {
             const persone = g => parseInt(g.persone) || 1;
-            const conf = data.guests.filter(g => g.confermato === 'si').length;
-            const att = data.guests.filter(g => g.confermato === 'attesa').length;
+            const conf = data.guests.filter(g => g.confermato === 'si').reduce((s, g) => s + persone(g), 0);
+            const att = data.guests.filter(g => g.confermato === 'attesa').reduce((s, g) => s + persone(g), 0);
+            const tot = data.guests.reduce((s, g) => s + persone(g), 0);
             const coperti = data.guests.filter(g => g.confermato !== 'no').reduce((s, g) => s + persone(g), 0);
             return `
                 <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:16px;">
-                    <span style="color:var(--text-secondary);"><strong style="color:var(--text-primary);">${data.guests.length}</strong> invites</span>
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--text-primary);">${tot}</strong> people (${data.guests.length} invites)</span>
                     <span style="color:var(--text-secondary);"><strong style="color:var(--success);">${conf}</strong> confirmed</span>
                     <span style="color:var(--text-secondary);"><strong style="color:var(--warning);">${att}</strong> pending</span>
-                    <span style="color:var(--text-secondary);"><strong style="color:var(--gold);">${coperti}</strong> covers</span>
+                    <span style="color:var(--text-secondary);"><strong style="color:var(--gold-text);">${coperti}</strong> covers</span>
                 </div>`;
         }
 
@@ -1548,7 +2302,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function updateGuest(i, field, value) {
-            data.guests[i][field] = field === 'persone' ? (parseInt(value) || 1) : value;
+            data.guests[i][field] = field === 'persone' ? Math.max(1, parseInt(value) || 1) : value;
             save();
             // Update only the summary (when RSVP/people changes) — do NOT rebuild the rows (text inputs).
             if (field === 'confermato' || field === 'persone') {
@@ -1626,18 +2380,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function renderTasks() {
-            const timelines = ['12 months', '6 months', '3 months', '1 month', '1 week', 'day'];
+            // + any unknown timeline found in the data: no task stays hidden
+            const timelines = TIMELINES.concat([...new Set(data.tasks.map(t => t && t.timeline))].filter(x => x && TIMELINES.indexOf(x) < 0));
             const html = timelines.map(timeline => {
                 const tasks = data.tasks.filter(t => t.timeline === timeline);
                 return `
                     <div class="task-group">
-                        <div class="task-timeline">${timeline}</div>
+                        <div class="task-timeline">${esc(timeline)}</div>
                         ${tasks.map((t, i) => `
                             <div class="task-item ${t.done ? 'completed' : ''}">
                                 <input type="checkbox" class="task-checkbox" ${t.done ? 'checked' : ''}
                                     onchange="updateTask('${jsAttr(timeline)}', '${jsAttr(t.title)}', this.checked, this)">
                                 <div class="task-text">
-                                    <div class="task-title">${t.title}</div>
+                                    <div class="task-title">${esc(t.title)}</div>
                                 </div>
                             </div>
                         `).join('')}
@@ -1658,17 +2413,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function renderTables() {
-            const menus = ['Meat', 'Fish', 'Vegetarian', 'Vegan', 'Kids'];
             const persone = g => parseInt(g.persone) || 1;
             const attending = data.guests.filter(g => g.confermato !== 'no');
+            // + any unknown menu found in the data: counted and shown, never dropped from the counts
+            const menus = MENUS.concat([...new Set(attending.map(g => g.menu))].filter(m => m && MENUS.indexOf(m) < 0));
 
             // 1) Menu summary — real counts from the guest list
             const counts = menus.map(m => attending.filter(g => g.menu === m).reduce((s, g) => s + persone(g), 0));
             const totale = attending.reduce((s, g) => s + persone(g), 0);
             const senzaMenu = attending.filter(g => !g.menu).reduce((s, g) => s + persone(g), 0);
             document.getElementById('menuSummary').innerHTML =
-                menus.map((m, i) => `<div class="menu-card"><div class="menu-count">${counts[i]}</div><div class="menu-type">${m}</div></div>`).join('')
-                + `<div class="menu-card" style="border-color:var(--gold);"><div class="menu-count" style="color:var(--gold);">${totale}</div><div class="menu-type">Total covers</div></div>`
+                menus.map((m, i) => `<div class="menu-card"><div class="menu-count">${counts[i]}</div><div class="menu-type">${esc(m)}</div></div>`).join('')
+                + `<div class="menu-card" style="border-color:var(--gold);"><div class="menu-count" style="color:var(--gold-text);">${totale}</div><div class="menu-type">Total covers</div></div>`
                 + (senzaMenu > 0 ? `<div class="menu-card" style="border-color:var(--warning);"><div class="menu-count" style="color:var(--warning);">${senzaMenu}</div><div class="menu-type">No menu</div></div>` : '');
 
             // 2) Tables — capacity + assigned guests + occupancy
@@ -1681,7 +2437,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     const usati = seduti.reduce((s, g) => s + persone(g), 0);
                     const over = usati > posti;
                     const chips = seduti.length
-                        ? seduti.map(g => `<span style="display:inline-block;background:var(--bg-dark);border:1px solid var(--border);border-radius:14px;padding:3px 11px;margin:4px 5px 0 0;font-size:12px;color:var(--text-primary);">${esc(g.nome)}${persone(g) > 1 ? ' &times;' + persone(g) : ''}${g.menu ? ' &middot; ' + g.menu : ''}</span>`).join('')
+                        ? seduti.map(g => `<span style="display:inline-block;background:var(--bg-dark);border:1px solid var(--border);border-radius:14px;padding:3px 11px;margin:4px 5px 0 0;font-size:12px;color:var(--text-primary);">${esc(g.nome)}${persone(g) > 1 ? ' &times;' + persone(g) : ''}${g.menu ? ' &middot; ' + esc(g.menu) : ''}</span>`).join('')
                         : '<span style="color:var(--text-secondary);font-size:12px;">No guests assigned</span>';
                     return `<div class="vendor-card" style="margin-bottom:16px;">
                         <div style="display:flex;gap:10px;align-items:center;">
@@ -1701,7 +2457,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 document.getElementById('seatingList').innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:6px 0;">Add guests in the "Guests" section to seat them at tables.</div>';
             } else {
                 const tblOpts = cur => '<option value="">&mdash; Table &mdash;</option>' + data.tables.map(tb => `<option value="${esc(tb.nome)}" ${cur === tb.nome ? 'selected' : ''}>${esc(tb.nome)}</option>`).join('');
-                const menuOpts = cur => '<option value="">&mdash; Menu &mdash;</option>' + menus.map(m => `<option value="${m}" ${cur === m ? 'selected' : ''}>${m}</option>`).join('');
+                const menuOpts = cur => '<option value="">&mdash; Menu &mdash;</option>' + menus.map(m => `<option value="${esc(m)}" ${cur === m ? 'selected' : ''}>${esc(m)}</option>`).join('');
                 const nonAssegnati = seatable.filter(g => !g.tavolo).reduce((s, g) => s + persone(g), 0);
                 const header = nonAssegnati > 0
                     ? `<div style="font-size:12.5px;color:var(--warning);margin-bottom:12px;">&#9888;&#65039; ${nonAssegnati} covers not seated yet</div>`
@@ -1728,6 +2484,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             if (field === 'nome') {
                 const old = data.tables[i].nome;
                 data.guests.forEach(g => { if (g.tavolo === old) g.tavolo = value; });
+                // The seating dropdowns are not rebuilt here: rename their option too, otherwise the
+                // stale "Table 1" seated guests at a table that no longer exists.
+                if (old) document.querySelectorAll('#seatingList select:first-of-type option').forEach(o => { if (o.value === old) { o.value = value; o.textContent = value; } });
             }
             data.tables[i][field] = field === 'posti' ? (parseInt(value) || 1) : value;
             save();
@@ -1753,7 +2512,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderTables();
         }
 
+        // Color Theme: unknown values (or data saved before this version) -> emerald, the original look.
+        function applyTheme(t) {
+            t = ['emerald', 'gold', 'silver', 'rose'].indexOf(t) >= 0 ? t : 'emerald';
+            document.documentElement.setAttribute('data-accent', t);
+            return t;
+        }
+
         function loadSettings() {
+            data.theme = applyTheme(data.theme);
+            document.getElementById('theme').value = data.theme;
             document.getElementById('brideName').value = data.bride || '';
             document.getElementById('groomName').value = data.groom || '';
             document.getElementById('weddingDate').value = data.date || '';
@@ -1765,6 +2533,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             data.groom = document.getElementById('groomName').value;
             data.date = document.getElementById('weddingDate').value;
             data.location = document.getElementById('location').value;
+            data.theme = applyTheme(document.getElementById('theme').value);
             save();
             renderAll();
         }
@@ -1788,6 +2557,40 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             a.click();
         }
 
+        // A valid backup is the object written by exportBackup, also from an earlier version (missing
+        // keys we added later): every known key that is present must have the right type. The rest
+        // (missing defaults, budget categories) is handled by init, as for the data in localStorage.
+        function isValidBackup(o) {
+            const isObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
+            if (!isObj(o) || !('guests' in o || 'budget' in o)) return false;
+            if (['bride', 'groom', 'date', 'location', 'theme'].some(k => o[k] != null && typeof o[k] !== 'string')) return false;
+            if ('budget' in o && !(isObj(o.budget) && Object.values(o.budget).every(isObj))) return false;
+            if ('menuPrefs' in o && !isObj(o.menuPrefs)) return false;
+            return ['guests', 'vendors', 'tasks', 'tables'].every(k => !(k in o) || (Array.isArray(o[k]) && o[k].every(isObj)));
+        }
+
+        function importBackup(input) {
+            const file = input.files && input.files[0];
+            const msg = document.getElementById('backupMsg');
+            msg.style.display = 'none';
+            if (!file) return;
+            const fail = () => alert('"' + file.name + '" is not a Wedding Planner Pro backup.\n\nChoose the .json file created with "Export Backup". Your current data has not been changed.');
+            const reader = new FileReader();
+            reader.onerror = () => { input.value = ''; fail(); };
+            reader.onload = () => {
+                input.value = ''; // so the same file can be chosen again
+                let o = null;
+                try { o = JSON.parse(reader.result); } catch(e) {}
+                if (!isValidBackup(o)) { fail(); return; }
+                const ppl = (o.guests || []).reduce((s, g) => s + (parseInt(g.persone) || 1), 0);
+                if (!confirm('Import the backup "' + file.name + '"?\n\nIt contains ' + ppl + ' guests, ' + (o.vendors || []).length + ' vendors and ' + (o.tasks || []).length + ' tasks.\nAll your current data will be REPLACED: export it first if you want to keep it.')) return;
+                init(o);
+                msg.textContent = '✓ Backup imported: data restored.';
+                msg.style.display = 'block';
+            };
+            reader.readAsText(file);
+        }
+
         function exportWeddingPDF() {
             const hasGuests = data.guests && data.guests.length > 0;
             const hasBudget = Object.values(data.budget || {}).some(b => (b.preventivo || 0) > 0 || (b.speso || 0) > 0);
@@ -1800,12 +2603,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             if (!Ctor) { alert('PDF engine not available'); return; }
 
             const LOC = 'en-US';
-            const CUR = '€';
-            const money = n => CUR + ' ' + (Number(n) || 0).toLocaleString(LOC);
+            const money = fmtMoney;
 
             const doc = new Ctor({ unit: 'pt', format: 'a4' });
             const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 48;
-            const EM = [16, 185, 129], DK = [17, 24, 28], GR = [110, 130, 140], CARD = [240, 250, 246], ACC = [5, 120, 90];
+            // Color Theme in the PDF too (white paper, so the light-mode colours): band = accent with dark text,
+            // ACC = accent as text (>= 4.5:1 on white and on CARD). Emerald stays exactly as before.
+            const PDF_THEMES = {
+                emerald: { em: [16, 185, 129], card: [240, 250, 246], acc: [5, 120, 90] },
+                gold: { em: [174, 128, 22], card: [250, 247, 241], acc: [121, 87, 10] },
+                silver: { em: [124, 137, 152], card: [247, 248, 249], acc: [80, 94, 111] },
+                rose: { em: [217, 95, 124], card: [253, 245, 247], acc: [173, 41, 72] }
+            };
+            const TH = PDF_THEMES[data.theme] || PDF_THEMES.emerald;
+            const EM = TH.em, DK = [17, 24, 28], GR = [110, 130, 140], CARD = TH.card, ACC = TH.acc;
 
             // header band
             doc.setFillColor.apply(doc, EM);
@@ -1821,7 +2632,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 if (!isNaN(wd)) {
                     const today = new Date(); today.setHours(0, 0, 0, 0);
                     const days = Math.round((wd - today) / 86400000);
-                    const dl = days > 0 ? days + ' days to go' : days === 0 ? 'Today!' : Math.abs(days) + ' days ago';
+                    const dl = days > 0 ? daysLabel(days) + ' to go' : days === 0 ? 'Today!' : daysLabel(Math.abs(days)) + ' ago';
                     dateLine = wd.toLocaleDateString(LOC) + '   -   ' + dl;
                 }
             }
@@ -1829,7 +2640,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.text([names, dateLine].filter(Boolean).join('     '), M, 64);
 
             // summary computations (mirror renderDashboard)
-            const confirmed = data.guests.filter(g => g.confermato === 'si').length;
+            const confirmed = data.guests.filter(g => g.confermato === 'si').reduce((sum, g) => sum + (parseInt(g.persone) || 1), 0);
             const totalHeads = data.guests.reduce((sum, g) => sum + (parseInt(g.persone) || 1), 0);
             const spent = Object.values(data.budget).reduce((sum, cat) => sum + (cat.speso || 0), 0);
             const totalBudget = Object.values(data.budget).reduce((sum, cat) => sum + (cat.preventivo || 0), 0);
@@ -1864,10 +2675,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.text('Budget by Category', M, y); y += 10;
             doc.setDrawColor(220, 225, 222); doc.line(M, y, W - M, y); y += 18;
 
-            const catRows = budgetCategories
+            const catRows = budgetCats()
                 .map(cat => ({ cat, b: data.budget[cat] || {} }))
                 .filter(r => (r.b.preventivo || 0) > 0 || (r.b.speso || 0) > 0)
-                .slice(0, 10);
+                .slice(0, 20);
 
             doc.setFontSize(10);
             if (catRows.length === 0) {

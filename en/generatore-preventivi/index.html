@@ -5,14 +5,14 @@
 :root{
   --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
   --el-border:#e3e7ec; --el-border2:#d6dce2;
-  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#656d76;
   --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
   color-scheme: light;
 }
 :root[data-theme="dark"]{
   --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
   --el-border:#24272e; --el-border2:#2e333b;
-  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#7a838d;
   --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
   color-scheme: dark;
 }
@@ -20,24 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Quote Generator Pro ✦</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
-    
-    
-    
     <script>/* jsPDF UMD inline (vettoriale) */
     /** @license
  *
@@ -543,10 +532,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-size: 14px;
         }
 
+        @media (hover: hover) { /* real pointers only: no sticky green fill after a tap */
         button:hover {
             background: var(--emeraldL);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
         }
 
         button:active {
@@ -607,6 +598,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             display: flex;
             flex-direction: column;
         }
+
+        .form-row > .form-group { min-width: 0; } /* columns may shrink: no field sticks out of its card */
 
         label {
             font-size: 13px;
@@ -865,7 +858,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             transition: all 0.3s ease;
         }
 
-        .template-btn.active {
+        .template-btn.active,
+        .template-btn.active:hover {
             background: var(--emerald);
             color: #08130e;
             border-color: var(--emerald);
@@ -1037,6 +1031,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         .items-table tbody tr:hover {
             background: #f9fafb;
+        }
+
+        .items-table td.text-right,
+        .totals-table td.value {
+            white-space: nowrap;
         }
 
         .text-right {
@@ -1423,6 +1422,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 margin: 0;
                 padding: 20px;
             }
+
+            /* the preview's fit-to-width scale is for the screen only */
+            #quotePreview {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            #quotePreview > .quote-preview {
+                transform: none !important;
+                width: auto !important;
+            }
         }
 
         @media (max-width: 1200px) {
@@ -1446,7 +1455,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 7000; /* above the sticky top bar (5000) and the menu (6000) */
             left: 0;
             top: 0;
             width: 100%;
@@ -1467,6 +1476,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border: 1px solid var(--brd);
             max-width: 500px;
             width: 90%;
+            max-height: calc(100vh - 32px);
+            max-height: calc(100dvh - 32px);
+            overflow-y: auto;
+        }
+
+        /* Load: title and Cancel stay put, only the list scrolls */
+        #loadModal .modal-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #savedQuotesList {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
         }
 
         .modal h3 {
@@ -1606,7 +1630,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            z-index: 2000;
+            z-index: 7100; /* stays above dialogs */
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.3s ease;
@@ -1694,6 +1718,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .pill.accepted { background: rgba(16,185,129,.16); color: var(--emeraldL); }
         .pill.pending { background: rgba(245,158,11,.16); color: #fbbf24; }
         .pill.rejected { background: rgba(239,68,68,.16); color: #f87171; }
+        /* light theme: darker pill and error text so they stay readable on white (WCAG AA) */
+        :root[data-theme="light"] .pill.draft { color: #4b5563; }
+        :root[data-theme="light"] .pill.sent { color: #1d4ed8; }
+        :root[data-theme="light"] .pill.accepted { color: #047857; }
+        :root[data-theme="light"] .pill.pending { color: #92400e; }
+        :root[data-theme="light"] .pill.rejected { color: #b91c1c; }
+        :root[data-theme="light"] .field-hint.error { color: #b91c1c; }
         .status-select { background: var(--bg); color: var(--t1); border: 1px solid var(--brd); border-radius: 6px; padding: 5px 8px; font-size: 12px; }
         .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .row-actions button { padding: 6px 10px; font-size: 12px; }
@@ -1714,7 +1745,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .tpl-card.active { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,.15); }
         .tpl-swatch { height: 74px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: flex-end; padding: 8px; }
         .tpl-card b { color: var(--t1); font-size: 14px; }
-        .tpl-card small { display: block; color: var(--t3); font-size: 11.5px; margin-top: 2px; }
+        .tpl-card small { display: block; color: var(--t2); font-size: 11.5px; margin-top: 2px; }
         .brand-colors { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 6px; }
         .brand-colors .bc { display: flex; align-items: center; gap: 10px; }
         .brand-colors input[type=color] { width: 46px; height: 34px; border: 1px solid var(--brd); border-radius: 8px; background: none; cursor: pointer; }
@@ -1732,7 +1763,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         /* ---- mobile hardening (tap-highlight · 100dvh · safe-area) ---- */
         html, body { -webkit-tap-highlight-color: transparent; }
-        .container { height: 100dvh; }
+        @media (min-width: 1201px) { .container { height: 100dvh; } } /* up to 1200px (phones included): one column that scrolls with the page (see max-width:1200px) */
         .app-shell { min-height: 100vh; min-height: 100dvh; }
         .qg-sidebar { padding-top: max(18px, env(safe-area-inset-top)); }
         @supports (padding: max(0px)) {
@@ -1789,6 +1820,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         #el-theme-toggle { display:none !important; }
         .qg-side-foot { display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
         .theme-switch { display:inline-flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer; padding:4px; color:var(--t2); font-size:12px; touch-action:manipulation; }
+        .theme-switch:hover { background:none; box-shadow:none; transform:none; color:var(--t1); } /* no green fill from the generic button:hover */
         .theme-switch .ts-track { width:42px; height:24px; border-radius:999px; background:#4b5563; position:relative; transition:background .2s; flex:0 0 auto; }
         .theme-switch .ts-knob { position:absolute; top:2.5px; left:2.5px; width:19px; height:19px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; font-size:10px; }
         .theme-switch.light .ts-track { background:var(--emerald); }
@@ -1821,14 +1853,85 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
 </style>
+<style>
+/* ===== Mobile nav: overlay drawer (doesn't push the content) + responsive items ===== */
+@media (max-width:760px){
+  .qg-sidebar.open .qg-nav{
+    display:flex !important; position:fixed !important; top:0; left:0; bottom:0;
+    width:min(80vw,300px); z-index:6000; margin:0 !important;
+    background:var(--bg2); border-right:1px solid var(--brd);
+    padding:66px 14px 78px !important; gap:6px; overflow-y:auto;
+    box-shadow:6px 0 40px rgba(0,0,0,.55); animation:qgDrawerIn .22s ease;
+  }
+  .qg-sidebar.open::before{
+    content:''; position:fixed; inset:0; z-index:5999; background:rgba(0,0,0,.55);
+    animation:qgFade .2s ease;
+  }
+  .qg-sidebar.open .qg-side-foot{
+    display:flex !important; position:fixed; left:0; bottom:0; width:min(80vw,300px);
+    z-index:6001; background:var(--bg2); border-right:1px solid var(--brd);
+    padding:14px !important; margin:0 !important; align-items:center; gap:12px;
+    box-shadow:6px 0 40px rgba(0,0,0,.55);
+  }
+  /* quote line items: 2 usable columns, no tiny inputs or sideways scrolling */
+  .line-item{
+    grid-template-columns:1fr 1fr !important;
+    grid-template-areas:"desc desc" "qty unit" "price discount" "total total" !important;
+    padding-right:44px !important;
+  }
+  /* hamburger: no green fill after a tap; subtle pressed/open state */
+  .qg-hamburger:hover{ background:transparent; transform:none; box-shadow:none; }
+  .qg-hamburger:active, .qg-sidebar.open .qg-hamburger{ background:var(--bg3); border-color:var(--emerald); }
+}
+@media (max-width:760px) and (hover:hover){ .qg-hamburger:hover{ border-color:var(--emerald); } }
+@keyframes qgDrawerIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+@keyframes qgFade{from{opacity:0}to{opacity:1}}
+
+/* ===== Print ("🖨️ Print PDF"): only the quote on A4, never the sidebar, editor or dialogs ===== */
+@page{ size:A4; margin:12mm; }
+@media print{
+  html, body{ background:#fff !important; }
+  .qg-sidebar, header, .editor-section, .el-brand, .toast, .modal, #logoCropOverlay{ display:none !important; }
+  .qg-view{ display:none !important; }
+  #view-editor{ display:block !important; }   /* prints the quote even when another view is open */
+  .app-shell, .qg-main, .container, .preview-section{
+    display:block !important; width:auto !important; height:auto !important; min-height:0 !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; border:0 !important; border-radius:0 !important; box-shadow:none !important;
+  }
+  #quotePreview > .quote-preview{ margin:0 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; } /* template colors even without "background graphics" */
+  .items-table tr, .totals-table, .notes-section{ break-inside:avoid; }
+  .section-title{ break-after:avoid; }
+}
+</style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
-<body><div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
+<body>
+<div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
 <div class="lock-title">Quote Generator</div><div class="lock-sub">Enter the code you received with your purchase</div>
 <input type="text" id="lockCodeInput" class="lock-input" placeholder="CODE" autocomplete="off" spellcheck="false">
 <button id="lockBtn" class="lock-btn">UNLOCK</button><div id="lockError" class="lock-error"></div>
 <div class="lock-footer">© 2026 EtherLabs</div></div></div>
 <div id="appContent" style="display:none">
+
     <div class="app-shell">
       <aside class="qg-sidebar" id="qgSidebar">
         <div class="qg-brand"><div class="logo">Q</div><div><b>Quote Generator</b><span>Pro</span></div><button type="button" class="qg-hamburger" onclick="app.toggleSidebar()" aria-label="Menu">☰</button></div>
@@ -1895,7 +1998,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 <div class="form-row">
                     <div class="form-group">
                         <label>VAT / Tax ID</label>
-                        <input type="text" id="companyVat" placeholder="VAT (11 digits) or Tax ID" oninput="app.validateVat(this)">
+                        <input type="text" id="companyVat" placeholder="VAT or Tax ID" oninput="app.validateVat(this)">
                         <div class="field-hint" id="companyVatHint"></div>
                     </div>
                     <div class="form-group">
@@ -1907,13 +2010,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 <div class="form-row">
                     <div class="form-group">
                         <label>Phone</label>
-                        <input type="text" id="companyPhone" placeholder="+39">
+                        <input type="text" id="companyPhone" placeholder="+1">
                     </div>
                     <div class="form-group">
                         <label>Company Logo</label>
                         <div class="logo-upload-zone" id="logoZone" onclick="document.getElementById('logoFile').click()">
                             <span id="logoPlaceholder">📤 Click or drag here<br><small style="font-size:11px;">PNG, JPG, SVG · max 2MB</small></span>
-                            <img id="logoPreview" style="display:none;" alt="Anteprima logo">
+                            <img id="logoPreview" style="display:none;" alt="Logo preview">
                         </div>
                         <input type="file" id="logoFile" accept="image/*" style="display:none;" onchange="app.handleLogoUpload(event)">
                         <div class="logo-upload-actions" id="logoActions" style="display:none;">
@@ -2278,7 +2381,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               <div class="form-inline">
                 <div class="form-group"><label>Currency</label>
                   <select id="setCurrency" onchange="app.saveSettings()">
-                    <option value="€">€ Euro</option><option value="$">$ Dollar</option><option value="£">£ Pound</option><option value="CHF">CHF</option>
+                    <option value="$">$ US Dollar</option><option value="€">€ Euro</option><option value="£">£ Pound</option><option value="C$">C$ Canadian Dollar</option><option value="A$">A$ Australian Dollar</option><option value="¥">¥ Japanese Yen</option><option value="₹">₹ Indian Rupee</option><option value="CHF">CHF Swiss Franc</option><option value="kr">kr (SEK/NOK/DKK)</option><option value="R$">R$ Brazilian Real</option>
                   </select></div>
                 <div class="form-group"><label>Default VAT %</label><input type="number" id="setIva" min="0" step="0.5" onchange="app.saveSettings()"></div>
                 <div class="form-group"><label>Default payment terms</label><input type="text" id="setPayment" placeholder="e.g. 30 days" onchange="app.saveSettings()"></div>
@@ -2307,7 +2410,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
 
     <!-- TOAST -->
-    <div class="toast" id="toast"><span class="dot"></span><span id="toastText">Saveto</span></div>
+    <div class="toast" id="toast"><span class="dot"></span><span id="toastText">Saved</span></div>
 
     <!-- LOAD QUOTE MODAL -->
     <div class="modal" id="loadModal">
@@ -2547,6 +2650,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return el ? el.value : '$';
             },
 
+            // amount with its currency symbol: $, £, C$, A$, R$, ¥, ₹ go first ($2,523.64, -$40.00); €, CHF, kr stay after the number as before (2,523.64 €)
+            fmtCur(n, c) {
+                if (c === undefined) c = this.cur();
+                const s = (Number(n) || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                if (['$', '£', 'C$', 'A$', 'R$', '¥', '₹'].indexOf(c) < 0) return s + ' ' + c;
+                return s.charAt(0) === '-' ? '-' + c + s.slice(1) : c + s;
+            },
+
             changeCurrency() {
                 this.calculateTotals();
                 this.renderPreview();
@@ -2629,12 +2740,24 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 });
             },
 
+            // 'YYYY-MM-DD' -> local date (new Date('YYYY-MM-DD') is UTC midnight = previous day in the Americas)
+            fmtDate(s) {
+                if (!s) return '';
+                const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+                const d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(s);
+                return isNaN(d) ? '' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            },
+
+            localISO(d) {
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            },
+
             setDefaultDates() {
                 const today = new Date();
-                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+                const validity = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
 
-                document.getElementById('quoteDate').valueAsDate = today;
-                document.getElementById('validityDate').valueAsDate = validity;
+                document.getElementById('quoteDate').value = this.localISO(today);
+                document.getElementById('validityDate').value = this.localISO(validity);
                 document.getElementById('quoteNumber').value = `Q${today.getFullYear()}-${this.data.quoteNumberCounter}`;
             },
 
@@ -2680,7 +2803,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 if (!item) return;
                 const cell = document.querySelector(`.line-item[data-id="${id}"] .line-total`);
                 if (cell) {
-                    cell.textContent = this.calculateLineTotal(item).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
+                    cell.textContent = this.fmtCur(this.calculateLineTotal(item));
                 }
             },
 
@@ -2722,7 +2845,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         </div>
                         <div class="li-total">
                             <span class="line-item-label">Total</span>
-                            <div class="line-total">${this.calculateLineTotal(item).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</div>
+                            <div class="line-total">${this.fmtCur(this.calculateLineTotal(item))}</div>
                         </div>
                         <button class="btn-icon btn-icon-danger li-del" onclick="app.removeLineItem(${item.id})" title="Remove item">✕</button>
                     </div>
@@ -2735,6 +2858,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
+            },
+
+            // set the VAT select, adding the rate as an option when it is not in the list (e.g. a custom default from Settings)
+            setIvaRate(v) {
+                const sel = document.getElementById('ivaRate');
+                const n = parseFloat(v);
+                if (!sel || !isFinite(n)) return;
+                let o = [...sel.options].find(o => parseFloat(o.value) === n);
+                if (!o) { o = document.createElement('option'); o.value = String(n); o.textContent = n + '%'; sel.appendChild(o); }
+                sel.value = o.value;
+            },
+
+            ratePct(id, def) {
+                const el = document.getElementById(id);
+                const n = el ? parseFloat(el.value) : NaN;
+                return isFinite(n) ? n : def;
             },
 
             calculateLineTotal(item) {
@@ -2754,7 +2893,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 // Social security markup (rivalsa): computed first, it is part of the VAT and withholding base
                 const inpsCharge = document.getElementById('inpsCharge').checked;
-                const inpsRatePct = parseFloat(document.getElementById('inpsRate').value) || 4;
+                const inpsRatePct = this.ratePct('inpsRate', 0);   // the rate shown in the field (0 is a valid rate)
                 const inpsAmount = inpsCharge ? afterDiscount * (inpsRatePct / 100) : 0;
 
                 const baseImponibile = afterDiscount + inpsAmount;   // VAT and withholding base
@@ -2773,14 +2912,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const bolloAmount = bollo ? bolloFlat : 0;
                 total += bolloAmount;
 
-                document.getElementById('subtotal').textContent = subtotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('afterDiscount').textContent = afterDiscount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('taxable').textContent = afterDiscount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('ivaAmount').textContent = ivaAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('inpsAmount').textContent = inpsAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('withholdingAmount').textContent = withholdingAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('bolloAmount').textContent = bolloAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
-                document.getElementById('finalTotal').textContent = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ' + this.cur();
+                document.getElementById('subtotal').textContent = this.fmtCur(subtotal);
+                document.getElementById('afterDiscount').textContent = this.fmtCur(afterDiscount);
+                document.getElementById('taxable').textContent = this.fmtCur(baseImponibile);
+                document.getElementById('ivaAmount').textContent = this.fmtCur(ivaAmount);
+                document.getElementById('inpsAmount').textContent = this.fmtCur(inpsAmount);
+                document.getElementById('withholdingAmount').textContent = this.fmtCur(withholdingAmount);
+                document.getElementById('bolloAmount').textContent = this.fmtCur(bolloAmount);
+                document.getElementById('finalTotal').textContent = this.fmtCur(total);
             },
 
             renderPreview() {
@@ -2821,9 +2960,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <td class="text-left">${this.escapeHtml(item.description)}</td>
                         <td class="text-right">${item.quantity}</td>
                         <td class="text-left">${this.escapeHtml(item.unit)}</td>
-                        <td class="text-right">${item.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                        <td class="text-right">${this.fmtCur(item.unitPrice)}</td>
                         <td class="text-right">${item.discount}%</td>
-                        <td class="text-right" style="font-weight: bold; color: var(--el-emerald-dark);">${this.calculateLineTotal(item).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                        <td class="text-right" style="font-weight: bold; color: var(--el-emerald-dark);">${this.fmtCur(this.calculateLineTotal(item))}</td>
                     </tr>
                 `).join('');
 
@@ -2857,11 +2996,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Quote Date</span>
-                                <span class="meta-value">${quoteDate ? new Date(quoteDate).toLocaleDateString('en-GB') : ''}</span>
+                                <span class="meta-value">${this.fmtDate(quoteDate)}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Valid Until</span>
-                                <span class="meta-value">${validityDate ? new Date(validityDate).toLocaleDateString('en-GB') : ''}</span>
+                                <span class="meta-value">${this.fmtDate(validityDate)}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Payment Terms</span>
@@ -2914,31 +3053,31 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <table class="totals-table">
                             <tr>
                                 <td class="label">Subtotal:</td>
-                                <td class="value">${subtotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(subtotal)}</td>
                             </tr>
                             <tr>
                                 <td class="label">After discount:</td>
-                                <td class="value">${afterDiscount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(afterDiscount)}</td>
                             </tr>
                             ${ivaAmount > 0 ? `<tr>
                                 <td class="label">VAT:</td>
-                                <td class="value">${ivaAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(ivaAmount)}</td>
                             </tr>` : '<tr><td class="label">VAT:</td><td class="value">Exempt</td></tr>'}
                             ${inpsAmount > 0 ? `<tr>
                                 <td class="label">Social Security (${inpsRatePct.toLocaleString('en-US')}%):</td>
-                                <td class="value">${inpsAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(inpsAmount)}</td>
                             </tr>` : ''}
                             ${withholdingAmount > 0 ? `<tr>
                                 <td class="label">Withholding tax (${(parseFloat(document.getElementById('withholdingRate').value) || 20).toLocaleString('en-US')}%):</td>
-                                <td class="value">-${withholdingAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">-${this.fmtCur(withholdingAmount)}</td>
                             </tr>` : ''}
                             ${bolloAmount > 0 ? `<tr>
                                 <td class="label">Stamp duty:</td>
-                                <td class="value">${bolloAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(bolloAmount)}</td>
                             </tr>` : ''}
                             <tr class="total-final">
                                 <td class="label">FINAL TOTAL:</td>
-                                <td class="value">${finalTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${this.cur()}</td>
+                                <td class="value">${this.fmtCur(finalTotal)}</td>
                             </tr>
                         </table>
 
@@ -3040,14 +3179,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 }
                 // 1. Save in browser memory (so it can be re-opened with "Load")
                 this.saveQuoteToStorage(name);
-                // 2. Auto-increment the quote number for the next one
-                this.data.quoteNumberCounter++;
-                localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
-                document.getElementById('quoteNumber').value = `Q${new Date().getFullYear()}-${this.data.quoteNumberCounter}`;
-                // 3. Generate and download the PDF of the preview
+                // 2. Generate and download the PDF (before the number changes, so it matches the saved quote)
                 this.closeModal();
                 this.toast('Generating PDF...');
                 this.downloadQuotePDF(name);
+                // 3. Auto-increment the quote number for the next one
+                this.data.quoteNumberCounter++;
+                localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
+                document.getElementById('quoteNumber').value = `Q${new Date().getFullYear()}-${this.data.quoteNumberCounter}`;
+                this.renderPreview();
             },
 
 buildQuotePdf(name, safe) {
@@ -3056,7 +3196,7 @@ buildQuotePdf(name, safe) {
                 const QL = {"locale": "en-US", "title": "QUOTE", "yourCompany": "Your Company", "no": "Quote No.", "date": "Quote Date", "valid": "Valid Until", "pay": "Payment Terms", "client": "CLIENT DETAILS", "cName": "Name", "cCompany": "Company", "cAddress": "Address", "cEmail": "Email", "cVat": "VAT / Tax ID", "details": "QUOTE DETAILS", "hDesc": "Description", "hQty": "Qty", "hUnit": "Unit", "hPrice": "Unit Price", "hDisc": "Disc.", "hAmount": "Amount", "summary": "FINANCIAL SUMMARY", "subtotal": "Subtotal", "afterDisc": "After discount", "vat": "VAT", "exempt": "Exempt", "inps": "Social Security", "wh": "Withholding tax", "stamp": "Stamp duty", "total": "FINAL TOTAL", "notes": "Notes & Terms", "bank": "Bank Account"};
                 const cur = (typeof this.cur === 'function') ? this.cur() : (document.getElementById('currency') ? (document.getElementById('currency').value || '€') : '€');
                 const v = id => { const e = document.getElementById(id); return e ? (e.value || '') : ''; };
-                const money = n => (Number(n) || 0).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + cur;
+                const money = n => this.fmtCur(n, cur);
                 const numOf = id => {
                     const e = document.getElementById(id); if (!e) return 0;
                     let t = (e.textContent || '').replace(/[^0-9.,-]/g, '');
@@ -3064,7 +3204,7 @@ buildQuotePdf(name, safe) {
                     else t = t.replace(/,/g, '');
                     return parseFloat(t) || 0;
                 };
-                const dt = s => { if (!s) return ''; try { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleDateString('en-GB'); } catch (e) { return s || ''; } };
+                const dt = s => this.fmtDate(s);
                 const doc = new Ctor({ unit:'mm', format:'a4' });
                 const M = 15, W = 210, H = 297, cw = W - 2*M;
                 const accent = (app.data.accent ? hexToRgb(app.data.accent) : [5,150,105]), ink = [26,26,26], muted = [95,95,95], line = [214,214,214], head = [238,245,242];
@@ -3128,7 +3268,7 @@ buildQuotePdf(name, safe) {
                     doc.text(dl, cx[0] + 2, y + 4.2);
                     doc.text(String(item.quantity), cx[1] + cols[1].w - 2, y + 4.2, { align:'right' });
                     doc.text(String(item.unit || ''), cx[2] + 2, y + 4.2);
-                    doc.text(money(item.unitPrice).replace(' ' + cur, ''), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
+                    doc.text((Number(item.unitPrice) || 0).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:2}), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
                     doc.text((item.discount || 0) + '%', cx[4] + cols[4].w - 2, y + 4.2, { align:'right' });
                     F('bold', 8.5, accent);
                     doc.text(money(this.calculateLineTotal(item)), cx[5] + cols[5].w - 2, y + 4.2, { align:'right' });
@@ -3205,7 +3345,7 @@ buildQuotePdf(name, safe) {
                                 <span style="font-size:11px; padding:2px 9px; border-radius:999px; color:#fff; background:${sm.bg};">${sm.label}</span>
                             </div>
                             <div style="color: var(--t2); font-size: 12px; margin-bottom: 8px;">
-                                ${new Date(quote.date).toLocaleDateString('en-GB')}
+                                ${this.fmtDate(quote.date)}
                             </div>
                             <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
                                 <label style="font-size:11px; color:var(--t2);">Status:</label>
@@ -3253,7 +3393,7 @@ buildQuotePdf(name, safe) {
                 document.getElementById('iban').value = data.iban;
                 document.getElementById('discountGlobal').value = data.discountGlobal;
                 document.getElementById('discountType').value = data.discountType;
-                document.getElementById('ivaRate').value = data.ivaRate;
+                this.setIvaRate(data.ivaRate);
                 document.getElementById('inpsCharge').checked = data.inpsCharge;
                 document.getElementById('inpsRate').value = data.inpsRate || '0';
                 document.getElementById('withholdingTax').checked = data.withholdingTax;
@@ -3295,7 +3435,8 @@ buildQuotePdf(name, safe) {
                 if (!quotes[name]) return;
                 quotes[name].status = status;
                 localStorage.setItem('quotes', JSON.stringify(quotes));
-                this.loadQuoteModal();
+                const lm = document.getElementById('loadModal');
+                if (lm && lm.classList.contains('active')) this.loadQuoteModal(); // refresh the open Load dialog only; the 📄 Quotes list re-renders itself
             },
 
             // ---- Convert to invoice (JSON importable by the Invoice Generator) ----
@@ -3359,9 +3500,9 @@ buildQuotePdf(name, safe) {
                 localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
 
                 const today = new Date();
-                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-                document.getElementById('quoteDate').valueAsDate = today;
-                document.getElementById('validityDate').valueAsDate = validity;
+                const validity = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+                document.getElementById('quoteDate').value = this.localISO(today);
+                document.getElementById('validityDate').value = this.localISO(validity);
 
                 this.calculateTotals();
                 this.renderPreview();
@@ -3481,7 +3622,7 @@ buildQuotePdf(name, safe) {
                         document.getElementById('iban').value = data.iban || '';
                         document.getElementById('discountGlobal').value = data.discountGlobal || '';
                         document.getElementById('discountType').value = data.discountType || '';
-                        document.getElementById('ivaRate').value = data.ivaRate || '20';
+                        this.setIvaRate(data.ivaRate || '20');
                         document.getElementById('inpsCharge').checked = data.inpsCharge || false;
                         document.getElementById('inpsRate').value = data.inpsRate || '0';
                         document.getElementById('withholdingTax').checked = data.withholdingTax || false;
@@ -3519,7 +3660,7 @@ buildQuotePdf(name, safe) {
                     document.getElementById('notes').value = data.notes || '';
                     document.getElementById('discountGlobal').value = data.discountGlobal || '';
                     document.getElementById('discountType').value = data.discountType || 'percentage';
-                    document.getElementById('ivaRate').value = data.ivaRate || '20';
+                    this.setIvaRate(data.ivaRate || '20');
                     if (data.inpsRate) document.getElementById('inpsRate').value = data.inpsRate;
                     if (typeof data.inpsCharge === 'boolean') document.getElementById('inpsCharge').checked = data.inpsCharge;
                     if (typeof data.withholdingTax === 'boolean') document.getElementById('withholdingTax').checked = data.withholdingTax;
@@ -3533,12 +3674,14 @@ buildQuotePdf(name, safe) {
             }
         };
 
+        window.app = app; // const is not a window property: the dashboard boot and theme-switch sync look up window.app
         document.addEventListener('DOMContentLoaded', () => app.init());
 
         // Auto-save: split company data (persistent profile) and quote data
         let _autoSaveBaseline = null;
         setInterval(() => {
             try {
+                if (app._resetting) return;
                 app.saveCompanyData();
                 const formData = {
                     clientName: document.getElementById('clientName').value,
@@ -3612,12 +3755,12 @@ buildQuotePdf(name, safe) {
         getQuotes(){ return getJSON('quotes', {}) || {}; },
         quoteValue(q){
           const d=(q&&q.data)||{}; const items=d.lineItems||[];
-          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice), 0);
+          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice)*(1-num(it.discount)/100), 0);   // same as calculateLineTotal (line discount included)
           const disc=num(d.discountGlobal);
           sub -= (d.discountType==='percentage') ? sub*disc/100 : disc;
           return Math.max(0, sub);
         },
-        money(n){ const c=(typeof this.cur==='function')?this.cur():'€'; return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+c; },
+        money(n){ const c=(typeof this.cur==='function')?this.cur():'€'; return this.fmtCur(n, c); },
 
         // ---------------- DASHBOARD ----------------
         renderDashboard(){
@@ -3664,7 +3807,7 @@ buildQuotePdf(name, safe) {
               return `<tr>
                 <td><b>${esc(q.name)}</b></td>
                 <td>${esc((q.data&&q.data.clientName)||'—')}</td>
-                <td>${q.date?new Date(q.date).toLocaleDateString('en-GB'):'—'}</td>
+                <td>${q.date?this.fmtDate(q.date):'—'}</td>
                 <td>${this.money(this.quoteValue(q))}</td>
                 <td><select class="status-select" onchange="app.setQuoteStatus('${ek}',this.value);app.renderQuotesList()">${opt(st,'draft','Draft')}${opt(st,'sent','Sent')}${opt(st,'accepted','Accepted')}</select></td>
                 <td class="row-actions">
@@ -3858,7 +4001,7 @@ buildQuotePdf(name, safe) {
         loadSettings(){
           const s=getJSON(LS.settings, {});
           const set=(id,v)=>{ const e=document.getElementById(id); if(e&&v!=null&&v!=='')e.value=v; };
-          set('setCurrency', s.currency); set('setIva', s.iva); set('setPayment', s.payment);
+          set('setCurrency', s.currency || this.cur()); set('setIva', s.iva); set('setPayment', s.payment);
         },
         saveSettings(){
           const g=id=>{ const e=document.getElementById(id); return e?e.value:''; };
@@ -3868,8 +4011,12 @@ buildQuotePdf(name, safe) {
         applySettingsToNew(){
           const s=getJSON(LS.settings, {});
           if(s.currency){ const e=document.getElementById('currency'); if(e)e.value=s.currency; }
-          if(s.iva){ const e=document.getElementById('ivaRate'); if(e)e.value=s.iva; }
-          if(s.payment){ const e=document.getElementById('paymentCustom'); if(e)e.value=s.payment; }
+          if(s.iva){ this.setIvaRate(s.iva); }
+          if(s.payment){   // select the matching option, otherwise use it as custom terms (paymentCustom is printed only with 'Custom')
+            const pt=document.getElementById('paymentTerms'), pc=document.getElementById('paymentCustom');
+            const o=pt?[...pt.options].find(o=>o.value.toLowerCase()===String(s.payment).trim().toLowerCase()):null;
+            if(o){ pt.value=o.value; } else { if(pt)pt.value='Custom'; if(pc)pc.value=s.payment; }
+          }
         },
 
         // ---------------- RESET (bug fix) ----------------
@@ -3896,12 +4043,14 @@ buildQuotePdf(name, safe) {
         },
         resetAll(){
           if(!confirm('Reset EVERYTHING: company profile, clients, products, saved quotes and current quote. This cannot be undone. Proceed?')) return;
+          this._resetting=true;   // stop autosave / beforeunload from writing the old data back
           ['formData','companyData','quotes','quoteCounter', LS.clients, LS.products, LS.settings, LS.style].forEach(k=>localStorage.removeItem(k));
           location.reload();
         },
 
         // ---------------- immediate autosave (bug fix: discountGlobal) ----------------
         _saveFormNow(){
+          if(this._resetting) return;
           try{
             const g=id=>{ const e=document.getElementById(id); return e?e.value:''; };
             const c=id=>{ const e=document.getElementById(id); return e?e.checked:false; };
@@ -3948,7 +4097,7 @@ buildQuotePdf(name, safe) {
     (function(){ function s(){ if(window.app&&app.syncThemeSwitch) app.syncThemeSwitch(); } if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){setTimeout(s,60);}); else setTimeout(s,60); })();
     </script>
 
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 <div id="logoCropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
   <div style="background:#ffffff;color:#1b1e22;border-radius:14px;padding:18px;max-width:min(520px,94vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">
@@ -3983,6 +4132,71 @@ function _wireLogoCrop(){var st=_lcq('logoCropStage');if(!st)return;
   _lcq('logoCropApply').addEventListener('click',logoCropApply);
   _lcq('logoCropCancel').addEventListener('click',function(){_lcq('logoCropOverlay').style.display='none';});}
 if(document.readyState!=='loading')_wireLogoCrop();else document.addEventListener('DOMContentLoaded',_wireLogoCrop);
+</script>
+<script>
+/* Preview fit-to-width: scale the INNER document and clip the container to the
+   column width → no sideways scrolling and no table sticking out of the page,
+   at every width (phones and the 2-column desktop). If the content fits, no scaling.
+   Print unchanged (see @media print); the PDF is vector-drawn and ignores the preview. */
+(function(){
+  var busy=false;
+  function fit(){
+    if(busy) return;
+    var sec=document.querySelector('.preview-section');
+    var outer=document.getElementById('quotePreview');
+    if(!sec||!outer) return;
+    var inner=outer.firstElementChild; if(!inner) return;
+    busy=true;
+    inner.style.transform=''; inner.style.width=''; inner.style.transformOrigin='top left';
+    outer.style.height=''; outer.style.overflow=''; outer.style.flexShrink='';
+    var cs=getComputedStyle(inner);
+    var mx=(parseFloat(cs.marginLeft)||0)+(parseFloat(cs.marginRight)||0);
+    var my=(parseFloat(cs.marginTop)||0)+(parseFloat(cs.marginBottom)||0);
+    var avail=sec.clientWidth-mx;      // room for the page, margins excluded
+    if(avail>0){
+      var natural=inner.scrollWidth;   // real content width in the fluid layout
+      if(natural>avail+1){             // scale ONLY when the content really overflows
+        inner.style.width='min-content'; // narrowest width without overflow, right padding included
+        natural=Math.max(Math.ceil(inner.getBoundingClientRect().width), avail);
+        inner.style.width=natural+'px';
+        var k=avail/natural;
+        var hh=inner.scrollHeight;
+        inner.style.transform='scale('+k+')';
+        outer.style.overflow='hidden';
+        outer.style.flexShrink='0';    // it is a flex item: without this it shrinks and clips the page
+        outer.style.height=(hh*k+my)+'px';
+      }
+    }
+    busy=false;
+  }
+  var tmr=null; function schedule(){ if(tmr) clearTimeout(tmr); tmr=setTimeout(fit,120); }
+  var target=document.getElementById('quotePreview');
+  // right after every render, before paint: the preview doesn't jump while typing
+  if(target) new MutationObserver(fit).observe(target,{childList:true,subtree:true,characterData:true});
+  window.addEventListener('resize', schedule);
+  // the column can change width without a resize (e.g. back to the Editor view)
+  var sec=document.querySelector('.preview-section'), lastW=-1;
+  if(sec && window.ResizeObserver) new ResizeObserver(function(){
+    var w=sec.clientWidth; if(Math.abs(w-lastW)>20){ lastW=w; if(w>0) requestAnimationFrame(fit); }
+  }).observe(sec);
+  if(document.readyState!=='loading') schedule(); else document.addEventListener('DOMContentLoaded', schedule);
+})();
+</script>
+<script>
+/* Nav drawer: close it when an item is picked or on a tap outside (backdrop). Consistent menus. */
+(function(){
+  var sb=document.getElementById('qgSidebar');
+  var nav=document.getElementById('qgNav');
+  function close(){ if(sb) sb.classList.remove('open'); }
+  if(nav) nav.addEventListener('click', function(e){ if(e.target.closest('button')) close(); });
+  document.addEventListener('click', function(e){
+    if(!sb || !sb.classList.contains('open')) return;
+    var t=e.target;
+    if(t.closest && (t.closest('#qgNav') || t.closest('.qg-side-foot') || t.closest('.qg-hamburger') || t.closest('#el-theme-toggle'))) return; // also the theme switch's internal click
+    close();  // tap on the backdrop or outside the drawer
+  });
+  window.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+})();
 </script>
 </div><!-- /appContent -->
 <script>(function(){

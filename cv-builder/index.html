@@ -735,6 +735,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         @media (max-width: 1200px) {
             .preview-wrap { position: static; margin-top: 30px; }
         }
+        /* the language/theme buttons stay at the top of the page instead of floating over the form and the CV */
+        #el-lang, #el-theme-toggle { position: absolute !important; }
+        @media (max-width: 600px) {
+            body { padding-top: 66px; } /* room for the buttons above the header */
+        }
 
         .preview-toolbar {
             display: flex;
@@ -1162,11 +1167,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 background: #fff !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                color-scheme: light !important; /* dark app theme would paint the page margins dark with "Background graphics" on */
             }
             body * { visibility: hidden !important; }
             #preview, #preview * { visibility: visible !important; }
+            /* every block above/below the CV must take no space (visibility alone left a blank gap at the top) */
             .header, .controls, .panel, .bottom-actions,
-            .toast, .preview-toolbar, .preview-wrap > .preview-toolbar { display: none !important; }
+            .toast, .preview-toolbar, .preview-wrap > .preview-toolbar,
+            .profile-bar, .ats-panel, .el-brand { display: none !important; }
             .main-layout {
                 display: block !important;
                 grid-template-columns: none !important;
@@ -1174,7 +1182,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 margin: 0 !important;
             }
             .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
-            .preview-wrap { position: static !important; }
+            .preview-wrap { position: static !important; margin: 0 !important; }
             .preview-panel {
                 position: static !important;
                 box-shadow: none !important;
@@ -1191,9 +1199,27 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 grid-template-columns: 1fr 200px !important;
                 gap: 24px !important;
             }
-            .preview-panel.template-executive .preview-header {
+            .preview-panel.template-executive .preview-header,
+            .preview-panel.template-sidebar .preview-header {
                 margin: 0 !important;
                 border-radius: 0 !important;
+            }
+            /* skill bars, the Executive/Band header bands and Creative's pill title / gradient headings print even without "Background graphics" */
+            .preview-skill-bar,
+            .preview-panel.template-executive .preview-header,
+            .preview-panel.template-sidebar .preview-header,
+            .preview-panel.template-creative .preview-title,
+            .preview-panel.template-creative .preview-section-title {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            /* the dark preview theme prints with the light colours (light text on white paper otherwise) */
+            .preview-panel.preview-dark {
+                --cv-bg: #ffffff;
+                --cv-text: #1a1a1a;
+                --cv-muted: #555;
+                --cv-subtle: #999;
+                --cv-line: #ddd;
             }
             a { color: inherit !important; text-decoration: none !important; }
         }
@@ -1277,6 +1303,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <div class="control-group">
                 <label for="font-select">Font:</label>
                 <select id="font-select">
+                    <option value="template">Template font</option>
                     <option value="default">Modern (sans + serif)</option>
                     <option value="roboto">Clean sans</option>
                     <option value="lora">Elegant serif</option>
@@ -1572,7 +1599,6 @@ const T_ALL = { en: {
             },
             confirmClear: 'Cancellare tutti i campi? L\'operazione è irreversibile.',
             confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
-            confirmPreset: 'Caricare questo esempio? I dati attuali verranno sostituiti.',
             saving: 'Salvataggio...',
             savedAt: 'Salvato ',
             saveFailed: 'Salvataggio fallito',
@@ -1581,6 +1607,7 @@ const T_ALL = { en: {
         T_ALL.en.ui = { profile:'Profile', newP:'+ New', rename:'Rename', duplicate:'Duplicate', del:'Delete', confirmDel:'Delete this profile? This cannot be undone.', promptName:'Profile name:', secOrder:'↕ Section order', secHint:'Drag the handles to reorder the sections of your CV (applies to preview, PDF and exports).', pCreated:'Profile created', pDeleted:'Profile deleted', pRenamed:'Profile renamed', pDup:'Profile duplicated' };
         T_ALL.it.ui = { profile:'Profilo', newP:'+ Nuovo', rename:'Rinomina', duplicate:'Duplica', del:'Elimina', confirmDel:'Eliminare questo profilo? L\'operazione è irreversibile.', promptName:'Nome profilo:', secOrder:'↕ Ordine sezioni', secHint:'Trascina le maniglie per riordinare le sezioni del CV (vale per anteprima, PDF ed export).', pCreated:'Profilo creato', pDeleted:'Profilo eliminato', pRenamed:'Profilo rinominato', pDup:'Profilo duplicato' };
         let T = T_ALL[__CVLANG__];
+        function curLang(){ return (typeof T_ALL !== 'undefined' && T === T_ALL.it) ? 'it' : 'en'; }
 
         // ============ CONSTANTS ============
 const LEVEL_LABELS_ALL = { en: { 1: 'Beginner', 2: 'Elementary', 3: 'Intermediate', 4: 'Advanced', 5: 'Expert' }, it: { 1: 'Base', 2: 'Elementare', 3: 'Intermedio', 4: 'Avanzato', 5: 'Esperto' } };
@@ -1609,7 +1636,7 @@ const LANG_LEVELS_ALL = { en: ['Select', 'Basic', 'Intermediate', 'Fluent', 'Nat
         };
 
         const FONT_MAP = {
-            default:    { body:"system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif", heading:"'Georgia','Times New Roman',serif", pdf:'helvetica' },
+            default:    { body:"system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif", heading:"'Georgia','Times New Roman',serif", pdf:'helvetica', pdfHead:'times' },
             roboto:     { body:"system-ui,'Segoe UI',Roboto,Arial,sans-serif", heading:"system-ui,'Segoe UI',sans-serif", pdf:'helvetica' },
             lora:       { body:"'Georgia','Times New Roman',serif", heading:"'Georgia',serif", pdf:'times' },
             montserrat: { body:"'Trebuchet MS','Segoe UI',Verdana,sans-serif", heading:"'Trebuchet MS',sans-serif", pdf:'helvetica' },
@@ -1629,10 +1656,10 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/alexmartinez',
                 summary: 'Full-stack engineer with 9+ years building scalable web applications. Expert in React, Node.js, and cloud architecture on AWS. Led teams of 5-8 engineers, shipped features serving 2M+ monthly users. Passionate about clean code, test-driven development, and mentoring junior developers.',
                 work: [
-                    {company:'Stripe', role:'Senior Software Engineer', start:'Jan 2022', end:'Present', description:'Architected payment reconciliation service processing $500M+ monthly. Reduced API latency by 40% through caching and query optimization. Mentored 4 engineers and led quarterly architecture reviews.'},
-                    {company:'Airbnb', role:'Software Engineer II', start:'Mar 2019', end:'Dec 2021', description:'Built real-time messaging infrastructure serving 150M+ users. Migrated legacy Ruby services to Node.js microservices. Reduced deployment time from 45min to 8min via CI/CD improvements.'}
+                    {company:'Tallyforge Payments', role:'Senior Software Engineer', start:'Jan 2022', end:'Present', description:'Architected payment reconciliation service processing $500M+ monthly. Reduced API latency by 40% through caching and query optimization. Mentored 4 engineers and led quarterly architecture reviews.'},
+                    {company:'Harbornest Stays', role:'Software Engineer II', start:'Mar 2019', end:'Dec 2021', description:'Built real-time messaging infrastructure serving 150M+ users. Migrated legacy Ruby services to Node.js microservices. Reduced deployment time from 45min to 8min via CI/CD improvements.'}
                 ],
-                education: [{institution:'UC Berkeley', degree:'B.S. Computer Science', year:'2015', gpa:'3.8/4.0'}],
+                education: [{institution:'Westbridge State University', degree:'B.S. Computer Science', year:'2015', gpa:'3.8/4.0'}],
                 skills: [
                     {name:'JavaScript/TypeScript', level:5},
                     {name:'React/Next.js', level:5},
@@ -1642,9 +1669,9 @@ const PRESETS_ALL = { en: {
                     {name:'Docker/K8s', level:4}
                 ],
                 languages: [{name:'English', level:4}, {name:'Spanish', level:4}],
-                certifications: [{name:'AWS Solutions Architect Professional', issuer:'Amazon Web Services', year:'2023'}],
+                certifications: [{name:'Cloud Solutions Architect Professional', issuer:'Cloudwright Academy', year:'2023'}],
                 customTitle: 'Open Source',
-                customContent: 'Contributor to React, Next.js and TanStack Query\nAuthor of react-query-utils (5k GitHub stars)'
+                customContent: 'Contributor to popular open-source React libraries\nAuthor of cache-sync-utils (5k GitHub stars)'
             },
             designer: {
                 fullName: 'Sofia Chen',
@@ -1656,10 +1683,10 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/sofiachen',
                 summary: 'Product designer with 7+ years shaping digital experiences for SaaS, fintech, and e-commerce. Specialize in design systems, user research, and turning complex workflows into simple interfaces. Worked with cross-functional teams to ship features that moved key metrics.',
                 work: [
-                    {company:'Notion', role:'Senior Product Designer', start:'Apr 2022', end:'Present', description:'Lead designer for AI features used by 30M+ users. Created comprehensive design system adopted across 4 product areas. Increased onboarding completion by 28% through research-driven redesign.'},
-                    {company:'Shopify', role:'Product Designer', start:'Jun 2019', end:'Mar 2022', description:'Designed checkout flows converting $3B+ in GMV. Led accessibility initiative bringing platform to WCAG 2.1 AA compliance. Facilitated 40+ user research sessions.'}
+                    {company:'Quillstack', role:'Senior Product Designer', start:'Apr 2022', end:'Present', description:'Lead designer for AI features used by 30M+ users. Created comprehensive design system adopted across 4 product areas. Increased onboarding completion by 28% through research-driven redesign.'},
+                    {company:'Marketlane Commerce', role:'Product Designer', start:'Jun 2019', end:'Mar 2022', description:'Designed checkout flows converting $3B+ in GMV. Led accessibility initiative bringing platform to WCAG 2.1 AA compliance. Facilitated 40+ user research sessions.'}
                 ],
-                education: [{institution:'Rhode Island School of Design', degree:'BFA Graphic Design', year:'2017', gpa:''}],
+                education: [{institution:'Eastport School of Art and Design', degree:'BFA Graphic Design', year:'2017', gpa:''}],
                 skills: [
                     {name:'Figma', level:5},
                     {name:'Design Systems', level:5},
@@ -1669,9 +1696,9 @@ const PRESETS_ALL = { en: {
                     {name:'HTML/CSS', level:3}
                 ],
                 languages: [{name:'English', level:4}, {name:'Mandarin', level:3}],
-                certifications: [{name:'Nielsen Norman UX Certification', issuer:'NN/g', year:'2021'}],
+                certifications: [{name:'Advanced UX Certification', issuer:'Northlight UX School', year:'2021'}],
                 customTitle: 'Speaking',
-                customContent: 'Config 2023 - "Scaling Design Systems Past 100 Components"\nUX Week 2022 - Panel on accessibility in fintech'
+                customContent: 'Pixelharbor Conf 2023 - "Scaling Design Systems Past 100 Components"\nBrightline UX Days 2022 - Panel on accessibility in fintech'
             },
             marketing: {
                 fullName: 'James Wilson',
@@ -1683,25 +1710,25 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/jameswilson',
                 summary: 'Growth marketing leader with 8+ years scaling B2B SaaS from $1M to $50M ARR. Deep expertise in demand gen, content strategy, and marketing operations. Built and led cross-functional teams of 12, ran campaigns with budgets up to £4M annually.',
                 work: [
-                    {company:'Monday.com', role:'Senior Marketing Manager - EMEA', start:'Sep 2021', end:'Present', description:'Own £4M/year demand gen budget across paid, SEO, and events. Delivered 180% YoY pipeline growth. Launched ABM program generating £12M in qualified pipeline.'},
-                    {company:'HubSpot', role:'Marketing Manager', start:'Jan 2018', end:'Aug 2021', description:'Led content strategy driving 2.5M monthly organic visitors. Scaled email program from 50k to 400k subscribers with 28% avg open rate. Managed £1.5M paid acquisition budget.'}
+                    {company:'Taskbridge', role:'Senior Marketing Manager - EMEA', start:'Sep 2021', end:'Present', description:'Own £4M/year demand gen budget across paid, SEO, and events. Delivered 180% YoY pipeline growth. Launched ABM program generating £12M in qualified pipeline.'},
+                    {company:'Funnelworks', role:'Marketing Manager', start:'Jan 2018', end:'Aug 2021', description:'Led content strategy driving 2.5M monthly organic visitors. Scaled email program from 50k to 400k subscribers with 28% avg open rate. Managed £1.5M paid acquisition budget.'}
                 ],
-                education: [{institution:'London School of Economics', degree:'BSc Business Management', year:'2016', gpa:'First Class Honours'}],
+                education: [{institution:'Kingsgate School of Business', degree:'BSc Business Management', year:'2016', gpa:'First Class Honours'}],
                 skills: [
                     {name:'Demand Generation', level:5},
                     {name:'Content Strategy', level:5},
                     {name:'SEO/SEM', level:4},
-                    {name:'HubSpot/Salesforce', level:5},
-                    {name:'Analytics (GA4, Amplitude)', level:4},
+                    {name:'Marketing Automation/CRM', level:5},
+                    {name:'Web & Product Analytics', level:4},
                     {name:'Team Leadership', level:4}
                 ],
                 languages: [{name:'English', level:4}, {name:'French', level:3}],
                 certifications: [
-                    {name:'Google Ads Professional', issuer:'Google', year:'2023'},
-                    {name:'HubSpot Inbound Marketing', issuer:'HubSpot', year:'2022'}
+                    {name:'Search Advertising Professional', issuer:'AdSkill Academy', year:'2023'},
+                    {name:'Inbound Marketing Certification', issuer:'Funnelworks Academy', year:'2022'}
                 ],
                 customTitle: 'Achievements',
-                customContent: 'Grew company blog to #1 in category (SimilarWeb)\nFeatured speaker at SaaStr Europe 2023'
+                customContent: 'Grew company blog to #1 in its category by organic traffic\nFeatured speaker at Scaleup Marketing Forum 2023'
             },
             sales: {
                 fullName: 'Michael Rodriguez',
@@ -1713,22 +1740,22 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/mrodriguezsales',
                 summary: 'Enterprise sales leader with 10+ years closing complex deals in B2B SaaS. Consistent top performer - exceeded quota 8 of last 10 quarters. Specialize in Fortune 500 accounts with deal sizes $250k-$2M. Strong consultative selling and executive engagement skills.',
                 work: [
-                    {company:'Salesforce', role:'Senior Enterprise AE', start:'Feb 2020', end:'Present', description:'115% attainment over 4 years on $3M+ quota. Closed largest deal in region ($4.2M ARR, 3-year contract). Top 5% of global sales org 3 years running.'},
-                    {company:'Oracle', role:'Account Executive', start:'Jul 2015', end:'Jan 2020', description:'Grew territory from $800k to $4.5M ARR. Built pipeline through outbound prospecting and partner channels. Promoted twice in 5 years.'}
+                    {company:'Dealcraft Software', role:'Senior Enterprise AE', start:'Feb 2020', end:'Present', description:'115% attainment over 4 years on $3M+ quota. Closed largest deal in region ($4.2M ARR, 3-year contract). Top 5% of global sales org 3 years running.'},
+                    {company:'Datacrest Systems', role:'Account Executive', start:'Jul 2015', end:'Jan 2020', description:'Grew territory from $800k to $4.5M ARR. Built pipeline through outbound prospecting and partner channels. Promoted twice in 5 years.'}
                 ],
-                education: [{institution:'Northwestern University - Kellogg', degree:'MBA', year:'2015', gpa:''}],
+                education: [{institution:'Lakeshore School of Management', degree:'MBA', year:'2015', gpa:''}],
                 skills: [
                     {name:'Enterprise Sales', level:5},
                     {name:'Consultative Selling', level:5},
-                    {name:'Salesforce CRM', level:5},
+                    {name:'CRM & Forecasting', level:5},
                     {name:'Negotiation', level:5},
                     {name:'C-Suite Engagement', level:4},
                     {name:'Pipeline Management', level:5}
                 ],
                 languages: [{name:'English', level:4}, {name:'Spanish', level:4}],
-                certifications: [{name:"President's Club", issuer:'Salesforce', year:'2023'}],
+                certifications: [{name:"President's Club", issuer:'Dealcraft Software', year:'2023'}],
                 customTitle: 'Awards',
-                customContent: "President's Club Winner - 2021, 2022, 2023\nRookie of the Year 2016 - Oracle North America"
+                customContent: "President's Club Winner - 2021, 2022, 2023\nRookie of the Year 2016 - Datacrest North America"
             },
             student: {
                 fullName: 'Emma Thompson',
@@ -1740,12 +1767,12 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/emmathompsoncs',
                 summary: 'Recent CS graduate with hands-on experience in full-stack web development and machine learning. Completed 3 internships at startups and a research assistantship in NLP. Eager to join a team where I can contribute to meaningful products while continuing to grow.',
                 work: [
-                    {company:'Dropbox', role:'Software Engineering Intern', start:'Jun 2024', end:'Aug 2024', description:'Built internal tool for team capacity planning. Wrote React frontend and Python API, shipped to production for 200+ employees. Returned offer received.'},
-                    {company:'MIT CSAIL', role:'Research Assistant', start:'Sep 2023', end:'May 2024', description:'NLP research under Prof. Jane Doe. Co-authored paper accepted at EMNLP 2024. Implemented benchmark evaluation framework.'}
+                    {company:'Filecove', role:'Software Engineering Intern', start:'Jun 2024', end:'Aug 2024', description:'Built internal tool for team capacity planning. Wrote React frontend and Python API, shipped to production for 200+ employees. Returned offer received.'},
+                    {company:'Harborview Institute of Technology - AI Lab', role:'Research Assistant', start:'Sep 2023', end:'May 2024', description:'NLP research under Prof. Jane Doe. Co-authored a paper accepted at an international NLP conference (2024). Implemented benchmark evaluation framework.'}
                 ],
                 education: [
-                    {institution:'Massachusetts Institute of Technology', degree:'B.S. Computer Science', year:'2025', gpa:'3.92/4.0'},
-                    {institution:'Boston Latin School', degree:'High School Diploma', year:'2021', gpa:''}
+                    {institution:'Harborview Institute of Technology', degree:'B.S. Computer Science', year:'2025', gpa:'3.92/4.0'},
+                    {institution:'Fenwick Hill High School', degree:'High School Diploma', year:'2021', gpa:''}
                 ],
                 skills: [
                     {name:'Python', level:5},
@@ -1756,9 +1783,9 @@ const PRESETS_ALL = { en: {
                     {name:'Data Structures & Algorithms', level:5}
                 ],
                 languages: [{name:'English', level:4}, {name:'French', level:2}],
-                certifications: [{name:'AWS Cloud Practitioner', issuer:'Amazon', year:'2024'}],
+                certifications: [{name:'Cloud Practitioner', issuer:'Cloudwright Academy', year:'2024'}],
                 customTitle: 'Projects',
-                customContent: 'Senior Capstone: Real-time transcription app for students (React + Whisper API)\nHackathon winner - HackMIT 2023 (Best AI Project)'
+                customContent: 'Senior Capstone: Real-time transcription app for students (React + speech-to-text API)\nHackathon winner - HackHarborview 2023 (Best AI Project)'
             }
         }, it: {
             developer: {
@@ -1771,10 +1798,10 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/alessandrobianchi',
                 summary: 'Ingegnere full-stack con oltre 9 anni di esperienza nella costruzione di applicazioni web scalabili. Esperto in React, Node.js e architetture cloud su AWS. Ho guidato team di 5-8 sviluppatori e rilasciato funzionalità utilizzate da oltre 2 milioni di utenti mensili. Appassionato di codice pulito, test-driven development e mentoring.',
                 work: [
-                    {company:'Satispay', role:'Senior Software Engineer', start:'Gen 2022', end:'Presente', description:'Progettato servizio di riconciliazione pagamenti che gestisce oltre 500M€ al mese. Ridotto la latenza API del 40% tramite caching e ottimizzazione query. Ho seguito 4 sviluppatori e guidato review di architettura trimestrali.'},
-                    {company:'Bending Spoons', role:'Software Engineer II', start:'Mar 2019', end:'Dic 2021', description:'Sviluppata infrastruttura di messaggistica real-time per 150M+ utenti. Migrati servizi legacy Ruby a microservizi Node.js. Ridotto il deployment time da 45min a 8min grazie a miglioramenti CI/CD.'}
+                    {company:'Tascapay', role:'Senior Software Engineer', start:'Gen 2022', end:'Presente', description:'Progettato servizio di riconciliazione pagamenti che gestisce oltre 500M€ al mese. Ridotto la latenza API del 40% tramite caching e ottimizzazione query. Ho seguito 4 sviluppatori e guidato review di architettura trimestrali.'},
+                    {company:'Lanterna Apps', role:'Software Engineer II', start:'Mar 2019', end:'Dic 2021', description:'Sviluppata infrastruttura di messaggistica real-time per 150M+ utenti. Migrati servizi legacy Ruby a microservizi Node.js. Ridotto il deployment time da 45min a 8min grazie a miglioramenti CI/CD.'}
                 ],
-                education: [{institution:'Politecnico di Milano', degree:'Laurea Magistrale in Ingegneria Informatica', year:'2015', gpa:'110/110 con lode'}],
+                education: [{institution:'Università Tecnica Lombarda', degree:'Laurea Magistrale in Ingegneria Informatica', year:'2015', gpa:'110/110 con lode'}],
                 skills: [
                     {name:'JavaScript/TypeScript', level:5},
                     {name:'React/Next.js', level:5},
@@ -1784,9 +1811,9 @@ const PRESETS_ALL = { en: {
                     {name:'Docker/Kubernetes', level:4}
                 ],
                 languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:2}],
-                certifications: [{name:'AWS Solutions Architect Professional', issuer:'Amazon Web Services', year:'2023'}],
+                certifications: [{name:'Cloud Solutions Architect Professional', issuer:'Cloudwright Academy', year:'2023'}],
                 customTitle: 'Open Source',
-                customContent: 'Contributor a React, Next.js e TanStack Query\nAutore di react-query-utils (5k stelle GitHub)'
+                customContent: 'Contributor a librerie open source per React\nAutore di cache-sync-utils (5k stelle GitHub)'
             },
             designer: {
                 fullName: 'Sofia Greco',
@@ -1798,10 +1825,10 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/sofiagreco',
                 summary: 'Product designer con oltre 7 anni di esperienza nel plasmare esperienze digitali per SaaS, fintech ed e-commerce. Specializzata in design system, user research e nella trasformazione di flussi complessi in interfacce semplici. Ho lavorato con team cross-funzionali per rilasciare funzionalità che hanno spostato metriche chiave.',
                 work: [
-                    {company:'Nexi', role:'Senior Product Designer', start:'Apr 2022', end:'Presente', description:'Design lead per funzionalità AI utilizzate da oltre 30M utenti. Creato design system adottato su 4 aree di prodotto. Aumentato il completamento dell\'onboarding del 28% grazie a redesign data-driven.'},
-                    {company:'Subito.it', role:'Product Designer', start:'Giu 2019', end:'Mar 2022', description:'Progettati flussi di checkout che hanno convertito oltre 3 miliardi di GMV. Guidata l\'iniziativa di accessibilità per raggiungere la conformità WCAG 2.1 AA. Facilitati oltre 40 sessioni di user research.'}
+                    {company:'Lumina Pay', role:'Senior Product Designer', start:'Apr 2022', end:'Presente', description:'Design lead per funzionalità AI utilizzate da oltre 30M utenti. Creato design system adottato su 4 aree di prodotto. Aumentato il completamento dell\'onboarding del 28% grazie a redesign data-driven.'},
+                    {company:'Mercato Facile', role:'Product Designer', start:'Giu 2019', end:'Mar 2022', description:'Progettati flussi di checkout che hanno convertito oltre 3 miliardi di GMV. Guidata l\'iniziativa di accessibilità per raggiungere la conformità WCAG 2.1 AA. Facilitati oltre 40 sessioni di user research.'}
                 ],
-                education: [{institution:'IUAV Venezia', degree:'Laurea Magistrale in Design della Comunicazione', year:'2017', gpa:'110/110'}],
+                education: [{institution:'Accademia di Design della Laguna, Venezia', degree:'Laurea Magistrale in Design della Comunicazione', year:'2017', gpa:'110/110'}],
                 skills: [
                     {name:'Figma', level:5},
                     {name:'Design System', level:5},
@@ -1811,9 +1838,9 @@ const PRESETS_ALL = { en: {
                     {name:'HTML/CSS', level:3}
                 ],
                 languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
-                certifications: [{name:'Nielsen Norman UX Certification', issuer:'NN/g', year:'2021'}],
+                certifications: [{name:'Certificazione UX Avanzata', issuer:'Northlight UX School', year:'2021'}],
                 customTitle: 'Speaking',
-                customContent: 'Config 2023 - "Scalare i Design System Oltre i 100 Componenti"\nUX Week 2022 - Panel su accessibilità nel fintech'
+                customContent: 'Pixelharbor Conf 2023 - "Scalare i Design System Oltre i 100 Componenti"\nBrightline UX Days 2022 - Panel su accessibilità nel fintech'
             },
             marketing: {
                 fullName: 'Giulia Ferrari',
@@ -1825,25 +1852,25 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/giuliaferrari',
                 summary: 'Marketing leader con oltre 8 anni di esperienza nello scalare SaaS B2B da 1M a 50M€ di ARR. Competenze approfondite in demand generation, content strategy e marketing operations. Ho costruito e guidato team cross-funzionali fino a 12 persone, gestendo budget annuali fino a 4M€.',
                 work: [
-                    {company:'Monday.com', role:'Senior Marketing Manager - EMEA', start:'Set 2021', end:'Presente', description:'Gestione di budget demand gen da 4M€/anno tra paid, SEO ed eventi. Crescita pipeline del 180% anno su anno. Lanciato programma ABM che ha generato 12M€ di pipeline qualificata.'},
-                    {company:'HubSpot', role:'Marketing Manager', start:'Gen 2018', end:'Ago 2021', description:'Guidata strategia di contenuti che ha portato 2,5M visitatori organici mensili. Scalato il programma email da 50k a 400k iscritti con tasso di apertura medio del 28%. Gestito budget di acquisizione paid da 1,5M€.'}
+                    {company:'Taskbridge', role:'Senior Marketing Manager - EMEA', start:'Set 2021', end:'Presente', description:'Gestione di budget demand gen da 4M€/anno tra paid, SEO ed eventi. Crescita pipeline del 180% anno su anno. Lanciato programma ABM che ha generato 12M€ di pipeline qualificata.'},
+                    {company:'Funnelworks', role:'Marketing Manager', start:'Gen 2018', end:'Ago 2021', description:'Guidata strategia di contenuti che ha portato 2,5M visitatori organici mensili. Scalato il programma email da 50k a 400k iscritti con tasso di apertura medio del 28%. Gestito budget di acquisizione paid da 1,5M€.'}
                 ],
-                education: [{institution:'Bocconi', degree:'Laurea Magistrale in Marketing Management', year:'2016', gpa:'110/110 con lode'}],
+                education: [{institution:'Ateneo Sforzesco di Economia', degree:'Laurea Magistrale in Marketing Management', year:'2016', gpa:'110/110 con lode'}],
                 skills: [
                     {name:'Demand Generation', level:5},
                     {name:'Content Strategy', level:5},
                     {name:'SEO/SEM', level:4},
-                    {name:'HubSpot/Salesforce', level:5},
-                    {name:'Analytics (GA4, Amplitude)', level:4},
+                    {name:'Marketing Automation/CRM', level:5},
+                    {name:'Web & Product Analytics', level:4},
                     {name:'Team Leadership', level:4}
                 ],
                 languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:2}],
                 certifications: [
-                    {name:'Google Ads Professional', issuer:'Google', year:'2023'},
-                    {name:'HubSpot Inbound Marketing', issuer:'HubSpot', year:'2022'}
+                    {name:'Search Advertising Professional', issuer:'AdSkill Academy', year:'2023'},
+                    {name:'Inbound Marketing Certification', issuer:'Funnelworks Academy', year:'2022'}
                 ],
                 customTitle: 'Riconoscimenti',
-                customContent: 'Blog aziendale cresciuto fino al #1 di categoria (SimilarWeb)\nSpeaker invitato a SaaStr Europe 2023'
+                customContent: 'Blog aziendale cresciuto fino al #1 di categoria per traffico organico\nSpeaker invitato a Scaleup Marketing Forum 2023'
             },
             sales: {
                 fullName: 'Marco Esposito',
@@ -1855,22 +1882,22 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/marcoespositosales',
                 summary: 'Sales leader enterprise con oltre 10 anni di esperienza nel chiudere deal complessi in ambito B2B SaaS. Top performer costante - superata la quota 8 degli ultimi 10 trimestri. Specializzato in account Fortune 500 con deal size 250k-2M€. Forte capacità di vendita consulenziale ed engagement con C-level.',
                 work: [
-                    {company:'Salesforce', role:'Senior Enterprise AE', start:'Feb 2020', end:'Presente', description:'115% di raggiungimento su quota da 3M€+ in 4 anni. Chiuso il deal più grande della regione (4,2M€ ARR, contratto triennale). Top 5% della sales org globale per 3 anni consecutivi.'},
-                    {company:'Oracle', role:'Account Executive', start:'Lug 2015', end:'Gen 2020', description:'Territorio cresciuto da 800k a 4,5M€ di ARR. Pipeline costruita tramite outbound e canali partner. Due promozioni in 5 anni.'}
+                    {company:'Dealcraft Software', role:'Senior Enterprise AE', start:'Feb 2020', end:'Presente', description:'115% di raggiungimento su quota da 3M€+ in 4 anni. Chiuso il deal più grande della regione (4,2M€ ARR, contratto triennale). Top 5% della sales org globale per 3 anni consecutivi.'},
+                    {company:'Datacrest Systems', role:'Account Executive', start:'Lug 2015', end:'Gen 2020', description:'Territorio cresciuto da 800k a 4,5M€ di ARR. Pipeline costruita tramite outbound e canali partner. Due promozioni in 5 anni.'}
                 ],
-                education: [{institution:'SDA Bocconi', degree:'MBA', year:'2015', gpa:''}],
+                education: [{institution:'Scuola di Management Sforzesca', degree:'MBA', year:'2015', gpa:''}],
                 skills: [
                     {name:'Vendite Enterprise', level:5},
                     {name:'Vendita Consulenziale', level:5},
-                    {name:'Salesforce CRM', level:5},
+                    {name:'CRM & Forecasting', level:5},
                     {name:'Negoziazione', level:5},
                     {name:'Engagement C-Suite', level:4},
                     {name:'Pipeline Management', level:5}
                 ],
                 languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Spagnolo', level:3}],
-                certifications: [{name:"President's Club", issuer:'Salesforce', year:'2023'}],
+                certifications: [{name:"President's Club", issuer:'Dealcraft Software', year:'2023'}],
                 customTitle: 'Premi',
-                customContent: "Vincitore President's Club - 2021, 2022, 2023\nRookie of the Year 2016 - Oracle"
+                customContent: "Vincitore President's Club - 2021, 2022, 2023\nRookie of the Year 2016 - Datacrest"
             },
             student: {
                 fullName: 'Elena Rossi',
@@ -1882,12 +1909,12 @@ const PRESETS_ALL = { en: {
                 linkedin: 'https://linkedin.com/in/elenarossics',
                 summary: 'Neolaureata in Informatica con esperienza pratica in sviluppo web full-stack e machine learning. Ho completato 3 stage in startup e un assistentato di ricerca in NLP. Desidero entrare in un team dove posso contribuire a prodotti significativi continuando a crescere professionalmente.',
                 work: [
-                    {company:'Nextdoor', role:'Stage in Ingegneria del Software', start:'Giu 2024', end:'Ago 2024', description:'Sviluppato uno strumento interno per pianificare la capacità dei team. Scritto frontend React e API Python, rilasciato in produzione per oltre 200 dipendenti. Return offer ricevuta.'},
-                    {company:'Università di Bologna - CS Lab', role:'Assistente alla Ricerca', start:'Set 2023', end:'Mag 2024', description:'Ricerca NLP sotto la guida del Prof. Rossi. Co-autrice di paper accettato a EMNLP 2024. Implementato framework di valutazione su benchmark.'}
+                    {company:'Nuvoletta Software', role:'Stage in Ingegneria del Software', start:'Giu 2024', end:'Ago 2024', description:'Sviluppato uno strumento interno per pianificare la capacità dei team. Scritto frontend React e API Python, rilasciato in produzione per oltre 200 dipendenti. Return offer ricevuta.'},
+                    {company:'Università Felsinea - Laboratorio di Informatica', role:'Assistente alla Ricerca', start:'Set 2023', end:'Mag 2024', description:'Ricerca NLP sotto la guida del Prof. Rossi. Co-autrice di un paper accettato a una conferenza internazionale di NLP (2024). Implementato framework di valutazione su benchmark.'}
                 ],
                 education: [
-                    {institution:'Università di Bologna', degree:'Laurea Magistrale in Informatica', year:'2025', gpa:'110/110 con lode'},
-                    {institution:'Liceo Scientifico Copernico', degree:'Diploma di Maturità Scientifica', year:'2020', gpa:'100/100'}
+                    {institution:'Università Felsinea', degree:'Laurea Magistrale in Informatica', year:'2025', gpa:'110/110 con lode'},
+                    {institution:'Liceo Scientifico Le Querce', degree:'Diploma di Maturità Scientifica', year:'2020', gpa:'100/100'}
                 ],
                 skills: [
                     {name:'Python', level:5},
@@ -1898,9 +1925,9 @@ const PRESETS_ALL = { en: {
                     {name:'Strutture Dati e Algoritmi', level:5}
                 ],
                 languages: [{name:'Italiano', level:4}, {name:'Inglese', level:3}, {name:'Francese', level:1}],
-                certifications: [{name:'AWS Cloud Practitioner', issuer:'Amazon', year:'2024'}],
+                certifications: [{name:'Cloud Practitioner', issuer:'Cloudwright Academy', year:'2024'}],
                 customTitle: 'Progetti',
-                customContent: 'Tesi di laurea: App di trascrizione in tempo reale per studenti (React + Whisper API)\nVincitrice hackathon - HackUnibo 2023 (Miglior Progetto AI)'
+                customContent: 'Tesi di laurea: App di trascrizione in tempo reale per studenti (React + API speech-to-text)\nVincitrice hackathon - Hackathon Felsinea 2023 (Miglior Progetto AI)'
             }
         } };
         let PRESETS = PRESETS_ALL[__CVLANG__];
@@ -1911,7 +1938,7 @@ const PRESETS_ALL = { en: {
             website: '', linkedin: '', photoData: '', summary: '',
             work: [], education: [], skills: [], languages: [], certifications: [],
             customTitle: '', customContent: '',
-            template: 'classic', font: 'default', accent: 'green', previewMode: 'light',
+            template: 'classic', font: 'default', fontPicked: false, accent: 'green', previewMode: 'light',
             customColors: [],
             sectionOrder: ['summary','work','education','skills','languages','certifications','custom']
         };
@@ -1931,7 +1958,7 @@ const PRESETS_ALL = { en: {
             showToast._timer = setTimeout(() => t.classList.remove('show'), 2500);
         }
         function safeFilename(s) {
-            return (s || (__CVLANG__==='it'?'cv':'resume')).replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'resume';
+            return (s || (curLang()==='it'?'cv':'resume')).replace(/[^a-zA-Z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'resume';
         }
         function hostnameOf(url) {
             try { return new URL(url).hostname.replace(/^www\./,''); }
@@ -2039,7 +2066,8 @@ const PRESETS_ALL = { en: {
             });
             var cb = document.getElementById('cropBtn');
             if (cb) cb.style.display = state.photoData ? '' : 'none';
-            if (state.photoData && !_lastPhotoSrc) _lastPhotoSrc = state.photoData;
+            if (!state.photoData) _lastPhotoSrc = null;
+            else if (!_lastPhotoSrc) _lastPhotoSrc = state.photoData;
         }
 
         // ============ WORK ============
@@ -2432,11 +2460,20 @@ const PRESETS_ALL = { en: {
             const preview = document.getElementById('preview');
             const dark = preview.classList.contains('preview-dark');
             preview.className = `preview-panel template-${state.template}` + (dark ? ' preview-dark' : '');
+            applySectionOrder();
         }
 
+        // the template's own font applies unless the user picked one in the dropdown
+        // (fontPicked; data saved before this flag existed: 'default' = template font, any other value = picked)
+        function fontOverridden() { return !!state.fontPicked || (!!state.font && state.font !== 'default'); }
         function applyFont() {
-            const f = FONT_MAP[state.font] || FONT_MAP.default;
             const preview = document.getElementById('preview');
+            if (!fontOverridden()) {
+                preview.style.removeProperty('--cv-font');
+                preview.style.removeProperty('--cv-heading');
+                return;
+            }
+            const f = FONT_MAP[state.font] || FONT_MAP.default;
             preview.style.setProperty('--cv-font', f.body);
             preview.style.setProperty('--cv-heading', f.heading);
         }
@@ -2496,81 +2533,265 @@ const PRESETS_ALL = { en: {
         }
         function pdfTheme() {
             return (state.previewMode === 'dark')
-                ? { bg:[24,24,24], text:[236,236,236], muted:[165,165,165], line:[74,74,74] }
-                : { bg:[255,255,255], text:[26,26,26], muted:[92,92,92], line:[214,214,214] };
+                ? { bg:[24,24,24], text:[236,236,236], muted:[165,165,165], subtle:[136,136,136], line:[74,74,74] }
+                : { bg:[255,255,255], text:[26,26,26], muted:[92,92,92], subtle:[150,150,150], line:[214,214,214] };
         }
-        // costruisce la lista di blocchi atomici gia' misurati (mm)
-        function buildResumeBlocks(doc, fam, cw, accent, th) {
+        // aspetto del PDF per template, ricalcato sulle regole CSS .template-* (anteprima e stampa)
+        // align: header centrato/a sinistra · photo: posizione foto · band: banda accent in testa · side: colonna laterale
+        // head: titoli di sezione (rule = filetto accent, top = filetto sopra, fill = sfumatura, dash = "## " tratteggiato, bar = barra a sinistra)
+        // fBody/fHead: font del template (se l'utente non ne ha scelto uno): Executive serif, Creative e Tech sans
+        const PDF_TPL = {
+            classic:   { align:'center', photo:'center', name:26, rule:0.8, head:'rule' },
+            modern:    { align:'left',   photo:'left',   name:26, rule:0.8, head:'rule', side:true },
+            minimal:   { align:'center', photo:'center', name:26, nameLight:true, nameCS:0.3, rule:0.3, ruleLine:true, head:'top' },
+            executive: { align:'left',   photo:'left',   name:24, band:true, bandSoft:true, head:'rule', headAccent:true, headCS:0.5, fBody:'times', fHead:'times' },
+            creative:  { align:'center', photo:'center', name:29, nameAccent:true, pill:true, head:'fill', fHead:'helvetica' },
+            tech:      { align:'left',   photo:'left',   photoSq:true, name:22.5, nameCS:-0.2, prompt:true, mono:true, rule:0.8, head:'dash', fHead:'helvetica' },
+            sidebar:   { align:'left',   photo:'center', name:26, band:true, head:'rule', headAccent:true },
+            compact:   { align:'center', photo:'center', name:20, rule:0.8, head:'bar', headCS:0.1, k:0.9, photoMM:22 }
+        };
+        // i font standard di jsPDF parlano solo WinAnsi (Latin-1 + € “ ” ‘ ’ – — … • ecc.): un solo carattere fuori
+        // set rovina l'intera riga. Qui: diacritici -> lettera base (ł -> l, ő -> o), simboli comuni -> ASCII, emoji tolte, resto -> '?'
+        const PDF_WINANSI = '\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161\u203a\u0153\u017e\u0178';
+        const PDF_FALLBACK = { '\u0142':'l', '\u0141':'L', '\u0111':'d', '\u0110':'D', '\u0131':'i', '\u0127':'h', '\u0126':'H', '\u0167':'t', '\u0166':'T', '\u017f':'s', '\u0140':'l', '\u013f':'L',
+            '\ufb00':'ff', '\ufb01':'fi', '\ufb02':'fl', '\u2212':'-', '\u2010':'-', '\u2011':'-', '\u2012':'-', '\u2015':'\u2014', '\u2032':"'", '\u2033':'"', '\u201b':"'", '\u201f':'"',
+            '\u2192':'->', '\u2190':'<-', '\u21d2':'=>', '\u2265':'>=', '\u2264':'<=', '\u2260':'!=', '\u2248':'~', '\u2713':'+', '\u2714':'+', '\u2717':'x', '\u2718':'x', '\u2605':'*', '\u2606':'*',
+            '\u25cf':'\u2022', '\u25e6':'\u2022', '\u25aa':'\u2022', '\u25a0':'\u2022', '\u25ba':'\u2022', '\u25b8':'\u2022', '\u2023':'\u2022', '\u2043':'-' };
+        const PDF_EMOJI = (function(){ try { return new RegExp('\\p{Extended_Pictographic}', 'u'); } catch(e) { return null; } })();
+        function pdfSafe(str) {
+            return Array.from(String(str == null ? '' : str)).map(function(ch){
+                var c = ch.codePointAt(0);
+                if (c < 256 || PDF_WINANSI.indexOf(ch) >= 0) return ch;
+                if (PDF_FALLBACK[ch] != null) return PDF_FALLBACK[ch];
+                if ((c >= 0x2000 && c <= 0x200a) || c === 0x202f || c === 0x205f || c === 0x3000) return ' ';
+                if ((c >= 0x200b && c <= 0x200f) || c === 0x2060 || c === 0xfeff || (c >= 0xfe00 && c <= 0xfe0f) || (PDF_EMOJI ? PDF_EMOJI.test(ch) : c > 0xffff)) return '';
+                var base = ch.normalize ? ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+                return (base && !/[^\u0000-\u00ff]/.test(base)) ? base : '?';
+            }).join('');
+        }
+        function mixRgb(a, b, t) { return [0,1,2].map(function(i){ return Math.round(a[i] + (b[i]-a[i])*t); }); }
+        // costruisce la lista di blocchi atomici gia' misurati (mm) di una colonna
+        // o: { fam, hfam, w, accent, th, tpl, pageW, keys:[sezioni], header:bool, narrow:bool }
+        function buildResumeBlocks(doc, o) {
+            var fam = o.fam, hfam = o.hfam, cw = o.w, accent = o.accent, th = o.th, tp = o.tpl, k = tp.k || 1;
             var LH = 1.28;                       // fattore interlinea
+            var WHITE = [255,255,255];
             function mmOf(pt){ return pt*0.3528; }
             function lineH(pt){ return mmOf(pt)*LH; }
+            function asc(pt){ return mmOf(pt)*0.78; }
+            function mid(pt){ return (lineH(pt) + mmOf(pt)*0.7)/2; }   // linea di base che centra le maiuscole in una riga
             var blocks = [];
-            function measure(txt, pt, style, w) {
-                doc.setFont(fam, style||'normal'); doc.setFontSize(pt);
-                return doc.splitTextToSize(String(txt||''), w||cw);
+            function setF(d, f, style, pt){ d.setFont(f, style||'normal'); d.setFontSize(pt); }
+            function tc(d, c){ d.setTextColor(c[0],c[1],c[2]); }
+            function tw(d, s, cs){ return d.getTextWidth(s) + (cs||0)*Math.max(0, s.length-1); }
+            function measure(txt, pt, style, w, f, cs) {
+                setF(doc, f||fam, style, pt); w = w||cw;
+                txt = pdfSafe(txt);
+                var lines = doc.splitTextToSize(txt, w), ww = w;
+                for (var n = 0; cs > 0 && n < 6 && lines.some(function(l){ return tw(doc, l, cs) > w; }); n++) { ww *= 0.94; lines = doc.splitTextToSize(txt, ww); }
+                return lines;
             }
-            // --- header (nome + ruolo + contatti [+ foto]) ---
-            var hasPhoto = !!state.photoData;
-            var photoMM = 26, gap = 6;
-            var textW = hasPhoto ? cw - photoMM - gap : cw;
-            var nameLines = measure(state.fullName || 'Nome Cognome', 22, 'bold', textW);
-            var titleLines = state.title ? measure(state.title, 12.5, 'normal', textW) : [];
-            var contactParts = [state.email, state.phone, state.location,
-                                state.website ? state.website.replace(/^https?:\/\/(www\.)?/,'') : '',
-                                state.linkedin ? state.linkedin.replace(/^https?:\/\/(www\.)?/,'') : ''].filter(Boolean);
-            var contactLines = contactParts.length ? measure(contactParts.join('  |  '), 9, 'normal', textW) : [];
-            var hTop = nameLines.length*lineH(22) + (titleLines.length?2+titleLines.length*lineH(12.5):0)
-                       + (contactLines.length?2.5+contactLines.length*lineH(9):0);
-            var headerH = Math.max(hTop, hasPhoto ? photoMM : 0) + 4;
-            blocks.push({ h: headerH + 3, draw: function(d,x,y){
-                if (hasPhoto) {
-                    try { d.addImage(state.photoData, x+cw-photoMM, y, photoMM, photoMM); } catch(e){}
+            // righe allineate a sinistra o al centro di [x, x+w], con spaziatura lettere opzionale
+            function put(d, lines, x, y, w, pt, align, cs) {
+                for (var i = 0; i < lines.length; i++) {
+                    var lx = (align === 'center') ? x + (w - tw(d, lines[i], cs))/2 : x;
+                    if (cs) d.text(lines[i], lx, y + i*lineH(pt), { charSpace: cs }); else d.text(lines[i], lx, y + i*lineH(pt));
                 }
-                var yy = y + mmOf(22)*0.86;
-                d.setFont(fam,'bold'); d.setFontSize(22); d.setTextColor(accent[0],accent[1],accent[2]);
-                d.text(nameLines, x, yy); yy += (nameLines.length-1)*lineH(22) + (titleLines.length?2.5:0);
-                if (titleLines.length){ d.setFont(fam,'normal'); d.setFontSize(12.5); d.setTextColor(th.text[0],th.text[1],th.text[2]);
-                    yy += lineH(12.5)*0.7; d.text(titleLines, x, yy); yy += (titleLines.length-1)*lineH(12.5); }
-                if (contactLines.length){ d.setFont(fam,'normal'); d.setFontSize(9); d.setTextColor(th.muted[0],th.muted[1],th.muted[2]);
-                    yy += lineH(9)*1.1 + 1.5; d.text(contactLines, x, yy); }
-                // riga separatrice accent
-                d.setDrawColor(accent[0],accent[1],accent[2]); d.setLineWidth(0.6);
-                d.line(x, y+headerH, x+cw, y+headerH);
-            }});
+            }
+            // contatti: si va a capo tra una voce e l'altra, non a meta' voce
+            function wrapParts(parts, sep, pt, w, f) {
+                setF(doc, f, 'normal', pt);
+                var out = [], cur = '';
+                parts.map(pdfSafe).forEach(function(p){
+                    var t = cur ? cur + sep + p : p;
+                    if (!cur || doc.getTextWidth(t) <= w) cur = t; else { out.push(cur); cur = p; }
+                });
+                if (cur) out.push(cur);
+                return out.reduce(function(a, l){ return a.concat(doc.getTextWidth(l) > w ? doc.splitTextToSize(l, w) : [l]); }, []);
+            }
+            function drawPhoto(d, px, py, S, sq, border) {
+                try {
+                    var ip = d.getImageProperties(state.photoData);
+                    var sc = S / Math.min(ip.width, ip.height), dw = ip.width*sc, dh = ip.height*sc;   // object-fit: cover
+                    d.saveGraphicsState();
+                    try {
+                        if (sq) d.roundedRect(px, py, S, S, 2.1, 2.1, null); else d.circle(px+S/2, py+S/2, S/2, null);
+                        d.clip(); d.discardPath();
+                        d.addImage(state.photoData, px + (S-dw)/2, py + (S-dh)/2, dw, dh);
+                    } finally { d.restoreGraphicsState(); }
+                    d.setDrawColor(border[0],border[1],border[2]); d.setLineWidth(0.8);
+                    if (sq) d.roundedRect(px, py, S, S, 2.1, 2.1, 'S'); else d.circle(px+S/2, py+S/2, S/2, 'S');
+                } catch(e){}
+            }
+            // --- header (foto + nome + ruolo + contatti), nello stile del template ---
+            if (o.header) (function(){
+                var band = !!tp.band, center = tp.align === 'center', al = center ? 'center' : 'left';
+                var hasPhoto = !!state.photoData, P = tp.photoMM || 26;
+                var nPt = tp.name, nSt = tp.nameLight ? 'normal' : 'bold', nCS = tp.nameCS || 0;
+                var nameLines = measure(state.fullName || T.yourName, nPt, nSt, cw, hfam, nCS);
+                var tPt = 12, tCS = 0.26;
+                var titleLines = state.title ? measure((tp.prompt ? '> ' : '') + String(state.title).toUpperCase(), tPt, 'bold', tp.pill ? cw - 8 : cw, fam, tCS) : [];
+                var cFam = tp.mono ? 'courier' : fam, cPt = 9, cLH = lineH(cPt)*1.45;
+                var contactParts = [state.email, state.phone, state.location,
+                                    state.website ? hostnameOf(state.website) : '',
+                                    state.linkedin ? state.linkedin.replace(/^https?:\/\/(www\.)?/,'') : ''].filter(Boolean);
+                var contactLines = contactParts.length ? wrapParts(contactParts, '  •  ', cPt, cw, cFam) : [];
+                // posizioni verticali relative al blocco (in banda il testo sale verso il bordo pagina)
+                var c = band ? -6 : 0, photoY = c;
+                if (hasPhoto) c += P + 4;
+                var nameY = c + asc(nPt);
+                c = nameY + (nameLines.length-1)*lineH(nPt) + mmOf(nPt)*0.22;
+                var titleY = 0, pillTop = 0, pillH = 0, pillW = 0;
+                if (titleLines.length) {
+                    if (tp.pill) {
+                        setF(doc, fam, 'bold', tPt);
+                        pillW = Math.max.apply(null, titleLines.map(function(l){ return tw(doc, l, tCS); })) + 7.4;
+                        c += 1.6; pillTop = c; pillH = titleLines.length*lineH(tPt) + 2;
+                        titleY = pillTop + 1 + mid(tPt); c = pillTop + pillH;
+                    } else {
+                        c += 1.3; titleY = c + asc(tPt);
+                        c = titleY + (titleLines.length-1)*lineH(tPt) + mmOf(tPt)*0.22;
+                    }
+                }
+                var contactY = 0;
+                if (contactLines.length) { c += 3; contactY = c + asc(cPt); c = contactY + (contactLines.length-1)*cLH + mmOf(cPt)*0.25; }
+                var bandBot = 0, ruleY = 0;
+                if (band) { bandBot = c + 7; c = bandBot + 6; }
+                else if (tp.rule) { c += 5; ruleY = c; c += tp.rule + 4.5; }
+                else c += 6;
+                blocks.push({ h: c, draw: function(d, x, y){
+                    if (band) { d.setFillColor(accent[0],accent[1],accent[2]); d.rect(0, 0, o.pageW, y + bandBot, 'F'); }
+                    if (hasPhoto) {
+                        var px = (tp.photo === 'center') ? x + (cw - P)/2 : x;
+                        drawPhoto(d, px, y + photoY, P, !!tp.photoSq, band ? mixRgb(accent, WHITE, 0.8) : accent);
+                    }
+                    setF(d, hfam, nSt, nPt); tc(d, band ? WHITE : (tp.nameAccent ? accent : th.text));
+                    put(d, nameLines, x, y + nameY, cw, nPt, al, nCS);
+                    if (titleLines.length) {
+                        setF(d, fam, 'bold', tPt);
+                        if (tp.pill) {
+                            var pl = center ? x + (cw - pillW)/2 : x;
+                            d.setFillColor(accent[0],accent[1],accent[2]);
+                            d.roundedRect(pl, y + pillTop, pillW, pillH, Math.min(pillH/2, 3.5), Math.min(pillH/2, 3.5), 'F');
+                            tc(d, WHITE);
+                        } else tc(d, band ? (tp.bandSoft ? mixRgb(WHITE, accent, 0.15) : WHITE) : accent);
+                        put(d, titleLines, (tp.pill && !center) ? x + 3.7 : x, y + titleY, cw, tPt, al, tCS);
+                    }
+                    if (contactLines.length) {
+                        setF(d, cFam, 'normal', cPt); tc(d, band ? mixRgb(WHITE, accent, 0.1) : th.muted);
+                        for (var i = 0; i < contactLines.length; i++) put(d, [contactLines[i]], x, y + contactY + i*cLH, cw, cPt, al, 0);
+                    }
+                    if (ruleY) {
+                        var rc = tp.ruleLine ? th.line : accent;
+                        d.setDrawColor(rc[0],rc[1],rc[2]); d.setLineWidth(tp.rule);
+                        d.line(x, y + ruleY, x + cw, y + ruleY);
+                    }
+                }});
+            })();
             // --- helper sezione ---
+            // testo a righe: un paragrafo breve resta intero; in uno lungo mai una riga sola in cima o in fondo alla pagina
+            function pushLines(lines, pt, color, after) {
+                var groups = (lines.length <= 4) ? [lines] : [lines.slice(0, 2)].concat(lines.slice(2, -2).map(function(l){ return [l]; }), [lines.slice(-2)]);
+                groups.forEach(function(g, i){
+                    var last = i === groups.length - 1;
+                    blocks.push({ h: g.length*lineH(pt) + (last ? after : 0), draw: function(d,x,y){
+                        setF(d, fam, 'normal', pt); tc(d, color);
+                        g.forEach(function(l, j){ d.text(l, x, y + lineH(pt)*(0.85 + j)); });
+                    }});
+                });
+            }
             function pushHeading(label) {
-                blocks.push({ h: lineH(11)+4.5, draw: function(d,x,y){
-                    d.setFont(fam,'bold'); d.setFontSize(11); d.setTextColor(accent[0],accent[1],accent[2]);
-                    d.text(String(label).toUpperCase(), x, y+lineH(11)*0.8);
-                    d.setDrawColor(th.line[0],th.line[1],th.line[2]); d.setLineWidth(0.3);
-                    d.line(x, y+lineH(11)+1.5, x+cw, y+lineH(11)+1.5);
+                var pt = 10.5*k, hs = tp.head, cs = (tp.headCS != null) ? tp.headCS : 0.26;
+                var g = blocks.length ? (tp.k ? 1.6 : 2.6) : 0;
+                var pre = (hs === 'dash') ? '## ' : '', preW = 0;
+                if (pre) { setF(doc, hfam, 'bold', pt); preW = tw(doc, pre, cs) + cs; }
+                var inset = (hs === 'fill') ? 6.4 : (hs === 'bar') ? 3.2 : preW;
+                var tl = measure(String(label).toUpperCase(), pt, 'bold', cw - inset, hfam, cs);
+                var tH = tl.length*lineH(pt), h;
+                if (hs === 'top') h = g + 4 + tH + 2.4;
+                else if (hs === 'fill') h = g + tH + 3.2 + 3;
+                else if (hs === 'bar') h = g + tH + 1 + 2;
+                else h = g + tH + 1.2 + 3.2;
+                blocks.push({ h: h, keep: true, draw: function(d,x,y){
+                    var yy = y + g;
+                    if (hs === 'top') {
+                        d.setDrawColor(th.line[0],th.line[1],th.line[2]); d.setLineWidth(0.3); d.line(x, yy, x+cw, yy);
+                        setF(d, hfam, 'bold', pt); tc(d, th.muted); put(d, tl, x, yy + 4 + asc(pt), cw, pt, 'left', cs);
+                    } else if (hs === 'fill') {
+                        // sfumatura accent -> sfondo, come linear-gradient(90deg, accent, transparent)
+                        var N = 90, sw = cw / N, bh = tH + 3.2;
+                        for (var i = 0; i < N; i++) { var gc = mixRgb(accent, th.bg, i/(N-1)); d.setFillColor(gc[0],gc[1],gc[2]); d.rect(x + i*sw, yy, sw + 0.2, bh, 'F'); }
+                        setF(d, hfam, 'bold', pt); tc(d, WHITE); put(d, tl, x + 3.2, yy + 1.6 + mid(pt), cw, pt, 'left', cs);
+                    } else if (hs === 'bar') {
+                        d.setFillColor(accent[0],accent[1],accent[2]); d.rect(x, yy, 0.8, tH + 1, 'F');
+                        setF(d, hfam, 'bold', pt); tc(d, th.text); put(d, tl, x + 3.2, yy + 0.5 + mid(pt), cw, pt, 'left', cs);
+                    } else {
+                        setF(d, hfam, 'bold', pt);
+                        if (pre) { tc(d, accent); d.text(pre, x, yy + asc(pt), { charSpace: cs }); }
+                        tc(d, tp.headAccent ? accent : th.text); put(d, tl, x + preW, yy + asc(pt), cw, pt, 'left', cs);
+                        d.setDrawColor(accent[0],accent[1],accent[2]);
+                        var ly = yy + tH + 1.2;
+                        if (hs === 'dash') { d.setLineWidth(0.26); d.setLineDashPattern([0.9, 0.7], 0); d.line(x, ly, x+cw, ly); d.setLineDashPattern([], 0); }
+                        else { d.setLineWidth(0.5); d.line(x, ly, x+cw, ly); }
+                    }
                 }});
             }
             function pushEntry(title, sub, date, desc) {
-                var tl = title ? measure(title,11,'bold',cw) : [];
-                var sl = sub ? measure(sub,10,'normal',cw) : [];
-                var dl = date ? measure(date,9,'normal',cw) : [];
-                var bl = desc ? measure(desc,9.8,'normal',cw) : [];
-                var h = (tl.length?tl.length*lineH(11):0) + (sl.length?sl.length*lineH(10):0)
-                        + (dl.length?dl.length*lineH(9):0) + (bl.length?1.5+bl.length*lineH(9.8):0) + 3.5;
-                blocks.push({ h:h, draw:function(d,x,y){
+                var a = 11*k, b = 10*k, c = 9*k, e = 9.8*k, after = 3.5*k;
+                var tl = title ? measure(title,a,'bold',cw) : [];
+                var sl = sub ? measure(sub,b,'normal',cw) : [];
+                var dl = date ? measure(date,c,'normal',cw) : [];
+                var bl = desc ? measure(desc,e,'normal',cw) : [];
+                var hh = (tl.length?tl.length*lineH(a):0) + (sl.length?sl.length*lineH(b):0) + (dl.length?dl.length*lineH(c):0);
+                function drawHead(d,x,y){
                     var yy=y;
-                    if (tl.length){ d.setFont(fam,'bold'); d.setFontSize(11); d.setTextColor(th.text[0],th.text[1],th.text[2]);
-                        yy+=lineH(11)*0.8; d.text(tl,x,yy); yy+=(tl.length-1)*lineH(11); }
-                    if (sl.length){ d.setFont(fam,'normal'); d.setFontSize(10); d.setTextColor(accent[0],accent[1],accent[2]);
-                        yy+=lineH(10); d.text(sl,x,yy); yy+=(sl.length-1)*lineH(10); }
-                    if (dl.length){ d.setFont(fam,'normal'); d.setFontSize(9); d.setTextColor(th.muted[0],th.muted[1],th.muted[2]);
-                        yy+=lineH(9); d.text(dl,x,yy); yy+=(dl.length-1)*lineH(9); }
-                    if (bl.length){ d.setFont(fam,'normal'); d.setFontSize(9.8); d.setTextColor(th.text[0],th.text[1],th.text[2]);
-                        yy+=lineH(9.8)+1.5; d.text(bl,x,yy); }
-                }});
+                    if (tl.length){ setF(d,fam,'bold',a); tc(d,th.text); yy+=lineH(a)*0.8; put(d,tl,x,yy,cw,a); yy+=(tl.length-1)*lineH(a); }
+                    if (sl.length){ setF(d,fam,'normal',b); tc(d,accent); yy+=lineH(b); put(d,sl,x,yy,cw,b); yy+=(sl.length-1)*lineH(b); }
+                    if (dl.length){ setF(d,fam,'normal',c); tc(d,th.subtle); yy+=lineH(c); put(d,dl,x,yy,cw,c); yy+=(dl.length-1)*lineH(c); }
+                    return yy;
+                }
+                var full = hh + (bl.length ? 1.5 + bl.length*lineH(e) : 0) + after;
+                if (full <= 80) {
+                    blocks.push({ h:full, draw:function(d,x,y){
+                        var yy = drawHead(d,x,y);
+                        if (bl.length){ setF(d,fam,'normal',e); tc(d,th.muted); put(d,bl,x,yy+lineH(e)+1.5,cw,e); }
+                    }});
+                } else {           // voce lunghissima: la descrizione puo' proseguire nella pagina dopo, riga per riga
+                    blocks.push({ h: hh + (bl.length ? 1.5 : after), keep: bl.length > 0, draw: drawHead });
+                    if (bl.length) pushLines(bl, e, th.muted, after);
+                }
             }
-            function pushText(txt) {
-                var bl = measure(txt,9.8,'normal',cw);
-                blocks.push({ h: bl.length*lineH(9.8)+3, draw:function(d,x,y){
-                    d.setFont(fam,'normal'); d.setFontSize(9.8); d.setTextColor(th.text[0],th.text[1],th.text[2]);
-                    d.text(bl, x, y+lineH(9.8)*0.85);
-                }});
+            function pushText(txt) { pushLines(measure(txt, 9.8*k, 'normal', cw), 9.8*k, th.muted, 3*k); }
+            // competenze e lingue: griglia a 2 colonne (1 nella colonna laterale), come l'anteprima
+            function pushGrid(list, cellH, drawCell) {
+                var cols = o.narrow ? 1 : 2, gap = 3.2, iw = (cw - gap*(cols-1))/cols;
+                for (var i = 0; i < list.length; i += cols) (function(row){
+                    var hs = row.map(function(it){ return cellH(it, iw); });
+                    blocks.push({ h: Math.max.apply(null, hs.map(function(q){ return q.h; })), draw: function(d,x,y){
+                        row.forEach(function(it, j){ drawCell(d, it, hs[j], x + j*(iw+gap), y, iw); });
+                    }});
+                })(list.slice(i, i + cols));
+            }
+            function pushSkills(list) {
+                var pt = 9*k, bh = 1.6;
+                pushGrid(list, function(s, iw){ var nl = measure(s.name, pt, 'normal', iw); return { nl: nl, h: nl.length*lineH(pt) + 1 + bh + 3.2*k }; },
+                    function(d, s, m, x, y, iw){
+                        setF(d, fam, 'normal', pt); tc(d, th.text); put(d, m.nl, x, y + lineH(pt)*0.8, iw, pt);
+                        var by = y + m.nl.length*lineH(pt) + 0.8, f = Math.max(0, Math.min(1, Number(s.level)/5)) || 0;
+                        d.setFillColor(th.line[0],th.line[1],th.line[2]); d.roundedRect(x, by, iw, bh, bh/2, bh/2, 'F');
+                        if (f > 0) { var fc = mixRgb(accent, th.bg, 0.15); d.setFillColor(fc[0],fc[1],fc[2]); d.roundedRect(x, by, iw*f, bh, Math.min(bh/2, iw*f/2), bh/2, 'F'); }
+                    });
+            }
+            function pushLangs(list) {
+                var pt = 9*k, lp = 7.5*k;
+                pushGrid(list, function(l, iw){
+                    var nl = measure(l.name, pt, 'normal', iw);
+                    var lv = (l.level > 0 && typeof LANG_LEVELS !== 'undefined' && LANG_LEVELS[l.level]) ? String(LANG_LEVELS[l.level]).toUpperCase() : '';
+                    return { nl: nl, lv: lv, h: nl.length*lineH(pt) + (lv ? lineH(lp) : 0) + 2.6*k };
+                }, function(d, l, m, x, y, iw){
+                    setF(d, fam, 'normal', pt); tc(d, th.text); put(d, m.nl, x, y + lineH(pt)*0.8, iw, pt);
+                    if (m.lv) { setF(d, fam, 'bold', lp); tc(d, accent); d.text(m.lv, x, y + m.nl.length*lineH(pt) + lineH(lp)*0.75); }
+                });
             }
             var S = (typeof T!=='undefined' && T.sections) ? T.sections : {summary:'Summary',work:'Experience',education:'Education',skills:'Skills',languages:'Languages',certifications:'Certifications'};
             var SEC = {
@@ -2578,16 +2799,14 @@ const PRESETS_ALL = { en: {
                 work:function(){ if (state.work && state.work.length){ pushHeading(S.work);
                     state.work.forEach(function(w){ pushEntry(w.role, w.company, [w.start,w.end].filter(Boolean).join(' - '), w.description); }); } },
                 education:function(){ if (state.education && state.education.length){ pushHeading(S.education);
-                    state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' | ')); }); } },
-                skills:function(){ if (state.skills && state.skills.length){ pushHeading(S.skills);
-                    pushText(state.skills.map(function(sk){ return sk.name + (sk.level? ' ('+ (typeof LEVEL_LABELS!=='undefined'?(LEVEL_LABELS[sk.level]||sk.level):sk.level) +'/5)':''); }).join('   •   ')); } },
-                languages:function(){ if (state.languages && state.languages.length){ pushHeading(S.languages);
-                    pushText(state.languages.map(function(l){ return l.name + (l.level!==undefined? ': '+ (typeof LANG_LEVELS!=='undefined'?(LANG_LEVELS[l.level]||''):'') :''); }).join('   •   ')); } },
+                    state.education.forEach(function(e){ pushEntry(e.degree, e.institution, [e.year, e.gpa].filter(Boolean).join(' • ')); }); } },
+                skills:function(){ if (state.skills && state.skills.length){ pushHeading(S.skills); pushSkills(state.skills); } },
+                languages:function(){ if (state.languages && state.languages.length){ pushHeading(S.languages); pushLangs(state.languages); } },
                 certifications:function(){ if (state.certifications && state.certifications.length){ pushHeading(S.certifications);
                     state.certifications.forEach(function(c){ pushEntry(c.name, c.issuer, c.year); }); } },
                 custom:function(){ if (state.customTitle && state.customContent){ pushHeading(state.customTitle); pushText(state.customContent); } }
             };
-            orderedSections().forEach(function(k){ if (SEC[k]) SEC[k](); });
+            (o.keys || orderedSections()).forEach(function(key){ if (SEC[key]) SEC[key](); });
             return blocks;
         }
         async function downloadPDF() {
@@ -2598,26 +2817,53 @@ const PRESETS_ALL = { en: {
             try {
                 var accent = hexToRgb(currentAccentHex());
                 var th = pdfTheme();
-                var fmap = FONT_MAP[state.font] || FONT_MAP.default;
-                var fam = fmap.pdf || 'helvetica';
-                var margin = 16, pageW = 210, cw = pageW - 2*margin;
+                var tp = PDF_TPL[state.template] || PDF_TPL.classic;
+                var fmap = fontOverridden() ? (FONT_MAP[state.font] || FONT_MAP.default) : null;
+                var fam = fmap ? (fmap.pdf || 'helvetica') : (tp.fBody || 'helvetica');
+                var hfam = fmap ? (fmap.pdfHead || fam) : (tp.fHead || 'times');
+                var margin = tp.k ? 13 : 16, pageW = 210, cw = pageW - 2*margin;
                 var measDoc = new Ctor({ unit:'mm', format:'a4' });
-                var blocks = buildResumeBlocks(measDoc, fam, cw, accent, th);
-                var total = blocks.reduce(function(s,b){ return s + b.h; }, 0);
+                var base = { fam:fam, hfam:hfam, accent:accent, th:th, tpl:tp, pageW:pageW };
+                var keys = orderedSections(), cols, sideX = 0;
+                if (tp.side) {
+                    // Modern: colonna principale (header incluso) + colonna laterale con filetto accent a sinistra
+                    var sw = 53, gap = 6.4, mw = cw - sw - gap;
+                    var isSide = function(key){ return SECTION_DOM[key] && SECTION_DOM[key].col === 'side'; };
+                    sideX = margin + mw + gap;
+                    cols = [
+                        { x: margin, blocks: buildResumeBlocks(measDoc, Object.assign({ w: mw, header: true, keys: keys.filter(function(key){ return !isSide(key); }) }, base)) },
+                        { x: sideX + 5.8, blocks: buildResumeBlocks(measDoc, Object.assign({ w: sw - 5.8, narrow: true, keys: keys.filter(isSide) }, base)) }
+                    ];
+                } else {
+                    cols = [{ x: margin, blocks: buildResumeBlocks(measDoc, Object.assign({ w: cw, header: true, keys: keys }, base)) }];
+                }
+                var total = Math.max.apply(null, cols.map(function(c){ return c.blocks.reduce(function(s,b){ return s + b.h; }, 0); }));
                 var usableA4 = 297 - 2*margin;
                 var multipage = total > usableA4;
-                var pageH = multipage ? 297 : Math.max(Math.ceil(total + 2*margin), 90);
+                var pageH = 297;   // sempre A4 (210x297), anche se il CV sta in una pagina: contenuto in alto, resto della pagina vuoto
+                // impaginazione: ogni colonna scorre per conto suo; un titolo di sezione non resta da solo in fondo alla pagina
+                var nPages = 1;
+                cols.forEach(function(c){
+                    var pg = 0, y = margin, B = c.blocks;
+                    c.placed = B.map(function(b, i){
+                        var need = b.h + ((b.keep && B[i+1]) ? B[i+1].h : 0);
+                        if (multipage && y + need > pageH - margin && y > margin) { pg++; y = margin; }
+                        var q = { b:b, pg:pg, y:y }; y += b.h; return q;
+                    });
+                    c.lastPg = pg; c.endY = y; nPages = Math.max(nPages, pg + 1);
+                });
                 // orientamento dinamico: evita che jsPDF scambi larghezza/altezza quando la pagina e' piu' corta di 210mm
                 var orient = pageH >= pageW ? 'portrait' : 'landscape';
-                var doc = new Ctor({ unit:'mm', format:[pageW, pageH], orientation: orient });
-                function fillBg(){ doc.setFillColor(th.bg[0],th.bg[1],th.bg[2]); doc.rect(0,0,pageW+2,pageH+2,'F'); }
-                fillBg();
-                var y = margin;
-                for (var i=0;i<blocks.length;i++){
-                    var b = blocks[i];
-                    if (multipage && y + b.h > pageH - margin && y > margin) { doc.addPage([pageW,pageH],'portrait'); fillBg(); y = margin; }
-                    b.draw(doc, margin, y);
-                    y += b.h;
+                var doc = new Ctor({ unit:'mm', format:[pageW, pageH], orientation: orient, compress: true });   // flussi compressi: file piu' leggero, stesso contenuto vettoriale
+                for (var p = 0; p < nPages; p++) {
+                    if (p) doc.addPage([pageW,pageH],'portrait');
+                    doc.setFillColor(th.bg[0],th.bg[1],th.bg[2]); doc.rect(0,0,pageW+2,pageH+2,'F');
+                    if (sideX) {
+                        // filetto della colonna laterale fino in fondo a ogni pagina A4
+                        doc.setDrawColor(accent[0],accent[1],accent[2]); doc.setLineWidth(0.53);
+                        doc.line(sideX + 0.27, margin, sideX + 0.27, pageH - margin);
+                    }
+                    cols.forEach(function(c){ c.placed.forEach(function(q){ if (q.pg === p) q.b.draw(doc, c.x, q.y); }); });
                 }
                 doc.save(safeFilename(state.fullName) + '_cv.pdf');
                 showToast(T.toast.pdfDone);
@@ -2643,8 +2889,8 @@ const PRESETS_ALL = { en: {
                 summary: () => state.summary ? `${T.sections.summary.toUpperCase()}\n${state.summary}\n\n` : '',
                 work: () => state.work.length ? `${T.sections.work.toUpperCase()}\n` + state.work.map(w => `${w.role} - ${w.company} (${w.start} - ${w.end})\n${w.description}\n`).join('\n') + '\n' : '',
                 education: () => state.education.length ? `${T.sections.education.toUpperCase()}\n` + state.education.map(e => `${e.degree} - ${e.institution} (${e.year})${e.gpa ? ' | GPA: ' + e.gpa : ''}`).join('\n') + '\n\n' : '',
-                skills: () => state.skills.length ? `${T.sections.skills.toUpperCase()}\n` + state.skills.map(s => `${s.name} (${LEVEL_LABELS[s.level] || s.level}/5)`).join('\n') + '\n\n' : '',
-                languages: () => state.languages.length ? `${T.sections.languages.toUpperCase()}\n` + state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n') + '\n\n' : '',
+                skills: () => state.skills.length ? `${T.sections.skills.toUpperCase()}\n` + state.skills.map(s => s.level ? `${s.name} (${LEVEL_LABELS[s.level] || (s.level + '/5')})` : s.name).join('\n') + '\n\n' : '',
+                languages: () => state.languages.length ? `${T.sections.languages.toUpperCase()}\n` + state.languages.map(l => l.level > 0 ? `${l.name}: ${LANG_LEVELS[l.level] || ''}` : l.name).join('\n') + '\n\n' : '',
                 certifications: () => state.certifications.length ? `${T.sections.certifications.toUpperCase()}\n` + state.certifications.map(c => `${c.name} - ${c.issuer} (${c.year})`).join('\n') + '\n\n' : '',
                 custom: () => (state.customTitle && state.customContent) ? `${state.customTitle.toUpperCase()}\n${state.customContent}\n` : ''
             };
@@ -2675,7 +2921,7 @@ const PRESETS_ALL = { en: {
                 work: () => { if (!state.work.length) return ''; let body = ''; state.work.forEach(w => { body += `${w.role}\n${w.company} | ${w.start} - ${w.end}\n${w.description}\n\n`; }); return sect(T.sections.work, body.trim()); },
                 education: () => { if (!state.education.length) return ''; let body = ''; state.education.forEach(e => { body += `${e.degree}\n${e.institution} | ${e.year}${e.gpa ? ' | GPA: ' + e.gpa : ''}\n\n`; }); return sect(T.sections.education, body.trim()); },
                 skills: () => state.skills.length ? sect(T.sections.skills, state.skills.map(s => '• ' + s.name).join('\n')) : '',
-                languages: () => state.languages.length ? sect(T.sections.languages, state.languages.map(l => `${l.name}: ${LANG_LEVELS[l.level] || ''}`).join('\n')) : '',
+                languages: () => state.languages.length ? sect(T.sections.languages, state.languages.map(l => l.level > 0 ? `${l.name}: ${LANG_LEVELS[l.level] || ''}` : l.name).join('\n')) : '',
                 certifications: () => { if (!state.certifications.length) return ''; let body = ''; state.certifications.forEach(c => { body += `${c.name} - ${c.issuer} (${c.year})\n`; }); return sect(T.sections.certifications, body.trim()); },
                 custom: () => (state.customTitle && state.customContent) ? sect(state.customTitle, state.customContent) : ''
             };
@@ -2711,6 +2957,7 @@ const PRESETS_ALL = { en: {
                 try {
                     const data = JSON.parse(ev.target.result);
                     Object.keys(state).forEach(k => { if (data[k] !== undefined) state[k] = data[k]; });
+                    if (data.fontPicked === undefined) state.fontPicked = false;   // older files: 'default' font = template font
                     // Handle legacy photoUrl from old JSON exports
                     if (data.photoUrl && !state.photoData) state.photoData = data.photoUrl;
                     ['work','education','skills','languages','certifications'].forEach(k => {
@@ -2774,7 +3021,7 @@ const PRESETS_ALL = { en: {
         function defaultStateObj(){
             return { fullName:'',title:'',email:'',phone:'',location:'',website:'',linkedin:'',photoData:'',summary:'',
                 work:[],education:[],skills:[],languages:[],certifications:[], customTitle:'',customContent:'',
-                template:'classic',font:'default',accent:'green',previewMode:'light',customColors:[],
+                template:'classic',font:'default',fontPicked:false,accent:'green',previewMode:'light',customColors:[],
                 sectionOrder: SECTION_KEYS.slice() };
         }
         function applyDataToState(data){
@@ -2783,12 +3030,13 @@ const PRESETS_ALL = { en: {
             Object.keys(d).forEach(function(k){ state[k] = d[k]; });
         }
         function syncUIFromState(){
+            _lastPhotoSrc = state.photoData || null;   // new profile / imported file: crop its own photo
             ['fullName','title','email','phone','location','website','linkedin','summary','customTitle','customContent']
                 .forEach(function(id){ var el = document.getElementById(id); if (el) el.value = state[id] || ''; });
             renderAll();
             updatePhotoUI();
             document.getElementById('template-select').value = state.template || 'classic';
-            document.getElementById('font-select').value = state.font || 'default';
+            document.getElementById('font-select').value = fontOverridden() ? (state.font || 'default') : 'template';
             renderCustomSwatches();
             setAccent(state.accent || 'green', false);
             if (state.previewMode) setPreviewMode(state.previewMode, false);
@@ -2821,7 +3069,7 @@ const PRESETS_ALL = { en: {
             saveActiveProfile();
             var src = profiles.list.find(function(p){ return p.id === profiles.activeId; });
             var base = src ? src.name : 'CV';
-            var id = genPid(); profiles.list.push({ id: id, name: base + (__CVLANG__==='it'?' (copia)':' (copy)') });
+            var id = genPid(); profiles.list.push({ id: id, name: base + (curLang()==='it'?' (copia)':' (copy)') });
             try{ localStorage.setItem(pkey(id), localStorage.getItem(activeProfileKey()) || JSON.stringify(state)); }catch(e){}
             profiles.activeId = id; saveProfilesIndex(); loadActiveProfile(); renderProfileBar(); showToast(T.ui.pDup);
         }
@@ -2856,7 +3104,7 @@ const PRESETS_ALL = { en: {
         // ============ SECTION ORDER ============
         function sectionLabel(k){
             var s = T.sections || {};
-            if (k === 'custom') return state.customTitle || (__CVLANG__==='it' ? 'Sezione personalizzata' : 'Custom section');
+            if (k === 'custom') return state.customTitle || (curLang()==='it' ? 'Sezione personalizzata' : 'Custom section');
             return s[k] || k;
         }
         function renderSectionOrderList(){
@@ -2873,15 +3121,16 @@ const PRESETS_ALL = { en: {
             _setTxt('sectionOrderSummary', T.ui.secOrder);
             _setTxt('sectionOrderHint', T.ui.secHint);
         }
+        // one-column templates: every section in the main column, exactly in the user's order (like the PDF)
+        // two-column template (Modern): each section stays in its column, each column sorted by the user's order
         function applySectionOrder(){
-            ['main','side'].forEach(function(col){
-                var keys = orderedSections().filter(function(k){ return SECTION_DOM[k] && SECTION_DOM[k].col === col; });
-                var parent = null;
-                keys.forEach(function(k){
-                    var node = document.getElementById(SECTION_DOM[k].el); if (!node) return;
-                    parent = parent || node.parentElement;
-                    if (parent) parent.appendChild(node);
-                });
+            var preview = document.getElementById('preview'); if (!preview) return;
+            var mainCol = preview.querySelector('.preview-main-col'), sideCol = preview.querySelector('.preview-side-col');
+            var twoCol = preview.classList.contains('template-modern');
+            orderedSections().forEach(function(k){
+                var node = SECTION_DOM[k] && document.getElementById(SECTION_DOM[k].el); if (!node) return;
+                var parent = (twoCol && SECTION_DOM[k].col === 'side') ? sideCol : mainCol;
+                if (parent) parent.appendChild(node);
             });
         }
 
@@ -2892,7 +3141,8 @@ const PRESETS_ALL = { en: {
         });
 
         document.getElementById('font-select').addEventListener('change', (e) => {
-            state.font = e.target.value;
+            if (e.target.value === 'template') { state.font = 'default'; state.fontPicked = false; }
+            else { state.font = e.target.value; state.fontPicked = true; }
             applyFont(); scheduleSave();
         });
 
@@ -2921,7 +3171,7 @@ const PRESETS_ALL = { en: {
             const wrap = document.getElementById('customSwatches');
             if (!wrap) return;
             wrap.innerHTML = (state.customColors || []).map(function(hex) {
-                return '<div class="color-option custom-swatch" data-accent="'+hex+'" title="'+hex+' — double-click to remove" style="background:'+hex+'"></div>';
+                return '<div class="color-option custom-swatch" data-accent="'+hex+'" title="'+hex+(curLang()==='it'?' — doppio clic per rimuovere':' — double-click to remove')+'" style="background:'+hex+'"></div>';
             }).join('');
         }
         function addCustomColor(hex) {
@@ -3083,6 +3333,11 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
 (function(){
   var EN2IT = {"ResumeBuilder Pro - Create Your Professional Resume": "CVBuilder Pro - Crea il tuo Curriculum Professionale", "Premium Tool": "Strumento Premium", "ResumeBuilder Pro": "CVBuilder Pro", "Autosave enabled": "Salvataggio automatico attivo", "Classic": "Classico", "Modern": "Moderno", "Creative": "Creativo", "Band (accent)": "Banda (accent)", "Compact": "Compatto", "Modern (sans + serif)": "Moderno (sans + serif)", "Clean sans": "Sans pulito", "Elegant serif": "Serif elegante", "Geometric": "Geometrico", "Editorial (serif)": "Editoriale (serif)", "Technical (mono)": "Tecnico (mono)", "Accent:": "Colore:", "Green": "Verde", "Blue": "Blu", "Purple": "Viola", "Rose": "Rosa", "Red": "Rosso", "Orange": "Arancione", "Black": "Nero", "Add custom color": "Aggiungi colore personalizzato", "Load Preset...": "Carica Esempio...", "Software Developer": "Sviluppatore Software", "UX/UI Designer": "Designer UX/UI", "Marketing Manager": "Responsabile Marketing", "Sales Executive": "Account Commerciale", "Recent Graduate": "Neolaureato", "Clear All": "Pulisci Tutto", "🎯 ATS check — paste the job post and find the missing keywords": "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti", "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.": "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.", "Paste the job description here...": "Incolla qui il testo dell'annuncio di lavoro...", "Analyze match": "Analizza corrispondenza", "Professional Information": "Informazioni Professionali", "Personal Details": "Dati Personali", "Full Name": "Nome e Cognome", "e.g. John Smith": "es. Mario Rossi", "Job Title/Role": "Ruolo/Posizione", "e.g. Senior Developer": "es. Sviluppatore Senior", "john@example.com": "mario@example.com", "Phone": "Telefono", "+1 (555) 123-4567": "+39 345 123 4567", "City/Country": "Città/Paese", "New York, USA": "Milano, Italia", "Website": "Sito Web", "https://johnsmith.com": "https://mariorossi.it", "https://linkedin.com/in/johnsmith": "https://linkedin.com/in/mariorossi", "Profile Photo": "Foto Profilo", "📷 Click or drag an image here": "📷 Clicca o trascina un'immagine qui", "Professional Summary": "Profilo Professionale", "Description": "Descrizione", "Describe your experience, skills and professional goals...": "Descrivi la tua esperienza, competenze e obiettivi professionali...", "Work Experience": "Esperienza Lavorativa", "+ Add": "+ Aggiungi", "Education": "Istruzione", "Skills": "Competenze", "Languages": "Lingue", "Certifications": "Certificazioni", "Custom Section": "Sezione Personalizzata", "Section Title": "Titolo Sezione", "e.g. Projects, Publications...": "es. Progetti, Pubblicazioni...", "Content": "Contenuto", "Add your custom section content...": "Aggiungi il contenuto della tua sezione personalizzata...", "⬇ Download PDF": "⬇ Scarica PDF", "🖨 Print": "🖨 Stampa", "📄 ATS Export (.txt)": "📄 Export ATS (.txt)", "📋 Copy Text": "📋 Copia Testo", "💾 Save (JSON)": "💾 Salva (JSON)", "📂 Load (JSON)": "📂 Carica (JSON)", "Preview:": "Anteprima:", "Light": "Chiara", "Dark": "Scura", "Your Name": "Nome e Cognome", "Professional Title": "Titolo Professionale", "Your professional summary will appear here...": "Il tuo profilo professionale apparirà qui...", "Message": "Messaggio", "Please select an image file": "Seleziona un file immagine", "Image too large (max 12 MB)": "Immagine troppo grande (max 12 MB)", "Photo": "Foto", "Photo loaded ✓": "Foto caricata ✓", "Click to replace": "Clicca per sostituire", "Remove": "Rimuovi", "Company": "Azienda", "Job Title": "Ruolo", "Start Date (e.g. Jan 2020)": "Data Inizio (es. Gen 2020)", "End Date (e.g. Dec 2023 or Present)": "Data Fine (es. Dic 2023 o Presente)", "Job description (you can add multiple lines)": "Descrizione del ruolo (puoi aggiungere più righe)", "Institution": "Istituto", "Degree/Title": "Titolo/Diploma", "Year": "Anno", "GPA (optional)": "Voto (opzionale)", "Skill": "Competenza", "Language": "Lingua", "Select Level": "Seleziona Livello", "Basic": "Base", "Intermediate": "Intermedio", "Fluent": "Fluente", "Native": "Madrelingua", "Certification Name": "Nome Certificazione", "Issuing Organization": "Ente Emittente", "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}": "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}", " | GPA: ": " | Voto: ", "'+hex+' — double-click to remove": "'+hex+' — doppio click per rimuovere", "Color saved to palette": "Colore salvato nella palette", "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around": "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa", "Summary present": "Riepilogo presente", "At least 1 experience": "Almeno 1 esperienza", "At least 3 skills": "Almeno 3 competenze", "Email and phone": "Email e telefono", "Present in resume": "Presenti nel CV", "none": "nessuna", "To add": "Da aggiungere", "all present ✓": "tutte presenti ✓", "Build your professional resume with style and ease": "Crea il tuo curriculum professionale con stile e facilità"};
   var IT2EN = {"CVBuilder Pro - Crea il tuo Curriculum Professionale": "ResumeBuilder Pro - Create Your Professional Resume", "Strumento Premium": "Premium Tool", "CVBuilder Pro": "ResumeBuilder Pro", "Salvataggio automatico attivo": "Autosave enabled", "Classico": "Classic", "Moderno": "Modern", "Creativo": "Creative", "Banda (accent)": "Band (accent)", "Compatto": "Compact", "Moderno (sans + serif)": "Modern (sans + serif)", "Sans pulito": "Clean sans", "Serif elegante": "Elegant serif", "Geometrico": "Geometric", "Editoriale (serif)": "Editorial (serif)", "Tecnico (mono)": "Technical (mono)", "Colore:": "Accent:", "Verde": "Green", "Blu": "Blue", "Viola": "Purple", "Rosa": "Rose", "Rosso": "Red", "Arancione": "Orange", "Nero": "Black", "Aggiungi colore personalizzato": "Add custom color", "Carica Esempio...": "Load Preset...", "Sviluppatore Software": "Software Developer", "Designer UX/UI": "UX/UI Designer", "Responsabile Marketing": "Marketing Manager", "Account Commerciale": "Sales Executive", "Neolaureato": "Recent Graduate", "Pulisci Tutto": "Clear All", "🎯 Analisi ATS — incolla l'annuncio e scopri le parole chiave mancanti": "🎯 ATS check — paste the job post and find the missing keywords", "I sistemi ATS scartano i CV che non contengono le parole chiave dell'annuncio. Incolla il testo dell'offerta: ti diciamo quali termini hai già e quali aggiungere.": "ATS systems discard resumes that miss the job's keywords. Paste the job description: we show which terms you already have and which to add.", "Incolla qui il testo dell'annuncio di lavoro...": "Paste the job description here...", "Analizza corrispondenza": "Analyze match", "Informazioni Professionali": "Professional Information", "Dati Personali": "Personal Details", "Nome e Cognome": "Your Name", "es. Mario Rossi": "e.g. John Smith", "Ruolo/Posizione": "Job Title/Role", "es. Sviluppatore Senior": "e.g. Senior Developer", "mario@example.com": "john@example.com", "Telefono": "Phone", "+39 345 123 4567": "+1 (555) 123-4567", "Città/Paese": "City/Country", "Milano, Italia": "New York, USA", "Sito Web": "Website", "https://mariorossi.it": "https://johnsmith.com", "https://linkedin.com/in/mariorossi": "https://linkedin.com/in/johnsmith", "Foto Profilo": "Profile Photo", "📷 Clicca o trascina un'immagine qui": "📷 Click or drag an image here", "Profilo Professionale": "Professional Summary", "Descrizione": "Description", "Descrivi la tua esperienza, competenze e obiettivi professionali...": "Describe your experience, skills and professional goals...", "Esperienza Lavorativa": "Work Experience", "+ Aggiungi": "+ Add", "Istruzione": "Education", "Competenze": "Skills", "Lingue": "Languages", "Certificazioni": "Certifications", "Sezione Personalizzata": "Custom Section", "Titolo Sezione": "Section Title", "es. Progetti, Pubblicazioni...": "e.g. Projects, Publications...", "Contenuto": "Content", "Aggiungi il contenuto della tua sezione personalizzata...": "Add your custom section content...", "⬇ Scarica PDF": "⬇ Download PDF", "🖨 Stampa": "🖨 Print", "📄 Export ATS (.txt)": "📄 ATS Export (.txt)", "📋 Copia Testo": "📋 Copy Text", "💾 Salva (JSON)": "💾 Save (JSON)", "📂 Carica (JSON)": "📂 Load (JSON)", "Anteprima:": "Preview:", "Chiara": "Light", "Scura": "Dark", "Titolo Professionale": "Professional Title", "Il tuo profilo professionale apparirà qui...": "Your professional summary will appear here...", "Messaggio": "Message", "Seleziona un file immagine": "Please select an image file", "Immagine troppo grande (max 12 MB)": "Image too large (max 12 MB)", "Foto": "Photo", "Foto caricata ✓": "Photo loaded ✓", "Clicca per sostituire": "Click to replace", "Rimuovi": "Remove", "Azienda": "Company", "Ruolo": "Job Title", "Data Inizio (es. Gen 2020)": "Start Date (e.g. Jan 2020)", "Data Fine (es. Dic 2023 o Presente)": "End Date (e.g. Dec 2023 or Present)", "Descrizione del ruolo (puoi aggiungere più righe)": "Job description (you can add multiple lines)", "Istituto": "Institution", "Titolo/Diploma": "Degree/Title", "Anno": "Year", "Voto (opzionale)": "GPA (optional)", "Competenza": "Skill", "Lingua": "Language", "Seleziona Livello": "Select Level", "Base": "Basic", "Intermedio": "Intermediate", "Fluente": "Fluent", "Madrelingua": "Native", "Nome Certificazione": "Certification Name", "Ente Emittente": "Issuing Organization", "${escapeHtml(LANG_LEVELS[l.level] || LANG_LEVELS[0])}": "${escapeHtml(LANG_LEVELS[l.level] || 'Select')}", " | Voto: ": " | GPA: ", "'+hex+' — doppio click per rimuovere": "'+hex+' — double-click to remove", "Colore salvato nella palette": "Color saved to palette", "della delle degli dello alla alle allo agli dalla dalle nel nella nelle negli sullo sulla con per tra fra come più meno non che chi cui questo questa questi queste sono essere avere fare stato stati molto anche solo tutti tutte ogni quando dove perché mentre oppure inoltre presso circa": "the for and with from that this these those your their have will been which they about into over under more less not who whom whose can may your our you are was were has had would could should within across around", "Riepilogo presente": "Summary present", "Almeno 1 esperienza": "At least 1 experience", "Almeno 3 competenze": "At least 3 skills", "Email e telefono": "Email and phone", "Presenti nel CV": "Present in resume", "nessuna": "none", "Da aggiungere": "To add", "tutte presenti ✓": "all present ✓", "Crea il tuo curriculum professionale con stile e facilità": "Build your professional resume with style and ease"};
+  [["✂️ Crop / Reposition","✂️ Ritaglia / Riposiziona"],["Crop photo","Ritaglia foto"],
+   ["Drag to move, drag the green corner to resize. The square becomes your photo.","Trascina per spostare, trascina l'angolo verde per ridimensionare. Il quadrato diventa la tua foto."],
+   ["Cancel","Annulla"],["Apply","Applica"],["Could not load image","Impossibile caricare l'immagine"],
+   ["Light / dark theme","Tema chiaro / scuro"],["Toggle theme","Cambia tema"],["Template font","Font del template"]
+  ].forEach(function(p){ if(!(p[0] in EN2IT)) EN2IT[p[0]]=p[1]; if(!(p[1] in IT2EN)) IT2EN[p[1]]=p[0]; });
   var TITLES = {en:"ResumeBuilder Pro - Create Your Professional Resume", it:"CVBuilder Pro - Crea il tuo Curriculum Professionale"};
   var CUR = (typeof __CVLANG__!=='undefined') ? __CVLANG__ : 'en';
   function tr(str, map){ var k=str.trim(); if(k && Object.prototype.hasOwnProperty.call(map,k)){ return str.replace(k, map[k]); } return null; }
@@ -3142,7 +3397,7 @@ const ATS_STOP = new Set(('the for and with from that this these those your thei
 })();
 </script>
 
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 <div id="cropOverlay" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--el-bg2,#fff);color:var(--el-text1,#1b1e22);border-radius:14px;padding:18px;max-width:min(420px,92vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45)">

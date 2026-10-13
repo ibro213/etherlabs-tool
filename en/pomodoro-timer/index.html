@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Pomodoro Timer Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -473,7 +464,7 @@ button.secondary:hover {
         }
 
         .chart-bar {
-            flex: 1;
+            width: 100%;
             background: linear-gradient(to top, var(--emerald), var(--emeraldL));
             border-radius: 4px 4px 0 0;
             min-height: 8px;
@@ -630,6 +621,25 @@ button.secondary:hover {
     <meta name="theme-color" content="#eef1f4">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -1211,12 +1221,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     saved = localStorage.getItem('pompro_en');
                 } catch(e) {}
                 if (saved) {
-                    const data = JSON.parse(saved);
+                    let data = {};
+                    try { data = JSON.parse(saved) || {}; } catch(e) {}
                     this.settings = { ...this.settings, ...data.settings };
                     this.state = { ...this.state, ...data.state };
                     this.history = data.history || {};
                 }
                 this.state.timeRemaining = this.getDurationForMode(this.state.currentMode) * 60;
+                this.state.isRunning = false; // the phase restarts from full length on load: don't auto-run it
                 this.state.lastTick = Date.now();
             },
 
@@ -1234,7 +1246,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Setup event listeners
             setupEventListeners() {
-                this.elements.taskInput.addEventListener('change', (e) => {
+                this.elements.taskInput.value = this.state.currentTask || '';
+                this.elements.taskInput.addEventListener('input', (e) => {
                     this.state.currentTask = e.target.value;
                     this.saveData();
                 });
@@ -1245,12 +1258,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 this.elements.longBreakDuration.value = this.settings.longBreakDuration;
                 this.elements.sessionsBeforeLongBreak.value = this.settings.sessionsBeforeLongBreak;
 
-                if (this.settings.autoStart) {
-                    this.elements.autoStartToggle.classList.add('on');
-                }
-                if (this.settings.soundEnabled) {
-                    this.elements.soundToggle.classList.add('on');
-                }
+                // force both ways: the sound toggle is ON in the HTML, so a saved "off" must remove the class
+                this.elements.autoStartToggle.classList.toggle('on', !!this.settings.autoStart);
+                this.elements.soundToggle.classList.toggle('on', !!this.settings.soundEnabled);
             },
 
             // Timer functions
@@ -1286,7 +1296,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             skip() {
                 this.state.timeRemaining = 0;
-                this.completeSession();
+                this.completeSession(true);
             },
 
             reset() {
@@ -1299,17 +1309,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 this.saveData();
             },
 
-            completeSession() {
+            completeSession(skipped) {
                 const mode = this.state.currentMode;
 
-                // Add to history if focus session
-                if (mode === 'focus') {
+                // Add to history if focus session (a skipped focus session is not a completed one)
+                if (mode === 'focus' && !skipped) {
                     this.addSessionToHistory();
                 }
 
-                // Play sound
+                // Play sound (never let an audio error stop the phase change below)
                 if (this.settings.soundEnabled) {
-                    this.playNotificationSound();
+                    try { this.playNotificationSound(); } catch (e) {}
                 }
 
                 // Move to next phase
@@ -1401,13 +1411,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             toggleAutoStart() {
                 this.settings.autoStart = !this.settings.autoStart;
-                this.elements.autoStartToggle.classList.toggle('on');
+                this.elements.autoStartToggle.classList.toggle('on', this.settings.autoStart);
                 this.saveData();
             },
 
             toggleSound() {
                 this.settings.soundEnabled = !this.settings.soundEnabled;
-                this.elements.soundToggle.classList.toggle('on');
+                this.elements.soundToggle.classList.toggle('on', this.settings.soundEnabled);
                 this.saveData();
             },
 
@@ -1469,9 +1479,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const maxSessions = Math.max(...last7Days.map(d => d.sessions), 1);
                 this.elements.chartBars.innerHTML = last7Days.map((day, idx) => {
                     const percentage = (day.sessions / maxSessions) * 100;
+                    // Height in px: a % height has no definite parent height here and collapsed to min-height. 78px = 100px chart minus the day label.
+                    const barPx = Math.round(Math.max(percentage, 10) * 0.78);
                     return `
                         <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
-                            <div class="chart-bar" style="height: ${Math.max(percentage, 10)}%;"></div>
+                            <div class="chart-bar" style="height: ${barPx}px;${day.sessions > 0 ? '' : ' opacity: 0.25;'}"></div>
                             <div class="chart-label">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(day.date).getDay()]}</div>
                         </div>
                     `;
@@ -1481,7 +1493,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 this.elements.historyList.innerHTML = last7Days.reverse().map(day => `
                     <div class="history-item">
                         <div class="history-date">${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                        <div class="history-details">${day.sessions} sessions • ${day.totalMinutes} min</div>
+                        <div class="history-details">${day.sessions} ${day.sessions === 1 ? 'session' : 'sessions'} • ${day.totalMinutes} min</div>
                         <div class="history-sessions">${day.sessions}</div>
                     </div>
                 `).join('');
@@ -1496,7 +1508,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     const data = this.history[dateStr] || { sessions: 0, totalMinutes: 0 };
                     days.push({
                         date: dateStr,
-                        ...data
+                        sessions: Number(data.sessions) || 0,
+                        totalMinutes: Number(data.totalMinutes) || 0
                     });
                 }
                 return days;
@@ -1524,7 +1537,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const EM = [16,185,129], DK = [17,24,28], GR = [110,130,140], LT = [235,238,241];
                 doc.setFillColor.apply(doc, EM); doc.rect(0,0,W,78,'F');
                 doc.setTextColor(6,10,10); doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.text('Focus Report', M, 46);
-                doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString(), M, 64);
+                doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}), M, 64);
                 y = 116;
                 const card = (label, value, x, w) => { doc.setFillColor(240,250,246); doc.roundedRect(x, y, w, 76, 10, 10, 'F'); doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor.apply(doc, GR); doc.text(label, x+16, y+24); doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor.apply(doc, EM); doc.text(value, x+16, y+54); };
                 const cw = (W - M*2 - 40) / 3;
@@ -1537,8 +1550,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const rowr = (label, value) => { doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK); doc.text(label, M, y); doc.setFont('helvetica','bold'); doc.text(value, W-M, y, {align:'right'}); y += 20; };
                 rowr('Active days', String(activeDays));
                 rowr('Average per active day', avgPerDay.toFixed(1) + ' sessions');
-                rowr('Best day', new Date(best.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) + '  (' + best.sessions + ' sessions)');
-                rowr('This week', weekSessions + ' sessions  .  ' + fmtH(weekMin));
+                rowr('Best day', new Date(best.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) + '  (' + best.sessions + (best.sessions === 1 ? ' session)' : ' sessions)'));
+                rowr('This week', weekSessions + (weekSessions === 1 ? ' session' : ' sessions') + '  .  ' + fmtH(weekMin));
                 y += 16;
                 doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc, DK); doc.text('Last 14 days', M, y); y += 8;
                 doc.setDrawColor(225,230,234); doc.line(M,y,W-M,y); y += 24;
@@ -1559,7 +1572,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Audio
             playNotificationSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return;
+                // Reuse one context: a new, never-closed context per phase piles up and browsers cap how many can be open
+                const audioContext = this.audioContext || (this.audioContext = new AC());
+                if (audioContext.state === 'suspended' && audioContext.resume) { const p = audioContext.resume(); if (p && p.catch) p.catch(() => {}); }
                 const now = audioContext.currentTime;
                 const duration = 0.5;
 

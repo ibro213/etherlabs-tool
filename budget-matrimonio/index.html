@@ -819,7 +819,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
     </div>
 
     <footer>
-        <p>Wedding Budget Planner Pro - Realizzato con ❤️</p>
+        <p>Pianificatore Budget Matrimonio Pro - Realizzato con ❤️</p>
     </footer>
 
     <script>
@@ -843,6 +843,16 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             'DJ/Musician', 'Cake Shop', 'Bride Tailor', 'Groom Tailor', 'Jeweler',
             'Hair Stylist', 'Makeup Artist', 'Printer', 'Entertainment', 'Photographer Assistant'
         ];
+        // Etichette mostrate in italiano: i nomi qui sopra sono le CHIAVI salvate in vendorStatus
+        // (localStorage), quindi restano invariati per non perdere gli stati già salvati.
+        const vendorLabels = {
+            'Venue/Location': 'Location', 'Catering': 'Catering', 'Photography': 'Fotografia',
+            'Videography': 'Videomaker', 'Florist': 'Fiorista', 'Decorations': 'Decorazioni',
+            'DJ/Musician': 'DJ/Musicisti', 'Cake Shop': 'Pasticceria', 'Bride Tailor': 'Atelier Sposa',
+            'Groom Tailor': 'Sartoria Sposo', 'Jeweler': 'Gioielleria', 'Hair Stylist': 'Parrucchiere',
+            'Makeup Artist': 'Truccatore', 'Printer': 'Tipografia', 'Entertainment': 'Intrattenimento',
+            'Photographer Assistant': 'Assistente Fotografo'
+        };
 
         const budgetData = {
             totalBudget: 0,
@@ -856,6 +866,22 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+        // €1.234,50 / -€500 (prima "€1234.50" con il punto decimale e "€-500"); d = decimali
+        function money(n, d) {
+            const v = Math.abs(Number(n) || 0), r = Math.round(v * Math.pow(10, d)) / Math.pow(10, d);
+            return ((Number(n) < 0 && r > 0) ? '-€' : '€') + r.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+        }
+        // percentuale a schermo con la virgola: 12,5
+        function pct(n) { return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+
+        // "AAAA-MM-GG" -> 13/10/2026 come data LOCALE (new Date('2026-10-13') è mezzanotte UTC e
+        // a ovest di Greenwich mostrava il giorno prima).
+        function fmtDate(iso) {
+            const p = String(iso || '').split('-').map(Number);
+            const d = p.length === 3 ? new Date(p[0], p[1] - 1, p[2]) : new Date(NaN);
+            return isNaN(d) ? '' : d.toLocaleDateString('it-IT');
+        }
+
         const STORE_KEY = 'wedding-budget-pro';
         function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify({budgetData, expenseData, vendorStatus})); }catch(e){} }
         function loadState(){ try{ const raw=localStorage.getItem(STORE_KEY); if(!raw) return false; const s=JSON.parse(raw); if(s.budgetData) Object.assign(budgetData, s.budgetData); if(s.expenseData) Object.assign(expenseData, s.expenseData); if(s.vendorStatus) Object.assign(vendorStatus, s.vendorStatus); return true; }catch(e){ return false; } }
@@ -864,6 +890,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             initializeCategories();
             initializeVendors();
             loadState();
+            syncCategories();
             document.getElementById('totalBudget').value = budgetData.totalBudget || '';
             document.getElementById('guestCount').value = budgetData.guestCount || '';
             document.getElementById('weddingDate').value = budgetData.weddingDate || '';
@@ -885,6 +912,25 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             renderCategories();
         }
 
+        // Dopo loadState(): le categorie salvate sostituiscono in blocco quelle di default, quindi
+        // garantisco che ogni categoria esista con campi numerici e mostro il nome italiano attuale
+        // (i nomi non sono modificabili; quelli salvati possono essere in inglese se lo stesso browser
+        // ha usato la versione EN, che condivide questa chiave di salvataggio).
+        function syncCategories() {
+            if (!budgetData.categories || typeof budgetData.categories !== 'object') budgetData.categories = {};
+            categories.forEach((cat, idx) => {
+                const c = budgetData.categories[idx];
+                const ok = c && typeof c === 'object';
+                const p = ok ? parseFloat(c.percent) : NaN;
+                budgetData.categories[idx] = Object.assign({}, ok ? c : {}, {
+                    name: cat.it,
+                    percent: isNaN(p) ? (cat.min + cat.max) / 2 : p,
+                    spent: ok ? (parseFloat(c.spent) || 0) : 0
+                });
+                if (!Array.isArray(expenseData[idx])) expenseData[idx] = [];
+            });
+        }
+
         function initializeVendors() {
             vendors.forEach(v => {
                 vendorStatus[v] = 'Non Iniziato';
@@ -895,12 +941,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         function setupEventListeners() {
             document.getElementById('totalBudget').addEventListener('change', e => {
                 budgetData.totalBudget = parseFloat(e.target.value) || 0;
-                updateDashboard();
+                updateDashboard(true);
             });
 
             document.getElementById('guestCount').addEventListener('change', e => {
                 budgetData.guestCount = parseInt(e.target.value) || 0;
-                updateDashboard();
+                updateDashboard(true);
             });
 
             document.getElementById('weddingDate').addEventListener('change', e => {
@@ -949,19 +995,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <div class="category-stats">
                         <div class="stat">
                             <div class="stat-label">Allocato</div>
-                            <div class="stat-value">€${allocated.toFixed(0)}</div>
+                            <div class="stat-value" data-alloc>${money(allocated, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Speso</div>
-                            <div class="stat-value">€${spent.toFixed(0)}</div>
+                            <div class="stat-value" data-spent>${money(spent, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Rimasto</div>
-                            <div class="stat-value">€${remaining.toFixed(0)}</div>
+                            <div class="stat-value" data-rem>${money(remaining, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Stato</div>
-                            <span class="status-badge ${isOver ? 'status-warning' : 'status-ok'}">
+                            <span class="status-badge ${isOver ? 'status-warning' : 'status-ok'}" data-status>
                                 ${isOver ? '⚠️ Oltre' : '✓ OK'}
                             </span>
                         </div>
@@ -1020,7 +1066,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const notes = document.getElementById(`notes-${idx}`).value;
             const paid = document.getElementById(`paid-${idx}`).value;
 
-            if (!vendor || amount <= 0) return;
+            // senza fornitore o importo prima non succedeva nulla: dico cosa manca
+            if (!vendor.trim() || amount <= 0) { alert(!vendor.trim() ? 'Inserisci il nome del fornitore.' : 'Inserisci un importo maggiore di zero.'); return; }
 
             expenseData[idx].push({ vendor, amount, date, notes, paid });
 
@@ -1045,11 +1092,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     item.innerHTML = `
                         <div class="expense-details">
                             <div class="expense-vendor">${esc(exp.vendor)}</div>
-                            <div class="expense-meta">${exp.date ? new Date(exp.date).toLocaleDateString('it-IT') : ''} - ${exp.paid === 'paid' ? '✓ Pagato' : '○ Non Pagato'}</div>
+                            <div class="expense-meta">${[fmtDate(exp.date), exp.paid === 'paid' ? '✓ Pagato' : '○ Non Pagato'].filter(Boolean).join(' - ')}</div>
                             ${exp.notes ? `<div class="expense-meta">${esc(exp.notes)}</div>` : ''}
                         </div>
                         <div style="display: flex; gap: 12px; align-items: center; white-space: nowrap;">
-                            <div class="expense-amount">€${exp.amount.toFixed(2)}</div>
+                            <div class="expense-amount">${money(exp.amount, 2)}</div>
                             <button class="btn btn-secondary btn-small" onclick="deleteExpense(${idx}, ${expIdx})">✕</button>
                         </div>
                     `;
@@ -1057,7 +1104,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 });
 
                 const total = expenseData[idx].reduce((sum, e) => sum + e.amount, 0);
-                document.getElementById(`totalExpense-${idx}`).textContent = total > 0 ? `Totale: €${total.toFixed(2)}` : '';
+                document.getElementById(`totalExpense-${idx}`).textContent = total > 0 ? `Totale: ${money(total, 2)}` : '';
             });
         }
 
@@ -1071,10 +1118,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function updateCategoryPercent(idx, value) {
             budgetData.categories[idx].percent = parseFloat(value) || 0;
-            updateDashboard();
+            updateDashboard(true);
         }
 
-        function updateDashboard() {
+        function updateDashboard(keepCards) {
             const totalBudget = budgetData.totalBudget;
             const totalSpent = Object.keys(budgetData.categories).reduce(
                 (sum, idx) => sum + budgetData.categories[idx].spent, 0
@@ -1082,23 +1129,44 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const remaining = totalBudget - totalSpent;
             const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
-            document.getElementById('totalBudgetDisplay').textContent = `€${totalBudget.toFixed(0)}`;
-            document.getElementById('totalSpentDisplay').textContent = `€${totalSpent.toFixed(0)}`;
-            document.getElementById('remainingDisplay').textContent = `€${remaining.toFixed(0)}`;
-            document.getElementById('percentUsedDisplay').textContent = `${percentUsed.toFixed(1)}%`;
+            document.getElementById('totalBudgetDisplay').textContent = `${money(totalBudget, 0)}`;
+            document.getElementById('totalSpentDisplay').textContent = `${money(totalSpent, 0)}`;
+            document.getElementById('remainingDisplay').textContent = `${money(remaining, 0)}`;
+            document.getElementById('percentUsedDisplay').textContent = `${pct(percentUsed)}%`;
             document.getElementById('progressFill').style.width = Math.min(percentUsed, 100) + '%';
 
             if (budgetData.guestCount > 0) {
                 const perGuest = totalSpent / budgetData.guestCount;
-                document.getElementById('perGuestValue').textContent = `€${perGuest.toFixed(2)}`;
+                document.getElementById('perGuestValue').textContent = `${money(perGuest, 2)}`;
                 document.getElementById('perGuestContainer').classList.remove('hidden');
             } else {
                 document.getElementById('perGuestContainer').classList.add('hidden');
             }
 
-            renderCategories();
+            if (keepCards) refreshCategoryStats(); else renderCategories();
             drawChart();
             saveState();
+        }
+
+        // Numeri delle card categoria aggiornati SUL POSTO, per gli eventi "change" degli input: il
+        // change scatta sul blur, cioè tra mousedown e mouseup del clic successivo, e ricostruire le
+        // card in quel momento si mangiava il clic (scrivi la %, clicchi "Aggiungi Spesa": niente).
+        function refreshCategoryStats() {
+            const cards = document.querySelectorAll('#categoriesGrid .category-card');
+            categories.forEach((_, idx) => {
+                const card = cards[idx];
+                if (!card) return;
+                const allocated = (budgetData.totalBudget * budgetData.categories[idx].percent) / 100;
+                const spent = budgetData.categories[idx].spent;
+                const remaining = allocated - spent;
+                const isOver = remaining < 0;
+                const set = (sel, txt) => { const el = card.querySelector(sel); if (el) el.textContent = txt; };
+                set('[data-alloc]', money(allocated, 0));
+                set('[data-spent]', money(spent, 0));
+                set('[data-rem]', money(remaining, 0));
+                const st = card.querySelector('[data-status]');
+                if (st) { st.className = 'status-badge ' + (isOver ? 'status-warning' : 'status-ok'); st.textContent = isOver ? '⚠️ Oltre' : '✓ OK'; }
+            });
         }
 
         function drawChart() {
@@ -1151,7 +1219,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
                 item.innerHTML = `
                     <div class="legend-color" style="background: ${colors[idx % colors.length]};"></div>
-                    <span>${budgetData.categories[idx].name}: €${allocated.toFixed(0)} (${percent.toFixed(1)}%)</span>
+                    <span>${budgetData.categories[idx].name}: ${money(allocated, 0)} (${pct(percent)}%)</span>
                 `;
                 legend.appendChild(item);
             });
@@ -1165,7 +1233,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 const item = document.createElement('div');
                 item.className = 'vendor-item';
                 item.innerHTML = `
-                    <span class="vendor-name">${vendor}</span>
+                    <span class="vendor-name">${esc(vendorLabels[vendor] || vendor)}</span>
                     <select class="status-select" onchange="updateVendorStatus('${vendor}', this.value)">
                         <option value="Non Iniziato" ${vendorStatus[vendor] === 'Non Iniziato' ? 'selected' : ''}>Non Iniziato</option>
                         <option value="Contattato" ${vendorStatus[vendor] === 'Contattato' ? 'selected' : ''}>Contattato</option>
@@ -1191,15 +1259,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             let summary = '=== RIEPILOGO BUDGET MATRIMONIO ===\n\n';
             summary += `Data: ${new Date().toLocaleDateString('it-IT')}\n`;
-            summary += `Matrimonio: ${budgetData.weddingDate || 'Non impostato'}\n`;
+            summary += `Matrimonio: ${fmtDate(budgetData.weddingDate) || 'Non impostato'}\n`;
             summary += `Ospiti: ${budgetData.guestCount || 0}\n\n`;
 
             summary += `TOTALI:\n`;
-            summary += `- Budget Totale: €${totalBudget.toFixed(2)}\n`;
-            summary += `- Spesa Totale: €${totalSpent.toFixed(2)}\n`;
-            summary += `- Rimasto: €${(totalBudget - totalSpent).toFixed(2)}\n`;
+            summary += `- Budget Totale: ${money(totalBudget, 2)}\n`;
+            summary += `- Spesa Totale: ${money(totalSpent, 2)}\n`;
+            summary += `- Rimasto: ${money((totalBudget - totalSpent), 2)}\n`;
             if (budgetData.guestCount > 0) {
-                summary += `- Costo per Ospite: €${(totalSpent / budgetData.guestCount).toFixed(2)}\n`;
+                summary += `- Costo per Ospite: ${money((totalSpent / budgetData.guestCount), 2)}\n`;
             }
             summary += '\n';
 
@@ -1207,10 +1275,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             categories.forEach((cat, idx) => {
                 const allocated = (totalBudget * budgetData.categories[idx].percent) / 100;
                 const spent = budgetData.categories[idx].spent;
-                summary += `\n${budgetData.categories[idx].name} (${budgetData.categories[idx].percent.toFixed(1)}%)\n`;
-                summary += `  Allocato: €${allocated.toFixed(2)}\n`;
-                summary += `  Speso: €${spent.toFixed(2)}\n`;
-                summary += `  Rimasto: €${(allocated - spent).toFixed(2)}\n`;
+                summary += `\n${budgetData.categories[idx].name} (${pct(budgetData.categories[idx].percent)}%)\n`;
+                summary += `  Allocato: ${money(allocated, 2)}\n`;
+                summary += `  Speso: ${money(spent, 2)}\n`;
+                summary += `  Rimasto: ${money((allocated - spent), 2)}\n`;
             });
 
             const element = document.createElement('a');
@@ -1220,6 +1288,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         initApp();
+        // I separatori delle fette usano il colore di sfondo del tema: ridisegno quando il tema è
+        // applicato (lo script del tema gira dopo initApp) e a ogni cambio chiaro/scuro.
+        window.addEventListener('DOMContentLoaded', drawChart);
+        window.addEventListener('el-theme-change', drawChart);
 
         /* ===== Navigazione a tab (aggiunto) ===== */
         (function(){

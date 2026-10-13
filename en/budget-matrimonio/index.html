@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Wedding Budget Planner Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -676,6 +667,25 @@
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -779,7 +789,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             { it: 'Trasporto', en: 'Transportation', min: 2, max: 3 },
             { it: 'Trucco & Capelli', en: 'Hair & Makeup', min: 2, max: 3 },
             { it: 'Anelli', en: 'Rings', min: 3, max: 5 },
-            { it: 'Bomboniere', en: 'Favors/Bomboniere', min: 2, max: 3 },
+            { it: 'Bomboniere', en: 'Wedding Favors', min: 2, max: 3 },
             { it: 'Varie & Emergenza', en: 'Miscellaneous/Emergency', min: 4, max: 7 }
         ];
 
@@ -788,6 +798,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             'DJ/Musician', 'Cake Shop', 'Bride Tailor', 'Groom Tailor', 'Jeweler',
             'Hair Stylist', 'Makeup Artist', 'Printer', 'Entertainment', 'Photographer Assistant'
         ];
+        // Display labels only: the names above are the keys saved in vendorStatus, keep them.
+        const vendorLabels = {
+            'Bride Tailor': 'Bridal Shop', 'Groom Tailor': "Groom's Tailor", 'Photographer Assistant': "Photographer's Assistant"
+        };
 
         const budgetData = {
             totalBudget: 0,
@@ -801,6 +815,20 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+        // $1,234.50 / -$500 (was "$1234.50" and "$-500"); d = decimals
+        function money(n, d) {
+            const v = Math.abs(Number(n) || 0), r = Math.round(v * Math.pow(10, d)) / Math.pow(10, d);
+            return ((Number(n) < 0 && r > 0) ? '-$' : '$') + r.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+        }
+
+        // "YYYY-MM-DD" -> 10/13/2026 as a LOCAL date: new Date('2026-10-13') is UTC midnight and
+        // showed the previous day in US time zones.
+        function fmtDate(iso) {
+            const p = String(iso || '').split('-').map(Number);
+            const d = p.length === 3 ? new Date(p[0], p[1] - 1, p[2]) : new Date(NaN);
+            return isNaN(d) ? '' : d.toLocaleDateString('en-US');
+        }
+
         const STORE_KEY = 'wedding-budget-pro';
         function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify({budgetData, expenseData, vendorStatus})); }catch(e){} }
         function loadState(){ try{ const raw=localStorage.getItem(STORE_KEY); if(!raw) return false; const s=JSON.parse(raw); if(s.budgetData) Object.assign(budgetData, s.budgetData); if(s.expenseData) Object.assign(expenseData, s.expenseData); if(s.vendorStatus) Object.assign(vendorStatus, s.vendorStatus); return true; }catch(e){ return false; } }
@@ -809,6 +837,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             initializeCategories();
             initializeVendors();
             loadState();
+            syncCategories();
             document.getElementById('totalBudget').value = budgetData.totalBudget || '';
             document.getElementById('guestCount').value = budgetData.guestCount || '';
             document.getElementById('weddingDate').value = budgetData.weddingDate || '';
@@ -830,6 +859,25 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             renderCategories();
         }
 
+        // After loadState(): saved categories replace the defaults wholesale, so make sure every
+        // category exists with numeric fields, and show the current name (names are not editable;
+        // the saved ones may be outdated, e.g. "Favors/Bomboniere", or from the IT file, which
+        // shares this storage key).
+        function syncCategories() {
+            if (!budgetData.categories || typeof budgetData.categories !== 'object') budgetData.categories = {};
+            categories.forEach((cat, idx) => {
+                const c = budgetData.categories[idx];
+                const ok = c && typeof c === 'object';
+                const pct = ok ? parseFloat(c.percent) : NaN;
+                budgetData.categories[idx] = Object.assign({}, ok ? c : {}, {
+                    name: cat.en,
+                    percent: isNaN(pct) ? (cat.min + cat.max) / 2 : pct,
+                    spent: ok ? (parseFloat(c.spent) || 0) : 0
+                });
+                if (!Array.isArray(expenseData[idx])) expenseData[idx] = [];
+            });
+        }
+
         function initializeVendors() {
             vendors.forEach(v => {
                 vendorStatus[v] = 'Not Started';
@@ -840,12 +888,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         function setupEventListeners() {
             document.getElementById('totalBudget').addEventListener('change', e => {
                 budgetData.totalBudget = parseFloat(e.target.value) || 0;
-                updateDashboard();
+                updateDashboard(true);
             });
 
             document.getElementById('guestCount').addEventListener('change', e => {
                 budgetData.guestCount = parseInt(e.target.value) || 0;
-                updateDashboard();
+                updateDashboard(true);
             });
 
             document.getElementById('weddingDate').addEventListener('change', e => {
@@ -894,19 +942,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <div class="category-stats">
                         <div class="stat">
                             <div class="stat-label">Allocated</div>
-                            <div class="stat-value">$${allocated.toFixed(0)}</div>
+                            <div class="stat-value" data-alloc>${money(allocated, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Spent</div>
-                            <div class="stat-value">$${spent.toFixed(0)}</div>
+                            <div class="stat-value" data-spent>${money(spent, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Remaining</div>
-                            <div class="stat-value">$${remaining.toFixed(0)}</div>
+                            <div class="stat-value" data-rem>${money(remaining, 0)}</div>
                         </div>
                         <div class="stat">
                             <div class="stat-label">Status</div>
-                            <span class="status-badge ${isOver ? 'status-warning' : 'status-ok'}">
+                            <span class="status-badge ${isOver ? 'status-warning' : 'status-ok'}" data-status>
                                 ${isOver ? '⚠️ Over' : '✓ OK'}
                             </span>
                         </div>
@@ -965,7 +1013,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const notes = document.getElementById(`notes-${idx}`).value;
             const paid = document.getElementById(`paid-${idx}`).value;
 
-            if (!vendor || amount <= 0) return;
+            // a missing vendor or amount used to do nothing at all: say what is missing
+            if (!vendor.trim() || amount <= 0) { alert(!vendor.trim() ? 'Enter the vendor name.' : 'Enter an amount greater than zero.'); return; }
 
             expenseData[idx].push({ vendor, amount, date, notes, paid });
 
@@ -990,11 +1039,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     item.innerHTML = `
                         <div class="expense-details">
                             <div class="expense-vendor">${esc(exp.vendor)}</div>
-                            <div class="expense-meta">${exp.date ? new Date(exp.date).toLocaleDateString('en-US') : ''} - ${exp.paid === 'paid' ? '✓ Paid' : '○ Unpaid'}</div>
+                            <div class="expense-meta">${[fmtDate(exp.date), exp.paid === 'paid' ? '✓ Paid' : '○ Unpaid'].filter(Boolean).join(' - ')}</div>
                             ${exp.notes ? `<div class="expense-meta">${esc(exp.notes)}</div>` : ''}
                         </div>
                         <div style="display: flex; gap: 12px; align-items: center; white-space: nowrap;">
-                            <div class="expense-amount">$${exp.amount.toFixed(2)}</div>
+                            <div class="expense-amount">${money(exp.amount, 2)}</div>
                             <button class="btn btn-secondary btn-small" onclick="deleteExpense(${idx}, ${expIdx})">✕</button>
                         </div>
                     `;
@@ -1002,7 +1051,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 });
 
                 const total = expenseData[idx].reduce((sum, e) => sum + e.amount, 0);
-                document.getElementById(`totalExpense-${idx}`).textContent = total > 0 ? `Total: $${total.toFixed(2)}` : '';
+                document.getElementById(`totalExpense-${idx}`).textContent = total > 0 ? `Total: ${money(total, 2)}` : '';
             });
         }
 
@@ -1016,10 +1065,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function updateCategoryPercent(idx, value) {
             budgetData.categories[idx].percent = parseFloat(value) || 0;
-            updateDashboard();
+            updateDashboard(true);
         }
 
-        function updateDashboard() {
+        function updateDashboard(keepCards) {
             const totalBudget = budgetData.totalBudget;
             const totalSpent = Object.keys(budgetData.categories).reduce(
                 (sum, idx) => sum + budgetData.categories[idx].spent, 0
@@ -1027,23 +1076,44 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const remaining = totalBudget - totalSpent;
             const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
-            document.getElementById('totalBudgetDisplay').textContent = `$${totalBudget.toFixed(0)}`;
-            document.getElementById('totalSpentDisplay').textContent = `$${totalSpent.toFixed(0)}`;
-            document.getElementById('remainingDisplay').textContent = `$${remaining.toFixed(0)}`;
+            document.getElementById('totalBudgetDisplay').textContent = `${money(totalBudget, 0)}`;
+            document.getElementById('totalSpentDisplay').textContent = `${money(totalSpent, 0)}`;
+            document.getElementById('remainingDisplay').textContent = `${money(remaining, 0)}`;
             document.getElementById('percentUsedDisplay').textContent = `${percentUsed.toFixed(1)}%`;
             document.getElementById('progressFill').style.width = Math.min(percentUsed, 100) + '%';
 
             if (budgetData.guestCount > 0) {
                 const perGuest = totalSpent / budgetData.guestCount;
-                document.getElementById('perGuestValue').textContent = `$${perGuest.toFixed(2)}`;
+                document.getElementById('perGuestValue').textContent = `${money(perGuest, 2)}`;
                 document.getElementById('perGuestContainer').classList.remove('hidden');
             } else {
                 document.getElementById('perGuestContainer').classList.add('hidden');
             }
 
-            renderCategories();
+            if (keepCards) refreshCategoryStats(); else renderCategories();
             drawChart();
             saveState();
+        }
+
+        // Numbers of the category cards updated IN PLACE, for the input "change" events: that event
+        // fires on blur, i.e. between mousedown and mouseup of the user's next click, and rebuilding
+        // the cards there swallowed the click (type the budget, click "Add Expense": nothing).
+        function refreshCategoryStats() {
+            const cards = document.querySelectorAll('#categoriesGrid .category-card');
+            categories.forEach((_, idx) => {
+                const card = cards[idx];
+                if (!card) return;
+                const allocated = (budgetData.totalBudget * budgetData.categories[idx].percent) / 100;
+                const spent = budgetData.categories[idx].spent;
+                const remaining = allocated - spent;
+                const isOver = remaining < 0;
+                const set = (sel, txt) => { const el = card.querySelector(sel); if (el) el.textContent = txt; };
+                set('[data-alloc]', money(allocated, 0));
+                set('[data-spent]', money(spent, 0));
+                set('[data-rem]', money(remaining, 0));
+                const st = card.querySelector('[data-status]');
+                if (st) { st.className = 'status-badge ' + (isOver ? 'status-warning' : 'status-ok'); st.textContent = isOver ? '⚠️ Over' : '✓ OK'; }
+            });
         }
 
         function drawChart() {
@@ -1096,7 +1166,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
                 item.innerHTML = `
                     <div class="legend-color" style="background: ${colors[idx % colors.length]};"></div>
-                    <span>${budgetData.categories[idx].name}: $${allocated.toFixed(0)} (${percent.toFixed(1)}%)</span>
+                    <span>${budgetData.categories[idx].name}: ${money(allocated, 0)} (${percent.toFixed(1)}%)</span>
                 `;
                 legend.appendChild(item);
             });
@@ -1110,7 +1180,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 const item = document.createElement('div');
                 item.className = 'vendor-item';
                 item.innerHTML = `
-                    <span class="vendor-name">${vendor}</span>
+                    <span class="vendor-name">${esc(vendorLabels[vendor] || vendor)}</span>
                     <select class="status-select" onchange="updateVendorStatus('${vendor}', this.value)">
                         <option value="Not Started" ${vendorStatus[vendor] === 'Not Started' ? 'selected' : ''}>Not Started</option>
                         <option value="Contacted" ${vendorStatus[vendor] === 'Contacted' ? 'selected' : ''}>Contacted</option>
@@ -1136,15 +1206,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             let summary = '=== WEDDING BUDGET SUMMARY ===\n\n';
             summary += `Date: ${new Date().toLocaleDateString('en-US')}\n`;
-            summary += `Wedding: ${budgetData.weddingDate || 'Not set'}\n`;
+            summary += `Wedding: ${fmtDate(budgetData.weddingDate) || 'Not set'}\n`;
             summary += `Guests: ${budgetData.guestCount || 0}\n\n`;
 
             summary += `TOTALS:\n`;
-            summary += `- Total Budget: $${totalBudget.toFixed(2)}\n`;
-            summary += `- Total Spent: $${totalSpent.toFixed(2)}\n`;
-            summary += `- Remaining: $${(totalBudget - totalSpent).toFixed(2)}\n`;
+            summary += `- Total Budget: ${money(totalBudget, 2)}\n`;
+            summary += `- Total Spent: ${money(totalSpent, 2)}\n`;
+            summary += `- Remaining: ${money((totalBudget - totalSpent), 2)}\n`;
             if (budgetData.guestCount > 0) {
-                summary += `- Cost Per Guest: $${(totalSpent / budgetData.guestCount).toFixed(2)}\n`;
+                summary += `- Cost Per Guest: ${money((totalSpent / budgetData.guestCount), 2)}\n`;
             }
             summary += '\n';
 
@@ -1153,9 +1223,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 const allocated = (totalBudget * budgetData.categories[idx].percent) / 100;
                 const spent = budgetData.categories[idx].spent;
                 summary += `\n${budgetData.categories[idx].name} (${budgetData.categories[idx].percent.toFixed(1)}%)\n`;
-                summary += `  Allocated: $${allocated.toFixed(2)}\n`;
-                summary += `  Spent: $${spent.toFixed(2)}\n`;
-                summary += `  Remaining: $${(allocated - spent).toFixed(2)}\n`;
+                summary += `  Allocated: ${money(allocated, 2)}\n`;
+                summary += `  Spent: ${money(spent, 2)}\n`;
+                summary += `  Remaining: ${money((allocated - spent), 2)}\n`;
             });
 
             const element = document.createElement('a');
@@ -1165,9 +1235,13 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         initApp();
+        // The slice separators use the theme background color: redraw once the theme is applied
+        // (the theme script runs after initApp) and on every light/dark toggle.
+        window.addEventListener('DOMContentLoaded', drawChart);
+        window.addEventListener('el-theme-change', drawChart);
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

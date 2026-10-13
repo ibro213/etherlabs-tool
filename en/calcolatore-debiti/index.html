@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Debt Payoff Calculator Pro - Accelerate Your Financial Freedom</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -664,6 +655,25 @@ input[type="range"]::-moz-range-thumb:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -826,7 +836,7 @@ input[type="range"]::-moz-range-thumb:hover {
                 <div class="motivation-box">
                     <div class="motivation-label">Months Saved</div>
                     <div class="motivation-value" id="monthsSaved">0</div>
-                    <div style="color: var(--text2); font-size: 12px;">7+ years of financial freedom</div>
+                    <div id="monthsSavedNote" style="color: var(--text2); font-size: 12px;">vs. minimum-only payments</div>
                 </div>
             </div>
 
@@ -1337,6 +1347,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function calculatePayoff() {
             if (debts.length === 0) {
+                ['debtFreeSection', 'chartSection', 'scheduleSection', 'motivationSection'].forEach(id => { document.getElementById(id).style.display = 'none'; });
                 document.getElementById('comparisonContainer').innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
@@ -1360,6 +1371,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             renderSchedules(snowballResult, avalancheResult);
             renderChart(snowballResult, avalancheResult);
             renderMotivation(snowballResult, avalancheResult);
+            calculateWhatIf();
         }
 
         function simulatePayoff(debtsArray, extra, strategy) {
@@ -1415,8 +1427,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 totalPaid += monthPayment;
 
                 debtsArray.forEach(d => {
-                    if (d.balance <= 0.01 && !paidNames.has(d.name)) {
-                        paidNames.add(d.name);
+                    const key = d.id != null ? d.id : d.name;
+                    if (d.balance <= 0.01 && !paidNames.has(key)) {
+                        paidNames.add(key);
                         payoffOrder.push({ name: d.name, month: month });
                     }
                 });
@@ -1479,9 +1492,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             if (monthsSaved > 0) {
                 headline = `<strong>Avalanche</strong> gets you debt-free <strong>${monthsSaved} month${monthsSaved === 1 ? '' : 's'} sooner</strong>` + (intDiff >= 1 ? ` and pays ${lessInt}` : '');
             } else if (intDiff >= 1) {
-                headline = `<strong>Same ${snowball.months} months either way</strong> — but <strong>Avalanche</strong> pays ${lessInt}`;
+                headline = `<strong>Same ${snowball.months} month${snowball.months === 1 ? '' : 's'} either way</strong> — but <strong>Avalanche</strong> pays ${lessInt}`;
             } else {
-                headline = `<strong>Same ${snowball.months} months and same interest</strong> with either strategy`;
+                headline = `<strong>Same ${snowball.months} month${snowball.months === 1 ? '' : 's'} and same interest</strong> with either strategy`;
             }
             const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline} (it attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first). <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. Choose Avalanche to save money, Snowball to stay motivated.</div>`;
 
@@ -1490,7 +1503,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="comparison-title">❄️ Snowball Method</div>
                     <div class="comparison-metric">
                         <div class="metric-label">Months to Freedom</div>
-                        <div class="metric-value">${snowball.converged ? snowball.months + ' months' : '600+ months'}</div>
+                        <div class="metric-value">${snowball.converged ? snowball.months + (snowball.months === 1 ? ' month' : ' months') : '600+ months'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Interest</div>
@@ -1511,7 +1524,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     <div class="comparison-title">⛰️ Avalanche Method</div>
                     <div class="comparison-metric">
                         <div class="metric-label">Months to Freedom</div>
-                        <div class="metric-value">${avalanche.converged ? avalanche.months + ' months' : '600+ months'}</div>
+                        <div class="metric-value">${avalanche.converged ? avalanche.months + (avalanche.months === 1 ? ' month' : ' months') : '600+ months'}</div>
                     </div>
                     <div class="comparison-metric">
                         <div class="metric-label">Total Interest</div>
@@ -1535,6 +1548,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             if (avalanche.converged) {
                 const date = new Date();
+                date.setDate(1);
                 date.setMonth(date.getMonth() + avalanche.months);
                 const months = ['January', 'February', 'March', 'April', 'May', 'June',
                                'July', 'August', 'September', 'October', 'November', 'December'];
@@ -1583,8 +1597,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             canvas.width = canvas.offsetWidth;
             canvas.height = 400;
 
-            const maxMonths = Math.max(snowball.months, avalanche.months);
-            const maxDebt = debts.reduce((s, d) => s + d.originalBalance, 0);
+            const maxMonths = Math.max(snowball.months, avalanche.months) || 1;
+            const startTotal = debts.reduce((s, d) => s + d.balance, 0);
+            const maxDebt = Math.max(startTotal, ...snowball.debtHistory, ...avalanche.debtHistory) || 1;
+            const axisMoney = v => v >= 1e6 ? '$' + (v / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1 }) + 'M'
+                : v >= 1000 ? '$' + (v / 1000).toLocaleString('en-US', { maximumFractionDigits: v >= 1e5 ? 0 : 1 }) + 'k'
+                : '$' + Math.round(v);
 
             const padding = 60;
             const width = canvas.width - padding * 2;
@@ -1640,7 +1658,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             for (let i = 0; i <= 5; i++) {
                 const amount = (maxDebt / 5) * (5 - i);
                 const y = padding + (height / 5) * i;
-                ctx.fillText(`$${Math.round(amount / 1000)}k`, padding - 10, y + 5);
+                ctx.fillText(axisMoney(amount), padding - 10, y + 5);
             }
 
             // Draw lines
@@ -1657,8 +1675,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 ctx.stroke();
             };
 
-            drawLine(snowball.debtHistory, cSnow);
-            drawLine(avalanche.debtHistory, cAval);
+            drawLine([startTotal].concat(snowball.debtHistory), cSnow);
+            drawLine([startTotal].concat(avalanche.debtHistory), cAval);
 
             // Legend
             ctx.font = 'bold 13px system-ui, sans-serif';
@@ -1681,15 +1699,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const minOnly = simulateMinOnly(debts);
             const best = avalanche.months <= snowball.months ? avalanche : snowball;
             // If paying only the minimums never clears the debt, the savings are undefined — show a dash.
+            const note = document.getElementById('monthsSavedNote');
             if (!minOnly.converged) {
                 document.getElementById('interestSaved').textContent = '—';
                 document.getElementById('monthsSaved').textContent = '—';
+                note.textContent = 'vs. minimum-only payments';
                 return;
             }
             const monthsSaved = Math.max(0, minOnly.months - best.months);
             const saved = Math.max(0, minOnly.interest - best.totalInterest);
-            document.getElementById('interestSaved').textContent = `$${saved.toFixed(2)}`;
+            document.getElementById('interestSaved').textContent = fmtC(saved);
             document.getElementById('monthsSaved').textContent = Math.floor(monthsSaved);
+            note.textContent = monthsSaved >= 12
+                ? '≈ ' + (monthsSaved / 12).toLocaleString('en-US', { maximumFractionDigits: 1 }) + ' years of financial freedom'
+                : 'vs. minimum-only payments';
         }
 
         function calculateWhatIf() {
@@ -1698,10 +1721,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             if (debts.length === 0) return;
 
-            const testDebts = JSON.parse(JSON.stringify(debts));
-            const result = simulatePayoff(testDebts, extra, 'avalanche');
-
             const baseExtra = parseFloat(document.getElementById('extraPayment').value) || 0;
+            const testDebts = JSON.parse(JSON.stringify(debts));
+            const result = simulatePayoff(testDebts, baseExtra + extra, 'avalanche');
+
             const baseDebts = JSON.parse(JSON.stringify(debts));
             const baseResult = simulatePayoff(baseDebts, baseExtra, 'avalanche');
 
@@ -1736,7 +1759,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const best = av.totalInterest <= sn.totalInterest ? av : sn;
             const bestLabel = (best === av) ? 'Avalanche  (highest APR first)' : 'Snowball  (smallest balance first)';
             const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const monthLabel = (m) => { const d = new Date(); d.setMonth(d.getMonth() + m); return MO[d.getMonth()] + ' ' + d.getFullYear(); };
+            const monthLabel = (m) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m); return MO[d.getMonth()] + ' ' + d.getFullYear(); };
             const interestSaved = Math.max(0, minOnly.interest - best.totalInterest);
             const monthsSaved = Math.max(0, minOnly.months - best.months);
 
@@ -1745,7 +1768,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             doc.setTextColor(6,10,10); doc.setFont('helvetica','bold'); doc.setFontSize(22);
             doc.text('Debt Payoff Plan', M, 46);
             doc.setFont('helvetica','normal'); doc.setFontSize(10);
-            doc.text('Generated ' + new Date().toLocaleDateString(), M, 64);
+            doc.text('Generated ' + new Date().toLocaleDateString('en-US'), M, 64);
             y = 112;
 
             // Your debts
@@ -1786,7 +1809,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 y += 86;
             } else {
                 const gw = (W - M*2 - 24) / 3;
-                card('Debt-free in', best.months + ' months', M, gw);
+                card('Debt-free in', best.months + (best.months === 1 ? ' month' : ' months'), M, gw);
                 card('Payoff date', monthLabel(best.months), M + gw + 12, gw);
                 card('Total interest', fmtC(best.totalInterest), M + (gw+12)*2, gw);
                 y += 78;
@@ -1794,9 +1817,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 doc.text('Recommended strategy:  ' + bestLabel, M, y); y += 18;
                 doc.setTextColor.apply(doc, EM); doc.setFont('helvetica','bold');
                 if (minOnly.converged) {
-                    doc.text('You save ' + fmtC(interestSaved) + ' in interest and ' + monthsSaved + ' months vs paying only the minimums.', M, y);
+                    doc.text('You save ' + fmtC(interestSaved) + ' in interest and ' + monthsSaved + (monthsSaved === 1 ? ' month' : ' months') + ' vs paying only the minimums.', M, y);
                 } else {
-                    doc.text('Paying only the minimums would never clear this debt — your plan does, in ' + best.months + ' months.', M, y);
+                    doc.text('Paying only the minimums would never clear this debt — your plan does, in ' + best.months + (best.months === 1 ? ' month.' : ' months.'), M, y);
                 }
                 y += 30;
             }
@@ -1872,7 +1895,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         });
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

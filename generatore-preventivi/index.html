@@ -5,14 +5,14 @@
 :root{
   --el-bg:#eef1f4; --el-bg2:#ffffff; --el-bg3:#f5f7f9; --el-bg4:#e8ecf0;
   --el-border:#e3e7ec; --el-border2:#d6dce2;
-  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#9198a1;
+  --el-text1:#1b1e22; --el-text2:#5a616a; --el-text3:#656d76;
   --el-emerald:#10b981; --el-emerald-light:#0a8f63; --el-emerald-dark:#059669; --el-emerald-lighter:#10b981;
   color-scheme: light;
 }
 :root[data-theme="dark"]{
   --el-bg:#0a0b0d; --el-bg2:#101216; --el-bg3:#151820; --el-bg4:#1a1d22;
   --el-border:#24272e; --el-border2:#2e333b;
-  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#5c636b;
+  --el-text1:#eceef1; --el-text2:#9aa1a9; --el-text3:#7a838d;
   --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
   color-scheme: dark;
 }
@@ -532,10 +532,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             font-size: 14px;
         }
 
+        @media (hover: hover) { /* solo con un puntatore vero: niente riempimento verde "appiccicoso" dopo un tap */
         button:hover {
             background: var(--emeraldL);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
         }
 
         button:active {
@@ -596,6 +598,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             display: flex;
             flex-direction: column;
         }
+
+        .form-row > .form-group { min-width: 0; } /* le colonne possono stringersi: nessun campo esce dalla card */
 
         label {
             font-size: 13px;
@@ -850,7 +854,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             transition: all 0.3s ease;
         }
 
-        .template-btn.active {
+        .template-btn.active,
+        .template-btn.active:hover {
             background: var(--emerald);
             color: #08130e;
             border-color: var(--emerald);
@@ -1022,6 +1027,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         .items-table tbody tr:hover {
             background: #f9fafb;
+        }
+
+        .items-table td.text-right,
+        .totals-table td.value {
+            white-space: nowrap;
         }
 
         .text-right {
@@ -1408,6 +1418,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 margin: 0;
                 padding: 20px;
             }
+
+            /* la scala fit-to-width dell'anteprima vale solo a schermo */
+            #quotePreview {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            #quotePreview > .quote-preview {
+                transform: none !important;
+                width: auto !important;
+            }
         }
 
         @media (max-width: 1200px) {
@@ -1431,7 +1451,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 7000; /* sopra la barra superiore sticky (5000) e menu/drawer (6000) */
             left: 0;
             top: 0;
             width: 100%;
@@ -1452,6 +1472,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border: 1px solid var(--brd);
             max-width: 500px;
             width: 90%;
+            max-height: calc(100vh - 32px);
+            max-height: calc(100dvh - 32px);
+            overflow-y: auto;
+        }
+
+        /* Carica: titolo e Annulla restano fissi, scorre solo l'elenco */
+        #loadModal .modal-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #savedQuotesList {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
         }
 
         .modal h3 {
@@ -1591,7 +1626,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            z-index: 2000;
+            z-index: 7100; /* resta sopra le finestre di dialogo */
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.3s ease;
@@ -1679,6 +1714,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .pill.accepted { background: rgba(16,185,129,.16); color: var(--emeraldL); }
         .pill.pending { background: rgba(245,158,11,.16); color: #fbbf24; }
         .pill.rejected { background: rgba(239,68,68,.16); color: #f87171; }
+        /* light theme: darker pill and error text so they stay readable on white (WCAG AA) */
+        :root[data-theme="light"] .pill.draft { color: #4b5563; }
+        :root[data-theme="light"] .pill.sent { color: #1d4ed8; }
+        :root[data-theme="light"] .pill.accepted { color: #047857; }
+        :root[data-theme="light"] .pill.pending { color: #92400e; }
+        :root[data-theme="light"] .pill.rejected { color: #b91c1c; }
+        :root[data-theme="light"] .field-hint.error { color: #b91c1c; }
         .status-select { background: var(--bg); color: var(--t1); border: 1px solid var(--brd); border-radius: 6px; padding: 5px 8px; font-size: 12px; }
         .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .row-actions button { padding: 6px 10px; font-size: 12px; }
@@ -1699,7 +1741,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         .tpl-card.active { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,.15); }
         .tpl-swatch { height: 74px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: flex-end; padding: 8px; }
         .tpl-card b { color: var(--t1); font-size: 14px; }
-        .tpl-card small { display: block; color: var(--t3); font-size: 11.5px; margin-top: 2px; }
+        .tpl-card small { display: block; color: var(--t2); font-size: 11.5px; margin-top: 2px; }
         .brand-colors { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 6px; }
         .brand-colors .bc { display: flex; align-items: center; gap: 10px; }
         .brand-colors input[type=color] { width: 46px; height: 34px; border: 1px solid var(--brd); border-radius: 8px; background: none; cursor: pointer; }
@@ -1717,7 +1759,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         /* ---- mobile hardening (tap-highlight · 100dvh · safe-area) ---- */
         html, body { -webkit-tap-highlight-color: transparent; }
-        .container { height: 100dvh; }
+        @media (min-width: 1201px) { .container { height: 100dvh; } } /* up to 1200px (phones included): one column that scrolls with the page (see max-width:1200px) */
         .app-shell { min-height: 100vh; min-height: 100dvh; }
         .qg-sidebar { padding-top: max(18px, env(safe-area-inset-top)); }
         @supports (padding: max(0px)) {
@@ -1774,6 +1816,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         #el-theme-toggle { display:none !important; }
         .qg-side-foot { display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
         .theme-switch { display:inline-flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer; padding:4px; color:var(--t2); font-size:12px; touch-action:manipulation; }
+        .theme-switch:hover { background:none; box-shadow:none; transform:none; color:var(--t1); } /* niente sfondo verde del button:hover generico */
         .theme-switch .ts-track { width:42px; height:24px; border-radius:999px; background:#4b5563; position:relative; transition:background .2s; flex:0 0 auto; }
         .theme-switch .ts-knob { position:absolute; top:2.5px; left:2.5px; width:19px; height:19px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; font-size:10px; }
         .theme-switch.light .ts-track { background:var(--emerald); }
@@ -1832,9 +1875,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     grid-template-areas:"desc desc" "qty unit" "price discount" "total total" !important;
     padding-right:44px !important;
   }
+  /* hamburger: niente riempimento verde dopo un tap; stato premuto/aperto discreto */
+  .qg-hamburger:hover{ background:transparent; transform:none; box-shadow:none; }
+  .qg-hamburger:active, .qg-sidebar.open .qg-hamburger{ background:var(--bg3); border-color:var(--emerald); }
 }
+@media (max-width:760px) and (hover:hover){ .qg-hamburger:hover{ border-color:var(--emerald); } }
 @keyframes qgDrawerIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 @keyframes qgFade{from{opacity:0}to{opacity:1}}
+
+/* ===== Stampa («🖨️ Stampa PDF»): solo il preventivo su A4, mai sidebar, editor o finestre ===== */
+@page{ size:A4; margin:12mm; }
+@media print{
+  html, body{ background:#fff !important; }
+  .qg-sidebar, header, .editor-section, .el-brand, .toast, .modal, #logoCropOverlay{ display:none !important; }
+  .qg-view{ display:none !important; }
+  #view-editor{ display:block !important; }   /* stampa il preventivo anche se è aperta un'altra vista */
+  .app-shell, .qg-main, .container, .preview-section{
+    display:block !important; width:auto !important; height:auto !important; min-height:0 !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; border:0 !important; border-radius:0 !important; box-shadow:none !important;
+  }
+  #quotePreview > .quote-preview{ margin:0 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; } /* colori del template anche senza "grafica di sfondo" */
+  .items-table tr, .totals-table, .notes-section{ break-inside:avoid; }
+  .section-title{ break-after:avoid; }
+}
 </style>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
 <style>
@@ -2023,14 +2086,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             <option value="30 giorni">30 giorni</option>
                             <option value="60 giorni">60 giorni</option>
                             <option value="30/60 giorni">30/60 giorni</option>
-                            <option value="Custom">Custom</option>
+                            <option value="Custom">Personalizzato</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row full">
                     <div class="form-group">
                         <label>Condizioni Pagamento Personalizzate</label>
-                        <input type="text" id="paymentCustom" placeholder="Descrivi i termini personalizzati (se selezionato Custom)">
+                        <input type="text" id="paymentCustom" placeholder="Descrivi i termini personalizzati (se selezionato Personalizzato)">
                     </div>
                 </div>
             </section>
@@ -2238,7 +2301,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               <input type="hidden" id="productEditId" value="">
               <div class="form-inline">
                 <div class="form-group" style="grid-column:1/-1"><label>Descrizione *</label><input type="text" id="pfDesc" placeholder="es. Sviluppo sito web"></div>
-                <div class="form-group"><label>Prezzo predefinito</label><input type="number" id="pfRate" placeholder="0.00" min="0" step="0.01"></div>
+                <div class="form-group"><label>Prezzo predefinito</label><input type="number" id="pfRate" placeholder="0,00" min="0" step="0.01"></div>
                 <div class="form-group"><label>Qtà predefinita</label><input type="number" id="pfQty" placeholder="1" min="0" step="0.01" value="1"></div>
               </div>
               <div style="display:flex;gap:8px;margin-top:12px">
@@ -2273,10 +2336,6 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <div class="panel">
               <h3>Default per nuovi preventivi</h3>
               <div class="form-inline">
-                <div class="form-group"><label>Valuta</label>
-                  <select id="setCurrency" onchange="app.saveSettings()">
-                    <option value="€">€ Euro</option><option value="$">$ Dollaro</option><option value="£">£ Sterlina</option><option value="CHF">CHF</option>
-                  </select></div>
                 <div class="form-group"><label>IVA predefinita %</label><input type="number" id="setIva" min="0" step="0.5" onchange="app.saveSettings()"></div>
                 <div class="form-group"><label>Termini di pagamento predefiniti</label><input type="text" id="setPayment" placeholder="es. 30 giorni" onchange="app.saveSettings()"></div>
               </div>
@@ -2616,12 +2675,24 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 });
             },
 
+            // 'AAAA-MM-GG' -> data locale (new Date('AAAA-MM-GG') è mezzanotte UTC: giorno prima a ovest di Greenwich)
+            fmtDate(s) {
+                if (!s) return '';
+                const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+                const d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(s);
+                return isNaN(d) ? '' : d.toLocaleDateString('it-IT');
+            },
+
+            localISO(d) {
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            },
+
             setDefaultDates() {
                 const today = new Date();
-                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+                const validity = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
 
-                document.getElementById('quoteDate').valueAsDate = today;
-                document.getElementById('validityDate').valueAsDate = validity;
+                document.getElementById('quoteDate').value = this.localISO(today);
+                document.getElementById('validityDate').value = this.localISO(validity);
                 document.getElementById('quoteNumber').value = `PV${today.getFullYear()}-${this.data.quoteNumberCounter}`;
             },
 
@@ -2724,6 +2795,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     .replace(/>/g, '&gt;');
             },
 
+            // imposta la select IVA, aggiungendo l'aliquota se non è in elenco (es. default personalizzato dalle Impostazioni)
+            setIvaRate(v) {
+                const sel = document.getElementById('ivaRate');
+                const n = parseFloat(v);
+                if (!sel || !isFinite(n)) return;
+                let o = [...sel.options].find(o => parseFloat(o.value) === n);
+                if (!o) { o = document.createElement('option'); o.value = String(n); o.textContent = String(n).replace('.', ',') + '%'; sel.appendChild(o); }
+                sel.value = o.value;
+            },
+
+            ratePct(id, def) {
+                const el = document.getElementById(id);
+                const n = el ? parseFloat(el.value) : NaN;
+                return isFinite(n) ? n : def;
+            },
+
             calculateLineTotal(item) {
                 const gross = item.quantity * item.unitPrice;
                 const discountAmount = gross * (item.discount / 100);
@@ -2741,7 +2828,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 // Rivalsa INPS/cassa: si calcola per prima ed è imponibile IVA e ritenuta (Gestione Separata)
                 const inpsCharge = document.getElementById('inpsCharge').checked;
-                const inpsRatePct = parseFloat(document.getElementById('inpsRate').value) || 4;
+                const inpsRatePct = this.ratePct('inpsRate', 4);   // 0 è un'aliquota valida: default solo se il campo è vuoto
                 const inpsAmount = inpsCharge ? afterDiscount * (inpsRatePct / 100) : 0;
 
                 const baseImponibile = afterDiscount + inpsAmount;   // imponibile IVA e ritenuta
@@ -2750,7 +2837,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const ivaAmount = baseImponibile * ivaRate;
 
                 const withholdingTax = document.getElementById('withholdingTax').checked;
-                const withholdingRatePct = parseFloat(document.getElementById('withholdingRate').value) || 20;
+                const withholdingRatePct = this.ratePct('withholdingRate', 20);
                 const withholdingAmount = withholdingTax ? baseImponibile * (withholdingRatePct / 100) : 0;
 
                 let total = afterDiscount + inpsAmount + ivaAmount - withholdingAmount;
@@ -2762,7 +2849,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
                 document.getElementById('subtotal').textContent = subtotal.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
                 document.getElementById('afterDiscount').textContent = afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('taxable').textContent = afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('taxable').textContent = baseImponibile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
                 document.getElementById('ivaAmount').textContent = ivaAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
                 document.getElementById('inpsAmount').textContent = inpsAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
                 document.getElementById('withholdingAmount').textContent = withholdingAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
@@ -2845,11 +2932,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Data Preventivo</span>
-                                <span class="meta-value">${quoteDate ? new Date(quoteDate).toLocaleDateString('it-IT') : ''}</span>
+                                <span class="meta-value">${this.fmtDate(quoteDate)}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Data Validità</span>
-                                <span class="meta-value">${validityDate ? new Date(validityDate).toLocaleDateString('it-IT') : ''}</span>
+                                <span class="meta-value">${this.fmtDate(validityDate)}</span>
                             </div>
                             <div class="meta-item">
                                 <span class="meta-label">Termini Pagamento</span>
@@ -3024,14 +3111,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 }
                 // 1. Salva in memoria del browser (così si può riaprire con "Carica")
                 this.saveQuoteToStorage(name);
-                // 2. Auto-incrementa il numero preventivo per il prossimo
-                this.data.quoteNumberCounter++;
-                localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
-                document.getElementById('quoteNumber').value = `PV${new Date().getFullYear()}-${this.data.quoteNumberCounter}`;
-                // 3. Genera e scarica il PDF con l'anteprima
+                // 2. Genera e scarica il PDF (prima di cambiare numero, così coincide con il preventivo salvato)
                 this.closeModal();
                 this.toast('Generazione PDF in corso...');
                 this.downloadQuotePDF(name);
+                // 3. Auto-incrementa il numero preventivo per il prossimo
+                this.data.quoteNumberCounter++;
+                localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
+                document.getElementById('quoteNumber').value = `PV${new Date().getFullYear()}-${this.data.quoteNumberCounter}`;
+                this.renderPreview();
             },
 
 buildQuotePdf(name, safe) {
@@ -3048,7 +3136,7 @@ buildQuotePdf(name, safe) {
                     else t = t.replace(/,/g, '');
                     return parseFloat(t) || 0;
                 };
-                const dt = s => { if (!s) return ''; try { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleDateString('en-GB'); } catch (e) { return s || ''; } };
+                const dt = s => this.fmtDate(s);
                 const doc = new Ctor({ unit:'mm', format:'a4' });
                 const M = 15, W = 210, H = 297, cw = W - 2*M;
                 const accent = (app.data.accent ? hexToRgb(app.data.accent) : [5,150,105]), ink = [26,26,26], muted = [95,95,95], line = [214,214,214], head = [238,245,242];
@@ -3069,7 +3157,7 @@ buildQuotePdf(name, safe) {
                 }
                 F('bold', 16, ink); doc.text(v('companyName') || QL.yourCompany, headX, y + 6);
                 let hy = y + 11; F('normal', 9, muted);
-                [v('ownerName'), v('companyAddress'), v('companyVat') ? 'VAT: ' + v('companyVat') : '', v('companyEmail'), v('companyPhone')]
+                [v('ownerName'), v('companyAddress'), v('companyVat') ? 'P.IVA: ' + v('companyVat') : '', v('companyEmail'), v('companyPhone')]
                     .filter(Boolean).forEach(li => { doc.text(String(li), headX, hy); hy += 4.5; });
                 y = Math.max(hy, y + (logo ? 24 : 0)) + 6;
                 // title
@@ -3189,7 +3277,7 @@ buildQuotePdf(name, safe) {
                                 <span style="font-size:11px; padding:2px 9px; border-radius:999px; color:#fff; background:${sm.bg};">${sm.label}</span>
                             </div>
                             <div style="color: var(--t2); font-size: 12px; margin-bottom: 8px;">
-                                ${new Date(quote.date).toLocaleDateString('it-IT')}
+                                ${this.fmtDate(quote.date)}
                             </div>
                             <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
                                 <label style="font-size:11px; color:var(--t2);">Stato:</label>
@@ -3237,7 +3325,7 @@ buildQuotePdf(name, safe) {
                 document.getElementById('iban').value = data.iban;
                 document.getElementById('discountGlobal').value = data.discountGlobal;
                 document.getElementById('discountType').value = data.discountType;
-                document.getElementById('ivaRate').value = data.ivaRate;
+                this.setIvaRate(data.ivaRate);
                 document.getElementById('inpsCharge').checked = data.inpsCharge;
                 document.getElementById('inpsRate').value = data.inpsRate || '4';
                 document.getElementById('withholdingTax').checked = data.withholdingTax;
@@ -3277,7 +3365,8 @@ buildQuotePdf(name, safe) {
                 if (!quotes[name]) return;
                 quotes[name].status = status;
                 localStorage.setItem('quotes', JSON.stringify(quotes));
-                this.loadQuoteModal();
+                const lm = document.getElementById('loadModal');
+                if (lm && lm.classList.contains('active')) this.loadQuoteModal(); // refresh the open Load dialog only; the 📄 Quotes list re-renders itself
             },
 
             // ---- Converti in fattura (JSON importabile dal Generatore Fatture) ----
@@ -3341,9 +3430,9 @@ buildQuotePdf(name, safe) {
                 localStorage.setItem('quoteCounter', this.data.quoteNumberCounter);
 
                 const today = new Date();
-                const validity = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-                document.getElementById('quoteDate').valueAsDate = today;
-                document.getElementById('validityDate').valueAsDate = validity;
+                const validity = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+                document.getElementById('quoteDate').value = this.localISO(today);
+                document.getElementById('validityDate').value = this.localISO(validity);
 
                 this.calculateTotals();
                 this.renderPreview();
@@ -3458,7 +3547,7 @@ buildQuotePdf(name, safe) {
                         document.getElementById('iban').value = data.iban || '';
                         document.getElementById('discountGlobal').value = data.discountGlobal || '';
                         document.getElementById('discountType').value = data.discountType || '';
-                        document.getElementById('ivaRate').value = data.ivaRate || '22';
+                        this.setIvaRate(data.ivaRate || '22');
                         document.getElementById('inpsCharge').checked = data.inpsCharge || false;
                         document.getElementById('inpsRate').value = data.inpsRate || '4';
                         document.getElementById('withholdingTax').checked = data.withholdingTax || false;
@@ -3494,7 +3583,7 @@ buildQuotePdf(name, safe) {
                     document.getElementById('notes').value = data.notes || '';
                     document.getElementById('discountGlobal').value = data.discountGlobal || '';
                     document.getElementById('discountType').value = data.discountType || 'percentage';
-                    document.getElementById('ivaRate').value = data.ivaRate || '22';
+                    this.setIvaRate(data.ivaRate || '22');
                     if (data.inpsRate) document.getElementById('inpsRate').value = data.inpsRate;
                     if (typeof data.inpsCharge === 'boolean') document.getElementById('inpsCharge').checked = data.inpsCharge;
                     if (typeof data.withholdingTax === 'boolean') document.getElementById('withholdingTax').checked = data.withholdingTax;
@@ -3507,12 +3596,14 @@ buildQuotePdf(name, safe) {
             }
         };
 
+        window.app = app; // const non crea window.app: il boot della dashboard e il sync dello switch tema cercano window.app
         document.addEventListener('DOMContentLoaded', () => app.init());
 
         // Auto-save: split company data (persistent profile) and quote data
         let _autoSaveBaseline = null;
         setInterval(() => {
             try {
+                if (app._resetting) return;
                 app.saveCompanyData();
                 const formData = {
                     clientName: document.getElementById('clientName').value,
@@ -3584,7 +3675,7 @@ buildQuotePdf(name, safe) {
         getQuotes(){ return getJSON('quotes', {}) || {}; },
         quoteValue(q){
           const d=(q&&q.data)||{}; const items=d.lineItems||[];
-          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice), 0);
+          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice)*(1-num(it.discount)/100), 0);   // same as calculateLineTotal (line discount included)
           const disc=num(d.discountGlobal);
           sub -= (d.discountType==='percentage') ? sub*disc/100 : disc;
           return Math.max(0, sub);
@@ -3632,7 +3723,7 @@ buildQuotePdf(name, safe) {
               return `<tr>
                 <td><b>${esc(q.name)}</b></td>
                 <td>${esc((q.data&&q.data.clientName)||'—')}</td>
-                <td>${q.date?new Date(q.date).toLocaleDateString('it-IT'):'—'}</td>
+                <td>${q.date?this.fmtDate(q.date):'—'}</td>
                 <td>${this.money(this.quoteValue(q))}</td>
                 <td><select class="status-select" onchange="app.setQuoteStatus('${ek}',this.value);app.renderQuotesList()">${opt(st,'draft','Bozza')}${opt(st,'sent','Inviato')}${opt(st,'accepted','Accettato')}</select></td>
                 <td class="row-actions">
@@ -3818,8 +3909,12 @@ buildQuotePdf(name, safe) {
         applySettingsToNew(){
           const s=getJSON(LS.settings, {});
           if(s.currency){ const e=document.getElementById('currency'); if(e)e.value=s.currency; }
-          if(s.iva){ const e=document.getElementById('ivaRate'); if(e)e.value=s.iva; }
-          if(s.payment){ const e=document.getElementById('paymentCustom'); if(e)e.value=s.payment; }
+          if(s.iva){ this.setIvaRate(s.iva); }
+          if(s.payment){   // seleziona l'opzione corrispondente, altrimenti termini personalizzati (paymentCustom si stampa solo con 'Custom')
+            const pt=document.getElementById('paymentTerms'), pc=document.getElementById('paymentCustom');
+            const o=pt?[...pt.options].find(o=>o.value.toLowerCase()===String(s.payment).trim().toLowerCase()):null;
+            if(o){ pt.value=o.value; } else { if(pt)pt.value='Custom'; if(pc)pc.value=s.payment; }
+          }
         },
 
         resetQuoteFields(){
@@ -3845,11 +3940,13 @@ buildQuotePdf(name, safe) {
         },
         resetAll(){
           if(!confirm('Reset COMPLETO: profilo azienda, clienti, prodotti, preventivi salvati e preventivo corrente. Non è reversibile. Procedere?')) return;
+          this._resetting=true;   // evita che autosave / beforeunload riscrivano i dati appena cancellati
           ['formData','companyData','quotes','quoteCounter', LS.clients, LS.products, LS.settings, LS.style].forEach(k=>localStorage.removeItem(k));
           location.reload();
         },
 
         _saveFormNow(){
+          if(this._resetting) return;
           try{
             const g=id=>{ const e=document.getElementById(id); return e?e.value:''; };
             const c=id=>{ const e=document.getElementById(id); return e?e.checked:false; };
@@ -3931,7 +4028,9 @@ if(document.readyState!=='loading')_wireLogoCrop();else document.addEventListene
 </script>
 <script>
 /* Anteprima fit-to-width: scalo il documento INTERNO e clippo il contenitore alla
-   larghezza schermo → niente scroll orizzontale su mobile. Desktop invariato (non scala). */
+   larghezza della colonna → niente scroll orizzontale né tabella che esce dalla pagina,
+   a ogni larghezza (mobile e desktop a 2 colonne). Se il contenuto entra non scala.
+   Stampa invariata (vedi @media print); il PDF è vettoriale e non usa l'anteprima. */
 (function(){
   var busy=false;
   function fit(){
@@ -3942,26 +4041,37 @@ if(document.readyState!=='loading')_wireLogoCrop();else document.addEventListene
     var inner=outer.firstElementChild; if(!inner) return;
     busy=true;
     inner.style.transform=''; inner.style.width=''; inner.style.transformOrigin='top left';
-    outer.style.height=''; outer.style.overflow='';
-    if(window.innerWidth>1024){ busy=false; return; }  // desktop: lascio tutto invariato
-    var avail=sec.clientWidth;
-    if(avail){
+    outer.style.height=''; outer.style.overflow=''; outer.style.flexShrink='';
+    var cs=getComputedStyle(inner);
+    var mx=(parseFloat(cs.marginLeft)||0)+(parseFloat(cs.marginRight)||0);
+    var my=(parseFloat(cs.marginTop)||0)+(parseFloat(cs.marginBottom)||0);
+    var avail=sec.clientWidth-mx;      // spazio per la pagina, margini esclusi
+    if(avail>0){
       var natural=inner.scrollWidth;   // larghezza reale del contenuto in layout fluido
-      if(natural>avail+1 && natural>0){ // scala SOLO se il contenuto sfora davvero (mobile), non su desktop
-        var k=avail/natural;
+      if(natural>avail+1){             // scala SOLO se il contenuto sfora davvero
+        inner.style.width='min-content'; // larghezza minima senza sforare, padding destro compreso
+        natural=Math.max(Math.ceil(inner.getBoundingClientRect().width), avail);
         inner.style.width=natural+'px';
+        var k=avail/natural;
         var hh=inner.scrollHeight;
         inner.style.transform='scale('+k+')';
         outer.style.overflow='hidden';
-        outer.style.height=(hh*k)+'px';
+        outer.style.flexShrink='0';    // è un flex item: senza questo si restringe e taglia la pagina
+        outer.style.height=(hh*k+my)+'px';
       }
     }
     busy=false;
   }
   var tmr=null; function schedule(){ if(tmr) clearTimeout(tmr); tmr=setTimeout(fit,120); }
   var target=document.getElementById('quotePreview');
-  if(target) new MutationObserver(schedule).observe(target,{childList:true,subtree:true,characterData:true});
+  // subito dopo ogni render, prima del paint: l'anteprima non "salta" mentre si digita
+  if(target) new MutationObserver(fit).observe(target,{childList:true,subtree:true,characterData:true});
   window.addEventListener('resize', schedule);
+  // la colonna può cambiare larghezza senza resize (es. si torna alla vista Editor)
+  var sec=document.querySelector('.preview-section'), lastW=-1;
+  if(sec && window.ResizeObserver) new ResizeObserver(function(){
+    var w=sec.clientWidth; if(Math.abs(w-lastW)>20){ lastW=w; if(w>0) requestAnimationFrame(fit); }
+  }).observe(sec);
   if(document.readyState!=='loading') schedule(); else document.addEventListener('DOMContentLoaded', schedule);
 })();
 </script>
@@ -3975,7 +4085,7 @@ if(document.readyState!=='loading')_wireLogoCrop();else document.addEventListene
   document.addEventListener('click', function(e){
     if(!sb || !sb.classList.contains('open')) return;
     var t=e.target;
-    if(t.closest && (t.closest('#qgNav') || t.closest('.qg-side-foot') || t.closest('.qg-hamburger'))) return;
+    if(t.closest && (t.closest('#qgNav') || t.closest('.qg-side-foot') || t.closest('.qg-hamburger') || t.closest('#el-theme-toggle'))) return; // anche il click interno dello switch tema
     close();  // tap sul backdrop o fuori dal drawer
   });
   window.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });

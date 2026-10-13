@@ -16,26 +16,18 @@
   --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
   color-scheme: dark;
 }
-#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+/* absolute, not fixed: the toggle stays in the top-right corner of the page and never floats over content while scrolling */
+#el-theme-toggle{position:absolute;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Net Salary Calculator Pro — International</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -92,6 +84,7 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--emerald) 0%, var(--emeraldL) 100%);
             color: var(--bg);
+            -webkit-text-fill-color: currentColor; /* the h1 text is transparent: without this "Pro" was invisible */
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -323,6 +316,8 @@ button:hover {
             font-family: 'Courier New', monospace;
         }
 
+        .result-value.result-hl { font-size: 2rem; }
+
         .result-unit {
             color: var(--t3);
             font-size: 0.75rem;
@@ -521,9 +516,18 @@ button:hover {
 
         @media (max-width: 768px) {
             h1 { font-size: 1.8rem; }
+            header { padding-left: 3.75rem; padding-right: 3.75rem; } /* title clear of the theme toggle in the top-right corner */
             .grid { grid-template-columns: 1fr; }
             .results-grid { grid-template-columns: repeat(2, 1fr); }
             .donut-wrapper { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            /* two summary boxes per row must fit a phone: tighter gap and padding, smaller amounts */
+            .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+            .result-box { padding: 0.75rem 0.5rem; }
+            .result-value { font-size: 1.25rem; overflow-wrap: anywhere; }
+            .result-value.result-hl { font-size: 1.4rem; }
         }
 
         @media print {
@@ -550,6 +554,25 @@ button:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -610,7 +633,7 @@ button:hover {
                 </select>
             </div>
             <div class="message info" id="presetInfo">
-                Preset applies typical deduction rates. You can still adjust each slider manually — the preset will switch to "Custom" automatically.
+                Presets fill in rough, typical flat rates for a quick estimate. They are not official tax tables. You can still adjust each slider manually — the preset will switch to "Custom" automatically.
             </div>
         </div>
 
@@ -638,8 +661,8 @@ button:hover {
                 <div class="form-group">
                     <label for="socialSec">Social Security / Pension</label>
                     <div class="slider-row">
-                        <input type="range" id="socialSec" min="0" max="30" step="0.1" value="6.2">
-                        <span class="slider-value" id="socialSecVal">6.2%</span>
+                        <input type="range" id="socialSec" min="0" max="30" step="0.05" value="7.65">
+                        <span class="slider-value" id="socialSecVal">7.65%</span>
                     </div>
                 </div>
 
@@ -665,7 +688,8 @@ button:hover {
 
     <!-- ====== RESULTS ====== -->
     <div class="chart-container" id="resultsPanel">
-        <h2 style="color: var(--emeraldL); margin-bottom: 1.5rem;">📋 Salary Breakdown</h2>
+        <h2 style="color: var(--emeraldL); margin-bottom: 0.5rem;">📋 Estimated Salary Breakdown</h2>
+        <p style="color: var(--t2); font-size: 0.9rem;">Estimate only: each rate above is applied as a flat percentage of gross pay. Real taxes use brackets, deductions and caps, so your actual take-home pay will differ.</p>
 
         <!-- Net summary boxes -->
         <div class="results-grid" id="summaryBoxes"></div>
@@ -676,13 +700,13 @@ button:hover {
 
     <!-- Donut chart + effective rate -->
     <div class="chart-container">
-        <h3 class="chart-title">Salary Composition</h3>
+        <h3 class="chart-title">Estimated Salary Composition</h3>
         <div class="donut-wrapper">
             <div class="donut-canvas-wrap">
                 <canvas id="donutChart" width="280" height="280"></canvas>
                 <div class="donut-center-label">
                     <span class="big" id="donutNet">—</span>
-                    <span class="small">Net / Year</span>
+                    <span class="small">Est. Net / Year</span>
                 </div>
             </div>
             <ul class="legend-list" id="donutLegend"></ul>
@@ -698,7 +722,7 @@ button:hover {
         <h3 class="chart-title">Export Results</h3>
         <div class="export-text" id="exportText"></div>
         <div class="btn-group">
-            <button onclick="copyText()">📋 Copy Text</button>
+            <button onclick="copyText(this)">📋 Copy Text</button>
             <button class="btn-secondary" onclick="exportPDF()">📄 Export PDF</button>
         </div>
     </div>
@@ -717,13 +741,13 @@ button:hover {
    ==================================================================== */
 
 const PRESETS = {
-    us:  { fedTax: 22,  stateTax: 5,  socialSec: 6.2, health: 2.5, otherDed: 0, currency: 'USD' },
+    us:  { fedTax: 22,  stateTax: 5,  socialSec: 7.65, health: 2.5, otherDed: 0, currency: 'USD' }, // FICA = Social Security 6.2% + Medicare 1.45%
     uk:  { fedTax: 20,  stateTax: 0,  socialSec: 12,  health: 0,   otherDed: 5, currency: 'GBP' },
     eu:  { fedTax: 25,  stateTax: 3,  socialSec: 10,  health: 3,   otherDed: 0, currency: 'EUR' },
 };
 
 const PRESET_LABELS = {
-    us: { fedTax:'Federal Income Tax', stateTax:'State Tax', socialSec:'Social Security (FICA)', health:'Health Insurance', otherDed:'Other Deductions' },
+    us: { fedTax:'Federal Income Tax', stateTax:'State Tax', socialSec:'Social Security + Medicare (FICA)', health:'Health Insurance', otherDed:'Other Deductions' },
     uk: { fedTax:'Income Tax', stateTax:'Regional Tax', socialSec:'National Insurance (NI)', health:'Health Insurance', otherDed:'Pension Contribution' },
     eu: { fedTax:'Income Tax', stateTax:'Regional Tax', socialSec:'Social Contributions', health:'Health Insurance', otherDed:'Other Deductions' },
     custom: { fedTax:'Federal / Income Tax', stateTax:'State / Regional Tax', socialSec:'Social Security / Pension', health:'Health Insurance', otherDed:'Other Deductions' },
@@ -737,10 +761,12 @@ let donutBound = false;
 /* ---------- helpers ---------- */
 function fmt(n, cur) {
     const sym = CURRENCY_MAP[cur] || '$';
-    return sym + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    // sign before the symbol (-$1,200, not $-1,200); a rounded -0 shows as $0
+    const neg = Math.round(n) < 0;
+    return (neg ? '-' : '') + sym + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
-function pct(n) { return n.toFixed(1) + '%'; }
+function pct(n) { const s = n.toFixed(2); return (s.slice(-1) === '0' ? n.toFixed(1) : s) + '%'; } // 7.65% stays 7.65%, 6.2 stays 6.2%
 
 function divisor(freq) {
     if (freq === 'biweekly') return 26;
@@ -769,7 +795,7 @@ const el = {
 /* ---------- sync gross slider / input ---------- */
 function syncGross(source) {
     if (source === 'slider') el.grossSalary.value = el.grossSlider.value;
-    else el.grossSlider.value = el.grossSalary.value;
+    else el.grossSlider.value = el.grossSalary.value || 0; // empty field: don't jump to the slider midpoint
     el.grossDisplay.textContent = fmt(+el.grossSalary.value, el.currency.value);
     calculate();
 }
@@ -785,6 +811,7 @@ SLIDER_IDS.forEach(id => {
     $(id).addEventListener('input', () => {
         $(id + 'Val').textContent = pct(+$(id).value);
         el.preset.value = 'custom';
+        updateSliderLabels('custom'); // keep slider labels in sync with the breakdown table
         calculate();
     });
 });
@@ -792,7 +819,7 @@ SLIDER_IDS.forEach(id => {
 /* ---------- presets ---------- */
 el.preset.addEventListener('change', () => {
     const key = el.preset.value;
-    if (key === 'custom') { calculate(); return; }
+    if (key === 'custom') { updateSliderLabels('custom'); calculate(); return; }
     const p = PRESETS[key];
     SLIDER_IDS.forEach(id => { $(id).value = p[id]; $(id + 'Val').textContent = pct(p[id]); });
     el.currency.value = p.currency;
@@ -835,7 +862,7 @@ function calculate() {
     renderSummary(gross, net, totalDed, cur, freq, div);
     renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur);
     renderDonut(net, amounts, labels, cur);
-    el.effectiveRate.textContent = effRate.toFixed(1) + '%';
+    el.effectiveRate.textContent = pct(effRate);
     renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, div, effRate);
     nsSave();
 }
@@ -856,7 +883,7 @@ function nsLoad() {
         if (!s) return false;
         const d = JSON.parse(s);
         if (!d) return false;
-        if (d.gross != null) { el.grossSalary.value = d.gross; el.grossSlider.value = d.gross; }
+        if (d.gross != null) { el.grossSalary.value = d.gross; el.grossSlider.value = d.gross || 0; }
         if (d.payFreq != null) el.payFreq.value = d.payFreq;
         if (d.currency != null) el.currency.value = d.currency;
         SLIDER_IDS.forEach(function (id) {
@@ -887,7 +914,7 @@ function renderSummary(gross, net, ded, cur, freq, div) {
 
     el.summaryBoxes.innerHTML = boxes.map(b =>
         '<div class="result-box"><div class="result-label">' + b.label + '</div>' +
-        '<div class="result-value" style="' + (b.highlight ? 'color:#4ade80;font-size:2rem;' : '') + '">' + b.value + '</div></div>'
+        '<div class="result-value' + (b.highlight ? ' result-hl' : '') + '" style="' + (b.highlight ? 'color:#4ade80;' : '') + '">' + b.value + '</div></div>'
     ).join('');
 }
 
@@ -950,8 +977,8 @@ function bindDonutHover(canvas) {
         let ang = Math.atan2(y, x); if (ang < -Math.PI / 2) ang += Math.PI * 2;
         const seg = donutState.segs.find(s => ang >= s.a0 && ang < s.a1);
         if (!seg) { tip.style.display = 'none'; return; }
-        const pctv = (seg.value / donutState.total * 100).toFixed(1);
-        tip.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:' + seg.color + ';margin-right:6px;"></span>' + seg.label + ': ' + fmt(seg.value, donutState.cur) + ' (' + pctv + '%)';
+        const pctv = pct(seg.value / donutState.total * 100);
+        tip.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:' + seg.color + ';margin-right:6px;"></span>' + seg.label + ': ' + fmt(seg.value, donutState.cur) + ' (' + pctv + ')';
         tip.style.display = 'block';
         tip.style.left = (e.clientX + 12) + 'px'; tip.style.top = (e.clientY + 12) + 'px';
     });
@@ -991,7 +1018,7 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
     const fl = freqLabel(freq);
     const now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
     let txt = '═══════════════════════════════════════\n';
-    txt += '  NET SALARY CALCULATOR PRO\n';
+    txt += '  NET SALARY CALCULATOR PRO — ESTIMATE\n';
     txt += '  Generated: ' + now + '\n';
     txt += '═══════════════════════════════════════\n\n';
     txt += '  Gross Annual Salary:  ' + fmt(gross, cur) + '\n';
@@ -1001,7 +1028,7 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
     txt += '  ─────────────────────────────────────\n';
     SLIDER_IDS.forEach(id => {
         if (rates[id] > 0) {
-            txt += '  ' + (labels[id] + ' (' + pct(rates[id]) + ')').padEnd(34) + '- ' + fmt(Math.round(amounts[id]), cur) + '\n';
+            txt += '  ' + (labels[id] + ' (' + pct(rates[id]) + ') ').padEnd(34) + '- ' + fmt(Math.round(amounts[id]), cur) + '\n'; // trailing space: a long label ("... (FICA) (7.65%)") no longer touches "- $4,590"
         }
     });
     txt += '  ─────────────────────────────────────\n';
@@ -1012,16 +1039,20 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
     txt += '  Monthly:'.padEnd(36) + fmt(Math.round(net / 12), cur) + '\n';
     txt += '  Biweekly:'.padEnd(36) + fmt(Math.round(net / 26), cur) + '\n';
     txt += '  Weekly:'.padEnd(36) + fmt(Math.round(net / 52), cur) + '\n\n';
-    txt += '  Effective Deduction Rate: ' + effRate.toFixed(1) + '%\n';
+    txt += '  Effective Deduction Rate: ' + pct(effRate) + '\n';
     txt += '═══════════════════════════════════════\n';
-    txt += '  Disclaimer: Estimates only.\n';
+    txt += '  ESTIMATE ONLY: rates are applied as flat\n';
+    txt += '  percentages of gross pay, not official\n';
+    txt += '  tax brackets or tables. Actual take-home\n';
+    txt += '  pay will differ. Consult a tax\n';
+    txt += '  professional for precise figures.\n';
 
     el.exportText.textContent = txt;
 }
 
 /* ---------- copy / PDF ---------- */
-function copyText() {
-    const btn = event.currentTarget;
+function copyText(btn) {
+    btn = btn || (window.event && window.event.currentTarget);
     const txt = el.exportText.textContent;
     const ok = () => {
         btn.textContent = '✅ Copied!';
@@ -1043,8 +1074,9 @@ function copyText() {
 
 function exportPDF() {
     const win = window.open('', '_blank');
+    if (!win) { alert('Pop-up blocked: allow pop-ups for this page, then try Export PDF again.'); return; }
     const css = 'body{font-family:Courier New,monospace;white-space:pre-wrap;padding:2rem;font-size:13px;color:#111;}';
-    win.document.write('<html><head><title>Salary Report</title><style>' + css + '</style></head><body>' +
+    win.document.write('<html><head><title>Salary Estimate</title><style>' + css + '</style></head><body>' +
         el.exportText.textContent.replace(/</g,'&lt;') + '</body></html>');
     win.document.close();
     setTimeout(() => { win.print(); }, 400);
@@ -1052,10 +1084,11 @@ function exportPDF() {
 
 /* ---------- init ---------- */
 if (!nsLoad()) updateSliderLabels('us');
+SLIDER_IDS.forEach(id => { $(id + 'Val').textContent = pct(+$(id).value); }); // first load too: "22.0%" like the table, not the static "22%"
 calculate();
 </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

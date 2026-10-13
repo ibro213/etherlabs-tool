@@ -16,26 +16,18 @@
   --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
   color-scheme: dark;
 }
-#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+/* absolute, not fixed: the toggle stays in the top-right corner of the page and never floats over content while scrolling */
+#el-theme-toggle{position:absolute;top:8px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Expense Splitter Pro ✦</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -688,6 +680,12 @@ select:hover {
 
         /* Responsive */
         @media (max-width: 768px) {
+            /* 4 tabs don't fit one row on phones: 2x2 grid instead of a horizontal page scroll */
+            .tabs {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
             h1 {
                 font-size: 1.8rem;
             }
@@ -792,6 +790,25 @@ select:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -819,6 +836,7 @@ select:hover {
                         <option value="">Select Group</option>
                     </select>
                     <button class="btn btn-secondary" onclick="openGroupModal()">+ New Group</button>
+                    <button class="btn btn-danger hidden" id="deleteGroupBtn" onclick="deleteGroup(appData.currentGroupId)">🗑️ Delete group</button>
                 </div>
             </div>
         </header>
@@ -831,7 +849,7 @@ select:hover {
                 <div class="grid grid-4">
                     <div class="card stats-card">
                         <div class="stats-label">Total Expenses</div>
-                        <div class="stats-value counter" id="totalExpenses">0.00</div>
+                        <div class="stats-value counter" id="totalExpenses">$0.00</div>
                     </div>
                     <div class="card stats-card">
                         <div class="stats-label">Number of Transactions</div>
@@ -1058,7 +1076,7 @@ select:hover {
                 saved = localStorage.getItem('divisoreExpensesData');
             } catch(e) {}
             if (saved) {
-                appData = JSON.parse(saved);
+                try { appData = Object.assign({ groups: [], currentGroupId: null, currency: '$' }, JSON.parse(saved)); } catch(e) {}
             }
         }
 
@@ -1074,6 +1092,10 @@ select:hover {
 
         function escapeHtml(s) {
             return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function fmtMoney(n) {
+            return Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         // Group Management
@@ -1111,7 +1133,10 @@ select:hover {
         }
 
         function deleteGroup(groupId) {
-            if (!confirm('Delete this group? This cannot be undone.')) return;
+            const g = appData.groups.find(x => x.id === groupId);
+            if (!g) return;
+            const np = g.participants.length, ne = g.expenses.length;
+            if (!confirm(`Delete the group "${g.name}"?\n\nIts ${np} ${np === 1 ? 'participant' : 'participants'} and ${ne} ${ne === 1 ? 'expense' : 'expenses'} will be deleted too. This cannot be undone.`)) return;
             appData.groups = appData.groups.filter(g => g.id !== groupId);
             if (appData.currentGroupId === groupId) {
                 appData.currentGroupId = appData.groups.length > 0 ? appData.groups[0].id : null;
@@ -1270,9 +1295,26 @@ select:hover {
         }
 
         function deleteParticipant(participantId) {
-            if (!confirm('Delete this participant?')) return;
             const group = getCurrentGroup();
             if (!group) return;
+            // Warn first if the person is in any expense: paid by them or charged only to them (whole amount) = deleted; shared = their share removed
+            const name = (group.participants.find(p => p.id === participantId) || {}).name || '';
+            const othersShare = e => Object.keys(e.splits).filter(k => k !== participantId).reduce((a, k) => a + e.splits[k], 0);
+            let removed = 0, reduced = 0;
+            group.expenses.forEach(e => {
+                const inSplits = !!(e.splits && e.splits.hasOwnProperty(participantId));
+                if (e.paidBy === participantId || (inSplits && othersShare(e) < 0.005)) removed++;
+                else if (inSplits && e.splits[participantId] > 0.005) reduced++;
+            });
+            let msg = 'Delete this participant?';
+            if (removed + reduced > 0) {
+                const tot = removed + reduced;
+                msg = `${name} is part of ${tot} ${tot === 1 ? 'expense' : 'expenses'}:\n`;
+                if (removed) msg += `\n• ${removed} will be deleted (paid by ${name} or charged only to ${name})`;
+                if (reduced) msg += `\n• in ${reduced}, ${name}'s share will be removed and the amount reduced`;
+                msg += `\n\nBalances will be recalculated. This cannot be undone.\nDelete ${name}?`;
+            }
+            if (!confirm(msg)) return;
             group.participants = group.participants.filter(p => p.id !== participantId);
             group.expenses = group.expenses.filter(e => e.paidBy !== participantId);
             group.expenses.forEach(e => {
@@ -1281,6 +1323,8 @@ select:hover {
                     // Recompute amount to the sum of remaining splits so paid == owed stays balanced
                     const remaining = Object.values(e.splits).reduce((a, b) => a + b, 0);
                     e.amount = remaining;
+                    // They carried the whole amount (e.g. a custom split with 0 for the others): drop it below, no 0.00 expense
+                    if (remaining < 0.005) e.splits = {};
                 }
             });
             // Drop expenses whose splits are now empty
@@ -1302,8 +1346,8 @@ select:hover {
             container.innerHTML = group.participants.map(p => `
                 <div class="participant-item">
                     <div class="participant-info">
-                        <div class="participant-avatar">${p.emoji}</div>
-                        <div class="participant-name">${p.name}</div>
+                        <div class="participant-avatar">${escapeHtml(p.emoji)}</div>
+                        <div class="participant-name">${escapeHtml(p.name)}</div>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-secondary btn-small" onclick="editParticipant('${p.id}')">✏️ Edit</button>
@@ -1358,12 +1402,12 @@ select:hover {
                 splitUI.innerHTML = '<p style="color: var(--t2); font-size: 0.9rem;">We will split equally among all participants</p>';
             } else if (splitType === 'selected') {
                 splitUI.innerHTML = `
-                    <label>Select who paid</label>
+                    <label>Select who shares this expense</label>
                     <div style="max-height: 200px; overflow-y: auto;">
                         ${group.participants.map(p => `
                             <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--t1); cursor: pointer;">
                                 <input type="checkbox" class="split-participant" value="${p.id}" checked>
-                                <span>${p.emoji} ${p.name}</span>
+                                <span>${escapeHtml(p.emoji)} ${escapeHtml(p.name)}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -1374,7 +1418,7 @@ select:hover {
                     <div style="max-height: 300px; overflow-y: auto;">
                         ${group.participants.map(p => `
                             <div class="form-group">
-                                <label>${p.emoji} ${p.name}</label>
+                                <label>${escapeHtml(p.emoji)} ${escapeHtml(p.name)}</label>
                                 <input type="number" class="split-amount" data-participant="${p.id}" placeholder="0.00" step="0.01" min="0">
                             </div>
                         `).join('')}
@@ -1386,7 +1430,7 @@ select:hover {
                     <div style="max-height: 300px; overflow-y: auto;">
                         ${group.participants.map(p => `
                             <div class="form-group">
-                                <label>${p.emoji} ${p.name}</label>
+                                <label>${escapeHtml(p.emoji)} ${escapeHtml(p.name)}</label>
                                 <input type="number" class="split-percentage" data-participant="${p.id}" placeholder="0" step="0.01" min="0" max="100">
                             </div>
                         `).join('')}
@@ -1513,7 +1557,6 @@ select:hover {
                     splitType = 'equal';
                 }
             }
-            expense.splitType = splitType;
 
             document.getElementById('expenseSplitTypeInput').value = splitType;
             updateSplitUI();
@@ -1610,6 +1653,7 @@ select:hover {
             expense.category = category;
             expense.paidBy = paidBy;
             expense.splits = splits;
+            expense.splitType = splitType;
 
             saveData();
             closeExpenseModal();
@@ -1654,10 +1698,10 @@ select:hover {
                     <div class="expense-item">
                         <div class="expense-icon">${icon}</div>
                         <div class="expense-details">
-                            <div class="expense-title">${e.description}</div>
-                            <div class="expense-meta">${paidByName} • ${e.category} • ${new Date(e.date).toLocaleDateString('en-US')}</div>
+                            <div class="expense-title">${escapeHtml(e.description)}</div>
+                            <div class="expense-meta">${escapeHtml(paidByName)} • ${escapeHtml(e.category)} • ${new Date(e.date).toLocaleDateString('en-US')}</div>
                         </div>
-                        <div class="expense-amount">${appData.currency}${e.amount.toFixed(2)}</div>
+                        <div class="expense-amount">${appData.currency}${fmtMoney(e.amount)}</div>
                         <div style="display: flex; gap: 10px;">
                             <button class="btn btn-secondary btn-small" onclick="editExpense('${e.id}')">✏️ Edit</button>
                             <button class="btn btn-danger btn-small" onclick="deleteExpense('${e.id}')"> Delete</button>
@@ -1683,9 +1727,9 @@ select:hover {
             });
 
             group.expenses.forEach(e => {
-                balances[e.paidBy].paid += e.amount;
+                if (balances[e.paidBy]) balances[e.paidBy].paid += e.amount;
                 Object.entries(e.splits).forEach(([participantId, amount]) => {
-                    balances[participantId].owed += amount;
+                    if (balances[participantId]) balances[participantId].owed += amount;
                 });
             });
 
@@ -1708,16 +1752,17 @@ select:hover {
             }));
 
             container.innerHTML = balanceArray.map(b => {
-                const isCredit = b.net > 0;
+                const settled = Math.abs(b.net) < 0.005;
+                const isCredit = b.net > 0 || settled;
                 const balanceClass = isCredit ? 'balance-positive' : 'balance-negative';
-                const balanceText = isCredit ? `+${appData.currency}${b.net.toFixed(2)}` : `-${appData.currency}${Math.abs(b.net).toFixed(2)}`;
+                const balanceText = settled ? `${appData.currency}${fmtMoney(0)}` : isCredit ? `+${appData.currency}${fmtMoney(b.net)}` : `-${appData.currency}${fmtMoney(Math.abs(b.net))}`;
 
                 return `
                     <div class="balance-card">
                         <div class="balance-info">
-                            <div class="balance-person">${b.emoji} ${b.name}</div>
+                            <div class="balance-person">${escapeHtml(b.emoji)} ${escapeHtml(b.name)}</div>
                             <div class="balance-details">
-                                Paid: ${appData.currency}${b.paid.toFixed(2)} • Owes: ${appData.currency}${b.owed.toFixed(2)}
+                                Paid: ${appData.currency}${fmtMoney(b.paid)} • Owes: ${appData.currency}${fmtMoney(b.owed)}
                             </div>
                         </div>
                         <div class="balance-amount ${balanceClass}">${balanceText}</div>
@@ -1775,11 +1820,11 @@ select:hover {
             container.innerHTML = settlements.map((s, idx) => `
                 <div class="settlement-item">
                     <div class="settlement-flow">
-                        <span class="settlement-person">${s.from}</span>
+                        <span class="settlement-person">${escapeHtml(s.from)}</span>
                         <span class="settlement-arrow">→</span>
-                        <span class="settlement-person">${s.to}</span>
+                        <span class="settlement-person">${escapeHtml(s.to)}</span>
                     </div>
-                    <div class="settlement-amount">${appData.currency}${s.amount.toFixed(2)}</div>
+                    <div class="settlement-amount">${appData.currency}${fmtMoney(s.amount)}</div>
                 </div>
             `).join('');
         }
@@ -1787,6 +1832,7 @@ select:hover {
         // Dashboard Update
         function updateUI() {
             const group = getCurrentGroup();
+            document.getElementById('deleteGroupBtn').classList.toggle('hidden', !group);
 
             if (!group) {
                 document.getElementById('mainContent').style.display = 'none';
@@ -1800,7 +1846,7 @@ select:hover {
             const totalExpenses = group.expenses.reduce((sum, e) => sum + e.amount, 0);
             const settlements = calculateSettlement();
 
-            document.getElementById('totalExpenses').textContent = `${appData.currency}${totalExpenses.toFixed(2)}`;
+            document.getElementById('totalExpenses').textContent = `${appData.currency}${fmtMoney(totalExpenses)}`;
             document.getElementById('totalTransactions').textContent = group.expenses.length;
             document.getElementById('totalParticipants').textContent = group.participants.length;
             document.getElementById('pendingSettlements').textContent = settlements.length;
@@ -1826,12 +1872,12 @@ select:hover {
             text += `PERSONAL BALANCES:\n`;
             Object.entries(balances).forEach(([id, data]) => {
                 const net = data.paid - data.owed;
-                text += `${data.name}: ${appData.currency}${net.toFixed(2)}\n`;
+                text += `${data.name}: ${Math.abs(net) < 0.005 ? '' : net > 0 ? '+' : '-'}${appData.currency}${fmtMoney(Math.abs(net))}\n`;
             });
 
             text += `\nSETTLEMENT PLAN:\n`;
             settlements.forEach(s => {
-                text += `${s.from} → ${s.to}: ${appData.currency}${s.amount.toFixed(2)}\n`;
+                text += `${s.from} → ${s.to}: ${appData.currency}${fmtMoney(s.amount)}\n`;
             });
 
             const blob = new Blob([text], { type: 'text/plain' });
@@ -1863,7 +1909,7 @@ select:hover {
         });
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

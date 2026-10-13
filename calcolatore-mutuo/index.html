@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Calcolatore Mutuo Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Calcolatore Mutuo Pro</title>
     <style>
         * {
             margin: 0;
@@ -366,6 +357,11 @@
             color: var(--text1);
         }
 
+        /* Colonna periodo ("Mese 1 · nov 2026") su una riga; su telefono la tabella scorre in orizzontale */
+        #tabellaAmmortamento td:first-child {
+            white-space: nowrap;
+        }
+
         @media (hover: hover) and (pointer: fine) {
 tbody tr:hover {
             background: rgba(16, 185, 129, 0.05);
@@ -542,6 +538,8 @@ button.secondary:hover {
             color: #ffb74d;
             border: 1px solid #ff9800;
         }
+        :root:not([data-theme="dark"]) .message.success { color: #1b5e20; } /* tema chiaro: il testo verde/arancio chiaro era quasi illeggibile sul riquadro chiaro */
+        :root:not([data-theme="dark"]) .message.warning { color: #8a4b00; }
 
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -616,6 +614,25 @@ button.secondary:hover {
 window.elc=function(k){try{var s=getComputedStyle(document.documentElement);var m={bg:'--el-bg2',text:'--el-text1',text2:'--el-text2',text3:'--el-text3',grid:'--el-border'};var v=(s.getPropertyValue(m[k])||'').trim();if(v)return v;}catch(e){}return {bg:'#ffffff',text:'#1b1e22',text2:'#5a616a',text3:'#9198a1',grid:'#e3e7ec'}[k];};
 window.addEventListener('DOMContentLoaded',function(){var R=document.documentElement;var mo=new MutationObserver(function(){window.dispatchEvent(new Event('el-theme-change'));});mo.observe(R,{attributes:true,attributeFilter:['data-theme']});});
 </script>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -652,7 +669,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                         </div>
                         <div>
                             <input type="number" id="importoNum" min="50000" max="1000000" step="10000" value="250000">
-                            <span class="slider-value" id="importoVal">€250.000</span>
+                            <span class="slider-value" id="importoVal">250.000,00 €</span>
                         </div>
                     </div>
                 </div>
@@ -840,6 +857,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
     <script>
         // ========== STATE & STORAGE ==========
         const storageKey = 'mutpro';
+        // Data locale AAAA-MM-GG (toISOString è in UTC: tra mezzanotte e le 2 darebbe il giorno prima)
+        function oggiISO() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
         let dataCalcolo = {
             importo: 250000,
             tasso: 3.5,
@@ -847,7 +866,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             tipoTasso: 'fisso',
             spread: 1.5,
             euribor: 2,
-            dataInizio: new Date().toISOString().split('T')[0],
+            dataInizio: oggiISO(),
             ammortamento: []
         };
 
@@ -879,14 +898,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('tassoRange').addEventListener('input', (e) => {
                 document.getElementById('tassoNum').value = e.target.value;
                 dataCalcolo.tasso = parseFloat(e.target.value);
-                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1).replace('.', ',') + '%');
+                aggiornaSliderValue('tassoVal', (dataCalcolo.tasso || 0).toFixed(1).replace('.', ',') + '%');
                 calcolaMutuo();
             });
 
             document.getElementById('tassoNum').addEventListener('input', (e) => {
                 document.getElementById('tassoRange').value = e.target.value;
                 dataCalcolo.tasso = parseFloat(e.target.value);
-                aggiornaSliderValue('tassoVal', dataCalcolo.tasso.toFixed(1).replace('.', ',') + '%');
+                aggiornaSliderValue('tassoVal', (dataCalcolo.tasso || 0).toFixed(1).replace('.', ',') + '%');
                 calcolaMutuo();
             });
 
@@ -894,14 +913,14 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('durataRange').addEventListener('input', (e) => {
                 document.getElementById('durataNum').value = e.target.value;
                 dataCalcolo.durata = parseFloat(e.target.value);
-                aggiornaSliderValue('durataVal', dataCalcolo.durata + ' anni');
+                aggiornaSliderValue('durataVal', (dataCalcolo.durata || 0) + ' anni');
                 calcolaMutuo();
             });
 
             document.getElementById('durataNum').addEventListener('input', (e) => {
                 document.getElementById('durataRange').value = e.target.value;
                 dataCalcolo.durata = parseFloat(e.target.value);
-                aggiornaSliderValue('durataVal', dataCalcolo.durata + ' anni');
+                aggiornaSliderValue('durataVal', (dataCalcolo.durata || 0) + ' anni');
                 calcolaMutuo();
             });
 
@@ -931,6 +950,12 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             // Data Inizio
             document.getElementById('dataInizio').addEventListener('change', (e) => {
                 dataCalcolo.dataInizio = e.target.value;
+                aggiornaTabellaAmmortamento();
+            });
+
+            // Ridisegna i grafici quando cambia il tema (sfondo/testi theme-aware)
+            window.addEventListener('el-theme-change', () => {
+                if (dataCalcolo.ammortamento && dataCalcolo.ammortamento.length) disegnaGrafici();
             });
 
             // Tabs
@@ -954,7 +979,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function setDataOggi() {
             if (!dataCalcolo.dataInizio) {
-                dataCalcolo.dataInizio = new Date().toISOString().split('T')[0];
+                dataCalcolo.dataInizio = oggiISO();
             }
             document.getElementById('dataInizio').value = dataCalcolo.dataInizio;
         }
@@ -962,17 +987,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         // ========== CORE CALCULATIONS ==========
         function getTassoAttuale() {
             if (dataCalcolo.tipoTasso === 'variabile') {
-                return dataCalcolo.spread + dataCalcolo.euribor;
+                return (Number(dataCalcolo.spread) || 0) + (Number(dataCalcolo.euribor) || 0);
             }
-            return dataCalcolo.tasso;
+            return Number(dataCalcolo.tasso) || 0;
         }
 
         function calcolaMutuo() {
-            const P = dataCalcolo.importo;
+            const P = Number(dataCalcolo.importo) || 0;
             const r = getTassoAttuale() / 100 / 12; // tasso mensile
-            const n = dataCalcolo.durata * 12; // numero rate
+            const n = Math.round((Number(dataCalcolo.durata) || 0) * 12); // numero rate
 
-            if (r === 0) {
+            if (P <= 0 || n <= 0) {
+                dataCalcolo.ammortamento = [];
+            } else if (r === 0) {
                 const rata = P / n;
                 dataCalcolo.ammortamento = generaAmmortamentoZero(P, n);
             } else {
@@ -1031,17 +1058,17 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
         function aggiornaRisultati() {
             const ammort = dataCalcolo.ammortamento;
-            if (ammort.length === 0) return;
+            const importo = ammort.length ? dataCalcolo.importo : 0;
 
-            const rata = ammort[0].rata;
+            const rata = ammort.length ? ammort[0].rata : 0;
             const totaleInteressi = ammort.reduce((sum, m) => sum + m.interessi, 0);
-            const costoTotale = dataCalcolo.importo + totaleInteressi;
-            const rapporto = (totaleInteressi / dataCalcolo.importo) * 100;
+            const costoTotale = importo + totaleInteressi;
+            const rapporto = importo > 0 ? (totaleInteressi / importo) * 100 : 0;
 
             document.getElementById('rataMensile').textContent = formatEuro(rata);
             document.getElementById('totaleInteressi').textContent = formatEuro(totaleInteressi);
             document.getElementById('costoTotale').textContent = formatEuro(costoTotale);
-            document.getElementById('rapportoInteressi').textContent = rapporto.toFixed(1) + '%';
+            document.getElementById('rapportoInteressi').textContent = rapporto.toFixed(1).replace('.', ',') + '%';
         }
 
         // ========== CHARTS ==========
@@ -1151,7 +1178,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const step = niceNum(rawMax / 5);
             const maxVal = Math.ceil(rawMax / step) * step;
             const ticks = Math.round(maxVal / step);
-            function fmtK(v) { return v >= 1000 ? '€' + (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'K' : '€' + Math.round(v); }
+            function fmtK(v) { return v >= 1000 ? '€' + (v / 1000).toFixed(v % 1000 ? 1 : 0).replace('.', ',') + 'K' : '€' + Math.round(v); }
             function topRect(x, y, w, h, rr) { rr = Math.max(0, Math.min(rr, w / 2, h)); ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x, y + rr); ctx.arcTo(x, y, x + rr, y, rr); ctx.lineTo(x + w - rr, y); ctx.arcTo(x + w, y, x + w, y + rr, rr); ctx.lineTo(x + w, y + h); ctx.closePath(); }
 
             ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
@@ -1194,10 +1221,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
 
             ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
             ctx.font = '13px "Segoe UI", system-ui, sans-serif';
-            let lx = margin.left + cW - 210; const ly = 24;
+            const lw1 = ctx.measureText('Quota Capitale').width, lw2 = ctx.measureText('Quota Interessi').width;
+            let lx = margin.left + cW - (20 + lw1 + 24 + 20 + lw2); const ly = 24;
             ctx.fillStyle = '#10b981'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
             ctx.fillStyle = elc('text'); ctx.fillText('Quota Capitale', lx + 20, ly);
-            lx += 130;
+            lx += 20 + lw1 + 24;
             ctx.fillStyle = '#f59e0b'; topRect(lx, ly - 6, 13, 13, 3); ctx.fill();
             ctx.fillStyle = elc('text'); ctx.fillText('Quota Interessi', lx + 20, ly);
         }
@@ -1211,13 +1239,19 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const vista = document.querySelector('.toggle-btn.active').dataset.view;
 
             if (vista === 'mensile') {
+                const inizio = new Date((dataCalcolo.dataInizio || '') + 'T00:00:00');
+                const meseRata = (k) => {
+                    if (isNaN(inizio.getTime())) return '';
+                    const d = new Date(inizio.getFullYear(), inizio.getMonth() + k, 1);
+                    return ' · ' + d.toLocaleDateString('it-IT', { month: 'short', year: 'numeric' });
+                };
                 ammort.forEach(m => {
                     const tr = document.createElement('tr');
                     const isHighlight = m.capitale > m.interessi;
                     if (isHighlight) tr.classList.add('highlight');
 
                     tr.innerHTML = `
-                        <td>Mese ${m.mese}</td>
+                        <td>Mese ${m.mese}${meseRata(m.mese)}</td>
                         <td>${formatEuro(m.rata)}</td>
                         <td>${formatEuro(m.capitale)}</td>
                         <td>${formatEuro(m.interessi)}</td>
@@ -1279,13 +1313,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         }
 
         // ========== CONFRONTO SCENARI ==========
+        let scenarioSeq = 0;
         function aggiungiScenario() {
             const list = document.getElementById('scenariList');
             const count = list.children.length;
+            const id = scenarioSeq++;
 
             const div = document.createElement('div');
             div.className = 'section';
-            div.dataset.scenario = count;
+            div.dataset.scenario = id;
             div.innerHTML = `
                 <h3 style="color: var(--emerald-light); margin-bottom: 15px;">Scenario ${count + 1}</h3>
                 <div class="scenario-inputs">
@@ -1293,7 +1329,7 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                     <label class="sc-field"><span>Tasso Interesse (%)</span><input type="number" class="scenario-tasso" min="0.5" max="10" step="0.1" value="3.5"></label>
                     <label class="sc-field"><span>Durata (anni)</span><input type="number" class="scenario-durata" min="5" max="40" step="1" value="20"></label>
                     <label class="sc-field"><span>Spread (%)</span><input type="number" class="scenario-spread" min="0" max="5" step="0.1" value="0"></label>
-                    <button class="remove-btn" onclick="rimuoviScenario(${count})">Rimuovi</button>
+                    <button class="remove-btn" onclick="rimuoviScenario(${id})">Rimuovi</button>
                 </div>
             `;
             list.appendChild(div);
@@ -1302,14 +1338,15 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
         function rimuoviScenario(idx) {
             const elem = document.querySelector(`[data-scenario="${idx}"]`);
             if (elem) elem.remove();
+            document.querySelectorAll('#scenariList > [data-scenario] h3').forEach((h, i) => { h.textContent = 'Scenario ' + (i + 1); });
         }
 
         function confrontaScenari() {
             const scenarios = Array.from(document.querySelectorAll('[data-scenario]')).map(el => {
                 return {
-                    importo: parseFloat(el.querySelector('.scenario-importo').value),
-                    tasso: parseFloat(el.querySelector('.scenario-tasso').value),
-                    durata: parseFloat(el.querySelector('.scenario-durata').value),
+                    importo: parseFloat(el.querySelector('.scenario-importo').value) || 0,
+                    tasso: parseFloat(el.querySelector('.scenario-tasso').value) || 0,
+                    durata: parseFloat(el.querySelector('.scenario-durata').value) || 0,
                     spread: parseFloat(el.querySelector('.scenario-spread').value) || 0
                 };
             });
@@ -1393,6 +1430,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             }
 
             const ammort = dataCalcolo.ammortamento;
+            if (!ammort || !ammort.length) {
+                mostraMessaggio('estinzione', 'Inserire importo, tasso e durata validi nel tab Calcolo Mutuo', 'warning');
+                return;
+            }
             const rata = ammort[0].rata;
             const rataTotale = rata + importoExtra;
 
@@ -1421,8 +1462,8 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             // interessi risparmiati = totale pagato piano originale − totale pagato con extra
             const risparmi = Math.max(0, (ammort.length * rata) - totalePagatoNuovo);
 
-            const nuovaDurata = (mesiRimanenti / 12).toFixed(1);
-            const durataOriginale = (ammort.length / 12).toFixed(1);
+            const nuovaDurata = (mesiRimanenti / 12).toFixed(1).replace('.', ',');
+            const durataOriginale = (ammort.length / 12).toFixed(1).replace('.', ',');
 
             const container = document.getElementById('risultatiEstinzione');
             container.innerHTML = `
@@ -1495,7 +1536,11 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             document.getElementById('durataRange').value = 20;
             document.getElementById('tassoFisso').checked = true;
             document.getElementById('variabileOptions').style.display = 'none';
-            setDataOggi();
+            document.getElementById('spread').value = 1.5;
+            document.getElementById('euribor').value = 2;
+            aggiornaSliderValue('importoVal', formatEuro(250000));
+            aggiornaSliderValue('tassoVal', '3,5%');
+            aggiornaSliderValue('durataVal', '20 anni');
             dataCalcolo = {
                 importo: 250000,
                 tasso: 3.5,
@@ -1503,9 +1548,10 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
                 tipoTasso: 'fisso',
                 spread: 1.5,
                 euribor: 2,
-                dataInizio: new Date().toISOString().split('T')[0],
+                dataInizio: oggiISO(),
                 ammortamento: []
             };
+            setDataOggi();
             calcolaMutuo();
             mostraMessaggio('calcolo', '✓ Valori ripristinati ai default', 'success');
         }
@@ -1519,7 +1565,9 @@ window.addEventListener('DOMContentLoaded',function(){var R=document.documentEle
             const saved = localStorage.getItem(storageKey);
             if (saved) {
                 try {
-                    dataCalcolo = JSON.parse(saved);
+                    const o = JSON.parse(saved) || {};
+                    ['importo', 'tasso', 'durata', 'spread', 'euribor'].forEach(k => { if (!Number.isFinite(o[k])) o[k] = dataCalcolo[k]; });
+                    dataCalcolo = Object.assign({}, dataCalcolo, o);
                     document.getElementById('importoNum').value = dataCalcolo.importo;
                     document.getElementById('importoRange').value = dataCalcolo.importo;
                     document.getElementById('tassoNum').value = dataCalcolo.tasso;

@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Calcolatore Tariffa Pro - Calcolo Tariffa Freelancer</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <title>Calcolatore Tariffa Pro - Calcolo Tariffa Freelancer</title>
     <style>
         * {
             margin: 0;
@@ -425,6 +416,25 @@ button.secondary:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -558,7 +568,7 @@ button.secondary:hover {
                     </div>
                     <div class="input-row">
                         <label>Contributi INPS / Cassa (%)</label>
-                        <input type="number" id="contributi_inps" min="0" max="100" step="0.1" value="26.07" placeholder="26.07">
+                        <input type="number" id="contributi_inps" min="0" max="100" step="0.1" value="26.07" placeholder="26,07">
                     </div>
                     <div class="input-row">
                         <label>Aliquota IRPEF stimata (%) — solo ordinario</label>
@@ -598,7 +608,7 @@ button.secondary:hover {
                     </div>
                 </div>
                 <div class="info-box">
-                    <strong>Ricorda:</strong> Non tutte le 8 ore di una giornata lavorativa sono fatturabili. Account, email, pause e amministrazione richiedono tempo. Inserisci solo le ore effettivamente dedicate ai clienti.
+                    <strong>Ricorda:</strong> Non tutte le 8 ore di una giornata lavorativa sono fatturabili. Contabilità, email, pause e amministrazione richiedono tempo. Inserisci solo le ore effettivamente dedicate ai clienti.
                 </div>
             </div>
         </div>
@@ -1225,14 +1235,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Hourly rate (minimum)
             const fatturatoOrario = fatturatoGiornaliero / Math.max(1, oreAlGiorno);
-            document.getElementById('tariffa_oraria').textContent = '€ ' + fatturatoOrario.toLocaleString('it-IT', { maximumFractionDigits: 2 });
+            document.getElementById('tariffa_oraria').textContent = '€ ' + fatturatoOrario.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             // Recommended rates (+20% safety margin)
             const fatturatoGiornalieroConsigliato = fatturatoGiornaliero * 1.2;
             const fatturatoOrarioConsigliato = fatturatoOrario * 1.2;
 
             document.getElementById('tariffa_consigliata').textContent = '€ ' + fatturatoGiornalieroConsigliato.toLocaleString('it-IT', { maximumFractionDigits: 0 });
-            document.getElementById('tariffa_oraria_consigliata').textContent = '€ ' + fatturatoOrarioConsigliato.toLocaleString('it-IT', { maximumFractionDigits: 2 });
+            document.getElementById('tariffa_oraria_consigliata').textContent = '€ ' + fatturatoOrarioConsigliato.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             // Monthly net income simulations (aliquota effettiva sul fatturato)
             const guadagno100Min = (100 * fatturatoOrario * (1 - aliquotaEffettiva)) - speseMensili;
@@ -1258,7 +1268,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const W = doc.internal.pageSize.getWidth(); const M = 48; let y = 0;
             const EM = [16,185,129], DK = [17,24,28], GR = [110,130,140];
             const eur = (v, dec) => '€ ' + (Number(v)||0).toLocaleString('it-IT', { minimumFractionDigits: dec||0, maximumFractionDigits: dec||0 });
-            const eurS = (v, dec) => (v < 0 ? '−' : '') + '€ ' + Math.abs(Number(v)||0).toLocaleString('it-IT', { minimumFractionDigits: dec||0, maximumFractionDigits: dec||0 });
+            const eurS = (v, dec) => (v < 0 ? '-' : '') + '€ ' + Math.abs(Number(v)||0).toLocaleString('it-IT', { minimumFractionDigits: dec||0, maximumFractionDigits: dec||0 });
             doc.setFillColor.apply(doc, EM); doc.rect(0,0,W,78,'F');
             doc.setTextColor(6,10,10); doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.text('Report Tariffa Freelance', M, 46);
             doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generato il ' + new Date().toLocaleDateString('it-IT'), M, 64);
@@ -1277,7 +1287,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const rowr = (label, value) => { doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK); doc.text(label, M, y); doc.setFont('helvetica','bold'); doc.text(value, W-M, y, {align:'right'}); y += 20; };
             rowr('Fatturato annuo necessario', eur(RES.annualRevenue, 0));
             rowr('Giorni fatturabili effettivi / anno', String(Math.round(RES.effectiveDays)) + ' giorni');
-            rowr('Spese mensili (personali + attivita)', eur(RES.monthlyExpenses, 0));
+            rowr('Spese mensili (personali + attività)', eur(RES.monthlyExpenses, 0));
             rowr('Regime fiscale', RES.regime);
             y += 14;
             doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc, DK); doc.text('Quanto ti resterebbe in tasca', M, y); y += 8;

@@ -16,26 +16,18 @@
   --el-emerald:#10b981; --el-emerald-light:#34d399; --el-emerald-dark:#059669; --el-emerald-lighter:#6ee7b7;
   color-scheme: dark;
 }
-#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+/* absolute, not fixed: the toggle stays in the top-right corner of the page and never floats over content while scrolling */
+#el-theme-toggle{position:absolute;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Side Hustle Scorecard & Evaluator Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         :root {
             --bg: var(--el-bg);
@@ -81,6 +73,14 @@
             border: 1px solid var(--border);
             border-radius: 15px;
             box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
+        }
+
+        /* narrower screens: keep the wrapped title clear of the theme toggle in the top-right corner */
+        @media (max-width: 960px) {
+            header {
+                padding-left: 50px;
+                padding-right: 50px;
+            }
         }
 
         h1 {
@@ -300,6 +300,21 @@ input[type="range"]::-moz-range-thumb:hover {
             gap: 15px;
             margin-top: 30px;
             flex-wrap: wrap;
+        }
+
+        /* Template tab and evaluator buttons sit outside the cards: same side inset as the card content */
+        #templates,
+        #evaluator > .button-group {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        @media (max-width: 768px) {
+            #templates,
+            #evaluator > .button-group {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
         }
 
         button {
@@ -549,6 +564,19 @@ input[type="range"]::-moz-range-thumb:hover {
             font-weight: 600;
         }
 
+        /* narrow phones: the comparison scrolls inside its own box, never the whole page */
+        .comparison-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 8px;
+            }
+        }
+
         @media (hover: hover) and (pointer: fine) {
 .comparison-table tr:hover {
             background: rgba(16, 185, 129, 0.05);
@@ -767,11 +795,30 @@ input[type="range"]::-moz-range-thumb:hover {
             button {
                 width: 100%;
             }
+
+            /* saved ideas (Compare tab): the buttons go under the name instead of past the screen edge */
+            .idea-item {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .idea-item-actions {
+                width: 100%;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            .idea-item-actions button {
+                width: auto;
+                flex: 1;
+                padding: 8px 10px;
+            }
         }
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* side gutter: the layout's own body padding, or the notch inset when larger */
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 20px); padding-right: max(env(safe-area-inset-right), 20px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {
@@ -794,6 +841,25 @@ input[type="range"]::-moz-range-thumb:hover {
     <meta name="theme-color" content="#eef1f4">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -867,7 +933,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
         <!-- TEMPLATES TAB -->
         <div id="templates" class="tab-content">
-            <h2 style="color: var(--emerald-light); margin-bottom: 20px;">📋 Templates Predefiniti</h2>
+            <h2 style="color: var(--emerald-light); margin-bottom: 20px;">📋 Ready-Made Templates</h2>
             <p style="color: var(--text2); margin-bottom: 25px;">Select a template to get started quickly</p>
             <div class="template-grid" id="templatesGrid"></div>
         </div>
@@ -882,7 +948,7 @@ input[type="range"]::-moz-range-thumb:hover {
         <!-- COMPARE TAB -->
         <div id="compare" class="tab-content">
             <div class="form-section">
-                <h2 style="color: var(--emerald-light); margin-bottom: 20px;">⚖️ Compare le Tue Idee</h2>
+                <h2 style="color: var(--emerald-light); margin-bottom: 20px;">⚖️ Compare Your Ideas</h2>
                 <p style="color: var(--text2); margin-bottom: 20px;">You can compare up to 3 saved ideas</p>
 
                 <div class="idea-list" id="savedIdeasList">
@@ -1309,6 +1375,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 </script>
     <script>
         let RES = {};
+        function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
         // Data Storage
         const criteria = [
             { id: 'earning', emoji: '💰', name: 'Earning Potential', description: 'How much can you realistically earn?' },
@@ -1430,6 +1497,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function loadTemplate(index) {
             const template = templates[index];
+            editingId = null;
             document.getElementById('ideaName').value = template.name;
             document.getElementById('category').value = template.category;
             document.getElementById('description').value = template.description;
@@ -1484,7 +1552,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             } else if (totalScore >= 40) {
                 scorecardVerdict = 'Idea with potential but requires work';
             } else {
-                scorecardVerdict = 'Consider reconsidering this idea';
+                scorecardVerdict = 'Consider rethinking this idea';
             }
 
             RES = {
@@ -1522,7 +1590,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 verdict = '⚠️ Idea with potential but requires work';
                 verdictEmoji = '⚠️';
             } else {
-                verdict = '🔄 Consider reconsidering this idea';
+                verdict = '🔄 Consider rethinking this idea';
                 verdictEmoji = '🔄';
             }
 
@@ -1539,6 +1607,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const suggestions = generateSuggestions(scores, category);
 
             const resultsHTML = `
+                <h2 style="color: var(--emerald-light); margin-bottom: 6px; overflow-wrap: anywhere;">🎯 Results for: ${esc(name)}</h2>
+                <p style="color: var(--text2); margin-bottom: 25px;">📂 ${esc(category)}</p>
+
                 <div class="dashboard">
                     <div class="score-box">
                         <div class="score-label">TOTAL SCORE</div>
@@ -1582,6 +1653,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             `;
 
             document.getElementById('resultsContent').innerHTML = resultsHTML;
+            document.getElementById('resultsContent').classList.remove('empty-state'); // filled: a plain full-width container, not the centred empty-state box
 
             // Draw radar chart
             setTimeout(() => drawRadarChart(scores), 100);
@@ -1634,9 +1706,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const sides = criteria.length;
             const angle = (Math.PI * 2) / sides;
 
-            // Clear canvas
-            ctx.fillStyle = 'rgba(12, 11, 20, 0.5)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Clear canvas (transparent: a dark fill showed as a grey box in the light theme and in print)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw gridlines
             ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)';
@@ -1721,22 +1792,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Low recurring revenue
             if (scores.recurring < 5) {
-                suggestions.push('Structure the model to generate recurring revenue: abbonamenti, contratti annuali');
+                suggestions.push('Structure the model to generate recurring revenue: subscriptions, annual contracts');
             }
 
             // Skills mismatch
             if (scores.skills < 5) {
-                suggestions.push('Plan training or find a co-founder per colmare il gap di competenze');
+                suggestions.push('Plan some training or find a co-founder to close the skills gap');
             }
 
             // Low passion
             if (scores.passion < 5) {
-                suggestions.push('Consider if this is truly the right opportunity per te - la passione conta!');
+                suggestions.push('Ask yourself whether this is truly the right opportunity for you - passion matters!');
             }
 
             // High competition
             if (scores.competition < 4) {
-                suggestions.push('Define a clear USP (Unique Selling Proposition) per differenziarti');
+                suggestions.push('Define a clear USP (Unique Selling Proposition) to stand out');
             }
 
             // Low online potential
@@ -1801,6 +1872,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function updateSavedIdeasList() {
             const list = document.getElementById('savedIdeasList');
+            selectedIdeasForComparison = selectedIdeasForComparison.filter(id => savedIdeas.some(i => i.id === id));
 
             if (savedIdeas.length === 0) {
                 list.innerHTML = '<div class="empty-state"><p>No ideas saved yet.</p></div>';
@@ -1811,11 +1883,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             list.innerHTML = savedIdeas.map(idea => `
                 <div class="idea-item">
                     <div class="idea-item-info">
-                        <h4>${idea.name}</h4>
-                        <p>📂 ${idea.category} | ⭐ ${idea.totalScore}/100 | 📅 ${idea.timestamp}</p>
+                        <h4>${esc(idea.name)}</h4>
+                        <p>📂 ${esc(idea.category)} | ⭐ ${idea.totalScore}/100 | 📅 ${esc(idea.timestamp)}</p>
                     </div>
                     <div class="idea-item-actions">
-                        <input type="checkbox" class="idea-checkbox" value="${idea.id}" onchange="updateComparisonList()">
+                        <input type="checkbox" class="idea-checkbox" value="${idea.id}"${selectedIdeasForComparison.includes(idea.id) ? ' checked' : ''} onchange="updateComparisonList()">
                         <button class="btn-secondary btn-small" onclick="loadIdeaToEdit(${idea.id})">✏️ Edit</button>
                         <button class="btn-secondary btn-small" onclick="deleteIdea(${idea.id})">🗑️ Delete</button>
                     </div>
@@ -1836,7 +1908,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             document.getElementById('ideaName').value = idea.name;
             document.getElementById('category').value = idea.category;
-            document.getElementById('description').value = idea.description;
+            document.getElementById('description').value = idea.description || '';
 
             Object.keys(idea.scores).forEach(criterionId => {
                 const value = idea.scores[criterionId];
@@ -1876,9 +1948,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             let comparisonHTML = '<div class="form-section" style="margin-top: 30px;"><h2 style="color: var(--emerald-light); margin-bottom: 20px;">📊 Detailed Comparison</h2>';
 
             // Summary table
-            comparisonHTML += '<table class="comparison-table"><thead><tr><th>Criterion</th>';
+            comparisonHTML += '<div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Criterion</th>';
             ideasToCompare.forEach(idea => {
-                comparisonHTML += `<th>${idea.name}</th>`;
+                comparisonHTML += `<th>${esc(idea.name)}</th>`;
             });
             comparisonHTML += '</tr></thead><tbody>';
 
@@ -1910,12 +1982,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const isWinner = s.score === maxTotal ? ' winner' : '';
                 comparisonHTML += `<td class="${isWinner}">${s.score}/100</td>`;
             });
-            comparisonHTML += '</tr></tbody></table>';
+            comparisonHTML += '</tr></tbody></table></div>';
 
-            // Recommendation
-            const winner = totalScores.reduce((prev, current) => (prev.score > current.score) ? prev : current);
+            // Recommendation (a tie is reported as a tie, not as the last idea in the list)
+            const winners = totalScores.filter(s => s.score === maxTotal);
+            const winnerNames = winners.map(w => esc(w.idea));
+            const winnerText = winnerNames.length > 1 ? winnerNames.slice(0, -1).join(', ') + ' and ' + winnerNames[winnerNames.length - 1] : winnerNames[0];
             comparisonHTML += `<div class="verdict" style="margin-top: 20px;">
-                🏆 <strong>Vincitore:</strong> <span style="color: var(--emerald-light);">${winner.idea}</span> con ${winner.score}/100
+                🏆 <strong>${winners.length > 1 ? 'Tie' : 'Winner'}:</strong> <span style="color: var(--emerald-light);">${winnerText}</span> with ${maxTotal}/100
             </div>`;
 
             comparisonHTML += '</div>';
@@ -1924,6 +1998,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         function generateActionPlan() {
+            document.getElementById('actionContent').classList.remove('empty-state'); // the "no results yet" message below brings its own empty-state box
             if (!currentResults) {
                 document.getElementById('actionContent').innerHTML = '<div class="empty-state"><p>Complete an evaluation before generating the action plan</p></div>';
                 return;
@@ -1934,7 +2009,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             // Generate first steps
             const firstSteps = [];
             if (scores.skills < 7) {
-                firstSteps.push('Complete courses or tutorials in the sector');
+                firstSteps.push('Take courses or tutorials in your field');
             } else {
                 firstSteps.push('Validate the idea with your target market');
             }
@@ -1961,9 +2036,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const timelineItems = [];
             const speedScore = scores.speed;
             const timeMultiplier = (11 - speedScore) / 2; // 0.5x for speed=10, 5x for speed=1
+            const firstWeeks = Math.ceil(1 * timeMultiplier);
 
             timelineItems.push({
-                period: `${Math.ceil(1 * timeMultiplier)} week(s)`,
+                period: `${firstWeeks} ${firstWeeks === 1 ? 'week' : 'weeks'}`,
                 milestone: 'First client / trial client',
                 description: 'Complete initial setup and get your first results'
             });
@@ -1997,9 +2073,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             const actionHTML = `
                 <div class="action-plan">
-                    <h3>🎯 Action Plan for: ${name}</h3>
+                    <h3>🎯 Action Plan for: ${esc(name)}</h3>
                     <p style="color: var(--text2); margin-bottom: 20px;">
-                        Based on a score of ${totalScore}/100 - Category: ${category}
+                        Based on a score of ${totalScore}/100 - Category: ${esc(category)}
                     </p>
 
                     <div class="action-plan">
@@ -2064,7 +2140,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             // Show selected tab
             document.getElementById(tabName).classList.add('active');
-            const btn = _el || document.querySelector('.tab-btn[onclick*="\'' + tabName + '\'"]');
+            const btn = (_el && _el.classList && _el.classList.contains('tab-btn') ? _el : null) || document.querySelector('.tab-btn[onclick*="\'' + tabName + '\'"]');
             if (btn) btn.classList.add('active');
 
             // Generate action plan when switching to action tab

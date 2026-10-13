@@ -20,22 +20,13 @@
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Password Generator Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -194,7 +185,7 @@ button:hover {
 
         .btn-delete {
             background: #8b4545;
-            color: var(--el-text1);
+            color: #fff; /* white text: in the light theme dark text on the red was hard to read */
             padding: 8px 16px;
             font-size: 0.9em;
         }
@@ -339,6 +330,7 @@ button:hover {
         .strength-text.weak { color: #e74c3c; }
         .strength-text.medium { color: #f39c12; }
         .strength-text.strong { color: #a8d5a8; }
+        :root:not([data-theme="dark"]) .strength-text.strong { color: #2e7d32; } /* light theme: #a8d5a8 on the light background was almost invisible */
         .strength-text.very-strong { color: var(--el-emerald); }
 
         .checker-group {
@@ -371,7 +363,7 @@ button:hover {
         }
 
         .warning {
-            background: #2a1a1a;
+            background: rgba(231, 76, 60, 0.12);
             border-left: 4px solid #e74c3c;
             padding: 15px;
             border-radius: 4px;
@@ -559,6 +551,25 @@ button:hover {
     <meta name="theme-color" content="#060a0a">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%2310b981'/%3E%3Ctext%20x='16'%20y='22'%20font-family='Georgia,serif'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='%23ffffff'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -571,7 +582,7 @@ button:hover {
     <div class="container">
         <header>
             <h1>🔐 Password Generator Pro</h1>
-            <p class="subtitle">Secure Password Generator &amp; Manager</p>
+            <p class="subtitle">Strong Password Generator &amp; Local Password Manager</p>
         </header>
 
         <div class="tabs">
@@ -753,7 +764,7 @@ button:hover {
                 <h2>Password Vault</h2>
 
                 <div class="warning">
-                    <strong>⚠️ Warning:</strong> localStorage is not encrypted. This vault is for convenience, not for high-security use. Do not store critical passwords here.
+                    <strong>⚠️ Warning:</strong> entries are saved only on this device, in this browser, and are not encrypted: anyone who uses this browser can read them. Don't use the vault on shared computers, and don't store important passwords here.
                 </div>
 
                 <h3 style="color: var(--el-emerald); margin: 25px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Add Entry</h3>
@@ -797,17 +808,17 @@ button:hover {
             'orbit', 'panda', 'phase', 'piano', 'plaza', 'plume', 'prism', 'quail', 'quest', 'raven',
             'ridge', 'robin', 'royal', 'sage', 'satin', 'scale', 'scout', 'shade', 'shelf', 'shore',
             'silver', 'slate', 'solar', 'spark', 'spice', 'spine', 'steam', 'steel', 'swift', 'table',
-            'thorn', 'token', 'tower', 'trail', 'tulip', 'umbra', 'unity', 'vapor', 'vault', 'vivid',
+            'thorn', 'token', 'tower', 'trail', 'tulip', 'actor', 'unity', 'vapor', 'vault', 'vivid',
             'wheat', 'width', 'yacht', 'zebra', 'acorn', 'basin', 'birch', 'bloom', 'blush', 'bread',
             'brick', 'brush', 'candy', 'chalk', 'charm', 'chess', 'cliff', 'cloth', 'coast', 'crown',
             'curve', 'depth', 'drift', 'dwarf', 'earth', 'elbow', 'event', 'faith', 'feast', 'fence',
-            'field', 'flame', 'flood', 'frost', 'globe', 'glove', 'grain', 'guard', 'guide', 'haste',
-            'heart', 'honey', 'house', 'humor', 'icicle', 'image', 'jewel', 'judge', 'juice', 'knife',
+            'field', 'angel', 'flood', 'frost', 'globe', 'glove', 'apron', 'guard', 'guide', 'haste',
+            'heart', 'honey', 'house', 'humor', 'icicle', 'image', 'attic', 'judge', 'juice', 'knife',
             'lance', 'latch', 'level', 'lilac', 'linen', 'lodge', 'manor', 'medal', 'melon', 'metal',
             'mixer', 'moose', 'motor', 'mount', 'music', 'nerve', 'night', 'north', 'novel', 'oasis',
-            'ocean', 'opera', 'otter', 'paint', 'patch', 'peace', 'peach', 'penny', 'pilot', 'pitch',
+            'audio', 'opera', 'otter', 'paint', 'patch', 'peace', 'peach', 'penny', 'pilot', 'pitch',
             'plant', 'plank', 'point', 'polar', 'proud', 'pulse', 'queen', 'quick', 'quiet', 'radar',
-            'ranch', 'rapid', 'realm', 'rider', 'rival', 'river', 'robin', 'route', 'ruler', 'rural',
+            'ranch', 'rapid', 'realm', 'rider', 'rival', 'award', 'bacon', 'route', 'ruler', 'rural',
             'salad', 'sandy', 'scarf', 'scene', 'scent', 'shark', 'shell', 'shine', 'shirt', 'sigma',
             'silk', 'slope', 'smile', 'smoke', 'snake', 'snowy', 'solid', 'south', 'space', 'spear',
             'split', 'sport', 'squad', 'stage', 'stair', 'stamp', 'stand', 'start', 'steak', 'stick',
@@ -820,59 +831,82 @@ button:hover {
             'aisle', 'alarm', 'alert', 'align', 'angle', 'anvil', 'arena', 'armor', 'arrow', 'atlas',
             'badge', 'baker', 'barge', 'basic', 'beach', 'beard', 'bench', 'berry', 'blade', 'blank',
             'blend', 'blink', 'block', 'board', 'bonus', 'booth', 'bound', 'brain', 'brand', 'brass',
-            'brisk', 'broad', 'brook', 'brush', 'bunch', 'cabin', 'cable', 'camel', 'cargo', 'carry',
+            'brisk', 'broad', 'brook', 'bagel', 'bunch', 'cabin', 'cable', 'camel', 'cargo', 'carry',
             'chain', 'chair', 'chase', 'cheap', 'check', 'chest', 'chief', 'child', 'china', 'chord',
             'civic', 'civil', 'claim', 'clamp', 'clash', 'clean', 'clear', 'climb', 'clock', 'close',
-            'coach', 'color', 'comet', 'comic', 'coral', 'cover', 'craft', 'crash', 'crazy', 'creek',
-            'crest', 'cross', 'crush', 'cubic', 'cycle', 'dairy', 'dance', 'demon', 'denim', 'dense',
+            'coach', 'color', 'comet', 'comic', 'banjo', 'cover', 'craft', 'crash', 'crazy', 'creek',
+            'crest', 'cross', 'crush', 'cubic', 'cycle', 'dairy', 'beads', 'demon', 'denim', 'dense',
             'depot', 'derby', 'diver', 'dodge', 'donor', 'doubt', 'draft', 'drain', 'drawn', 'dress',
             'drink', 'drive', 'drone', 'dying', 'eager', 'early', 'eight', 'elect', 'elite', 'enjoy',
             'enter', 'equal', 'equip', 'erupt', 'essay', 'evoke', 'exact', 'exile', 'extra', 'fable',
-            'facet', 'fancy', 'fiber', 'fifth', 'filth', 'final', 'flame', 'flask', 'fleet', 'flesh',
+            'facet', 'fancy', 'fiber', 'fifth', 'filth', 'final', 'berth', 'flask', 'fleet', 'flesh',
             'float', 'flour', 'fluid', 'flute', 'focal', 'focus', 'forge', 'forth', 'forum', 'found',
             'frame', 'fresh', 'front', 'fruit', 'fungi', 'giant', 'given', 'glass', 'gleam', 'glide',
             'glory', 'goose', 'grace', 'grade', 'grand', 'grant', 'grasp', 'grass', 'grave', 'great',
             'green', 'greet', 'grind', 'group', 'grove', 'grown', 'guest', 'habit', 'happy', 'harsh',
             'hazel', 'hedge', 'heron', 'honor', 'horse', 'hotel', 'human', 'ideal', 'index', 'indie',
-            'inner', 'input', 'irony', 'ivory', 'jolly', 'knack', 'kneel', 'known', 'label', 'labor',
-            'large', 'laser', 'later', 'laugh', 'layer', 'learn', 'lever', 'light', 'limit', 'linen',
+            'inner', 'input', 'irony', 'bison', 'jolly', 'knack', 'kneel', 'known', 'label', 'labor',
+            'large', 'laser', 'later', 'laugh', 'layer', 'learn', 'lever', 'bluff', 'limit', 'boots',
             'liver', 'llama', 'local', 'logic', 'loose', 'lover', 'lower', 'loyal', 'lucky', 'lunch',
             'lyric', 'major', 'maker', 'march', 'match', 'mayor', 'media', 'mercy', 'might', 'miner',
-            'minor', 'minus', 'model', 'money', 'month', 'moral', 'motor', 'mound', 'mouse', 'mouth',
-            'movie', 'mural', 'naive', 'naval', 'nerve', 'never', 'newly', 'niche', 'night', 'ninth',
-            'noise', 'north', 'noted', 'novel', 'nurse', 'ocean', 'onset', 'opera', 'orbit', 'order',
+            'minor', 'minus', 'model', 'money', 'month', 'moral', 'broom', 'mound', 'mouse', 'mouth',
+            'movie', 'mural', 'naive', 'naval', 'buddy', 'never', 'newly', 'niche', 'bugle', 'ninth',
+            'noise', 'canal', 'noted', 'canoe', 'nurse', 'cello', 'onset', 'cheek', 'cheer', 'order',
             'organ', 'other', 'outer', 'owner', 'oxide', 'ozone', 'panel', 'paper', 'party', 'pasta',
-            'patch', 'pause', 'penny', 'perch', 'petal', 'phase', 'phone', 'photo', 'piece', 'pixel',
-            'place', 'plain', 'plane', 'plate', 'plaza', 'plead', 'pluck', 'plumb', 'plush', 'point',
-            'polar', 'popup', 'porch', 'pouch', 'pound', 'power', 'press', 'price', 'pride', 'prime',
-            'print', 'prize', 'proof', 'prose', 'proud', 'pupil', 'purse', 'quota', 'quote', 'rally',
-            'ranch', 'range', 'rapid', 'ratio', 'reach', 'realm', 'rebel', 'reign', 'relax', 'reply',
-            'rider', 'rigid', 'rival', 'robin', 'roman', 'roost', 'round', 'route', 'royal', 'rugby',
-            'rural', 'saint', 'salsa', 'savor', 'scale', 'scene', 'scoop', 'scope', 'score', 'sense',
-            'serve', 'seven', 'shade', 'shall', 'shape', 'share', 'sharp', 'sheet', 'shelf', 'shift',
-            'shire', 'shock', 'shoot', 'shore', 'short', 'shout', 'sight', 'silly', 'sixth', 'sixty',
-            'sized', 'skill', 'skull', 'sleep', 'slice', 'slide', 'slope', 'sloth', 'small', 'smart',
-            'smell', 'smith', 'snail', 'solar', 'solve', 'sonic', 'sound', 'south', 'spare', 'speak',
-            'speed', 'spend', 'spicy', 'spoil', 'spoon', 'spray', 'stain', 'stake', 'stale', 'stamp',
-            'stand', 'stark', 'state', 'stays', 'steed', 'steep', 'steer', 'stern', 'stone', 'store',
-            'stork', 'storm', 'stout', 'stove', 'strip', 'stuck', 'study', 'stuff', 'stump', 'suite',
-            'sunny', 'surge', 'swarm', 'sweet', 'swept', 'tenth', 'their', 'theme', 'thick', 'thing',
-            'think', 'third', 'tidal', 'tiger', 'tight', 'timer', 'title', 'toast', 'today', 'topaz',
-            'topic', 'total', 'touch', 'tough', 'tower', 'toxic', 'trace', 'track', 'trade', 'trail',
-            'trait', 'tramp', 'trash', 'trend', 'trial', 'tribe', 'troop', 'truce', 'truly', 'trunk',
-            'tunic', 'twist', 'unity', 'until', 'upper', 'urban', 'usage', 'usual', 'utter', 'valet',
-            'valve', 'vapor', 'verse', 'viper', 'visit', 'vista', 'vivid', 'vocal', 'voice', 'voter',
-            'wagon', 'waist', 'watch', 'water', 'weave', 'wedge', 'wheat', 'while', 'whole', 'widen',
-            'witch', 'women', 'world', 'worry', 'worse', 'worst', 'worth', 'wreck', 'wrist', 'wrong',
-            'yacht', 'youth', 'zebra', 'pixel', 'bliss', 'crisp', 'flask', 'gleam', 'haven', 'jewel',
-            'knack', 'latch', 'mocha', 'nifty', 'optic', 'plush', 'quilt', 'rogue', 'sleek', 'tryst'
+            'chili', 'pause', 'cider', 'perch', 'petal', 'clerk', 'phone', 'photo', 'piece', 'pixel',
+            'place', 'plain', 'plane', 'plate', 'cloak', 'plead', 'pluck', 'plumb', 'plush', 'cobra',
+            'cocoa', 'comma', 'porch', 'pouch', 'pound', 'power', 'press', 'price', 'pride', 'prime',
+            'print', 'prize', 'proof', 'prose', 'couch', 'pupil', 'purse', 'quota', 'quote', 'rally',
+            'crate', 'range', 'cream', 'ratio', 'reach', 'crepe', 'rebel', 'reign', 'relax', 'reply',
+            'crumb', 'rigid', 'daily', 'diary', 'roman', 'roost', 'round', 'dingo', 'disco', 'rugby',
+            'dough', 'saint', 'salsa', 'savor', 'dozen', 'drama', 'scoop', 'scope', 'score', 'sense',
+            'serve', 'seven', 'dryer', 'shall', 'shape', 'share', 'sharp', 'sheet', 'ebony', 'shift',
+            'shire', 'shock', 'shoot', 'elder', 'short', 'shout', 'sight', 'silly', 'sixth', 'sixty',
+            'sized', 'skill', 'skull', 'sleep', 'slice', 'slide', 'email', 'sloth', 'small', 'smart',
+            'smell', 'smith', 'snail', 'envoy', 'solve', 'sonic', 'sound', 'ferry', 'spare', 'speak',
+            'speed', 'spend', 'spicy', 'spoil', 'spoon', 'spray', 'stain', 'stake', 'stale', 'flair',
+            'flock', 'stark', 'state', 'stays', 'steed', 'steep', 'steer', 'stern', 'foyer', 'store',
+            'stork', 'fudge', 'stout', 'gecko', 'strip', 'stuck', 'study', 'stuff', 'stump', 'suite',
+            'sunny', 'surge', 'swarm', 'sweet', 'swept', 'tenth', 'their', 'theme', 'genie', 'thing',
+            'gizmo', 'third', 'tidal', 'glaze', 'tight', 'timer', 'title', 'gnome', 'today', 'topaz',
+            'topic', 'total', 'touch', 'tough', 'gravy', 'toxic', 'grill', 'track', 'guild', 'gusto',
+            'trait', 'tramp', 'trash', 'hatch', 'trial', 'hippo', 'troop', 'truce', 'truly', 'trunk',
+            'tunic', 'twist', 'hobby', 'until', 'holly', 'hound', 'usage', 'usual', 'utter', 'valet',
+            'valve', 'jelly', 'jumbo', 'viper', 'visit', 'vista', 'kayak', 'kiosk', 'koala', 'voter',
+            'wagon', 'waist', 'ladle', 'lasso', 'weave', 'wedge', 'latte', 'while', 'whole', 'lemur',
+            'witch', 'women', 'lobby', 'worry', 'worse', 'worst', 'worth', 'wreck', 'lotus', 'wrong',
+            'mango', 'merit', 'mimic', 'motel', 'bliss', 'crisp', 'nacho', 'nylon', 'onion', 'pecan',
+            'pedal', 'pizza', 'mocha', 'nifty', 'optic', 'plaid', 'quilt', 'rogue', 'sleek', 'tryst'
         ];
 
         // ==================== UTILITY FUNCTIONS ====================
-        function getRandomValues(length) {
-            const array = new Uint8Array(length);
-            crypto.getRandomValues(array);
-            return array;
+        // Uniform random integer in [0, max): crypto.getRandomValues + rejection sampling.
+        // The old byte (0-255) % length could never pick a word past the 256th and made
+        // some characters more likely than others (modulo bias).
+        function randomInt(max) {
+            const limit = Math.floor(0x100000000 / max) * max;
+            const buf = new Uint32Array(1);
+            do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
+            return buf[0] % max;
+        }
+
+        // Copy to clipboard, with a fallback when the Clipboard API is missing or refuses
+        function copyText(text) {
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                let ok = false;
+                try { ok = document.execCommand('copy'); } catch (e) {}
+                document.body.removeChild(ta);
+                showFeedback(ok ? '✅ Copied!' : '❌ Copy failed: select it and copy it manually');
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showFeedback('✅ Copied!'), fallback);
+            } else { fallback(); }
         }
 
         function switchTab(tabName, _el) {
@@ -943,10 +977,9 @@ button:hover {
                 return;
             }
 
-            const bytes = getRandomValues(length);
             let password = '';
             for (let i = 0; i < length; i++) {
-                password += charset[bytes[i] % charset.length];
+                password += charset[randomInt(charset.length)];
             }
 
             document.getElementById('passwordDisplay').textContent = password;
@@ -975,9 +1008,7 @@ button:hover {
                 showFeedback('❌ Generate a password before copying');
                 return;
             }
-            navigator.clipboard.writeText(password).then(() => {
-                showFeedback('✅ Copied!');
-            });
+            copyText(password);
         }
 
         // ==================== PASSWORD CHECKER ====================
@@ -987,13 +1018,14 @@ button:hover {
             const upper = (password.match(/[A-Z]/g) || []).length;
             const lower = (password.match(/[a-z]/g) || []).length;
             const nums = (password.match(/[0-9]/g) || []).length;
-            const syms = (password.match(/[!@#$%^&*()\-_+=\[\]{}|;:,.<>?]/g) || []).length;
+            // every ASCII symbol (~ ` ' " / \ were not counted as symbols before)
+            const syms = (password.match(/[!-\/:-@\[-\x60{-~]/g) || []).length;
 
             let charset = '';
             if (/[A-Z]/.test(password)) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             if (/[a-z]/.test(password)) charset += 'abcdefghijklmnopqrstuvwxyz';
             if (/[0-9]/.test(password)) charset += '0123456789';
-            if (/[!@#$%^&*()\-_+=\[\]{}|;:,.<>?]/.test(password)) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            if (syms > 0) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
             const entropy = calculateEntropy(password, charset);
             const strength = getStrengthLevel(entropy);
@@ -1026,7 +1058,7 @@ button:hover {
             if (suggestions.length > 0) {
                 suggestionsDiv.innerHTML = '<div class="warning"><strong>💡 Suggestions:</strong><br>' + suggestions.join('<br>') + '</div>';
             } else {
-                suggestionsDiv.innerHTML = '<div style="background: #1a2a1a; border-left: 4px solid #a8d5a8; padding: 15px; border-radius: 4px; color: var(--el-text1); margin: 20px 0;">✅ Very strong password!</div>';
+                suggestionsDiv.innerHTML = '<div style="background: rgba(168, 213, 168, 0.15); border-left: 4px solid #a8d5a8; padding: 15px; border-radius: 4px; color: var(--el-text1); margin: 20px 0;">✅ Very strong password!</div>';
             }
         }
 
@@ -1037,11 +1069,10 @@ button:hover {
             const capitalize = document.getElementById('capitalizeSeparator').checked;
             const addNumber = document.getElementById('addNumber').checked;
 
-            const bytes = getRandomValues(wordCount);
             let words = [];
 
             for (let i = 0; i < wordCount; i++) {
-                const idx = bytes[i] % ENGLISH_WORDS.length;
+                const idx = randomInt(ENGLISH_WORDS.length);
                 let word = ENGLISH_WORDS[idx];
                 if (capitalize) {
                     word = word.charAt(0).toUpperCase() + word.slice(1);
@@ -1051,8 +1082,7 @@ button:hover {
 
             let passphrase = words.join(separator);
             if (addNumber) {
-                const numByte = getRandomValues(1)[0];
-                passphrase += separator + (numByte % 100);
+                passphrase += separator + randomInt(100);
             }
 
             document.getElementById('passphraseDisplay').textContent = passphrase;
@@ -1070,9 +1100,7 @@ button:hover {
                 showFeedback('❌ Generate a passphrase before copying');
                 return;
             }
-            navigator.clipboard.writeText(passphrase).then(() => {
-                showFeedback('✅ Copied!');
-            });
+            copyText(passphrase);
         }
 
         // ==================== VAULT ====================
@@ -1087,22 +1115,29 @@ button:hover {
             let v = null;
             try { v = JSON.parse(data); } catch(e) { return []; }
             if (!Array.isArray(v)) return [];
-            // every entry must carry the fields the renderer expects, even ones added later
-            return v.filter(e => e && typeof e === 'object').map(e => Object.assign({
-                id: Date.now(), service: '', username: '', password: '', created: ''
-            }, e));
+            // every entry must carry the fields the renderer expects, even ones added later.
+            // The fallback id is stable (position): Date.now() changed on every read, so
+            // Show/Delete could no longer find a saved entry that had no id.
+            return v.filter(e => e && typeof e === 'object').map((e, i) => {
+                const entry = Object.assign({ service: '', username: '', password: '', created: '' }, e);
+                if (typeof entry.id !== 'number' || !isFinite(entry.id)) entry.id = -(i + 1);
+                return entry;
+            });
         }
 
         function saveVault(vault) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(vault));
+            // if the browser blocks local storage or it is full, say so instead of failing silently
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(vault)); return true; }
+            catch (e) { showFeedback('❌ Could not save: browser storage is not available'); return false; }
         }
 
         function addVaultEntry() {
             const service = document.getElementById('vaultService').value.trim();
             const username = document.getElementById('vaultUsername').value.trim();
-            const password = document.getElementById('vaultPassword').value.trim();
+            // save the password exactly as typed: leading/trailing spaces (spaces option) are part of it
+            const password = document.getElementById('vaultPassword').value;
 
-            if (!service || !username || !password) {
+            if (!service || !username || !password.trim()) {
                 showFeedback('❌ Fill in all fields');
                 return;
             }
@@ -1116,7 +1151,7 @@ button:hover {
                 created: new Date().toLocaleDateString('en-US')
             });
 
-            saveVault(vault);
+            if (!saveVault(vault)) return;
             document.getElementById('vaultService').value = '';
             document.getElementById('vaultUsername').value = '';
             document.getElementById('vaultPassword').value = '';
@@ -1128,7 +1163,7 @@ button:hover {
             if (!confirm('Are you sure you want to delete this entry?')) return;
             let vault = loadVault();
             vault = vault.filter(e => e.id !== id);
-            saveVault(vault);
+            if (!saveVault(vault)) return;
             showFeedback('✅ Deleted');
             displayVault();
         }
@@ -1137,6 +1172,7 @@ button:hover {
             const vault = loadVault();
             const entry = vault.find(e => e.id === id);
             const display = document.getElementById('pwd-' + id);
+            if (!entry || !display) return;
 
             if (display.textContent === '••••••••') {
                 display.textContent = entry.password;
@@ -1151,8 +1187,8 @@ button:hover {
             const search = document.getElementById('vaultSearch').value.toLowerCase();
             const vault = loadVault();
             const filtered = vault.filter(e =>
-                e.service.toLowerCase().includes(search) ||
-                e.username.toLowerCase().includes(search)
+                String(e.service == null ? '' : e.service).toLowerCase().includes(search) ||
+                String(e.username == null ? '' : e.username).toLowerCase().includes(search)
             );
             displayVaultEntries(filtered);
         }
@@ -1186,7 +1222,7 @@ button:hover {
                     </div>
                     <div class="vault-actions">
                         <button class="btn-delete" onclick="deleteVaultEntry(${entry.id})">🗑️ Delete</button>
-                        <div style="color: var(--el-text2); font-size: 0.8em; margin-top: 5px;">${entry.created}</div>
+                        <div style="color: var(--el-text2); font-size: 0.8em; margin-top: 5px;">${escapeHtml(entry.created)}</div>
                     </div>
                 </div>
             `).join('');
@@ -1213,7 +1249,7 @@ button:hover {
         });
     </script>
 <footer class="el-brand" style="text-align:center;padding:22px 16px;margin-top:28px;font-size:12.5px;line-height:1.6;color:#6b8a7e;border-top:1px solid rgba(120,160,145,0.18);">✦ Made by EtherLabs — <a href="https://www.etsy.com/shop/EtherLabsStudio" target="_blank" rel="noopener" style="color:var(--el-emerald);text-decoration:none;">etsy.com/shop/EtherLabsStudio</a> · © 2026</footer>
-<button id="el-theme-toggle" type="button" aria-label="Cambia tema" title="Tema chiaro / scuro">🌙</button>
+<button id="el-theme-toggle" type="button" aria-label="Toggle theme" title="Light / dark theme">🌙</button>
 <script>(function(){var K='etherlabs-theme',R=document.documentElement;function upd(){var b=document.getElementById('el-theme-toggle');if(b)b.textContent=R.getAttribute('data-theme')==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}function set(t){R.setAttribute('data-theme',t);try{localStorage.setItem(K,t)}catch(e){}upd();}var s=null;try{s=localStorage.getItem(K)}catch(e){}set(s==='light'?'light':'dark');document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#el-theme-toggle');if(b)set(R.getAttribute('data-theme')==='dark'?'light':'dark');});})();</script>
 </div><!-- /appContent -->
 <script>(function(){

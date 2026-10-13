@@ -20,26 +20,18 @@
   --el-danger:#ff9999; --el-warn:#ffcc99; --el-info:#99ff99;
   color-scheme: dark;
 }
-#el-theme-toggle{position:fixed;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
+/* absolute, not fixed: the toggle stays in the top-right corner of the page and never floats over content while scrolling */
+#el-theme-toggle{position:absolute;top:14px;right:14px;z-index:99999;width:40px;height:40px;border-radius:50%;
   border:1px solid var(--el-border2);background:var(--el-bg2);color:var(--el-text1);font-size:18px;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 @media print{#el-theme-toggle{display:none}}
-
-#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#lockScreen.hidden{display:none}
-.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.lock-icon{font-size:3.5rem;margin-bottom:16px}.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
-.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none}
-.lock-input:focus{border-color:#10b981}.lock-input.error{border-color:#ef4444}
-.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation}
-.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
 </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
     <title>Eisenhower Matrix Pro - Prioritize with Intelligence</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <style>
         * {
             margin: 0;
@@ -854,12 +846,15 @@
                 grid-template-columns: 1fr;
             }
 
-            .matrix-grid {
-                grid-template-columns: 1fr;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 2x2 matrix down to 800px (iPad portrait, small laptops); one column only below */
+        @media (max-width: 799px) {
+            .matrix-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -961,10 +956,19 @@
                 flex-wrap: wrap;
             }
         }
+
+        /* phones: the title row starts below the theme toggle (top-right corner) instead of running under it */
+        @media (max-width: 600px) {
+            .header {
+                padding-top: 56px;
+            }
+        }
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* side gutter: the layout's own body padding, or the notch inset when larger */
+        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 20px); padding-right: max(env(safe-area-inset-right), 20px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        @media (max-width: 480px) { body { padding-left: max(env(safe-area-inset-left), 10px); padding-right: max(env(safe-area-inset-right), 10px); } }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {
@@ -1000,6 +1004,25 @@
     .task-card.el-drag-src { opacity: .35; }
     .task-card.el-ghost { box-shadow: 0 14px 34px rgba(0,0,0,.45); }
     </style>
+<style>
+/* ===== Lock Screen ===== */
+#lockScreen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#060a0a 0%,#0a1210 50%,#0f1a17 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#lockScreen.hidden{display:none}
+.lock-card{background:rgba(16,185,129,0.04);border:1px solid #162e26;border-radius:24px;padding:50px 40px;max-width:420px;width:90%;text-align:center;backdrop-filter:blur(20px);animation:fadeIn .6s ease}
+.lock-icon{font-size:3.5rem;margin-bottom:16px}
+.lock-title{color:#e8f0ec;font-size:1.6rem;font-weight:700;margin-bottom:8px}
+.lock-sub{color:#7a9a8e;font-size:.95rem;margin-bottom:30px}
+.lock-input{width:100%;padding:14px 18px;background:rgba(16,185,129,0.08);border:2px solid #162e26;border-radius:12px;color:#e8f0ec;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .3s}
+.lock-input:focus{border-color:#10b981}
+.lock-input.error{border-color:#ef4444;animation:lockShake .4s ease}
+.lock-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:12px;color:#060a0a;font-size:1.05rem;font-weight:700;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.3)}
+.lock-error{color:#ef4444;font-size:.85rem;margin-top:12px;min-height:1.2em}
+.lock-footer{color:#4a6b5e;font-size:.8rem;margin-top:30px}
+.install-hint{display:none;margin-top:20px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid #162e26;border-radius:10px;color:#7a9a8e;font-size:.85rem}
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="lockScreen"><div class="lock-card"><div class="lock-icon">🔐</div>
@@ -1753,7 +1776,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             input.focus();
             input.select();
 
+            let finished = false; // Enter/Escape remove the input, which also fires blur: handle the edit only once
             function saveEdit() {
+                if (finished) return;
+                finished = true;
                 const newText = input.value.trim();
                 if (newText && newText !== originalText) {
                     task.text = newText;
@@ -1774,6 +1800,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 if (e.key === 'Enter') {
                     saveEdit();
                 } else if (e.key === 'Escape') {
+                    finished = true;
                     textElement.textContent = originalText;
                 }
             });
@@ -1821,10 +1848,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const EM = [16,185,129], DK = [17,24,28], GR = [120,135,145];
             doc.setFillColor.apply(doc, EM); doc.rect(0,0,W,72,'F');
             doc.setTextColor(6,10,10); doc.setFont('helvetica','bold'); doc.setFontSize(21); doc.text('Eisenhower Matrix', M, 42);
-            doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString() + '  .  ' + tasks.length + ' tasks', M, 60);
+            doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Generated ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + '  .  ' + tasks.length + (tasks.length === 1 ? ' task' : ' tasks'), M, 60);
             const gap = 16, top = 92;
             const cw = (W - M*2 - gap) / 2, ch = (H - top - M - gap) / 2;
-            const order = [['q1',0,0],['q3',1,0],['q2',0,1],['q4',1,1]];
+            const order = [['q1',0,0],['q2',1,0],['q3',0,1],['q4',1,1]]; // same layout as the on-screen matrix
             order.forEach(([q, col, row]) => {
                 const x = M + col*(cw+gap), y = top + row*(ch+gap), m = META[q], list = byQ[q];
                 doc.setFillColor(249,250,251); doc.setDrawColor(232,235,238); doc.roundedRect(x, y, cw, ch, 10, 10, 'FD');
@@ -1840,9 +1867,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                     const t = list[i]; const done = t.completed;
                     doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor.apply(doc, done ? GR : DK);
                     const mark = done ? '[x] ' : '- ';
-                    const lines = doc.splitTextToSize(mark + t.text, cw - 28);
+                    const due = t.dueDate ? 'due ' + formatDate(t.dueDate) : '';
+                    const dueW = due ? doc.getStringUnitWidth(due) * 7.5 / doc.internal.scaleFactor + 14 : 0; // keep the task text clear of the right-aligned due date
+                    const lines = doc.splitTextToSize(mark + t.text, cw - 28 - dueW);
                     doc.text(lines[0] + (lines.length > 1 ? '...' : ''), x+14, ty);
-                    if (t.dueDate) { doc.setFontSize(7.5); doc.setTextColor.apply(doc, m.color); doc.text('due ' + formatDate(t.dueDate), x+cw-14, ty, {align:'right'}); }
+                    if (due) { doc.setFontSize(7.5); doc.setTextColor.apply(doc, m.color); doc.text(due, x+cw-14, ty, {align:'right'}); }
                     ty += lineH;
                 }
             });
@@ -1875,7 +1904,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 quad.tasks.forEach(task => {
                     const status = task.completed ? '[✓]' : '[ ]';
                     const priority = ` (${task.priority})`;
-                    const dueDate = task.dueDate ? ` - Due Date: ${task.dueDate}` : '';
+                    const dueDate = task.dueDate ? ` - Due Date: ${formatDate(task.dueDate)}` : '';
                     content += `${status} ${task.text}${priority}${dueDate}\n`;
                 });
                 content += `Total: ${quad.tasks.length}\n`;
@@ -2161,7 +2190,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             try {
                 saved = localStorage.getItem('matrix_tasks');
             } catch(e) {}
-            tasks = saved ? JSON.parse(saved) : [];
+            try { tasks = saved ? JSON.parse(saved) : []; } catch(e) { tasks = []; }
+            if (!Array.isArray(tasks)) tasks = [];
         }
 
         // UTILITIES
