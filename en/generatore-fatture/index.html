@@ -1193,14 +1193,15 @@ function t(key) {
 }
 function taxWord() { return COUNTRIES[state.country].taxLabel; }
 
-function fmtMoney(value) {
+function fmtMoney(value, maxDec) {   // maxDec: unit prices show up to 4 decimals (0.085), amounts the currency's 2
     const loc = COUNTRIES[state.country].locale;
     const iso = CURRENCY_ISO[state.currency] || 'USD';
     const v = isFinite(value) ? value : 0;
+    const dec = maxDec ? { maximumFractionDigits: maxDec } : {};
     let s;
-    try { s = new Intl.NumberFormat(loc, { style: 'currency', currency: iso, currencyDisplay: 'narrowSymbol' }).format(v); }
+    try { s = new Intl.NumberFormat(loc, { style: 'currency', currency: iso, currencyDisplay: 'narrowSymbol', ...dec }).format(v); }
     catch (e) {
-        try { s = new Intl.NumberFormat(loc, { style: 'currency', currency: iso }).format(v); }
+        try { s = new Intl.NumberFormat(loc, { style: 'currency', currency: iso, ...dec }).format(v); }
         catch (e2) { s = state.currency + v.toFixed(2); }
     }
     // normalize special spaces (jsPDF Helvetica can't render them) and fix euro-before-digit overlap
@@ -1312,35 +1313,70 @@ function removeLineItem(id) {
     updatePreview();
 }
 
-/* ---------- calculation (tax inclusive/exclusive + forfettario) ---------- */
+/* ---------- calculation (tax inclusive/exclusive + forfettario) ----------
+   every amount is rounded to the cent where it is made and every total is the sum of the amounts shown:
+   the tax is worked out per rate (as in the FatturaPA DatiRiepilogo) and split over the lines in whole cents,
+   so editor, preview, print, PDF and XML all add up */
+function roundDec(n, d) {   // half away from zero; toFixed(6) first drops float noise (18,25 × 22% = 4,015 is stored as 4,01499…: it must give 4,02)
+    const f = Math.pow(10, d); n = Number(n) || 0;
+    return Math.sign(n) * Math.round(parseFloat((Math.abs(n) * f).toFixed(6))) / f + 0;
+}
+function r2(n) { return roundDec(n, 2); }
+function roundToTotal(values, total) {   // each value to the cent, down or up (largest remainder), so the parts add up to total exactly
+    const raw = values.map(v => parseFloat((v * 100).toFixed(6)));
+    const parts = raw.map(Math.floor);
+    let left = Math.round(total * 100) - parts.reduce((s, c) => s + c, 0);
+    const order = raw.map((x, i) => i).sort((a, b) => (raw[b] - parts[b]) - (raw[a] - parts[a]));
+    order.forEach(i => { if (left > 0) { parts[i]++; left--; } });
+    order.reverse().forEach(i => { if (left < 0) { parts[i]--; left++; } });
+    return parts.map(c => c / 100);
+}
+function splitCents(amount, weights) {   // amount split in proportion to the weights, in whole cents that add up to it exactly
+    const W = weights.reduce((s, w) => s + w, 0);
+    if (!W) return weights.map((w, i) => i ? 0 : r2(amount));
+    return roundToTotal(weights.map(w => amount * w / W), amount);
+}
 function computeInvoice() {
     const forf = state.forfettario && COUNTRIES[state.country].forfettario;
     const incl = state.taxInclusive && !forf;
     const items = [];
-    let subtotal = 0;
 
     document.querySelectorAll('.line-item').forEach(row => {
         const desc = row.querySelector('.description').value || '-';
         const qty = parseFloat(row.querySelector('.quantity').value) || 0;
-        const price = parseFloat(row.querySelector('.price').value) || 0;
+        const price = roundDec(parseFloat(row.querySelector('.price').value) || 0, 4);   // up to 4 decimals (0.085 a word), shown as used
         let rate = parseFloat(row.querySelector('.tax').value) || 0;
         if (forf) rate = 0;
         // Natura IVA: forfettario N2.2 (automatic); Italian line at 0% the code picked on the line
         const natura = forf ? 'N2.2' : (state.country === 'IT' && rate === 0 ? row.querySelector('.natura').value : null);
-
-        const gross = qty * price;
-        let net, lineTax;
-        if (incl && rate > 0) { net = gross / (1 + rate / 100); lineTax = gross - net; }
-        else { net = gross; lineTax = gross * rate / 100; }
-
-        subtotal += net;
-        items.push({ desc, qty, price, rate, net, lineTax, exempt: forf, natura, lineTotal: net + lineTax });
+        items.push({ desc, qty, price, rate, exempt: forf, natura, gross: r2(qty * price) });   // gross: the line as typed (net, or tax included)
     });
+
+    // gruppi IVA (aliquota + Natura, come i DatiRiepilogo): netto e imposta per aliquota, ripartiti sulle righe al centesimo
+    const groups = [];
+    items.forEach(it => {
+        const key = it.rate + '|' + (it.natura || '');
+        let g = groups.find(x => x.key === key);
+        if (!g) groups.push(g = { key, rate: it.rate, natura: it.natura || '', items: [] });
+        g.items.push(it);
+    });
+    groups.forEach(g => {
+        g.gross = r2(g.items.reduce((s, it) => s + it.gross, 0));
+        if (incl) {   // scorporo per aliquota: netto = lordo / (1 + aliquota); ogni riga resta il prezzo scritto
+            g.net = r2(g.gross / (1 + g.rate / 100));
+            splitCents(g.net, g.items.map(it => it.gross)).forEach((n, i) => { const it = g.items[i]; it.net = n; it.lineTax = r2(it.gross - n); });
+        } else {
+            g.net = g.gross;
+            splitCents(r2(g.net * g.rate / 100), g.items.map(it => it.gross)).forEach((x, i) => { const it = g.items[i]; it.net = it.gross; it.lineTax = x; });
+        }
+        g.items.forEach(it => { it.lineTotal = r2(it.net + it.lineTax); });
+    });
+    const subtotal = r2(items.reduce((s, it) => s + it.net, 0));
 
     // sconto
     const raw = $('discount').value.trim();
     const dNum = parseLocalNum(raw);
-    let discountAmount = raw.includes('%') ? subtotal * (dNum / 100) : dNum;
+    let discountAmount = r2(raw.includes('%') ? subtotal * (dNum / 100) : dNum);
     if (discountAmount < 0) discountAmount = 0;
     if (discountAmount > subtotal) discountAmount = subtotal;
     const discountFactor = subtotal > 0 ? (subtotal - discountAmount) / subtotal : 1;
@@ -1351,32 +1387,44 @@ function computeInvoice() {
     if (forf) ritenutaRate = 0;                       // i forfettari non subiscono ritenuta
     const rivalsaInRit = $('rivalsaInRitenuta') ? $('rivalsaInRitenuta').checked : true;
 
-    const imponibile = subtotal - discountAmount;     // base scontata
-    const cassaTotal = imponibile * cassaRate / 100;
+    const imponibile = r2(subtotal - discountAmount);     // base scontata
+    const cassaTotal = r2(imponibile * cassaRate / 100);
 
-    // IVA sulla base SCONTATA + quota cassa, ripartita pro-quota per riga (aliquote miste ok)
-    let taxTotal = 0;
-    items.forEach(it => {
-        const discNet = it.net * discountFactor;
-        const cassaShare = discNet * cassaRate / 100;
-        it.discNet = discNet;                  // netto riga scontato (per DettaglioLinee/PrezzoTotale)
-        it.taxBase = discNet + cassaShare;     // base IVA reale = imponibile FatturaPA della riga
-        it.taxDue = it.taxBase * it.rate / 100;
-        taxTotal += it.taxDue;
+    // IVA sulla base SCONTATA + quota cassa, per aliquota (aliquote miste ok); sconto e cassa ripartiti sulle righe al centesimo.
+    // Sconto in %: ogni riga tiene (1 − %) del suo netto a meno di un centesimo, così la FatturaPA può scriverlo come Percentuale (SdI 00423)
+    const pctTyped = raw.includes('%') && discountAmount === r2(subtotal * (dNum / 100)) ? dNum : null;
+    const keep = pctTyped != null ? 1 - pctTyped / 100 : discountFactor;
+    roundToTotal(items.map(it => it.net * keep), imponibile).forEach((v, i) => { items[i].discNet = v; });   // netto riga scontato (per DettaglioLinee/PrezzoTotale)
+    splitCents(cassaTotal, items.map(it => it.discNet)).forEach((v, i) => {
+        const it = items[i];
+        it.cassaShare = v;
+        it.taxBase = r2(it.discNet + v);       // base IVA reale = imponibile FatturaPA della riga
     });
+    let taxTotal = 0;
+    groups.forEach(g => {
+        g.base = r2(g.items.reduce((s, it) => s + it.taxBase, 0));      // ImponibileImporto
+        g.cassa = r2(g.items.reduce((s, it) => s + it.cassaShare, 0));
+        // IVA inclusa e base invariata (né sconto né cassa): l'imposta è lordo − netto, così il totale resta la somma delle righe
+        g.tax = (incl && Math.abs(g.base - g.net) < 0.005) ? r2(g.gross - g.net) : r2(g.base * g.rate / 100);
+        taxTotal += g.tax;
+    });
+    taxTotal = r2(taxTotal);
 
     // imposta di bollo: dovuta oltre 77,47 € di importi non soggetti a IVA (forfettario, o righe 0% con Natura in NATURE_BOLLO);
     // se addebitata al cliente i 2 € restano fuori da base IVA, cassa e ritenuta
-    const bolloBase = forf ? imponibile + cassaTotal + taxTotal
-        : items.reduce((s, it) => s + (NATURE_BOLLO.includes(it.natura) ? it.taxBase : 0), 0);
+    const bolloBase = r2(forf ? imponibile + cassaTotal + taxTotal
+        : items.reduce((s, it) => s + (NATURE_BOLLO.includes(it.natura) ? it.taxBase : 0), 0));
     const bolloDue = state.country === 'IT' && bolloBase > 77.47;
     const bolloAmount = (bolloDue && state.bolloCliente) ? 2 : 0;
-    const grandTotal = imponibile + cassaTotal + taxTotal + bolloAmount;   // totale fattura (lordo)
+    const grandTotal = r2(imponibile + cassaTotal + taxTotal + bolloAmount);   // totale fattura (lordo)
     const ritBase = imponibile + (rivalsaInRit ? cassaTotal : 0);     // rivalsa GS soggetta a ritenuta
-    const ritenutaAmount = ritBase * ritenutaRate / 100;
-    const nettoAPagare = grandTotal - ritenutaAmount;
+    const ritenutaAmount = r2(ritBase * ritenutaRate / 100);
+    const nettoAPagare = r2(grandTotal - ritenutaAmount);
 
-    return { items, subtotal, discountAmount, discountFactor, imponibile, cassaRate, cassaTotal,
+    // the % as typed, when the FatturaPA can write it as it is (2 decimals): otherwise the XML gives the discount per unit
+    const discountPct = (pctTyped != null && Math.abs(pctTyped * 100 - Math.round(pctTyped * 100)) < 1e-6) ? pctTyped : null;
+
+    return { items, groups, subtotal, discountAmount, discountFactor, discountPct, imponibile, cassaRate, cassaTotal,
              taxTotal, grandTotal, ritenutaRate, ritenutaAmount, nettoAPagare, forf, incl, bolloDue, bolloAmount, rivalsaInRit };
 }
 
@@ -1412,8 +1460,9 @@ function syncNaturaSelects() {
     });
 }
 
-/* country switch: lines still on the default rate take the new country's default; a rate typed by hand stays.
+/* country switch or a new Default Rate: lines still on the default rate take the new default; a rate typed by hand stays.
    Lines loaded from saved data (origin unknown) move only when their rate equals the old default. */
+let syncedDefaultTax = null;   // the Default Rate the lines were last synced with (set by updatePreview)
 function moveDefaultRates(oldDef, newDef) {
     document.querySelectorAll('.line-item .tax').forEach(inp => {
         if (inp.dataset.handSet || !(inp.dataset.autoRate || parseFloat(lineRate(inp)) === parseFloat(oldDef))) return;
@@ -1430,6 +1479,7 @@ function updatePreview() {
     updateTotals(calc);
     renderPreview(calc);
     saveState();
+    syncedDefaultTax = $('defaultTax').value;
 }
 
 /* ---------- style resolution for a template ---------- */
@@ -1482,7 +1532,7 @@ function renderPreview(calc) {
         itemsHTML += `<tr>
             <td>${esc(it.desc)}</td>
             <td style="text-align:center;">${it.qty}</td>
-            <td style="text-align:right;">${esc(fmtMoney(it.price))}</td>
+            <td style="text-align:right;">${esc(fmtMoney(it.price, 4))}</td>
             <td style="text-align:center;">${taxCell}</td>
             <td style="text-align:right;">${esc(fmtMoney(it.lineTotal))}</td>
         </tr>`;
@@ -1741,7 +1791,7 @@ async function buildInvoicePdf() {
         const ty = y + 5.2;
         descLines.forEach((ln, li) => doc.text(ln, colX[0] + pad, ty + li * lineH));
         cell(String(it.qty), 1, ty);
-        cell(fmtMoney(it.price), 2, ty);
+        cell(fmtMoney(it.price, 4), 2, ty);
         cell(it.exempt ? t('exempt') : fmtPct(it.rate) + (it.natura ? ' ' + it.natura : ''), 3, ty);
         cell(fmtMoney(it.lineTotal), 4, ty);
         doc.setDrawColor(225, 225, 225); doc.setLineWidth(0.1);
@@ -2007,7 +2057,8 @@ $('forfettario').addEventListener('change', e => { state.forfettario = e.target.
 $('bolloCliente').addEventListener('change', e => { state.bolloCliente = e.target.checked; updatePreview(); });
 $('accentColor').addEventListener('input', e => { state.accent = e.target.value; updatePreview(); });
 $('accentReset').addEventListener('click', () => { state.accent = null; $('accentColor').value = TEMPLATES[state.template].defAccent; updatePreview(); });
-['defaultTax','invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate',
+$('defaultTax').addEventListener('change', e => { moveDefaultRates(syncedDefaultTax, e.target.value); updatePreview(); });
+['invoiceCounter','discount','invoiceDate','dueDate','fromName','fromAddress','fromCity','fromEmail','fromPhone','fromTax','fromLogo','toName','toAddress','toCity','toEmail','toTax','bankName','bankIBAN','paymentTerms','notes','cassaRate','ritenutaRate',
  'fromCap','fromProv','toCap','toProv','codiceDestinatario','pecDestinatario','intentoProt','intentoDate']
     .forEach(id => $(id).addEventListener('input', updatePreview));
 $('rivalsaInRitenuta').addEventListener('change', updatePreview);
@@ -2142,9 +2193,10 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
     // ImponibileImporto = base IVA reale (netto scontato + quota cassa), così Imposta = Imponibile×Aliquota
     // riconcilia (controllo SdI 00423) anche con sconto e/o cassa previdenziale. The bollo charged to the client joins N1, outside the cassa.
     var groups={},gk=[];
-    function addG(al,na,imp,cassa){var k=al+'|'+na;if(!groups[k]){groups[k]={al:al,na:na,imp:0,cassa:0};gk.push(k);}groups[k].imp+=imp;groups[k].cassa+=cassa;}
-    (calc.items||[]).forEach(function(it){addG(forf?0:it.rate,it.natura||'',(it.taxBase!=null?it.taxBase:(it.net||0)),(it.discNet!=null?it.discNet:(it.net||0))*(+calc.cassaRate||0)/100);});
-    if(bolloCli>0)addG(0,'N1',bolloCli,0);
+    // same cent-rounded groups as the totals shown (computeInvoice), so Imposta and ImportoTotaleDocumento match preview and PDF
+    function addG(al,na,imp,cassa,tax){var k=al+'|'+na;if(!groups[k]){groups[k]={al:al,na:na,imp:0,cassa:0,tax:0};gk.push(k);}groups[k].imp+=imp;groups[k].cassa+=cassa;groups[k].tax+=tax;}
+    (calc.groups||[]).forEach(function(g){addG(forf?0:g.rate,g.natura||'',g.base,g.cassa,g.tax);});
+    if(bolloCli>0)addG(0,'N1',bolloCli,0,0);
     if((+calc.cassaRate||0)>0&&(+calc.cassaTotal||0)>0){
       // one block per rate/Natura, so each DatiRiepilogo reconciles with its lines + its share of the cassa
       var cg=gk.filter(function(k){return groups[k].cassa>0;});
@@ -2157,20 +2209,27 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
     L.push('</DatiGeneraliDocumento></DatiGenerali>');
     L.push('<DatiBeniServizi>');
     // Lo sconto globale è uniforme su tutte le righe: lo rappresentiamo con ScontoMaggiorazione (SC)
-    // così PrezzoTotale (netto scontato) è coerente con PrezzoUnitario×Quantità per lo SdI.
-    var df=(calc.discountFactor!=null?+calc.discountFactor:1); var discPct=(1-df)*100;
+    // così PrezzoTotale (netto scontato) è coerente con PrezzoUnitario×Quantità per lo SdI (controllo 00423).
+    // Sconto in % scrivibile a 2 decimali: Percentuale. Sconto in importo (o % più fine): Importo per unità, a 8 decimali,
+    // con PrezzoUnitario e Importo presi in unità da 1e-8 così (PrezzoUnitario − Importo) × Quantità = PrezzoTotale esatto.
+    var pct=(calc.discountPct!=null&&calc.discountPct>0)?calc.discountPct:null;
+    function u8(n){return Math.round((+n||0)*1e8);}
+    function f8(u){var s=String(Math.abs(u)).padStart(9,'0');return (u<0?'-':'')+s.slice(0,-8)+'.'+s.slice(-8);}
+    function qty8(n){return (+n||0).toFixed(8).replace(/(\.\d{2}\d*?)0+$/,'$1');}   // Quantita with the decimals used (2 to 8)
     // dichiarazione d'intento on the N3.5 lines: AltriDatiGestionali INTENTO (Agenzia delle Entrate, from 2022)
     var prot=(d.intentoProt||'').trim();
     var intento=prot?'<AltriDatiGestionali><TipoDato>INTENTO</TipoDato><RiferimentoTesto>'+xe(prot.slice(0,60))+'</RiferimentoTesto>'+(d.intentoDate?'<RiferimentoData>'+xe(d.intentoDate.slice(0,10))+'</RiferimentoData>':'')+'</AltriDatiGestionali>':'';
     (calc.items||[]).forEach(function(it,i){
       // PrezzoUnitario in FatturaPA è sempre NETTO (IVA esclusa): usa il netto/qtà, valido anche in modalità "IVA inclusa".
-      var unit=(it.qty>0)?(it.net/it.qty):(+it.price||0);
-      var sconto=(discPct>0.0000001)?'<ScontoMaggiorazione><Tipo>SC</Tipo><Percentuale>'+n2(discPct)+'</Percentuale></ScontoMaggiorazione>':'';
-      L.push('<DettaglioLinee><NumeroLinea>'+(i+1)+'</NumeroLinea><Descrizione>'+xe(it.desc||'-')+'</Descrizione><Quantita>'+n2(it.qty)+'</Quantita><PrezzoUnitario>'+unit.toFixed(8)+'</PrezzoUnitario>'+sconto+'<PrezzoTotale>'+n2(it.discNet!=null?it.discNet:it.net)+'</PrezzoTotale><AliquotaIVA>'+n2(forf?0:it.rate)+'</AliquotaIVA>'+(rit?'<Ritenuta>SI</Ritenuta>':'')+(it.natura?'<Natura>'+it.natura+'</Natura>':'')+(it.natura==='N3.5'?intento:'')+'</DettaglioLinee>');
+      var dn=(it.discNet!=null?it.discNet:it.net);
+      var unit=(it.qty>0)?u8(it.net/it.qty):u8(it.price), off=(it.qty>0)?unit-u8(dn/it.qty):0;
+      var sconto=pct?'<ScontoMaggiorazione><Tipo>SC</Tipo><Percentuale>'+n2(pct)+'</Percentuale></ScontoMaggiorazione>'
+        :(off!==0?'<ScontoMaggiorazione><Tipo>'+(off>0?'SC':'MG')+'</Tipo><Importo>'+f8(Math.abs(off))+'</Importo></ScontoMaggiorazione>':'');
+      L.push('<DettaglioLinee><NumeroLinea>'+(i+1)+'</NumeroLinea><Descrizione>'+xe(it.desc||'-')+'</Descrizione><Quantita>'+qty8(it.qty)+'</Quantita><PrezzoUnitario>'+f8(unit)+'</PrezzoUnitario>'+sconto+'<PrezzoTotale>'+n2(dn)+'</PrezzoTotale><AliquotaIVA>'+n2(forf?0:it.rate)+'</AliquotaIVA>'+(rit?'<Ritenuta>SI</Ritenuta>':'')+(it.natura?'<Natura>'+it.natura+'</Natura>':'')+(it.natura==='N3.5'?intento:'')+'</DettaglioLinee>');
     });
     // bollo charged to the client: its own line, Natura N1 (escluso art. 15 DPR 633/72), no discount, outside the cassa base
     if(bolloCli>0)L.push('<DettaglioLinee><NumeroLinea>'+((calc.items||[]).length+1)+'</NumeroLinea><Descrizione>Imposta di bollo</Descrizione><Quantita>1.00</Quantita><PrezzoUnitario>'+bolloCli.toFixed(8)+'</PrezzoUnitario><PrezzoTotale>'+n2(bolloCli)+'</PrezzoTotale><AliquotaIVA>0.00</AliquotaIVA><Natura>N1</Natura></DettaglioLinee>');
-    gk.forEach(function(k){var g=groups[k]; var imposta=(g.na||g.al===0)?0:(g.imp*g.al/100);
+    gk.forEach(function(k){var g=groups[k]; var imposta=(g.na||g.al===0)?0:g.tax;
       var rif=!g.na?'':(forf&&g.na==='N2.2'?'Operazione in regime forfettario ex art.1 c.54-89 L.190/2014':NATURE[g.na]);
       L.push('<DatiRiepilogo><AliquotaIVA>'+n2(g.al)+'</AliquotaIVA>'+(g.na?'<Natura>'+g.na+'</Natura>':'')+'<ImponibileImporto>'+n2(g.imp)+'</ImponibileImporto><Imposta>'+n2(imposta)+'</Imposta>'+(rif?'<RiferimentoNormativo>'+xe(rif)+'</RiferimentoNormativo>':'')+'</DatiRiepilogo>');
     });

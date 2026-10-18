@@ -112,6 +112,11 @@
             gap: 12px;
         }
 
+        /* the fixed theme toggle sits in the top-right corner: keep the header clear of it */
+        .header {
+            padding-right: 48px;
+        }
+
         /* Buttons */
         .btn {
             padding: 12px 26px;
@@ -987,6 +992,16 @@
                 font-size: 1.8rem;
             }
 
+            /* phones: only the title row is next to the toggle */
+            .header {
+                padding-right: 0;
+            }
+
+            .header-content {
+                flex: 1 1 100%;
+                padding-right: 48px;
+            }
+
             .goals-grid {
                 grid-template-columns: 1fr;
             }
@@ -1066,7 +1081,9 @@
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* side gutter: the layout's own padding (24px, 16px on phones), or the notch inset when larger */
+        body { min-height: 100dvh; padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        @media (max-width: 768px) { body { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); } }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {

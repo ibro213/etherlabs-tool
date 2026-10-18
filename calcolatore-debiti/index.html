@@ -556,6 +556,26 @@ input[type="range"]::-moz-range-thumb:hover {
             margin-right: 0;
         }
 
+        /* scelta della strategia nel box "libero da debiti": la data segue la strategia scelta */
+        .strategy-pick {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .strategy-pick .toggle-btn {
+            margin: 0;
+            width: auto;
+        }
+
+        @media (max-width: 480px) {
+            .strategy-pick .toggle-btn {
+                padding: 11px 14px;
+            }
+        }
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -640,7 +660,8 @@ input[type="range"]::-moz-range-thumb:hover {
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* margine laterale: i 20px del layout, o l'inset del notch se maggiore */
+        body { min-height: 100dvh; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {
@@ -755,7 +776,11 @@ input[type="range"]::-moz-range-thumb:hover {
         <div class="debt-free-section" id="debtFreeSection" style="display: none;">
             <div class="debt-free-label">Libero da Debiti Entro</div>
             <div class="debt-free-date" id="debtFreeDate">Novembre 2027</div>
-            <div style="color: var(--text2); font-size: 14px;">Continua con la strategia selezionata</div>
+            <div id="strategyNote" style="color: var(--text2); font-size: 14px;">Continua con la strategia selezionata</div>
+            <div class="strategy-pick" role="group" aria-label="Strategia di estinzione">
+                <button type="button" class="toggle-btn" data-strategy="snowball" onclick="setStrategy('snowball')">❄️ Palla di Neve</button>
+                <button type="button" class="toggle-btn" data-strategy="avalanche" onclick="setStrategy('avalanche')">⛰️ Valanga</button>
+            </div>
         </div>
 
         <!-- Strategy Comparison -->
@@ -1261,6 +1286,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         let debts = [];
         const LS_KEY = 'etherlabs_debtpayoff_v1';
         const EXTRA_KEY = 'etherlabs_debtpayoff_extra_v1';
+        const STRATEGY_KEY = 'etherlabs_debtpayoff_strategy_v1';
+        // Strategia seguita dal piano (data di estinzione, motivazione, simulazione, PDF). Valanga se l'utente non sceglie la Palla di Neve.
+        let chosenStrategy = 'avalanche';
+        try { if (localStorage.getItem(STRATEGY_KEY) === 'snowball') chosenStrategy = 'snowball'; } catch (e) {}
         const NF = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
         function fmtC(n) { return NF.format(Number(n) || 0); }
         function fmtP(n) { return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'; }
@@ -1270,6 +1299,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         function saveDebts() { try { localStorage.setItem(LS_KEY, JSON.stringify(debts)); } catch (e) {} }
         function loadDebts() { try { const s = localStorage.getItem(LS_KEY); if (s) debts = JSON.parse(s) || []; } catch (e) {} }
+
+        function setStrategy(s) {
+            chosenStrategy = s === 'snowball' ? 'snowball' : 'avalanche';
+            try { localStorage.setItem(STRATEGY_KEY, chosenStrategy); } catch (e) {}
+            if (debts.length > 0) calculatePayoff(); else syncStrategyButtons();
+        }
+
+        function syncStrategyButtons() {
+            document.querySelectorAll('.strategy-pick .toggle-btn').forEach(b => {
+                const on = b.dataset.strategy === chosenStrategy;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+        }
 
         function addDebt() {
             const name = document.getElementById('debtName').value.trim();
@@ -1479,18 +1522,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const snFirst = (debts.slice().sort((a, b) => a.balance - b.balance)[0] || {}).name || '—';
             const avFirst = (debts.slice().sort((a, b) => b.rate - a.rate)[0] || {}).name || '—';
             const bothConv = snowball.converged && avalanche.converged;
-            // Headline coerente coi numeri: la Valanga può estinguere PRIMA (mesi risparmiati), non solo pagare meno interessi.
+            // Headline coerente coi numeri in ogni caso: ciascuna strategia può essere la più veloce e/o la più economica, oppure pari.
             const emStyle = 'color:var(--el-emerald,#10b981);';
             const intLess = `<strong style="${emStyle}">${fmtC(Math.abs(saved))} di interessi in meno</strong>`;
+            const cheaper = saved >= 1 ? 'Valanga' : (saved <= -1 ? 'Palla di Neve' : null);
+            const faster = monthsSaved > 0 ? 'Valanga' : (monthsSaved < 0 ? 'Palla di Neve' : null);
+            const nMesi = n => `${n} ${n === 1 ? 'mese' : 'mesi'}`;
+            const stessiMesi = n => n === 1 ? 'Stesso 1 mese' : 'Stessi ' + n + ' mesi';
             let headline;
-            if (monthsSaved > 0) {
-                headline = `La <strong>Valanga</strong> ti libera dal debito <strong>${monthsSaved} ${monthsSaved === 1 ? 'mese' : 'mesi'} prima</strong>` + (Math.abs(saved) >= 1 ? ` e paga ${intLess}` : '');
-            } else if (Math.abs(saved) >= 1) {
-                headline = `<strong>${snowball.months === 1 ? 'Stesso 1 mese' : 'Stessi ' + snowball.months + ' mesi'} in entrambi i casi</strong> — ma la <strong>Valanga</strong> paga ${intLess}`;
+            if (faster) {
+                headline = `La <strong>${faster}</strong> ti libera dal debito <strong>${nMesi(Math.abs(monthsSaved))} prima</strong>`
+                    + (cheaper === faster ? ` e paga ${intLess}` : (cheaper ? ` — ma la <strong>${cheaper}</strong> paga ${intLess}` : ''));
+            } else if (cheaper) {
+                headline = `<strong>${stessiMesi(snowball.months)} in entrambi i casi</strong> — ma la <strong>${cheaper}</strong> paga ${intLess}`;
             } else {
-                headline = `<strong>${snowball.months === 1 ? 'Stesso 1 mese' : 'Stessi ' + snowball.months + ' mesi'} e stessi interessi</strong> con entrambe le strategie`;
+                headline = `<strong>${stessiMesi(snowball.months)} e stessi interessi</strong> con entrambe le strategie`;
             }
-            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline} (attacca prima il debito col tasso più alto, <em>${escapeHtml(avFirst)}</em>). La <strong>Palla di Neve</strong> estingue prima il debito più piccolo, <em>${escapeHtml(snFirst)}</em>, per una vittoria motivante. Valanga per risparmiare, Palla di Neve per restare motivato.</div>`;
+            const advice = cheaper === 'Valanga' ? 'Valanga per risparmiare, Palla di Neve per restare motivato.'
+                : (cheaper === 'Palla di Neve' ? 'Qui la Palla di Neve ti fa anche risparmiare.' : 'Il costo è lo stesso: scegli quella che ti motiva di più.');
+            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline}. La <strong>Valanga</strong> attacca prima il debito col tasso più alto, <em>${escapeHtml(avFirst)}</em>; la <strong>Palla di Neve</strong> estingue prima il debito più piccolo, <em>${escapeHtml(snFirst)}</em>, per una vittoria motivante. ${advice}</div>`;
 
             const html = takeaway + `
                 <div class="comparison-box">
@@ -1511,7 +1561,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="metric-label">Attacca per primo</div>
                         <div class="metric-value" style="font-size:1rem;">${escapeHtml(snFirst)}</div>
                     </div>
-                    ${saved < -0.01 ? `<div class="winner-badge">🏆 Meno interessi</div>` : ''}
+                    ${cheaper === 'Palla di Neve' ? `<div class="winner-badge">🏆 Meno interessi</div>` : ''}
                 </div>
 
                 <div class="comparison-box">
@@ -1532,7 +1582,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="metric-label">Attacca per primo</div>
                         <div class="metric-value" style="font-size:1rem;">${escapeHtml(avFirst)}</div>
                     </div>
-                    ${saved >= -0.01 ? `<div class="winner-badge">🏆 Meno interessi</div>` : ''}
+                    ${cheaper === 'Valanga' ? `<div class="winner-badge">🏆 Meno interessi</div>` : ''}
                 </div>
             `;
 
@@ -1540,18 +1590,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const warnHtml = stuck.length ? `<div style="grid-column:1/-1;background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.35);border-radius:12px;padding:14px 16px;margin-bottom:16px;color:var(--el-text1,#2a2f33);font-size:14px;">⚠️ <strong>Attenzione:</strong> il pagamento minimo su ${stuck.map(d=>escapeHtml(d.name)).join(', ')} è troppo basso per coprire gli interessi mensili — questo debito non si riduce pagando solo il minimo. Aumenta il minimo o aggiungi pagamenti extra.</div>` : '';
             document.getElementById('comparisonContainer').innerHTML = warnHtml + html;
 
-            if (avalanche.converged) {
-                const date = new Date();
-                date.setDate(1);
-                date.setMonth(date.getMonth() + avalanche.months);
-                const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                               'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
-                document.getElementById('debtFreeDate').textContent =
-                    `${months[date.getMonth()]} ${date.getFullYear()}`;
+            // Data di estinzione della strategia scelta (il box resta visibile se almeno una si completa, così la scelta resta raggiungibile)
+            const chosen = chosenStrategy === 'snowball' ? snowball : avalanche;
+            const strategyLabel = chosenStrategy === 'snowball' ? 'Palla di Neve (saldo più piccolo prima)' : 'Valanga (tasso più alto prima)';
+            if (snowball.converged || avalanche.converged) {
+                if (chosen.converged) {
+                    const date = new Date();
+                    date.setDate(1);
+                    date.setMonth(date.getMonth() + chosen.months);
+                    const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                                   'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+                    document.getElementById('debtFreeDate').textContent =
+                        `${months[date.getMonth()]} ${date.getFullYear()}`;
+                    document.getElementById('strategyNote').textContent = 'Continua con la strategia selezionata: ' + strategyLabel;
+                } else {
+                    document.getElementById('debtFreeDate').textContent = 'Oltre 50 anni';
+                    document.getElementById('strategyNote').textContent = 'Con la strategia ' + strategyLabel + ' il debito non si estingue entro 50 anni: scegli l\'altra strategia o paga di più ogni mese.';
+                }
                 document.getElementById('debtFreeSection').style.display = 'block';
             } else {
                 document.getElementById('debtFreeSection').style.display = 'none';
             }
+            syncStrategyButtons();
         }
 
         function renderSchedules(snowball, avalanche) {
@@ -1689,7 +1749,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function renderMotivation(snowball, avalanche) {
             document.getElementById('motivationSection').style.display = 'block';
             const minOnly = simulateMinOnly(debts);
-            const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            const best = chosenStrategy === 'snowball' ? snowball : avalanche; // strategia scelta dall'utente
             // Se pagando solo i minimi il debito non si estingue mai, il risparmio è indefinito — mostra un trattino.
             const note = document.getElementById('monthsSavedNote');
             if (!minOnly.converged) {
@@ -1715,10 +1775,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             const baseExtra = parseFloat(document.getElementById('extraPayment').value) || 0;
             const testDebts = JSON.parse(JSON.stringify(debts));
-            const result = simulatePayoff(testDebts, baseExtra + extra, 'avalanche');
+            const result = simulatePayoff(testDebts, baseExtra + extra, chosenStrategy);
 
             const baseDebts = JSON.parse(JSON.stringify(debts));
-            const baseResult = simulatePayoff(baseDebts, baseExtra, 'avalanche');
+            const baseResult = simulatePayoff(baseDebts, baseExtra, chosenStrategy);
 
             document.getElementById('whatIfMonths').textContent = Math.max(0, baseResult.months - result.months);
         }
@@ -1747,7 +1807,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const sn = simulatePayoff(JSON.parse(JSON.stringify(debts)), extra, 'snowball');
             const av = simulatePayoff(JSON.parse(JSON.stringify(debts)), extra, 'avalanche');
             const minOnly = simulateMinOnly(debts);
-            const best = av.totalInterest <= sn.totalInterest ? av : sn;
+            const best = chosenStrategy === 'snowball' ? sn : av; // stessa strategia della data a schermo
             const bestLabel = (best === av) ? 'Valanga  (tasso più alto prima)' : 'Palla di Neve  (saldo più piccolo prima)';
             const MO = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
             const monthLabel = (m) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()+m); return MO[d.getMonth()]+' '+d.getFullYear(); };
@@ -1781,7 +1841,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 card('Data estinzione', monthLabel(best.months), M+gw+12, gw);
                 card('Interessi totali', fmtC(best.totalInterest), M+(gw+12)*2, gw);
                 y += 78;
-                doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc,DK); doc.text('Strategia consigliata:  ' + bestLabel, M, y); y += 18;
+                doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc,DK); doc.text('La tua strategia:  ' + bestLabel, M, y); y += 18;
                 doc.setTextColor.apply(doc,EM); doc.setFont('helvetica','bold');
                 if (minOnly.converged) {
                     doc.text('Risparmi ' + fmtC(interestSaved) + ' di interessi e ' + monthsSaved + (monthsSaved === 1 ? ' mese' : ' mesi') + ' rispetto ai soli minimi.', M, y);

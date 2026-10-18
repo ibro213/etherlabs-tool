@@ -380,6 +380,20 @@ button:hover {
 
         .breakdown-table tr.deduct td { color: #f87171; }
 
+        .breakdown-table .row-note {
+            display: block;
+            color: var(--t2);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 400;
+            margin-top: 0.15rem;
+        }
+
+        /* bracket explanation under a table-computed row, across all three columns */
+        .breakdown-table tr.has-note td { border-bottom: none; padding-bottom: 0.25rem; }
+        .breakdown-table tr.note-row td { padding-top: 0; text-align: left; }
+        .breakdown-table tr.note-row .row-note { margin-top: 0; }
+
         .donut-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -632,8 +646,15 @@ button:hover {
                     <option value="eu">EU Typical</option>
                 </select>
             </div>
+            <div class="form-group" id="filingGroup">
+                <label for="filing">Filing Status (US)</label>
+                <select id="filing">
+                    <option value="single">Single</option>
+                    <option value="mfj">Married filing jointly</option>
+                </select>
+            </div>
             <div class="message info" id="presetInfo">
-                Presets fill in rough, typical flat rates for a quick estimate. They are not official tax tables. You can still adjust each slider manually — the preset will switch to "Custom" automatically.
+                The US and UK presets work out income tax and Social Security / National Insurance with the 2026 tax-year brackets, allowances and caps; the other rows (and the EU preset) are typical flat rates. Estimates only, not official tax calculations. You can adjust the state, health and other sliders freely; moving the income tax or social security slider switches to "Custom" (flat rates for every row).
             </div>
         </div>
 
@@ -689,7 +710,7 @@ button:hover {
     <!-- ====== RESULTS ====== -->
     <div class="chart-container" id="resultsPanel">
         <h2 style="color: var(--emeraldL); margin-bottom: 0.5rem;">📋 Estimated Salary Breakdown</h2>
-        <p style="color: var(--t2); font-size: 0.9rem;">Estimate only: each rate above is applied as a flat percentage of gross pay. Real taxes use brackets, deductions and caps, so your actual take-home pay will differ.</p>
+        <p id="resultsNote" style="color: var(--t2); font-size: 0.9rem;">Estimate only: each rate above is applied as a flat percentage of gross pay. Real taxes use brackets, deductions and caps, so your actual take-home pay will differ.</p>
 
         <!-- Net summary boxes -->
         <div class="results-grid" id="summaryBoxes"></div>
@@ -740,10 +761,68 @@ button:hover {
    Self-contained, generic, en-US locale, multiple currencies.
    ==================================================================== */
 
+// us / uk: fedTax and socialSec are only starting slider positions, calculate() replaces them with the TAX_TABLES result
 const PRESETS = {
     us:  { fedTax: 22,  stateTax: 5,  socialSec: 7.65, health: 2.5, otherDed: 0, currency: 'USD' }, // FICA = Social Security 6.2% + Medicare 1.45%
-    uk:  { fedTax: 20,  stateTax: 0,  socialSec: 12,  health: 0,   otherDed: 5, currency: 'GBP' },
+    uk:  { fedTax: 20,  stateTax: 0,  socialSec: 8,   health: 0,   otherDed: 5, currency: 'GBP' },
     eu:  { fedTax: 25,  stateTax: 3,  socialSec: 10,  health: 3,   otherDed: 0, currency: 'EUR' },
+};
+
+/* ---------- 2026 tax-year tables (US and UK presets) ---------- */
+// brackets: [upper limit, rate %], applied to the income above the previous limit
+const US_2026 = {
+    single: { std: 16100, addlMedicareFrom: 200000, brackets: [[12400,10],[50400,12],[105700,22],[201775,24],[256225,32],[640600,35],[Infinity,37]] },
+    mfj:    { std: 32200, addlMedicareFrom: 250000, brackets: [[24800,10],[100800,12],[211400,22],[403550,24],[512450,32],[768700,35],[Infinity,37]] },
+    ssWageBase: 184500,
+};
+const UK_2026 = { // 2026/27, England, Wales and Northern Ireland
+    allowance: 12570, taperFrom: 100000,
+    bands: [[37700,20],[125140,40],[Infinity,45]],   // on taxable income (after the personal allowance)
+    ni: [[12570,0],[50270,8],[Infinity,2]],          // employee Class 1 National Insurance
+};
+
+function bracketTax(income, brackets) {
+    let tax = 0, lower = 0;
+    for (const [upper, rate] of brackets) {
+        if (income <= lower) break;
+        tax += (Math.min(income, upper) - lower) * rate / 100;
+        lower = upper;
+    }
+    return tax;
+}
+
+// annual fedTax and socialSec for a preset, with a one-line explanation of each for the breakdown and export
+const TAX_TABLES = {
+    us(gross, cur) {
+        const mfj = el.filing.value === 'mfj', t = US_2026[mfj ? 'mfj' : 'single'];
+        const taxable = Math.max(0, gross - t.std);
+        const ss = Math.min(gross, US_2026.ssWageBase) * 0.062;
+        const medicare = gross * 0.0145 + Math.max(0, gross - t.addlMedicareFrom) * 0.009;
+        return {
+            fedTax: bracketTax(taxable, t.brackets),
+            socialSec: ss + medicare,
+            notes: {
+                fedTax: '2026 brackets on ' + fmt(taxable, cur) + ' taxable, after the ' + fmt(t.std, cur) + ' standard deduction',
+                socialSec: 'Social Security ' + fmt(ss, cur) + ' (6.2% up to ' + fmt(US_2026.ssWageBase, cur) + ') + Medicare ' + fmt(medicare, cur) + ' (1.45%, +0.9% above ' + fmt(t.addlMedicareFrom, cur) + ')',
+            },
+            basis: '2026 tax year estimate (US, ' + (mfj ? 'married filing jointly' : 'single filer') + ')',
+            note: '2026 tax year estimate: federal income tax uses the 2026 brackets after the standard deduction (' + (mfj ? 'married filing jointly' : 'single filer') + '); Social Security stops at the 2026 wage base and Medicare adds 0.9% on high wages. State tax, health insurance and other deductions are flat percentages of gross pay. Credits, pre-tax benefits and local taxes are not included, so your actual take-home pay will differ.',
+        };
+    },
+    uk(gross, cur) {
+        const allowance = Math.max(0, UK_2026.allowance - Math.max(0, gross - UK_2026.taperFrom) / 2); // £1 less for every £2 above £100,000
+        const taxable = Math.max(0, gross - allowance);
+        return {
+            fedTax: bracketTax(taxable, UK_2026.bands),
+            socialSec: bracketTax(gross, UK_2026.ni),
+            notes: {
+                fedTax: '20% / 40% / 45% on ' + fmt(taxable, cur) + ' taxable, after a ' + fmt(allowance, cur) + ' personal allowance' + (allowance < UK_2026.allowance ? ' (tapered above ' + fmt(UK_2026.taperFrom, cur) + ')' : ''),
+                socialSec: '8% between ' + fmt(12570, cur) + ' and ' + fmt(50270, cur) + ', 2% above',
+            },
+            basis: '2026/27 tax year estimate (UK)',
+            note: '2026/27 tax year estimate (England, Wales and Northern Ireland): income tax uses the personal allowance, tapered above £100,000, and the 20% / 40% / 45% bands; National Insurance is 8% between £12,570 and £50,270 and 2% above. Pension and other rows are flat percentages of gross pay. Scottish rates, student loans and salary sacrifice are not included, so your actual take-home pay will differ.',
+        };
+    },
 };
 
 const PRESET_LABELS = {
@@ -784,7 +863,8 @@ function freqLabel(freq) {
 const $  = id => document.getElementById(id);
 const el = {
     grossSlider: $('grossSlider'), grossSalary: $('grossSalary'), grossDisplay: $('grossDisplay'),
-    payFreq: $('payFreq'), currency: $('currency'), preset: $('preset'),
+    payFreq: $('payFreq'), currency: $('currency'), preset: $('preset'), filing: $('filing'), filingGroup: $('filingGroup'),
+    resultsNote: $('resultsNote'),
     fedTax: $('fedTax'), stateTax: $('stateTax'), socialSec: $('socialSec'), health: $('health'), otherDed: $('otherDed'),
     fedTaxVal: $('fedTaxVal'), stateTaxVal: $('stateTaxVal'), socialSecVal: $('socialSecVal'), healthVal: $('healthVal'), otherDedVal: $('otherDedVal'),
     summaryBoxes: $('summaryBoxes'), breakdownTable: $('breakdownTable'),
@@ -803,6 +883,7 @@ function syncGross(source) {
 el.grossSlider.addEventListener('input', () => syncGross('slider'));
 el.grossSalary.addEventListener('input', () => syncGross('input'));
 el.payFreq.addEventListener('change', calculate);
+el.filing.addEventListener('change', calculate);
 el.currency.addEventListener('change', () => { el.grossDisplay.textContent = fmt(+el.grossSalary.value, el.currency.value); calculate(); });
 
 /* ---------- sliders ---------- */
@@ -810,8 +891,11 @@ const SLIDER_IDS = ['fedTax','stateTax','socialSec','health','otherDed'];
 SLIDER_IDS.forEach(id => {
     $(id).addEventListener('input', () => {
         $(id + 'Val').textContent = pct(+$(id).value);
-        el.preset.value = 'custom';
-        updateSliderLabels('custom'); // keep slider labels in sync with the breakdown table
+        // a US / UK preset keeps its tax tables while state, health or other change; moving a table-computed rate switches to flat Custom
+        if (!TAX_TABLES[el.preset.value] || id === 'fedTax' || id === 'socialSec') {
+            el.preset.value = 'custom';
+            updateSliderLabels('custom'); // keep slider labels in sync with the breakdown table
+        }
         calculate();
     });
 });
@@ -849,30 +933,42 @@ function calculate() {
     const labels = PRESET_LABELS[presetKey] || PRESET_LABELS.custom;
 
     const amounts = {};
-    let totalDed = 0;
-    SLIDER_IDS.forEach(id => {
-        amounts[id] = gross * rates[id] / 100;
-        totalDed += amounts[id];
+    SLIDER_IDS.forEach(id => amounts[id] = gross * rates[id] / 100);
+
+    // US / UK presets: income tax and social security come from the 2026 tables, their sliders show the effective rate
+    const table = TAX_TABLES[presetKey] ? TAX_TABLES[presetKey](gross, cur) : null;
+    const notes = table ? table.notes : {};
+    Object.keys(notes).forEach(id => {
+        amounts[id] = table[id];
+        rates[id] = gross > 0 ? table[id] / gross * 100 : 0;
+        $(id).value = rates[id];
     });
+    SLIDER_IDS.forEach(id => { $(id + 'Val').textContent = pct(rates[id]) + (notes[id] ? ' eff.' : ''); });
+    el.filingGroup.style.display = presetKey === 'us' ? '' : 'none';
+    el.resultsNote.textContent = table ? table.note : FLAT_NOTE;
+
+    let totalDed = 0;
+    SLIDER_IDS.forEach(id => totalDed += amounts[id]);
 
     const net = gross - totalDed;
     const div = divisor(freq);
     const effRate = gross > 0 ? (totalDed / gross) * 100 : 0;
 
     renderSummary(gross, net, totalDed, cur, freq, div);
-    renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur);
+    renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur, notes);
     renderDonut(net, amounts, labels, cur);
     el.effectiveRate.textContent = pct(effRate);
-    renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, div, effRate);
+    renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, div, effRate, notes, table ? table.basis : 'Flat percentages of gross pay');
     nsSave();
 }
+const FLAT_NOTE = el.resultsNote.textContent;
 
 /* ---------- persistence (survives refresh) ---------- */
 const NS_KEY = 'etherlabs_netsalary_en_v1';
 function nsSave() {
     try {
         localStorage.setItem(NS_KEY, JSON.stringify({
-            gross: el.grossSalary.value, payFreq: el.payFreq.value, currency: el.currency.value, preset: el.preset.value,
+            gross: el.grossSalary.value, payFreq: el.payFreq.value, currency: el.currency.value, preset: el.preset.value, filing: el.filing.value,
             fedTax: el.fedTax.value, stateTax: el.stateTax.value, socialSec: el.socialSec.value, health: el.health.value, otherDed: el.otherDed.value
         }));
     } catch (e) {}
@@ -890,6 +986,7 @@ function nsLoad() {
             if (d[id] != null) { document.getElementById(id).value = d[id]; document.getElementById(id + 'Val').textContent = pct(+d[id]); }
         });
         if (d.preset != null) el.preset.value = d.preset;
+        el.filing.value = d.filing === 'mfj' ? 'mfj' : 'single'; // saves from before the filing status existed: single
         updateSliderLabels(el.preset.value);
         el.grossDisplay.textContent = fmt(+el.grossSalary.value, el.currency.value);
         return true;
@@ -919,11 +1016,12 @@ function renderSummary(gross, net, ded, cur, freq, div) {
 }
 
 /* ---------- breakdown table ---------- */
-function renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur) {
+function renderBreakdown(gross, net, totalDed, amounts, rates, labels, cur, notes) {
     let html = '<thead><tr><th>Deduction</th><th>Rate</th><th style="text-align:right">Amount</th></tr></thead><tbody>';
     SLIDER_IDS.forEach(id => {
-        if (rates[id] > 0) {
-            html += '<tr class="deduct"><td>' + labels[id] + '</td><td>' + pct(rates[id]) + '</td><td class="amount" style="color:#f87171;">&minus; ' + fmt(Math.round(amounts[id]), cur) + '</td></tr>';
+        if (rates[id] > 0 || notes[id]) { // table-computed rows stay visible at $0 (e.g. income below the standard deduction)
+            html += '<tr class="deduct' + (notes[id] ? ' has-note' : '') + '"><td>' + labels[id] + '</td><td>' + pct(rates[id]) + (notes[id] ? '<span class="row-note">effective</span>' : '') + '</td><td class="amount" style="color:#f87171;">&minus; ' + fmt(Math.round(amounts[id]), cur) + '</td></tr>';
+            if (notes[id]) html += '<tr class="note-row"><td colspan="3"><span class="row-note">' + notes[id] + '</span></td></tr>';
         }
     });
     html += '<tr><td colspan="2" style="color:var(--t2);">Total Deductions</td><td class="amount" style="color:#f87171;">&minus; ' + fmt(Math.round(totalDed), cur) + '</td></tr>';
@@ -1014,7 +1112,7 @@ function renderDonut(net, amounts, labels, cur) {
 }
 
 /* ---------- export text ---------- */
-function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, div, effRate) {
+function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, div, effRate, notes, basis) {
     const fl = freqLabel(freq);
     const now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
     let txt = '═══════════════════════════════════════\n';
@@ -1023,12 +1121,14 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
     txt += '═══════════════════════════════════════\n\n';
     txt += '  Gross Annual Salary:  ' + fmt(gross, cur) + '\n';
     txt += '  Pay Frequency:        ' + fl + '\n';
-    txt += '  Currency:             ' + cur + '\n\n';
+    txt += '  Currency:             ' + cur + '\n';
+    txt += '  Tax Basis:            ' + basis + '\n\n';
     txt += '  DEDUCTIONS\n';
     txt += '  ─────────────────────────────────────\n';
     SLIDER_IDS.forEach(id => {
-        if (rates[id] > 0) {
-            txt += '  ' + (labels[id] + ' (' + pct(rates[id]) + ') ').padEnd(34) + '- ' + fmt(Math.round(amounts[id]), cur) + '\n'; // trailing space: a long label ("... (FICA) (7.65%)") no longer touches "- $4,590"
+        if (rates[id] > 0 || notes[id]) {
+            txt += '  ' + (labels[id] + ' (' + pct(rates[id]) + (notes[id] ? ' eff.' : '') + ') ').padEnd(34) + '- ' + fmt(Math.round(amounts[id]), cur) + '\n'; // trailing space: a long label ("... (FICA) (7.65%)") no longer touches "- $4,590"
+            if (notes[id]) txt += '    ' + notes[id] + '\n';
         }
     });
     txt += '  ─────────────────────────────────────\n';
@@ -1041,11 +1141,21 @@ function renderExport(gross, net, totalDed, amounts, rates, labels, cur, freq, d
     txt += '  Weekly:'.padEnd(36) + fmt(Math.round(net / 52), cur) + '\n\n';
     txt += '  Effective Deduction Rate: ' + pct(effRate) + '\n';
     txt += '═══════════════════════════════════════\n';
-    txt += '  ESTIMATE ONLY: rates are applied as flat\n';
-    txt += '  percentages of gross pay, not official\n';
-    txt += '  tax brackets or tables. Actual take-home\n';
-    txt += '  pay will differ. Consult a tax\n';
-    txt += '  professional for precise figures.\n';
+    if (Object.keys(notes).length) {
+        txt += '  ESTIMATE ONLY: income tax and social\n';
+        txt += '  security use the tax-year brackets,\n';
+        txt += '  allowances and caps noted above; other\n';
+        txt += '  rows are flat percentages of gross pay.\n';
+        txt += '  Credits and pre-tax benefits are not\n';
+        txt += '  included. Consult a tax professional\n';
+        txt += '  for precise figures.\n';
+    } else {
+        txt += '  ESTIMATE ONLY: rates are applied as flat\n';
+        txt += '  percentages of gross pay, not official\n';
+        txt += '  tax brackets or tables. Actual take-home\n';
+        txt += '  pay will differ. Consult a tax\n';
+        txt += '  professional for precise figures.\n';
+    }
 
     el.exportText.textContent = txt;
 }

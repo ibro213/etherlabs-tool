@@ -112,6 +112,11 @@
             gap: 12px;
         }
 
+        /* il pulsante tema fisso sta nell'angolo in alto a destra: l'header non deve finirci sotto */
+        .header {
+            padding-right: 48px;
+        }
+
         /* Buttons */
         .btn {
             padding: 12px 26px;
@@ -987,6 +992,16 @@
                 font-size: 1.8rem;
             }
 
+            /* telefono: accanto al pulsante tema c'è solo la riga del titolo */
+            .header {
+                padding-right: 0;
+            }
+
+            .header-content {
+                flex: 1 1 100%;
+                padding-right: 48px;
+            }
+
             .goals-grid {
                 grid-template-columns: 1fr;
             }
@@ -1066,7 +1081,9 @@
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* margine laterale: il padding del layout (24px, 16px su telefono), o l'inset del notch se maggiore */
+        body { min-height: 100dvh; padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        @media (max-width: 768px) { body { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); } }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {

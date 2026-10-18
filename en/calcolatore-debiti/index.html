@@ -556,6 +556,26 @@ input[type="range"]::-moz-range-thumb:hover {
             margin-right: 0;
         }
 
+        /* strategy picker in the debt-free box: the date follows the chosen strategy */
+        .strategy-pick {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .strategy-pick .toggle-btn {
+            margin: 0;
+            width: auto;
+        }
+
+        @media (max-width: 480px) {
+            .strategy-pick .toggle-btn {
+                padding: 11px 14px;
+            }
+        }
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -640,7 +660,8 @@ input[type="range"]::-moz-range-thumb:hover {
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* side gutter: the layout's own 20px, or the notch inset when larger */
+        body { min-height: 100dvh; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {
@@ -755,7 +776,11 @@ input[type="range"]::-moz-range-thumb:hover {
         <div class="debt-free-section" id="debtFreeSection" style="display: none;">
             <div class="debt-free-label">Debt-Free By</div>
             <div class="debt-free-date" id="debtFreeDate">November 2027</div>
-            <div style="color: var(--text2); font-size: 14px;">Stay the course with your chosen strategy</div>
+            <div id="strategyNote" style="color: var(--text2); font-size: 14px;">Stay the course with your chosen strategy</div>
+            <div class="strategy-pick" role="group" aria-label="Payoff strategy">
+                <button type="button" class="toggle-btn" data-strategy="snowball" onclick="setStrategy('snowball')">❄️ Snowball</button>
+                <button type="button" class="toggle-btn" data-strategy="avalanche" onclick="setStrategy('avalanche')">⛰️ Avalanche</button>
+            </div>
         </div>
 
         <!-- Strategy Comparison -->
@@ -1261,6 +1286,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         let debts = [];
         const LS_KEY = 'etherlabs_debtpayoff_v1';
         const EXTRA_KEY = 'etherlabs_debtpayoff_extra_v1';
+        const STRATEGY_KEY = 'etherlabs_debtpayoff_strategy_v1';
+        // Strategy the plan follows (debt-free date, motivation, what-if, PDF). Avalanche unless the user picks Snowball.
+        let chosenStrategy = 'avalanche';
+        try { if (localStorage.getItem(STRATEGY_KEY) === 'snowball') chosenStrategy = 'snowball'; } catch (e) {}
         const NF = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
         function fmtC(n) { return NF.format(Number(n) || 0); }
         function fmtP(n) { return (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'; }
@@ -1270,6 +1299,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
         function saveDebts() { try { localStorage.setItem(LS_KEY, JSON.stringify(debts)); } catch (e) {} }
         function loadDebts() { try { const s = localStorage.getItem(LS_KEY); if (s) debts = JSON.parse(s) || []; } catch (e) {} }
+
+        function setStrategy(s) {
+            chosenStrategy = s === 'snowball' ? 'snowball' : 'avalanche';
+            try { localStorage.setItem(STRATEGY_KEY, chosenStrategy); } catch (e) {}
+            if (debts.length > 0) calculatePayoff(); else syncStrategyButtons();
+        }
+
+        function syncStrategyButtons() {
+            document.querySelectorAll('.strategy-pick .toggle-btn').forEach(b => {
+                const on = b.dataset.strategy === chosenStrategy;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+        }
 
         function addDebt() {
             const name = document.getElementById('debtName').value.trim();
@@ -1486,17 +1529,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const avFirst = (debts.slice().sort((a, b) => b.rate - a.rate)[0] || {}).name || '—';
             const bothConv = snowball.converged && avalanche.converged;
             const intDiff = Math.abs(saved);
-            // Headline must match the numbers: Avalanche can also finish SOONER (months saved), not only pay less interest.
+            // Headline must match the numbers in every case: either strategy can be the faster and/or the cheaper one, or they tie.
+            const cheaper = saved >= 1 ? 'Avalanche' : (saved <= -1 ? 'Snowball' : null);
+            const faster = monthsSaved > 0 ? 'Avalanche' : (monthsSaved < 0 ? 'Snowball' : null);
+            const nMonths = n => `${n} month${n === 1 ? '' : 's'}`;
             const lessInt = `<strong style="color:var(--el-emerald,#10b981);">${fmtC(intDiff)} less interest</strong>`;
             let headline;
-            if (monthsSaved > 0) {
-                headline = `<strong>Avalanche</strong> gets you debt-free <strong>${monthsSaved} month${monthsSaved === 1 ? '' : 's'} sooner</strong>` + (intDiff >= 1 ? ` and pays ${lessInt}` : '');
-            } else if (intDiff >= 1) {
-                headline = `<strong>Same ${snowball.months} month${snowball.months === 1 ? '' : 's'} either way</strong> — but <strong>Avalanche</strong> pays ${lessInt}`;
+            if (faster) {
+                headline = `<strong>${faster}</strong> gets you debt-free <strong>${nMonths(Math.abs(monthsSaved))} sooner</strong>`
+                    + (cheaper === faster ? ` and pays ${lessInt}` : (cheaper ? ` — but <strong>${cheaper}</strong> pays ${lessInt}` : ''));
+            } else if (cheaper) {
+                headline = `<strong>Same ${nMonths(snowball.months)} either way</strong> — but <strong>${cheaper}</strong> pays ${lessInt}`;
             } else {
-                headline = `<strong>Same ${snowball.months} month${snowball.months === 1 ? '' : 's'} and same interest</strong> with either strategy`;
+                headline = `<strong>Same ${nMonths(snowball.months)} and same interest</strong> with either strategy`;
             }
-            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline} (it attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first). <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. Choose Avalanche to save money, Snowball to stay motivated.</div>`;
+            const advice = cheaper === 'Avalanche' ? 'Choose Avalanche to save money, Snowball to stay motivated.'
+                : (cheaper === 'Snowball' ? 'Here Snowball saves you money too.' : 'The cost is the same, so pick the one that keeps you motivated.');
+            const takeaway = !bothConv ? '' : `<div style="grid-column:1/-1;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.30);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--el-text1,#2a2f33);font-size:14px;line-height:1.55;">💡 ${headline}. <strong>Avalanche</strong> attacks your highest-rate debt, <em>${escapeHtml(avFirst)}</em>, first; <strong>Snowball</strong> clears your smallest debt, <em>${escapeHtml(snFirst)}</em>, first for a motivating quick win. ${advice}</div>`;
 
             const html = takeaway + `
                 <div class="comparison-box">
@@ -1517,7 +1566,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="metric-label">Attacks first</div>
                         <div class="metric-value" style="font-size:1rem;">${escapeHtml(snFirst)}</div>
                     </div>
-                    ${saved < -0.01 ? `<div class="winner-badge">🏆 Less interest</div>` : ''}
+                    ${cheaper === 'Snowball' ? `<div class="winner-badge">🏆 Less interest</div>` : ''}
                 </div>
 
                 <div class="comparison-box">
@@ -1538,7 +1587,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                         <div class="metric-label">Attacks first</div>
                         <div class="metric-value" style="font-size:1rem;">${escapeHtml(avFirst)}</div>
                     </div>
-                    ${saved >= -0.01 ? `<div class="winner-badge">🏆 Less interest</div>` : ''}
+                    ${cheaper === 'Avalanche' ? `<div class="winner-badge">🏆 Less interest</div>` : ''}
                 </div>
             `;
 
@@ -1546,18 +1595,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const warnHtml = stuck.length ? `<div style="grid-column:1/-1;background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.35);border-radius:12px;padding:14px 16px;margin-bottom:16px;color:var(--el-text1,#2a2f33);font-size:14px;">⚠️ <strong>Heads up:</strong> the minimum payment on ${stuck.map(d=>escapeHtml(d.name)).join(', ')} is too low to cover the monthly interest — this debt won't shrink on minimums alone. Increase its minimum or add extra payments.</div>` : '';
             document.getElementById('comparisonContainer').innerHTML = warnHtml + html;
 
-            if (avalanche.converged) {
-                const date = new Date();
-                date.setDate(1);
-                date.setMonth(date.getMonth() + avalanche.months);
-                const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                               'July', 'August', 'September', 'October', 'November', 'December'];
-                document.getElementById('debtFreeDate').textContent =
-                    `${months[date.getMonth()]} ${date.getFullYear()}`;
+            // Debt-free date of the strategy the user chose (the box stays visible while either one finishes, so the picker is reachable)
+            const chosen = chosenStrategy === 'snowball' ? snowball : avalanche;
+            const strategyLabel = chosenStrategy === 'snowball' ? 'Snowball (smallest balance first)' : 'Avalanche (highest rate first)';
+            if (snowball.converged || avalanche.converged) {
+                if (chosen.converged) {
+                    const date = new Date();
+                    date.setDate(1);
+                    date.setMonth(date.getMonth() + chosen.months);
+                    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                                   'July', 'August', 'September', 'October', 'November', 'December'];
+                    document.getElementById('debtFreeDate').textContent =
+                        `${months[date.getMonth()]} ${date.getFullYear()}`;
+                    document.getElementById('strategyNote').textContent = 'Stay the course with your chosen strategy: ' + strategyLabel;
+                } else {
+                    document.getElementById('debtFreeDate').textContent = 'Not within 50 years';
+                    document.getElementById('strategyNote').textContent = strategyLabel + ' does not clear your debt within 50 years: pick the other strategy or pay more each month.';
+                }
                 document.getElementById('debtFreeSection').style.display = 'block';
             } else {
                 document.getElementById('debtFreeSection').style.display = 'none';
             }
+            syncStrategyButtons();
         }
 
         function renderSchedules(snowball, avalanche) {
@@ -1695,9 +1754,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         function renderMotivation(snowball, avalanche) {
             document.getElementById('motivationSection').style.display = 'block';
 
-            // Real minimum-only baseline (no extra, no rollover) vs the chosen best strategy
+            // Real minimum-only baseline (no extra, no rollover) vs the strategy the user chose
             const minOnly = simulateMinOnly(debts);
-            const best = avalanche.months <= snowball.months ? avalanche : snowball;
+            const best = chosenStrategy === 'snowball' ? snowball : avalanche;
             // If paying only the minimums never clears the debt, the savings are undefined — show a dash.
             const note = document.getElementById('monthsSavedNote');
             if (!minOnly.converged) {
@@ -1723,10 +1782,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
             const baseExtra = parseFloat(document.getElementById('extraPayment').value) || 0;
             const testDebts = JSON.parse(JSON.stringify(debts));
-            const result = simulatePayoff(testDebts, baseExtra + extra, 'avalanche');
+            const result = simulatePayoff(testDebts, baseExtra + extra, chosenStrategy);
 
             const baseDebts = JSON.parse(JSON.stringify(debts));
-            const baseResult = simulatePayoff(baseDebts, baseExtra, 'avalanche');
+            const baseResult = simulatePayoff(baseDebts, baseExtra, chosenStrategy);
 
             document.getElementById('whatIfMonths').textContent = Math.max(0, baseResult.months - result.months);
         }
@@ -1756,7 +1815,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             const sn = simulatePayoff(JSON.parse(JSON.stringify(debts)), extra, 'snowball');
             const av = simulatePayoff(JSON.parse(JSON.stringify(debts)), extra, 'avalanche');
             const minOnly = simulateMinOnly(debts);
-            const best = av.totalInterest <= sn.totalInterest ? av : sn;
+            const best = chosenStrategy === 'snowball' ? sn : av; // same strategy as the on-screen debt-free date
             const bestLabel = (best === av) ? 'Avalanche  (highest APR first)' : 'Snowball  (smallest balance first)';
             const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const monthLabel = (m) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m); return MO[d.getMonth()] + ' ' + d.getFullYear(); };
@@ -1814,7 +1873,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 card('Total interest', fmtC(best.totalInterest), M + (gw+12)*2, gw);
                 y += 78;
                 doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, DK);
-                doc.text('Recommended strategy:  ' + bestLabel, M, y); y += 18;
+                doc.text('Your strategy:  ' + bestLabel, M, y); y += 18;
                 doc.setTextColor.apply(doc, EM); doc.setFont('helvetica','bold');
                 if (minOnly.converged) {
                     doc.text('You save ' + fmtC(interestSaved) + ' in interest and ' + monthsSaved + (monthsSaved === 1 ? ' month' : ' months') + ' vs paying only the minimums.', M, y);

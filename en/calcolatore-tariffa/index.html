@@ -138,6 +138,18 @@
             background: var(--el-bg2);
         }
 
+        /* fields that do not apply to the selected tax regime */
+        .input-row.is-disabled label,
+        .input-row input:disabled,
+        .input-row select:disabled {
+            opacity: 0.5;
+        }
+
+        .input-row input:disabled,
+        .input-row select:disabled {
+            cursor: not-allowed;
+        }
+
         .total-row {
             margin-top: 20px;
             padding-top: 20px;
@@ -390,7 +402,8 @@ button.secondary:hover {
     
         /* === MOBILE iOS FIX (auto-applied) === */
         html { -webkit-text-size-adjust: 100%; }
-        body { min-height: 100dvh; padding-left: max(env(safe-area-inset-left), 0px); padding-right: max(env(safe-area-inset-right), 0px); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
+        /* side gutter: the layout's own 20px, or the notch inset when larger */
+        body { min-height: 100dvh; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); overscroll-behavior-y: contain; }
         input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], input[type="search"], input[type="password"], textarea, select { font-size: 16px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         button, a, label, [role="button"], .btn, .tab, .star, .toggle-switch button { touch-action: manipulation; }
         @media (max-width: 768px) {
@@ -1200,7 +1213,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
         }
 
+        // Social Security + Income Tax only count with the Custom regime: grey them out otherwise (the note explains why)
+        function syncCustomTaxFields() {
+            const isCustom = document.getElementById('tax_regime').value === 'custom';
+            ['social_security', 'income_tax'].forEach(id => {
+                const el = document.getElementById(id);
+                el.disabled = !isCustom;
+                el.title = isCustom ? '' : 'Used only with the Custom tax regime';
+                el.closest('.input-row').classList.toggle('is-disabled', !isCustom);
+            });
+        }
+
         function calculateResults() {
+            syncCustomTaxFields();
             const totalPersonal = personalExpenses.reduce((sum, id) => {
                 return sum + (parseFloat(document.getElementById(id).value) || 0);
             }, 0);

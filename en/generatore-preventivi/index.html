@@ -648,12 +648,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 4px;
             padding: 10px;
             margin-bottom: 12px;
+            container-type: inline-size; /* the rows follow the width of the editor column, see @container below */
         }
 
         .line-item {
             position: relative;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1.1fr;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) 1.1fr; /* a long total can't squeeze the other fields */
             grid-template-areas:
                 "desc desc desc desc desc"
                 "qty unit price discount total";
@@ -1452,6 +1453,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
         }
 
+        /* line items in a narrow editor column (2-column desktop, small windows): 3 fields per row,
+           then 2, so the Unit select never shrinks to «hc». Phones keep their own layout (max-width:760px) */
+        @container (max-width: 619px) {
+            .line-item {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-areas:
+                    "desc desc desc"
+                    "qty unit price"
+                    "discount total total";
+            }
+        }
+        @container (max-width: 389px) {
+            .line-item {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-areas:
+                    "desc desc"
+                    "qty unit"
+                    "price discount"
+                    "total total";
+            }
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -1877,8 +1900,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   .line-item{
     grid-template-columns:1fr 1fr !important;
     grid-template-areas:"desc desc" "qty unit" "price discount" "total total" !important;
-    padding-right:44px !important;
+    padding-right:14px !important;
   }
+  .li-desc{ margin-right:30px; }                              /* room for the ✕ next to the description only: the fields below get the full width */
+  .line-item select{ padding-left:6px; padding-right:4px; }   /* so «service», «project» fit in the Unit select down to 320px */
   /* hamburger: no green fill after a tap; subtle pressed/open state */
   .qg-hamburger:hover{ background:transparent; transform:none; box-shadow:none; }
   .qg-hamburger:active, .qg-sidebar.open .qg-hamburger{ background:var(--bg3); border-color:var(--emerald); }
@@ -2651,9 +2676,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             },
 
             // amount with its currency symbol: $, £, C$, A$, R$, ¥, ₹ go first ($2,523.64, -$40.00); €, CHF, kr stay after the number as before (2,523.64 €)
-            fmtCur(n, c) {
+            // maxDec: unit prices show up to 4 decimals (0.085 a word), amounts 2
+            fmtCur(n, c, maxDec) {
                 if (c === undefined) c = this.cur();
-                const s = (Number(n) || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const s = (Number(n) || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: maxDec || 2});
                 if (['$', '£', 'C$', 'A$', 'R$', '¥', '₹'].indexOf(c) < 0) return s + ' ' + c;
                 return s.charAt(0) === '-' ? '-' + c + s.slice(1) : c + s;
             },
@@ -2876,50 +2902,69 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return isFinite(n) ? n : def;
             },
 
-            calculateLineTotal(item) {
-                const gross = item.quantity * item.unitPrice;
-                const discountAmount = gross * (item.discount / 100);
-                return gross - discountAmount;
+            // to the cent, half away from zero; toFixed(6) first drops float noise
+            // (2,799 × 7.5% = 209.925 is stored as 209.92499…: it must round to 209.93, as on paper)
+            round2(n) {
+                n = Number(n) || 0;
+                return Math.sign(n) * Math.round(parseFloat((Math.abs(n) * 100).toFixed(6))) / 100 + 0;
             },
 
-            calculateTotals() {
-                let subtotal = this.data.lineItems.reduce((sum, item) => sum + this.calculateLineTotal(item), 0);
+            // unit prices keep up to 4 decimals (0.085 a word): the line uses the price exactly as preview and PDF show it
+            round4(n) {
+                n = Number(n) || 0;
+                return Math.sign(n) * Math.round(parseFloat((Math.abs(n) * 10000).toFixed(6))) / 10000 + 0;
+            },
+
+            calculateLineTotal(item) {
+                const gross = item.quantity * this.round4(item.unitPrice);
+                const discountAmount = gross * (item.discount / 100);
+                return this.round2(gross - discountAmount);
+            },
+
+            // every amount is rounded to the cent before it is added up, so the total is exactly
+            // the sum of the lines shown; editor, preview, print and PDF all use these same values
+            computeTotals() {
+                const r2 = n => this.round2(n);
+                const subtotal = r2(this.data.lineItems.reduce((sum, item) => sum + this.calculateLineTotal(item), 0));
 
                 const discountGlobal = parseFloat(document.getElementById('discountGlobal').value) || 0;
                 const discountType = document.getElementById('discountType').value;
-                let discountAmount = discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal;
+                const discountAmount = r2(discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal);
 
-                const afterDiscount = subtotal - discountAmount;
+                const afterDiscount = r2(subtotal - discountAmount);
 
                 // Social security markup (rivalsa): computed first, it is part of the VAT and withholding base
                 const inpsCharge = document.getElementById('inpsCharge').checked;
                 const inpsRatePct = this.ratePct('inpsRate', 0);   // the rate shown in the field (0 is a valid rate)
-                const inpsAmount = inpsCharge ? afterDiscount * (inpsRatePct / 100) : 0;
+                const inpsAmount = inpsCharge ? r2(afterDiscount * (inpsRatePct / 100)) : 0;
 
-                const baseImponibile = afterDiscount + inpsAmount;   // VAT and withholding base
+                const baseImponibile = r2(afterDiscount + inpsAmount);   // VAT and withholding base
 
                 const ivaRate = (parseFloat(document.getElementById('ivaRate').value) || 0) / 100;
-                const ivaAmount = baseImponibile * ivaRate;
+                const ivaAmount = r2(baseImponibile * ivaRate);
 
                 const withholdingTax = document.getElementById('withholdingTax').checked;
                 const withholdingRatePct = parseFloat(document.getElementById('withholdingRate').value) || 0;
-                const withholdingAmount = withholdingTax ? baseImponibile * (withholdingRatePct / 100) : 0;
-
-                let total = afterDiscount + inpsAmount + ivaAmount - withholdingAmount;
+                const withholdingAmount = withholdingTax ? r2(baseImponibile * (withholdingRatePct / 100)) : 0;
 
                 const bollo = document.getElementById('bollo').checked;
                 const bolloFlat = parseFloat(document.getElementById('bolloAmountInput').value) || 0;
-                const bolloAmount = bollo ? bolloFlat : 0;
-                total += bolloAmount;
+                const bolloAmount = bollo ? r2(bolloFlat) : 0;
 
-                document.getElementById('subtotal').textContent = this.fmtCur(subtotal);
-                document.getElementById('afterDiscount').textContent = this.fmtCur(afterDiscount);
-                document.getElementById('taxable').textContent = this.fmtCur(baseImponibile);
-                document.getElementById('ivaAmount').textContent = this.fmtCur(ivaAmount);
-                document.getElementById('inpsAmount').textContent = this.fmtCur(inpsAmount);
-                document.getElementById('withholdingAmount').textContent = this.fmtCur(withholdingAmount);
-                document.getElementById('bolloAmount').textContent = this.fmtCur(bolloAmount);
-                document.getElementById('finalTotal').textContent = this.fmtCur(total);
+                const total = r2(afterDiscount + inpsAmount + ivaAmount - withholdingAmount + bolloAmount);
+                return { subtotal, afterDiscount, baseImponibile, ivaAmount, inpsAmount, withholdingAmount, bolloAmount, total };
+            },
+
+            calculateTotals() {
+                const t = this.computeTotals();
+                document.getElementById('subtotal').textContent = this.fmtCur(t.subtotal);
+                document.getElementById('afterDiscount').textContent = this.fmtCur(t.afterDiscount);
+                document.getElementById('taxable').textContent = this.fmtCur(t.baseImponibile);
+                document.getElementById('ivaAmount').textContent = this.fmtCur(t.ivaAmount);
+                document.getElementById('inpsAmount').textContent = this.fmtCur(t.inpsAmount);
+                document.getElementById('withholdingAmount').textContent = this.fmtCur(t.withholdingAmount);
+                document.getElementById('bolloAmount').textContent = this.fmtCur(t.bolloAmount);
+                document.getElementById('finalTotal').textContent = this.fmtCur(t.total);
             },
 
             renderPreview() {
@@ -2947,20 +2992,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const notes = esc('notes');
                 const iban = esc('iban');
 
-                const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace(/[^0-9.-]/g, ''));
-                const afterDiscount = parseFloat(document.getElementById('afterDiscount').textContent.replace(/[^0-9.-]/g, ''));
-                const ivaAmount = parseFloat(document.getElementById('ivaAmount').textContent.replace(/[^0-9.-]/g, ''));
-                const inpsAmount = parseFloat(document.getElementById('inpsAmount').textContent.replace(/[^0-9.-]/g, ''));
-                const withholdingAmount = parseFloat(document.getElementById('withholdingAmount').textContent.replace(/[^0-9.-]/g, ''));
-                const bolloAmount = parseFloat(document.getElementById('bolloAmount').textContent.replace(/[^0-9.-]/g, ''));
-                const finalTotal = parseFloat(document.getElementById('finalTotal').textContent.replace(/[^0-9.-]/g, ''));
+                const { subtotal, afterDiscount, ivaAmount, inpsAmount, withholdingAmount, bolloAmount, total: finalTotal } = this.computeTotals();
 
                 const itemsHtml = this.data.lineItems.map(item => `
                     <tr>
                         <td class="text-left">${this.escapeHtml(item.description)}</td>
                         <td class="text-right">${item.quantity}</td>
                         <td class="text-left">${this.escapeHtml(item.unit)}</td>
-                        <td class="text-right">${this.fmtCur(item.unitPrice)}</td>
+                        <td class="text-right">${this.fmtCur(this.round4(item.unitPrice), undefined, 4)}</td>
                         <td class="text-right">${item.discount}%</td>
                         <td class="text-right" style="font-weight: bold; color: var(--el-emerald-dark);">${this.fmtCur(this.calculateLineTotal(item))}</td>
                     </tr>
@@ -3197,13 +3236,7 @@ buildQuotePdf(name, safe) {
                 const cur = (typeof this.cur === 'function') ? this.cur() : (document.getElementById('currency') ? (document.getElementById('currency').value || '€') : '€');
                 const v = id => { const e = document.getElementById(id); return e ? (e.value || '') : ''; };
                 const money = n => this.fmtCur(n, cur);
-                const numOf = id => {
-                    const e = document.getElementById(id); if (!e) return 0;
-                    let t = (e.textContent || '').replace(/[^0-9.,-]/g, '');
-                    if (t.lastIndexOf(',') > t.lastIndexOf('.')) t = t.replace(/\./g, '').replace(',', '.');
-                    else t = t.replace(/,/g, '');
-                    return parseFloat(t) || 0;
-                };
+                const tot = this.computeTotals();   // same cent-rounded amounts as the editor and the preview
                 const dt = s => this.fmtDate(s);
                 const doc = new Ctor({ unit:'mm', format:'a4' });
                 const M = 15, W = 210, H = 297, cw = W - 2*M;
@@ -3268,7 +3301,7 @@ buildQuotePdf(name, safe) {
                     doc.text(dl, cx[0] + 2, y + 4.2);
                     doc.text(String(item.quantity), cx[1] + cols[1].w - 2, y + 4.2, { align:'right' });
                     doc.text(String(item.unit || ''), cx[2] + 2, y + 4.2);
-                    doc.text((Number(item.unitPrice) || 0).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:2}), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
+                    doc.text(this.round4(item.unitPrice).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:4}), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
                     doc.text((item.discount || 0) + '%', cx[4] + cols[4].w - 2, y + 4.2, { align:'right' });
                     F('bold', 8.5, accent);
                     doc.text(money(this.calculateLineTotal(item)), cx[5] + cols[5].w - 2, y + 4.2, { align:'right' });
@@ -3278,16 +3311,16 @@ buildQuotePdf(name, safe) {
                 y += 8;
                 // financial summary
                 ensure(52); label(QL.summary); y += 7;
-                const rows = [[QL.subtotal, money(numOf('subtotal'))], [QL.afterDisc, money(numOf('afterDiscount'))]];
-                const iva = numOf('ivaAmount'); rows.push([QL.vat, iva > 0 ? money(iva) : QL.exempt]);
-                const inps = numOf('inpsAmount'); if (inps > 0) rows.push([QL.inps + ' (' + (parseFloat(v('inpsRate')) || 4) + '%)', money(inps)]);
-                const wh = numOf('withholdingAmount'); if (wh > 0) rows.push([QL.wh + ' (' + (parseFloat(v('withholdingRate')) || 20) + '%)', '-' + money(wh)]);
-                const bollo = numOf('bolloAmount'); if (bollo > 0) rows.push([QL.stamp, money(bollo)]);
+                const rows = [[QL.subtotal, money(tot.subtotal)], [QL.afterDisc, money(tot.afterDiscount)]];
+                const iva = tot.ivaAmount; rows.push([QL.vat, iva > 0 ? money(iva) : QL.exempt]);
+                const inps = tot.inpsAmount; if (inps > 0) rows.push([QL.inps + ' (' + (parseFloat(v('inpsRate')) || 4) + '%)', money(inps)]);
+                const wh = tot.withholdingAmount; if (wh > 0) rows.push([QL.wh + ' (' + (parseFloat(v('withholdingRate')) || 20) + '%)', '-' + money(wh)]);
+                const bollo = tot.bolloAmount; if (bollo > 0) rows.push([QL.stamp, money(bollo)]);
                 const sumX = W - M - 78;
                 rows.forEach(r => { ensure(6); F('normal', 9.5, muted); doc.text(String(r[0]), sumX, y); F('normal', 9.5, ink); doc.text(String(r[1]), W - M - 2, y, { align:'right' }); y += 5.9; });
                 ensure(11);
                 doc.setFillColor(accent[0], accent[1], accent[2]); doc.rect(sumX - 3, y - 1.5, (W - M) - (sumX - 3), 9.5, 'F');
-                F('bold', 11, [255,255,255]); doc.text(QL.total, sumX, y + 4.7); doc.text(money(numOf('finalTotal')), W - M - 2, y + 4.7, { align:'right' });
+                F('bold', 11, [255,255,255]); doc.text(QL.total, sumX, y + 4.7); doc.text(money(tot.total), W - M - 2, y + 4.7, { align:'right' });
                 y += 15;
                 // notes
                 const notes = v('notes'), iban = v('iban');
@@ -3755,12 +3788,12 @@ buildQuotePdf(name, safe) {
         getQuotes(){ return getJSON('quotes', {}) || {}; },
         quoteValue(q){
           const d=(q&&q.data)||{}; const items=d.lineItems||[];
-          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice)*(1-num(it.discount)/100), 0);   // same as calculateLineTotal (line discount included)
+          // same cent-rounded steps as computeTotals: line totals, subtotal, global discount
+          const sub=this.round2(items.reduce((s,it)=> s + this.calculateLineTotal({ quantity:num(it.quantity), unitPrice:num(it.unitPrice), discount:num(it.discount) }), 0));
           const disc=num(d.discountGlobal);
-          sub -= (d.discountType==='percentage') ? sub*disc/100 : disc;
-          return Math.max(0, sub);
+          return Math.max(0, this.round2(sub - this.round2((d.discountType==='percentage') ? sub*disc/100 : disc)));
         },
-        money(n){ const c=(typeof this.cur==='function')?this.cur():'€'; return this.fmtCur(n, c); },
+        money(n, maxDec){ const c=(typeof this.cur==='function')?this.cur():'€'; return this.fmtCur(n, c, maxDec); },
 
         // ---------------- DASHBOARD ----------------
         renderDashboard(){
@@ -3902,7 +3935,7 @@ buildQuotePdf(name, safe) {
           el.innerHTML=`<div class="card-grid2">${list.map(p=>`
             <div class="cat-card">
               <h4>${esc(p.description)}</h4>
-              <p class="price">${this.money(num(p.rate))}${p.qty&&num(p.qty)!==1?` · qty ${esc(p.qty)}`:''}</p>
+              <p class="price">${this.money(this.round4(num(p.rate)), 4)}${p.qty&&num(p.qty)!==1?` · qty ${esc(p.qty)}`:''}</p>
               <div class="acts">
                 <button class="mini-btn" onclick="app.addProductToQuote('${p.id}')">Add to quote</button>
                 <button class="mini-btn" onclick="app.editProduct('${p.id}')">Edit</button>

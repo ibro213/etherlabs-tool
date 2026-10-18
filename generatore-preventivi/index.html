@@ -648,12 +648,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             border-radius: 4px;
             padding: 10px;
             margin-bottom: 12px;
+            container-type: inline-size; /* le righe seguono la larghezza della colonna editor, vedi @container sotto */
         }
 
         .line-item {
             position: relative;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1.1fr;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) 1.1fr; /* un totale lungo non schiaccia gli altri campi */
             grid-template-areas:
                 "desc desc desc desc desc"
                 "qty unit price discount total";
@@ -1448,6 +1449,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             }
         }
 
+        /* voci in una colonna editor stretta (desktop a 2 colonne, finestre piccole): 3 campi per riga,
+           poi 2, così la select Unità non si riduce a «o…». I telefoni tengono il loro layout (max-width:760px) */
+        @container (max-width: 619px) {
+            .line-item {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-areas:
+                    "desc desc desc"
+                    "qty unit price"
+                    "discount total total";
+            }
+        }
+        @container (max-width: 389px) {
+            .line-item {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-areas:
+                    "desc desc"
+                    "qty unit"
+                    "price discount"
+                    "total total";
+            }
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -1873,8 +1896,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   .line-item{
     grid-template-columns:1fr 1fr !important;
     grid-template-areas:"desc desc" "qty unit" "price discount" "total total" !important;
-    padding-right:44px !important;
+    padding-right:14px !important;
   }
+  .li-desc{ margin-right:30px; }                              /* spazio per la ✕ solo accanto alla descrizione: i campi sotto hanno tutta la larghezza */
+  .line-item select{ padding-left:6px; padding-right:4px; }   /* così «servizio», «progetto» entrano nella select Unità fino a 320px */
   /* hamburger: niente riempimento verde dopo un tap; stato premuto/aperto discreto */
   .qg-hamburger:hover{ background:transparent; transform:none; box-shadow:none; }
   .qg-hamburger:active, .qg-sidebar.open .qg-hamburger{ background:var(--bg3); border-color:var(--emerald); }
@@ -2811,50 +2836,70 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 return isFinite(n) ? n : def;
             },
 
-            calculateLineTotal(item) {
-                const gross = item.quantity * item.unitPrice;
-                const discountAmount = gross * (item.discount / 100);
-                return gross - discountAmount;
+            // al centesimo, metà per eccesso; toFixed(6) prima toglie il rumore dei float
+            // (IVA 22% di 18,25 = 4,015 è salvato come 4,01499…: deve dare 4,02, come a mano)
+            round2(n) {
+                n = Number(n) || 0;
+                return Math.sign(n) * Math.round(parseFloat((Math.abs(n) * 100).toFixed(6))) / 100 + 0;
             },
 
-            calculateTotals() {
-                let subtotal = this.data.lineItems.reduce((sum, item) => sum + this.calculateLineTotal(item), 0);
+            // i prezzi unitari tengono fino a 4 decimali (0,085 a parola): la riga usa il prezzo esattamente come lo mostrano anteprima e PDF
+            round4(n) {
+                n = Number(n) || 0;
+                return Math.sign(n) * Math.round(parseFloat((Math.abs(n) * 10000).toFixed(6))) / 10000 + 0;
+            },
+
+            calculateLineTotal(item) {
+                const gross = item.quantity * this.round4(item.unitPrice);
+                const discountAmount = gross * (item.discount / 100);
+                return this.round2(gross - discountAmount);
+            },
+
+            // ogni importo è arrotondato al centesimo prima di essere sommato: il totale è esattamente
+            // la somma delle righe mostrate; editor, anteprima, stampa e PDF usano questi stessi valori
+            computeTotals() {
+                const r2 = n => this.round2(n);
+                const subtotal = r2(this.data.lineItems.reduce((sum, item) => sum + this.calculateLineTotal(item), 0));
 
                 const discountGlobal = parseFloat(document.getElementById('discountGlobal').value) || 0;
                 const discountType = document.getElementById('discountType').value;
-                let discountAmount = discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal;
+                const discountAmount = r2(discountType === 'percentage' ? (subtotal * discountGlobal / 100) : discountGlobal);
 
-                const afterDiscount = subtotal - discountAmount;
+                const afterDiscount = r2(subtotal - discountAmount);
 
                 // Rivalsa INPS/cassa: si calcola per prima ed è imponibile IVA e ritenuta (Gestione Separata)
                 const inpsCharge = document.getElementById('inpsCharge').checked;
                 const inpsRatePct = this.ratePct('inpsRate', 4);   // 0 è un'aliquota valida: default solo se il campo è vuoto
-                const inpsAmount = inpsCharge ? afterDiscount * (inpsRatePct / 100) : 0;
+                const inpsAmount = inpsCharge ? r2(afterDiscount * (inpsRatePct / 100)) : 0;
 
-                const baseImponibile = afterDiscount + inpsAmount;   // imponibile IVA e ritenuta
+                const baseImponibile = r2(afterDiscount + inpsAmount);   // imponibile IVA e ritenuta
 
                 const ivaRate = parseFloat(document.getElementById('ivaRate').value) / 100;
-                const ivaAmount = baseImponibile * ivaRate;
+                const ivaAmount = r2(baseImponibile * ivaRate);
 
                 const withholdingTax = document.getElementById('withholdingTax').checked;
                 const withholdingRatePct = this.ratePct('withholdingRate', 20);
-                const withholdingAmount = withholdingTax ? baseImponibile * (withholdingRatePct / 100) : 0;
-
-                let total = afterDiscount + inpsAmount + ivaAmount - withholdingAmount;
+                const withholdingAmount = withholdingTax ? r2(baseImponibile * (withholdingRatePct / 100)) : 0;
 
                 const bollo = document.getElementById('bollo').checked;
                 const ivaExempt = parseFloat(document.getElementById('ivaRate').value) === 0;
                 const bolloAmount = (bollo && ivaExempt && afterDiscount > 77.47) ? 2 : 0;
-                total += bolloAmount;
 
-                document.getElementById('subtotal').textContent = subtotal.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('afterDiscount').textContent = afterDiscount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('taxable').textContent = baseImponibile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('ivaAmount').textContent = ivaAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('inpsAmount').textContent = inpsAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('withholdingAmount').textContent = withholdingAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('bolloAmount').textContent = bolloAmount.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
-                document.getElementById('finalTotal').textContent = total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                const total = r2(afterDiscount + inpsAmount + ivaAmount - withholdingAmount + bolloAmount);
+                return { subtotal, afterDiscount, baseImponibile, ivaAmount, inpsAmount, withholdingAmount, bolloAmount, total };
+            },
+
+            calculateTotals() {
+                const t = this.computeTotals();
+                const eur = n => n.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
+                document.getElementById('subtotal').textContent = eur(t.subtotal);
+                document.getElementById('afterDiscount').textContent = eur(t.afterDiscount);
+                document.getElementById('taxable').textContent = eur(t.baseImponibile);
+                document.getElementById('ivaAmount').textContent = eur(t.ivaAmount);
+                document.getElementById('inpsAmount').textContent = eur(t.inpsAmount);
+                document.getElementById('withholdingAmount').textContent = eur(t.withholdingAmount);
+                document.getElementById('bolloAmount').textContent = eur(t.bolloAmount);
+                document.getElementById('finalTotal').textContent = eur(t.total);
             },
 
             renderPreview() {
@@ -2882,20 +2927,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 const notes = esc('notes');
                 const iban = esc('iban');
 
-                const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const afterDiscount = parseFloat(document.getElementById('afterDiscount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const ivaAmount = parseFloat(document.getElementById('ivaAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const inpsAmount = parseFloat(document.getElementById('inpsAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const withholdingAmount = parseFloat(document.getElementById('withholdingAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const bolloAmount = parseFloat(document.getElementById('bolloAmount').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
-                const finalTotal = parseFloat(document.getElementById('finalTotal').textContent.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                const { subtotal, afterDiscount, ivaAmount, inpsAmount, withholdingAmount, bolloAmount, total: finalTotal } = this.computeTotals();
 
                 const itemsHtml = this.data.lineItems.map(item => `
                     <tr>
                         <td class="text-left">${this.escapeHtml(item.description)}</td>
                         <td class="text-right">${item.quantity}</td>
                         <td class="text-left">${this.escapeHtml(item.unit)}</td>
-                        <td class="text-right">${item.unitPrice.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                        <td class="text-right">${this.round4(item.unitPrice).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 4})} €</td>
                         <td class="text-right">${item.discount}%</td>
                         <td class="text-right" style="font-weight: bold; color: var(--el-emerald-dark);">${this.calculateLineTotal(item).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
                     </tr>
@@ -3129,13 +3168,7 @@ buildQuotePdf(name, safe) {
                 const cur = (typeof this.cur === 'function') ? this.cur() : (document.getElementById('currency') ? (document.getElementById('currency').value || '€') : '€');
                 const v = id => { const e = document.getElementById(id); return e ? (e.value || '') : ''; };
                 const money = n => (Number(n) || 0).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + cur;
-                const numOf = id => {
-                    const e = document.getElementById(id); if (!e) return 0;
-                    let t = (e.textContent || '').replace(/[^0-9.,-]/g, '');
-                    if (t.lastIndexOf(',') > t.lastIndexOf('.')) t = t.replace(/\./g, '').replace(',', '.');
-                    else t = t.replace(/,/g, '');
-                    return parseFloat(t) || 0;
-                };
+                const tot = this.computeTotals();   // gli stessi importi al centesimo di editor e anteprima
                 const dt = s => this.fmtDate(s);
                 const doc = new Ctor({ unit:'mm', format:'a4' });
                 const M = 15, W = 210, H = 297, cw = W - 2*M;
@@ -3200,7 +3233,7 @@ buildQuotePdf(name, safe) {
                     doc.text(dl, cx[0] + 2, y + 4.2);
                     doc.text(String(item.quantity), cx[1] + cols[1].w - 2, y + 4.2, { align:'right' });
                     doc.text(String(item.unit || ''), cx[2] + 2, y + 4.2);
-                    doc.text(money(item.unitPrice).replace(' ' + cur, ''), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
+                    doc.text(this.round4(item.unitPrice).toLocaleString(QL.locale || 'en-US', {minimumFractionDigits:2, maximumFractionDigits:4}), cx[3] + cols[3].w - 2, y + 4.2, { align:'right' });
                     doc.text((item.discount || 0) + '%', cx[4] + cols[4].w - 2, y + 4.2, { align:'right' });
                     F('bold', 8.5, accent);
                     doc.text(money(this.calculateLineTotal(item)), cx[5] + cols[5].w - 2, y + 4.2, { align:'right' });
@@ -3210,16 +3243,16 @@ buildQuotePdf(name, safe) {
                 y += 8;
                 // financial summary
                 ensure(52); label(QL.summary); y += 7;
-                const rows = [[QL.subtotal, money(numOf('subtotal'))], [QL.afterDisc, money(numOf('afterDiscount'))]];
-                const iva = numOf('ivaAmount'); rows.push([QL.vat, iva > 0 ? money(iva) : QL.exempt]);
-                const inps = numOf('inpsAmount'); if (inps > 0) rows.push([QL.inps + ' (' + (parseFloat(v('inpsRate')) || 4) + '%)', money(inps)]);
-                const wh = numOf('withholdingAmount'); if (wh > 0) rows.push([QL.wh + ' (' + (parseFloat(v('withholdingRate')) || 20) + '%)', '-' + money(wh)]);
-                const bollo = numOf('bolloAmount'); if (bollo > 0) rows.push([QL.stamp, money(bollo)]);
+                const rows = [[QL.subtotal, money(tot.subtotal)], [QL.afterDisc, money(tot.afterDiscount)]];
+                const iva = tot.ivaAmount; rows.push([QL.vat, iva > 0 ? money(iva) : QL.exempt]);
+                const inps = tot.inpsAmount; if (inps > 0) rows.push([QL.inps + ' (' + (parseFloat(v('inpsRate')) || 4) + '%)', money(inps)]);
+                const wh = tot.withholdingAmount; if (wh > 0) rows.push([QL.wh + ' (' + (parseFloat(v('withholdingRate')) || 20) + '%)', '-' + money(wh)]);
+                const bollo = tot.bolloAmount; if (bollo > 0) rows.push([QL.stamp, money(bollo)]);
                 const sumX = W - M - 78;
                 rows.forEach(r => { ensure(6); F('normal', 9.5, muted); doc.text(String(r[0]), sumX, y); F('normal', 9.5, ink); doc.text(String(r[1]), W - M - 2, y, { align:'right' }); y += 5.9; });
                 ensure(11);
                 doc.setFillColor(accent[0], accent[1], accent[2]); doc.rect(sumX - 3, y - 1.5, (W - M) - (sumX - 3), 9.5, 'F');
-                F('bold', 11, [255,255,255]); doc.text(QL.total, sumX, y + 4.7); doc.text(money(numOf('finalTotal')), W - M - 2, y + 4.7, { align:'right' });
+                F('bold', 11, [255,255,255]); doc.text(QL.total, sumX, y + 4.7); doc.text(money(tot.total), W - M - 2, y + 4.7, { align:'right' });
                 y += 15;
                 // notes
                 const notes = v('notes'), iban = v('iban');
@@ -3675,12 +3708,12 @@ buildQuotePdf(name, safe) {
         getQuotes(){ return getJSON('quotes', {}) || {}; },
         quoteValue(q){
           const d=(q&&q.data)||{}; const items=d.lineItems||[];
-          let sub=items.reduce((s,it)=> s + num(it.quantity)*num(it.unitPrice)*(1-num(it.discount)/100), 0);   // same as calculateLineTotal (line discount included)
+          // stessi passaggi al centesimo di computeTotals: totali riga, subtotale, sconto globale
+          const sub=this.round2(items.reduce((s,it)=> s + this.calculateLineTotal({ quantity:num(it.quantity), unitPrice:num(it.unitPrice), discount:num(it.discount) }), 0));
           const disc=num(d.discountGlobal);
-          sub -= (d.discountType==='percentage') ? sub*disc/100 : disc;
-          return Math.max(0, sub);
+          return Math.max(0, this.round2(sub - this.round2((d.discountType==='percentage') ? sub*disc/100 : disc)));
         },
-        money(n){ const c=(typeof this.cur==='function')?this.cur():'€'; return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+c; },
+        money(n, maxDec){ const c=(typeof this.cur==='function')?this.cur():'€'; return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:maxDec||2})+' '+c; },
 
         renderDashboard(){
           const quotes=Object.entries(this.getQuotes());
@@ -3804,7 +3837,7 @@ buildQuotePdf(name, safe) {
           el.innerHTML=`<div class="card-grid2">${list.map(p=>`
             <div class="cat-card">
               <h4>${esc(p.description)}</h4>
-              <p class="price">${this.money(num(p.rate))}${p.qty&&num(p.qty)!==1?` · qtà ${esc(p.qty)}`:''}</p>
+              <p class="price">${this.money(this.round4(num(p.rate)), 4)}${p.qty&&num(p.qty)!==1?` · qtà ${esc(p.qty)}`:''}</p>
               <div class="acts">
                 <button class="mini-btn" onclick="app.addProductToQuote('${p.id}')">Aggiungi al preventivo</button>
                 <button class="mini-btn" onclick="app.editProduct('${p.id}')">Modifica</button>
@@ -3923,7 +3956,7 @@ buildQuotePdf(name, safe) {
           const sd=(id,v)=>{ const e=document.getElementById(id); if(!e)return;
             if(e.tagName==='SELECT'){ if(v!=null && [...e.options].some(o=>o.value===v)) e.value=v; else { const d=e.querySelector('option[selected]'); e.value = d ? d.value : (e.options[0]?e.options[0].value:e.value); } }
             else e.value=v; };
-          sd('paymentTerms','Immediate'); sd('discountType','percentage'); sd('ivaRate','20'); sd('inpsRate','0'); sd('withholdingRate','20'); sd('bolloAmountInput','2');
+          sd('paymentTerms','Immediate'); sd('discountType','percentage'); sd('ivaRate','20'); sd('inpsRate','4'); sd('withholdingRate','20'); sd('bolloAmountInput','2');
           ['inpsCharge','withholdingTax','bollo'].forEach(id=>{ const e=document.getElementById(id); if(e)e.checked=false; });
           this.data.lineItems=[];
           this.toggleInpsRate(); this.toggleWithholdingRate(); if(this.toggleStampDuty) this.toggleStampDuty();

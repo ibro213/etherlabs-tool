@@ -2865,7 +2865,7 @@ const PRESETS_ALL = { en: {
                     }
                     cols.forEach(function(c){ c.placed.forEach(function(q){ if (q.pg === p) q.b.draw(doc, c.x, q.y); }); });
                 }
-                doc.save(safeFilename(state.fullName) + '_cv.pdf');
+                doc.save(safeFilename(state.fullName) + T.fileSuffix + '.pdf');   // Name_resume.pdf in English, Nome_cv.pdf in Italian
                 showToast(T.toast.pdfDone);
             } catch (err) {
                 console.error('PDF error:', err);

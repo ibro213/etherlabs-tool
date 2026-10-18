@@ -500,6 +500,18 @@
             color: var(--c-info);
         }
 
+        /* toast di showAlert(): in basso a destra con sfondo pieno, così non copre mai l'header (titolo, badge PRO) */
+        .alert.toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            bottom: max(20px, env(safe-area-inset-bottom));
+            z-index: 9999;
+            max-width: min(400px, calc(100vw - 40px));
+            background-color: var(--bg2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        }
+
         /* MATRIX GRID */
         .matrix-grid {
             display: grid;
@@ -2164,12 +2176,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         function showAlert(message, type = 'info') {
             const alert = document.createElement('div');
-            alert.className = `alert ${type}`;
-            alert.style.position = 'fixed';
-            alert.style.top = '20px';
-            alert.style.right = '20px';
-            alert.style.zIndex = '9999';
-            alert.style.maxWidth = '400px';
+            alert.className = `alert ${type} toast`; // toast: in basso a destra (vedi .alert.toast), mai sopra l'header
             alert.textContent = message;
             document.body.appendChild(alert);
 
