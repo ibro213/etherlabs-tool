@@ -2141,7 +2141,10 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
   function n2(n){return (Math.round((+n||0)*100)/100).toFixed(2);}
   function gv(id){var el=document.getElementById(id);return el?el.value:'';}
   function classifyTaxId(raw){
-    var s=(raw||'').replace(/[^0-9A-Za-z]/g,'').toUpperCase();
+    // the field is filled as «P.IVA 01234567890» (that is its placeholder): drop the label, keep the number
+    var s=String(raw||'').toUpperCase()
+      .replace(/^\s*(?:P\.?\s*IVA|PARTITA\s*IVA|COD(?:ICE)?\.?\s*FISC(?:ALE)?\.?|C\.\s*F\.?|CF(?=[\s:.\-])|VAT|IVA)\s*[:.\-]?\s*/,'')
+      .replace(/[^0-9A-Z]/g,'');
     if(/^[0-9]{11}$/.test(s))return{piva:s,cf:null};
     if(/^IT[0-9]{11}$/.test(s))return{piva:s.slice(2),cf:null};
     if(/^[A-Z0-9]{16}$/.test(s))return{piva:null,cf:s};
@@ -2150,14 +2153,19 @@ function syncLogoTools(){_lastLogoSrc=state.logoDataUrl||null;var g=_lcq('logoTo
   function genXml(d,calc){
     var W=[],forf=!!calc.forf,regime=forf?'RF19':'RF01';
     var sid=classifyTaxId(d.fromTax),bid=classifyTaxId(d.toTax);
-    if(!sid.piva&&!sid.cf)W.push('P.IVA/CF mittente mancante (obbligatorio)');
+    if(!sid.piva)W.push(sid.cf?'P.IVA mittente non valida: servono 11 cifre (lo SdI vuole sempre la P.IVA di chi emette)':'P.IVA mittente mancante (obbligatoria)');
+    if(!bid.piva&&!bid.cf)W.push('P.IVA o codice fiscale del cliente mancante (obbligatorio)');
+    else if(!bid.piva&&bid.cf.length!==16)W.push('P.IVA/CF cliente non valido: servono 11 cifre (P.IVA) o 16 caratteri (codice fiscale)');
     var codDest=((d.codiceDestinatario||'').toUpperCase().replace(/[^A-Z0-9]/g,''))||'0000000';
     var pec=(d.pec||'').trim();
     if(codDest==='0000000'&&!pec)W.push('Serve Codice Destinatario (7 caratteri) OPPURE la PEC del cliente');
     if(!d.fromCap)W.push('CAP mittente mancante');
     if(!d.toCap)W.push('CAP cliente mancante');
     if((d.intentoProt||'').trim()&&!d.intentoDate)W.push("Data del protocollo della dichiarazione d'intento mancante");
-    var prog=(d.invoiceNumber||'1').replace(/[^A-Za-z0-9]/g,'').slice(0,10)||'1';
+    // the progressive of the file name (and ProgressivoInvio) is at most 5 letters/digits and must never repeat: a 5-character code made from invoice number + date
+    var prog=(function(num,dt){var k=String(num||'1').replace(/[^A-Za-z0-9]/g,'').toUpperCase()+'|'+String(dt||'').slice(0,10);
+      var h=0x811c9dc5;for(var i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}
+      return (h%60466176).toString(36).toUpperCase().padStart(5,'0');})(d.invoiceNumber,d.invoiceDate);
     var nazDest=(d.toCountry||'IT').toUpperCase().slice(0,2);
     var L=[];
     L.push('<?xml version="1.0" encoding="UTF-8"?>');
